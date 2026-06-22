@@ -43,7 +43,7 @@
       display: flex; align-items: center; gap: 8px;
       text-decoration: none; color: #f8fafc; flex-shrink: 0;
     }
-    .cd-nav-brand img { height: 28px; width: auto; }
+    .cd-nav-brand img { height: 32px; width: auto; }
     /* Pill group — matches React bundle nav */
     .cd-nav-links {
       display: flex; align-items: center; list-style: none; margin: 0; padding: 0;
@@ -140,6 +140,10 @@
       transition: background 150ms; margin-left: 0.25rem;
     }
     .cd-nav-cta:hover { background: #1d4ed8; }
+    @media (min-width: 1024px) {
+      .cd-nav { height: 80px; }
+      .cd-nav-brand img { height: 40px; }
+    }
     @media (max-width: 768px) {
       .cd-nav-links { display: none; }
       .cd-nav { padding: 0 1rem; }
@@ -413,10 +417,205 @@
   document.body.appendChild(footer);
   }
 
+  function initModals() {
+    /* ── Modal Aviso de Privacidad ── */
+    if (!document.getElementById('cd-privacy-backdrop')) {
+      document.body.insertAdjacentHTML('beforeend', `
+        <style>
+          #cd-privacy-backdrop {
+            display:none;position:fixed;inset:0;z-index:99999;
+            background:rgba(5,8,22,0.72);backdrop-filter:blur(6px);
+            -webkit-backdrop-filter:blur(6px);
+            align-items:center;justify-content:center;padding:1.5rem;
+          }
+          #cd-privacy-backdrop.open{display:flex;}
+          #cd-privacy-modal {
+            background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;
+            width:100%;max-width:780px;max-height:88vh;
+            display:flex;flex-direction:column;
+            box-shadow:0 32px 80px rgba(5,8,22,0.45);
+            font-family:'DM Sans',system-ui,sans-serif;color:#0f172a;overflow:hidden;
+          }
+          #cd-privacy-header {
+            display:flex;justify-content:space-between;align-items:flex-start;
+            padding:2rem 2rem 1.2rem;border-bottom:1px solid #e2e8f0;
+            flex-shrink:0;background:#ffffff;
+          }
+          #cd-privacy-header h2{font-size:1.15rem;font-weight:600;margin:0 0 0.2rem;color:#0f172a;}
+          #cd-privacy-header p{font-size:0.78rem;font-weight:400;margin:0;color:#64748b;}
+          #cd-privacy-close {
+            width:36px;height:36px;border-radius:50%;border:1px solid #e2e8f0;
+            background:#ffffff;cursor:pointer;display:grid;place-items:center;
+            flex-shrink:0;margin-left:1rem;color:#64748b;transition:background 180ms,color 180ms;
+          }
+          #cd-privacy-close:hover{background:#f1f5f9;color:#0f172a;}
+          #cd-privacy-body {
+            overflow-y:auto;padding:1.8rem 2rem 2rem;background:#ffffff;
+            font-size:0.84rem;font-weight:300;line-height:1.8;color:#475569;scrollbar-width:thin;
+          }
+          #cd-privacy-body h3 {
+            font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;
+            color:#0f172a;margin:1.8rem 0 0.6rem;padding-top:1.2rem;border-top:1px solid #e2e8f0;
+          }
+          #cd-privacy-body h3:first-child{margin-top:0;padding-top:0;border-top:none;}
+          #cd-privacy-body p{margin:0 0 0.9rem;}
+          #cd-privacy-body ul{margin:0.4rem 0 0.9rem 1.2rem;padding:0;}
+          #cd-privacy-body li{margin-bottom:0.4rem;}
+          #cd-privacy-body a{color:#3b5bdb;text-decoration:none;}
+          #cd-privacy-body a:hover{text-decoration:underline;}
+          #cd-privacy-body strong{color:#0f172a;font-weight:500;}
+        </style>
+        <div id="cd-privacy-backdrop">
+          <div id="cd-privacy-modal" role="dialog" aria-modal="true" aria-labelledby="cd-privacy-title">
+            <div id="cd-privacy-header">
+              <div>
+                <h2 id="cd-privacy-title">Aviso de Privacidad</h2>
+                <p>CartoData 2.0 SC</p>
+              </div>
+              <button id="cd-privacy-close" aria-label="Cerrar">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/>
+                </svg>
+              </button>
+            </div>
+            <div id="cd-privacy-body">
+              <p>CartoData 2.0 SC., con domicilio en Circunvalación Oriente número 689, Colonia Ciudad Granja, Código Postal 45010, en la ciudad de Zapopan, Jalisco, México, (en adelante "CartoData"), con fundamento en los artículos 15 y 16 de la Ley Federal de Protección de Datos Personales en Posesión de Particulares, reconoce la importancia que tiene el tratamiento legítimo, controlado e informado de sus datos personales, por lo tanto, la información de nuestros clientes y clientes potenciales es tratada de forma estrictamente confidencial, por lo que hacemos un esfuerzo permanente para salvaguardarla.</p>
+              <h3>Finalidad</h3>
+              <p>Su información personal será utilizada exclusivamente para prestarle los servicios solicitados (Fotogrametría, Geodesia, Cartografía, levantamiento de censos, topografía, mapas, planos y bases de datos, teledetección, mapeo terrestre, desarrollo de software, geoprocesamiento), dar cumplimiento a requerimientos legales, llevar a cabo facturación y cobro, formalizar contratos, mantener actualizados nuestros registros e invitarle a eventos y comunicaciones relacionadas con nuestros servicios.</p>
+              <h3>Datos Personales Tratados</h3>
+              <p><strong>Datos necesarios:</strong> Nombre completo, domicilio, fecha de nacimiento, CURP, teléfono, correo electrónico, domicilio fiscal, RFC, datos de facturación, información de cuentas bancarias, actividad económica, polígonos de áreas de interés.</p>
+              <p><strong>Datos no necesarios:</strong> Cuentas de redes sociales.</p>
+              <h3>Transferencia de Datos</h3>
+              <p>CartoData no transferirá sin su consentimiento previo sus datos personales a personas ajenas a nuestra empresa, salvo por disposición de la Ley.</p>
+              <h3>Medidas de Seguridad</h3>
+              <p>CartoData ha adoptado medidas de seguridad administrativas, físicas y técnicas para proteger sus datos personales contra daño, pérdida, alteración, destrucción o uso no autorizado.</p>
+              <h3>Derechos ARCO</h3>
+              <p>Como titular de datos personales, puede ejercitar los derechos de <strong>Acceso, Rectificación, Cancelación y Oposición</strong> enviando su solicitud a <a href="mailto:privacidad@cartodata.com">privacidad@cartodata.com</a>. La respuesta se emitirá en un plazo no mayor a <strong>15 días hábiles</strong>.</p>
+              <h3>Cambios al Aviso</h3>
+              <p>Este aviso podrá ser modificado. Las modificaciones serán informadas a través de <a href="https://www.cartodata.com/privacidad" target="_blank">www.cartodata.com/privacidad</a>.</p>
+              <h3>Contacto</h3>
+              <p><a href="mailto:privacidad@cartodata.com">privacidad@cartodata.com</a><br>
+              Circunvalación Oriente 689, Col. Ciudad Granja, C.P. 45010, Zapopan, Jalisco, México.</p>
+            </div>
+          </div>
+        </div>`);
+
+      const privBackdrop = document.getElementById('cd-privacy-backdrop');
+      const privClose    = document.getElementById('cd-privacy-close');
+      const openPrivacy  = e => { if(e) e.preventDefault(); privBackdrop.classList.add('open'); document.body.style.overflow='hidden'; };
+      const closePrivacy = () => { privBackdrop.classList.remove('open'); document.body.style.overflow=''; };
+      privClose.addEventListener('click', closePrivacy);
+      privBackdrop.addEventListener('click', e => { if(e.target===privBackdrop) closePrivacy(); });
+      document.addEventListener('keydown', e => { if(e.key==='Escape') closePrivacy(); });
+      window.openPrivacyModal = openPrivacy;
+
+      function hookPrivacyLinks() {
+        document.querySelectorAll('a[href="#aviso-privacidad"],a[href*="privaci"]').forEach(l => {
+          if (!l.dataset.cdPrivHooked) { l.dataset.cdPrivHooked='1'; l.addEventListener('click', openPrivacy); }
+        });
+      }
+      hookPrivacyLinks();
+      const privObs = new MutationObserver(hookPrivacyLinks);
+      privObs.observe(document.body, { childList:true, subtree:true });
+      setTimeout(() => { hookPrivacyLinks(); privObs.disconnect(); }, 5000);
+    }
+
+    /* ── Modal Términos y Condiciones ── */
+    if (!document.getElementById('cd-terms-backdrop')) {
+      document.body.insertAdjacentHTML('beforeend', `
+        <style>
+          #cd-terms-backdrop {
+            display:none;position:fixed;inset:0;z-index:99999;
+            background:rgba(5,8,22,0.72);backdrop-filter:blur(4px);
+            align-items:center;justify-content:center;padding:1.5rem;
+          }
+          #cd-terms-backdrop.open{display:flex;}
+          #cd-terms-modal {
+            background:#ffffff;color:#0f172a;border:1px solid #e2e8f0;border-radius:16px;
+            width:100%;max-width:680px;max-height:85vh;display:flex;flex-direction:column;
+            box-shadow:0 24px 80px rgba(5,8,22,0.35);font-family:'DM Sans',system-ui,sans-serif;
+          }
+          #cd-terms-header {
+            padding:1.6rem 2rem 1.2rem;border-bottom:1px solid #e2e8f0;
+            display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;
+          }
+          #cd-terms-header h2{font-size:1.25rem;font-weight:600;margin:0;color:#0f172a;}
+          #cd-terms-header p{font-size:0.78rem;color:#64748b;margin:0.25rem 0 0;}
+          #cd-terms-close {
+            flex-shrink:0;background:none;border:1px solid #e2e8f0;border-radius:8px;
+            padding:0.4rem 0.75rem;cursor:pointer;font-size:0.8rem;color:#64748b;line-height:1;
+          }
+          #cd-terms-close:hover{background:#f1f5f9;color:#0f172a;}
+          #cd-terms-body{padding:1.6rem 2rem;overflow-y:auto;font-size:0.875rem;line-height:1.7;color:#374151;}
+          #cd-terms-body h3{font-size:0.95rem;font-weight:600;color:#0f172a;margin:1.4rem 0 0.5rem;padding-top:1.2rem;border-top:1px solid #f1f5f9;}
+          #cd-terms-body h3:first-child{margin-top:0;padding-top:0;border-top:none;}
+          #cd-terms-body p{margin:0 0 0.9rem;}
+          #cd-terms-body ul{margin:0.4rem 0 0.9rem 1.2rem;padding:0;}
+          #cd-terms-body li{margin-bottom:0.4rem;}
+          #cd-terms-body a{color:#3b5bdb;text-decoration:none;}
+          #cd-terms-body a:hover{text-decoration:underline;}
+          #cd-terms-body strong{color:#0f172a;font-weight:500;}
+        </style>
+        <div id="cd-terms-backdrop">
+          <div id="cd-terms-modal" role="dialog" aria-modal="true" aria-labelledby="cd-terms-title">
+            <div id="cd-terms-header">
+              <div>
+                <h2 id="cd-terms-title">Términos y Condiciones</h2>
+                <p>Última actualización: junio 2025 · CartoData S. de R.L. de C.V.</p>
+              </div>
+              <button id="cd-terms-close" aria-label="Cerrar">Cerrar ✕</button>
+            </div>
+            <div id="cd-terms-body">
+              <h3>1. Aceptación de los Términos</h3>
+              <p>Al acceder y utilizar el sitio web <strong>www.cartodata.mx</strong> y los servicios de <strong>CartoData S. de R.L. de C.V.</strong>, usted acepta quedar vinculado por los presentes Términos y Condiciones.</p>
+              <h3>2. Descripción de los Servicios</h3>
+              <p>CartoData ofrece soluciones geoespaciales que incluyen: cartografía digital y análisis territorial, procesamiento de datos GIS, consultoría en planeación urbana e infraestructura, estudios de impacto ambiental y desarrollo de plataformas de visualización geográfica.</p>
+              <h3>3. Propiedad Intelectual</h3>
+              <p>Todo el contenido publicado —incluyendo textos, gráficas, mapas, metodologías, logotipos y software— es propiedad exclusiva de CartoData o de sus licenciantes, protegido por las leyes mexicanas e internacionales de propiedad intelectual. Queda prohibida la reproducción o distribución sin autorización previa y por escrito.</p>
+              <h3>4. Uso Permitido</h3>
+              <p>El usuario se compromete a utilizar el sitio y los servicios únicamente con fines lícitos. Queda prohibido usarlo para fines fraudulentos, intentar acceso no autorizado a sistemas de CartoData, reproducir o revender los servicios sin autorización, o transmitir virus o código dañino.</p>
+              <h3>5. Confidencialidad</h3>
+              <p>La información técnica, metodológica o estratégica compartida durante la prestación de servicios tendrá carácter confidencial. Ambas partes se obligan a no divulgarla a terceros sin consentimiento previo y por escrito.</p>
+              <h3>6. Limitación de Responsabilidad</h3>
+              <p>CartoData no será responsable de daños directos, indirectos, incidentales o consecuentes derivados del uso o la imposibilidad de uso del sitio o de los servicios. La responsabilidad máxima se limitará al monto total pagado por el servicio específico que originó el reclamo.</p>
+              <h3>7. Protección de Datos Personales</h3>
+              <p>El tratamiento de los datos personales se rige por nuestro <strong>Aviso de Privacidad</strong>, disponible en el pie de página. CartoData cumple con la <em>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</em>.</p>
+              <h3>8. Modificaciones</h3>
+              <p>CartoData se reserva el derecho de actualizar estos Términos en cualquier momento. El uso continuado de los servicios constituye aceptación de las modificaciones.</p>
+              <h3>9. Jurisdicción y Ley Aplicable</h3>
+              <p>Estos términos se rigen por las leyes de los <strong>Estados Unidos Mexicanos</strong>. Para cualquier controversia, las partes se someten a la jurisdicción de los tribunales de <strong>Guadalajara, Jalisco</strong>.</p>
+              <h3>10. Contacto</h3>
+              <p>Para dudas, escríbanos a <a href="mailto:contacto@cartodata.mx">contacto@cartodata.mx</a>.</p>
+            </div>
+          </div>
+        </div>`);
+
+      const termsBackdrop = document.getElementById('cd-terms-backdrop');
+      const termsClose    = document.getElementById('cd-terms-close');
+      const openTerms     = e => { if(e) e.preventDefault(); termsBackdrop.classList.add('open'); document.body.style.overflow='hidden'; };
+      const closeTerms    = () => { termsBackdrop.classList.remove('open'); document.body.style.overflow=''; };
+      termsClose.addEventListener('click', closeTerms);
+      termsBackdrop.addEventListener('click', e => { if(e.target===termsBackdrop) closeTerms(); });
+      document.addEventListener('keydown', e => { if(e.key==='Escape') closeTerms(); });
+      window.openTermsModal = openTerms;
+
+      function hookTermsLinks() {
+        document.querySelectorAll('a[href*="terminos"],a[href*="términos"],a[href*="terms"]').forEach(l => {
+          if (!l.dataset.cdTermsHooked) { l.dataset.cdTermsHooked='1'; l.addEventListener('click', openTerms); }
+        });
+      }
+      hookTermsLinks();
+      const termsObs = new MutationObserver(hookTermsLinks);
+      termsObs.observe(document.body, { childList:true, subtree:true });
+      setTimeout(() => { hookTermsLinks(); termsObs.disconnect(); }, 5000);
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectFooter);
+    document.addEventListener('DOMContentLoaded', () => { injectFooter(); initModals(); });
   } else {
     injectFooter();
+    initModals();
   }
 
 })();
