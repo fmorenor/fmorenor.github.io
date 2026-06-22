@@ -1,0 +1,1511 @@
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>CartoData — Contexto geográfico para tus decisiones</title>
+    <meta name="description" content="Damos contexto geográfico a tus decisiones. Soluciones geoespaciales para ciudades, infraestructura, minería e instituciones." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="./assets/index-DnxW7q2B.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CPcc1KG7.css">
+    <style>#xray { display: none !important; }</style>
+    <style id="cd-step-fix"></style>
+  </head>
+  <body>
+    <div id="root"></div>
+  <script>
+  /* ── Reemplaza la sección "cost" con charts modernos ── */
+  (function injectCostCharts() {
+    const NS = 'http://www.w3.org/2000/svg';
+    /* B = ganador (CartoData), A = sin cambio */
+    const DATA = [
+      { label: '2020', a: 7.8,  b: 8   },
+      { label: '2021', a: 8.3,  b: 11.5 },
+      { label: '2022', a: 9.0,  b: 16.8 },
+      { label: '2023', a: 9.5,  b: 21.4 },
+      { label: '2024', a: 10,   b: 26  },
+    ];
+    const MAX_V = 28;
+
+    function css(v) {
+      return getComputedStyle(document.documentElement).getPropertyValue(v).trim() || (v === '--blue' ? '#2244cc' : v === '--line-b' ? '#5f5f5b' : '#888');
+    }
+
+    function mk(tag, attrs, text) {
+      const el = document.createElementNS(NS, tag);
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+      if (text !== undefined) el.textContent = text;
+      return el;
+    }
+
+    function animateStat(el, target, prefix, suffix, dur) {
+      if (!el) return;
+      const t0 = performance.now();
+      function tick(now) {
+        const t = Math.min(1, (now - t0) / dur);
+        const e = 1 - Math.pow(1 - t, 3);
+        const val = target % 1 === 0 ? Math.round(e * target) : (e * target).toFixed(1);
+        el.textContent = prefix + val + suffix;
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    let chartDrawn = false, statsAnimated = false, barsDrawn = false;
+
+    function buildChart(prog) {
+      const svg = document.getElementById('cd-chartSvg');
+      if (!svg) return;
+      svg.innerHTML = '';
+      const BLUE  = '#3b5bdb';
+      const GRAY  = '#94a3b8';
+      const GRID  = '#e2e8f0';
+      const LABEL = '#64748b';
+      const fnt   = 'DM Sans, system-ui, sans-serif';
+      const VW = 580, VH = 300;
+      const PL = 44, PR = 52, PT = 20, PB = 40;
+      const CW = VW - PL - PR, CH = VH - PT - PB, n = DATA.length;
+      const ease = p => 1 - Math.pow(1 - p, 3);
+      const sx = i => PL + (i / (n - 1)) * CW;
+      const sy = v  => PT + CH - (v / MAX_V) * CH;
+
+      function buildPts(key) {
+        const sweepX = PL + ease(prog) * CW;
+        const pts = [];
+        for (let i = 0; i < n; i++) {
+          if (sx(i) > sweepX) break;
+          pts.push([sx(i), sy(DATA[i][key])]);
+        }
+        const li = pts.length - 1;
+        if (li >= 0 && li < n - 1) {
+          const t = (sweepX - sx(li)) / (sx(li+1) - sx(li));
+          pts.push([sweepX, sy(DATA[li][key] + (DATA[li+1][key] - DATA[li][key]) * t)]);
+        }
+        return pts;
+      }
+
+      function smooth(pts) {
+        if (pts.length < 2) return `M ${pts[0]?.[0]??0} ${pts[0]?.[1]??0}`;
+        let d = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+        for (let i = 0; i < pts.length - 1; i++) {
+          const p0 = pts[Math.max(0,i-1)], p1 = pts[i], p2 = pts[i+1], p3 = pts[Math.min(pts.length-1,i+2)];
+          d += ` C ${(p1[0]+(p2[0]-p0[0])/4.5).toFixed(1)} ${(p1[1]+(p2[1]-p0[1])/4.5).toFixed(1)}, ${(p2[0]-(p3[0]-p1[0])/4.5).toFixed(1)} ${(p2[1]-(p3[1]-p1[1])/4.5).toFixed(1)}, ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
+        }
+        return d;
+      }
+
+      const base = PT + CH;
+      const closeArea = pts => !pts.length ? '' : ` L ${pts[pts.length-1][0].toFixed(1)} ${base} L ${pts[0][0].toFixed(1)} ${base} Z`;
+
+      const defs = mk('defs', {});
+      /* Gradiente azul (B - ganador) */
+      const gb = mk('linearGradient', { id: 'cd-gb', x1:'0', y1:'0', x2:'0', y2:'1' });
+      gb.appendChild(mk('stop', { offset:'0%',   'stop-color': BLUE, 'stop-opacity':'0.22' }));
+      gb.appendChild(mk('stop', { offset:'100%', 'stop-color': BLUE, 'stop-opacity':'0.01' }));
+      /* Gradiente gris (A) */
+      const ga = mk('linearGradient', { id: 'cd-ga', x1:'0', y1:'0', x2:'0', y2:'1' });
+      ga.appendChild(mk('stop', { offset:'0%',   'stop-color': GRAY, 'stop-opacity':'0.12' }));
+      ga.appendChild(mk('stop', { offset:'100%', 'stop-color': GRAY, 'stop-opacity':'0.01' }));
+      defs.appendChild(gb); defs.appendChild(ga);
+      svg.appendChild(defs);
+
+      const g = mk('g', {});
+
+      /* Grid horizontal sutil */
+      [0, 7, 14, 21, 28].forEach(v => {
+        const y = sy(v);
+        g.appendChild(mk('line', { x1: PL, y1: y, x2: PL+CW, y2: y, stroke: GRID, 'stroke-width': v===0?'1.5':'1', 'stroke-dasharray': v===0?'':'4 6' }));
+        g.appendChild(mk('text', { x: PL-10, y: y+4.5, 'text-anchor':'end', fill: LABEL, 'font-size':'11', 'font-family': fnt, 'font-weight':'400' }, `${v}`));
+      });
+
+      const ptsA = buildPts('a'), ptsB = buildPts('b');
+
+      /* Areas */
+      if (ptsA.length > 1) g.appendChild(mk('path', { d: smooth(ptsA)+closeArea(ptsA), fill:'url(#cd-ga)' }));
+      if (ptsB.length > 1) g.appendChild(mk('path', { d: smooth(ptsB)+closeArea(ptsB), fill:'url(#cd-gb)' }));
+
+      /* Líneas */
+      if (ptsA.length > 1) g.appendChild(mk('path', { d: smooth(ptsA), fill:'none', stroke: GRAY, 'stroke-width':'2', 'stroke-linecap':'round', 'stroke-linejoin':'round' }));
+      if (ptsB.length > 1) g.appendChild(mk('path', { d: smooth(ptsB), fill:'none', stroke: BLUE, 'stroke-width':'2.8', 'stroke-linecap':'round', 'stroke-linejoin':'round' }));
+
+      /* Dots en cada año (solo los que el sweep ya alcanzó) */
+      DATA.forEach((d, i) => {
+        if (sx(i) > PL + ease(prog) * CW + 2) return;
+        g.appendChild(mk('circle', { cx: sx(i), cy: sy(d.a), r:'4', fill:'#fff', stroke: GRAY, 'stroke-width':'2' }));
+        g.appendChild(mk('circle', { cx: sx(i), cy: sy(d.b), r:'5', fill:'#fff', stroke: BLUE, 'stroke-width':'2.5' }));
+      });
+
+      /* Dot animado en la punta de B */
+      if (ptsB.length > 0) {
+        const tip = ptsB[ptsB.length-1];
+        g.appendChild(mk('circle', { cx: tip[0], cy: tip[1], r:'5', fill: BLUE }));
+        if (prog < 0.99) {
+          const pr = 5 + 10*(1-(prog%1));
+          g.appendChild(mk('circle', { cx: tip[0], cy: tip[1], r: pr, fill:'none', stroke: BLUE, 'stroke-width':'1.2', opacity: 0.25*(1-prog%1) }));
+        }
+      }
+
+      /* Etiquetas año */
+      DATA.forEach((d, i) => {
+        g.appendChild(mk('text', { x: sx(i), y: VH-10, 'text-anchor':'middle', fill: LABEL, 'font-size':'12', 'font-family': fnt, 'font-weight':'400' }, d.label));
+      });
+
+      /* Labels finales en chip */
+      if (prog > 0.88) {
+        const fade = ease(Math.min(1, (prog-0.88)/0.12));
+        const lastA = ptsA[ptsA.length-1], lastB = ptsB[ptsB.length-1];
+        if (lastA) {
+          g.appendChild(mk('rect', { x: PL+CW+6, y: lastA[1]-11, width: 38, height: 20, rx:10, fill: GRAY, opacity: fade*0.15 }));
+          g.appendChild(mk('text', { x: PL+CW+25, y: lastA[1]+4, fill: GRAY, 'font-size':'12', 'font-family': fnt, 'font-weight':'600', 'text-anchor':'middle', opacity: fade }, '10'));
+        }
+        if (lastB) {
+          g.appendChild(mk('rect', { x: PL+CW+6, y: lastB[1]-13, width: 38, height: 22, rx:11, fill: BLUE, opacity: fade*0.15 }));
+          g.appendChild(mk('text', { x: PL+CW+25, y: lastB[1]+4, fill: BLUE, 'font-size':'13', 'font-family': fnt, 'font-weight':'700', 'text-anchor':'middle', opacity: fade }, '26'));
+        }
+      }
+
+      svg.appendChild(g);
+
+      if (prog > 0.4 && !statsAnimated) {
+        statsAnimated = true;
+        animateStat(document.getElementById('cd-statGrowth'), 232, '+', '%', 1100);
+        animateStat(document.getElementById('cd-statB'), 26, '', ' mdp', 1100);
+        animateStat(document.getElementById('cd-statA'), 10, '', ' mdp', 1100);
+      }
+    }
+
+    function buildComparisonBars(prog) {
+      const svg = document.getElementById('cd-comparisonSvg');
+      if (!svg) return;
+      svg.innerHTML = '';
+      const BLUE  = '#3b5bdb';
+      const GRAY  = '#94a3b8';
+      const LABEL = '#64748b';
+      const GRID  = '#f1f5f9';
+      const fnt   = 'DM Sans, system-ui, sans-serif';
+      const ease  = p => 1 - Math.pow(1 - p, 3);
+      const e     = ease(prog);
+
+      const VW = 960, VH = 380;
+      const PAD = 80, TOP = 70, BOT = 50;
+      const baseline = VH - BOT;
+      const maxBar   = VH - TOP - BOT - 10;
+      const maxV     = 28;
+      /* A (gris) izquierda, B (azul) derecha dentro de cada grupo */
+      const GAP_BETWEEN = 20, BAR_W = 90, GROUP_GAP = 120;
+      const groupW = BAR_W * 2 + GAP_BETWEEN;
+      const totalW = groupW * 2 + GROUP_GAP;
+      const startX = (VW - totalW) / 2;
+
+      const groups = [
+        { label: '2020', x: startX,
+          bars: [
+            { name: 'Mun. A', value: 7.8,  color: GRAY, textColor: LABEL },
+            { name: 'Mun. B', value: 8,    color: BLUE, textColor: BLUE  },
+          ]
+        },
+        { label: '2024', x: startX + groupW + GROUP_GAP,
+          bars: [
+            { name: 'Mun. A', value: 10,   color: GRAY, textColor: LABEL },
+            { name: 'Mun. B', value: 26,   color: BLUE, textColor: BLUE  },
+          ]
+        },
+      ];
+
+      /* Líneas de grid horizontales */
+      [0, 7, 14, 21, 28].forEach(v => {
+        const y = baseline - (v / maxV) * maxBar;
+        svg.appendChild(mk('line', { x1: PAD/2, y1: y, x2: VW - PAD/2, y2: y,
+          stroke: GRID, 'stroke-width': v===0 ? '1.5' : '1' }));
+        if (v > 0) svg.appendChild(mk('text', { x: PAD/2 - 8, y: y+4, 'text-anchor':'end',
+          fill: LABEL, 'font-size':'11', 'font-family': fnt }, `${v}`));
+      });
+
+      /* Separador vertical entre grupos — línea punteada */
+      const midX = startX + groupW + GROUP_GAP / 2;
+      svg.appendChild(mk('line', { x1: midX, y1: TOP-10, x2: midX, y2: baseline,
+        stroke: '#cbd5e1', 'stroke-width':'1.2', 'stroke-dasharray':'5 6' }));
+
+      groups.forEach(group => {
+        /* Etiqueta de año como pill */
+        const pillW = 64, pillH = 28, pillX = group.x + groupW/2 - pillW/2;
+        svg.appendChild(mk('rect', { x: pillX, y: TOP-48, width: pillW, height: pillH,
+          rx: pillH/2, fill: '#f1f5f9' }));
+        svg.appendChild(mk('text', { x: group.x + groupW/2, y: TOP-29,
+          fill: '#475569', 'font-size':'14', 'font-family': fnt, 'font-weight':'600',
+          'letter-spacing':'0.06em', 'text-anchor':'middle' }, group.label));
+
+        group.bars.forEach((bar, i) => {
+          const x   = group.x + i * (BAR_W + GAP_BETWEEN);
+          const h   = (bar.value / maxV) * maxBar * e;
+          const y   = baseline - h;
+          const val = bar.value % 1 === 0 ? String(bar.value) : bar.value.toFixed(1);
+
+          /* Barra con solo esquinas superiores redondeadas */
+          const r = 10;
+          const bx = x, by = Math.max(y, baseline - maxBar);
+          const bh = Math.max(1, h);
+          const barPath = `M ${bx+r} ${by} h ${BAR_W-2*r} a ${r} ${r} 0 0 1 ${r} ${r} v ${bh-r} h -${BAR_W} v -${bh-r} a ${r} ${r} 0 0 1 ${r} -${r} Z`;
+          svg.appendChild(mk('path', { d: barPath, fill: bar.color,
+            opacity: bar.color === BLUE ? '0.9' : '0.55' }));
+
+          /* Valor sobre la barra */
+          if (e > 0.1) {
+            const fontSize = bar.value >= 20 ? 20 : 15;
+            svg.appendChild(mk('text', { x: x + BAR_W/2, y: y - 10,
+              fill: bar.textColor, 'font-size': fontSize, 'font-family': fnt,
+              'font-weight':'700', 'text-anchor':'middle',
+              opacity: Math.min(1, e * 1.4) }, val));
+          }
+
+          /* Nombre debajo */
+          svg.appendChild(mk('text', { x: x + BAR_W/2, y: baseline + 26,
+            fill: bar.color === BLUE ? BLUE : LABEL,
+            'font-size':'13', 'font-family': fnt, 'font-weight':'500',
+            'text-anchor':'middle' }, bar.name));
+
+          /* Badge +232% dentro de la barra ganadora */
+          if (bar.value === 26 && prog > 0.5) {
+            const badgeO = Math.min(1, (prog-0.5)/0.3);
+            const bady = y + h * 0.45;
+            svg.appendChild(mk('rect', { x: x+BAR_W/2-28, y: bady-14, width:56, height:24,
+              rx:12, fill:'rgba(255,255,255,0.22)', opacity: badgeO }));
+            svg.appendChild(mk('text', { x: x+BAR_W/2, y: bady+5,
+              fill:'#ffffff', 'font-size':'13', 'font-family': fnt, 'font-weight':'700',
+              'text-anchor':'middle', opacity: badgeO }, '+232%'));
+          }
+        });
+      });
+    }
+
+    function injectHTML(container) {
+      container.innerHTML = `
+        <style>
+          /* ── Breakout full-width ── */
+          #cd-cost-inject-wrapper {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0 clamp(1.5rem, 5vw, 4rem);
+            box-sizing: border-box;
+          }
+          #cd-cost-inject { font-family: 'DM Sans', Helvetica, sans-serif; max-width: 1200px; margin: 0 auto; }
+
+          /* ── Chart + stat cards ── */
+          #cd-cost-inject .cd-chart-section {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 1.8rem;
+            align-items: stretch;
+            margin-bottom: 2rem;
+          }
+          #cd-cost-inject .cd-chart-col {
+            border: 1px solid hsl(var(--border,214 32% 91%));
+            border-radius: 20px;
+            background: hsl(var(--card,0 0% 100%));
+            padding: 2rem 2rem 1.4rem;
+            display: flex; flex-direction: column; gap: 1.2rem;
+            min-height: 323px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+          }
+          #cd-cost-inject .cd-chart-col-header { display: flex; align-items: center; gap: 1.6rem; }
+          #cd-cost-inject .cd-legend-item {
+            display: flex; align-items: center; gap: 0.5rem;
+            font-size: 0.72rem; font-weight: 600;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            color: hsl(var(--muted-foreground,215 16% 47%));
+          }
+          #cd-cost-inject .cd-legend-pip { width: 22px; height: 3px; border-radius: 2px; }
+          #cd-cost-inject .cd-chart-wrap { flex: 1; min-height: 0; }
+          #cd-cost-inject .cd-chart-svg { width: 100%; height: 100%; display: block; overflow: visible; min-height: 238px; }
+
+          /* ── Stat cards ── */
+          #cd-cost-inject .cd-stat-cards {
+            display: flex; flex-direction: column; gap: 14px;
+          }
+          #cd-cost-inject .cd-stat-card {
+            background: hsl(var(--card,0 0% 100%));
+            border: 1px solid hsl(var(--border,214 32% 91%));
+            border-radius: 16px;
+            padding: 1.6rem 1.8rem 1.4rem;
+            display: flex; flex-direction: column; gap: 0.35rem; flex: 1;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+            transition: box-shadow 200ms;
+          }
+          #cd-cost-inject .cd-stat-card:hover {
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+          }
+          #cd-cost-inject .cd-stat-card.accent {
+            background: linear-gradient(135deg, #3b5bdb 0%, #2d4bbd 100%);
+            border-color: transparent;
+            flex: 1.5;
+            box-shadow: 0 8px 32px rgba(59,91,219,0.35), 0 2px 8px rgba(59,91,219,0.2);
+          }
+          #cd-cost-inject .cd-stat-card.accent:hover {
+            box-shadow: 0 12px 40px rgba(59,91,219,0.45), 0 4px 12px rgba(59,91,219,0.25);
+          }
+          #cd-cost-inject .cd-stat-label {
+            font-size: 0.65rem; font-weight: 600;
+            letter-spacing: 0.14em; text-transform: uppercase;
+            color: hsl(var(--muted-foreground,215 16% 47%));
+          }
+          #cd-cost-inject .cd-stat-card.accent .cd-stat-label { color: rgba(255,255,255,0.65); }
+          #cd-cost-inject .cd-stat-number {
+            font-size: clamp(2.2rem, 3.8vw, 3.6rem); font-weight: 200;
+            line-height: 1; letter-spacing: -0.025em;
+            color: hsl(var(--foreground,222 84% 5%)); font-variant-numeric: tabular-nums;
+          }
+          #cd-cost-inject .cd-stat-card.accent .cd-stat-number { color: #fff; }
+          #cd-cost-inject .cd-stat-sub {
+            font-size: 0.78rem; font-weight: 300;
+            color: hsl(var(--muted-foreground,215 16% 47%)); margin-top: 0.2rem;
+          }
+          #cd-cost-inject .cd-stat-card.accent .cd-stat-sub { color: rgba(255,255,255,0.6); }
+
+          /* ── Comparison bars ── */
+          #cd-cost-inject .cd-comparison-wrap {
+            border-radius: 20px; overflow: hidden;
+            border: 1px solid hsl(var(--border,214 32% 91%));
+            background: hsl(var(--card,0 0% 100%));
+            margin-bottom: 2rem;
+            min-height: 306px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+          }
+          #cd-cost-inject .cd-comparison-svg { display: block; width: 100%; height: auto; min-height: 306px; overflow: visible; }
+
+          @media (max-width: 780px) {
+            #cd-cost-inject .cd-chart-section { grid-template-columns: 1fr; }
+            #cd-cost-inject .cd-stat-cards { flex-direction: row; flex-wrap: wrap; }
+            #cd-cost-inject .cd-stat-card.accent { flex: 1 1 100%; }
+          }
+        </style>
+        <div id="cd-cost-inject-wrapper"><div id="cd-cost-inject">
+          <div class="cd-chart-section" id="cd-chartSection">
+            <div class="cd-chart-col">
+              <div class="cd-chart-col-header">
+                <span class="cd-legend-item"><span class="cd-legend-pip" style="background:#94a3b8"></span>Municipio A</span>
+                <span class="cd-legend-item"><span class="cd-legend-pip" style="background:#3b5bdb"></span>Municipio B</span>
+              </div>
+              <div class="cd-chart-wrap">
+                <svg id="cd-chartSvg" class="cd-chart-svg" viewBox="0 0 580 300" preserveAspectRatio="xMidYMid meet"></svg>
+              </div>
+            </div>
+            <div class="cd-stat-cards">
+              <div class="cd-stat-card accent">
+                <span class="cd-stat-label">Crecimiento · Municipio B</span>
+                <span class="cd-stat-number" id="cd-statGrowth">+0%</span>
+                <span class="cd-stat-sub">en 4 años</span>
+              </div>
+              <div class="cd-stat-card">
+                <span class="cd-stat-label">Recaudación · Municipio B</span>
+                <span class="cd-stat-number" id="cd-statB">0 mdp</span>
+                <span class="cd-stat-sub">al año 4</span>
+              </div>
+              <div class="cd-stat-card">
+                <span class="cd-stat-label">Recaudación · Municipio A</span>
+                <span class="cd-stat-number" id="cd-statA">0 mdp</span>
+                <span class="cd-stat-sub">al año 4</span>
+              </div>
+            </div>
+          </div>
+          <div class="cd-comparison-wrap">
+            <svg id="cd-comparisonSvg" class="cd-comparison-svg" viewBox="0 0 960 380" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+        </div></div>
+      `;
+
+      buildChart(0);
+      buildComparisonBars(0);
+
+      setTimeout(() => {
+        const t0 = performance.now(), dur = 1600;
+        function frame(now) {
+          const p = Math.min(1, (now - t0) / dur);
+          buildChart(p);
+          if (p < 1) requestAnimationFrame(frame); else chartDrawn = true;
+        }
+        requestAnimationFrame(frame);
+      }, 500);
+
+      setTimeout(() => {
+        const t0 = performance.now(), dur = 1300;
+        function frameBars(now) {
+          const p = Math.min(1, (now - t0) / dur);
+          buildComparisonBars(p);
+          if (p < 1) requestAnimationFrame(frameBars); else barsDrawn = true;
+        }
+        requestAnimationFrame(frameBars);
+      }, 760);
+    }
+
+    function tryInject() {
+      /* Busca el h2/h3 que contiene el título de la sección cost */
+      const all = document.querySelectorAll('h2, h3');
+      let target = null;
+      for (const el of all) {
+        if (el.textContent.includes('La información que no tienes')) {
+          target = el;
+          break;
+        }
+      }
+      if (!target) return false;
+
+      /* Subimos hasta encontrar el contenedor de sección */
+      let section = target;
+      for (let i = 0; i < 6; i++) {
+        if (!section.parentElement) break;
+        section = section.parentElement;
+        /* buscamos el contenedor que tiene la tabla */
+        if (section.querySelector('table')) break;
+      }
+
+      /* Reemplazamos solo el contenido después del párrafo intro */
+      const table = section.querySelector('table');
+      if (!table) return false;
+      const tableWrap = table.closest('div') || table.parentElement;
+      if (tableWrap) {
+        /* Ampliar el contenedor padre para que ocupe ancho completo */
+        let ancestor = tableWrap;
+        for (let i = 0; i < 4; i++) {
+          if (!ancestor.parentElement) break;
+          ancestor = ancestor.parentElement;
+          const style = window.getComputedStyle(ancestor);
+          if (style.maxWidth && parseInt(style.maxWidth) > 0 && parseInt(style.maxWidth) < 900) {
+            ancestor.style.maxWidth = 'none';
+          }
+        }
+        injectHTML(tableWrap);
+      }
+      return true;
+    }
+
+    /* React puede tardar en montar, usamos MutationObserver */
+    const observer = new MutationObserver(() => {
+      if (tryInject()) observer.disconnect();
+    });
+    observer.observe(document.getElementById('root') || document.body, { childList: true, subtree: true });
+    /* Fallback por si ya está montado */
+    setTimeout(() => { tryInject(); observer.disconnect(); }, 3000);
+  })();
+
+  /* ── Sección Resultados estilo Hero ── */
+  (function injectCasesHero() {
+    const CASES = [
+      {
+        tab:    'Gobierno',
+        title:  'El Salvador Maps',
+        copy:   'Un país entero sin cartografía moderna. El gobierno de El Salvador necesitaba mapear sus 20,742 km² para que sus instituciones pudieran tomar decisiones con información real y compartida.',
+        result: 'Hoy El Salvador está en Google Maps. Y sus instituciones comparten información geográfica en tiempo real.',
+        media:  'B-40F0BGieM',
+        type:   'youtube',
+      },
+      {
+        tab:    'Infraestructura',
+        title:  'Tren Maya',
+        copy:   'Trazar una vía férrea a través de selva densa sin visibilidad del terreno ni certeza sobre lo que hay debajo.',
+        result: 'El proyecto avanzó con certeza técnica, información precisa y sin sorpresas en campo.',
+        media:  'ltVx39NTzrE',
+        type:   'youtube',
+      },
+      {
+        tab:    'Municipio',
+        title:  'Tequila, Jalisco',
+        copy:   'El municipio de Tequila recaudaba menos de lo que le correspondía porque su catastro no reflejaba la realidad.',
+        result: 'La recaudación predial creció 232%. Sin subir un solo impuesto.',
+        media:  'WQ3NXpvWvhs',
+        type:   'youtube',
+      },
+    ];
+
+    let current = 0;
+
+    /* ── YouTube helpers ──────────────────────────── */
+    function ytSrc(id) {
+      return `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`;
+    }
+    function stopYT(i) {
+      const f = document.getElementById(`cd-media-${i}`);
+      if (f && CASES[i].type === 'youtube') f.src = ytSrc(CASES[i].media);
+    }
+
+    /* ── Inject ───────────────────────────────────── */
+    function injectCases(section) {
+      /* Ocultar COMPLETAMENTE la sección de React para que sus re-renders no afecten */
+      section.style.display = 'none';
+
+      const wrapper = document.createElement('div');
+      wrapper.id = 'cd-cases-hero-root';
+      wrapper.innerHTML = `
+      <style>
+        #cd-cases-hero-root {
+          width: 100vw; position: relative; left: 50%; transform: translateX(-50%);
+          background: #050816; overflow: hidden;
+          font-family: 'DM Sans', system-ui, sans-serif;
+        }
+        .cd-cases-header {
+          max-width: 1400px; margin: 0 auto;
+          padding: 3.5rem clamp(1.5rem,4vw,3rem) 0;
+        }
+        .cd-cases-eyebrow {
+          font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+          text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.9rem;
+        }
+        .cd-cases-heading {
+          font-size: clamp(1.6rem,3vw,2.4rem); font-weight: 300;
+          color: rgba(255,255,255,0.92); line-height: 1.15; margin: 0;
+        }
+        .cd-cases-wrap {
+          display: grid; grid-template-columns: 1fr 460px;
+          min-height: 560px; max-width: 1400px; margin: 0 auto;
+          padding: 2.5rem clamp(1.5rem,4vw,3rem) 3.5rem; gap: 2rem;
+        }
+        .cd-cases-media-col {
+          position: relative; overflow: hidden; border-radius: 20px; background: #0b1226;
+        }
+        .cd-cases-media-col img,
+        .cd-cases-media-col iframe {
+          position: absolute; inset: 0; width: 100%; height: 100%;
+          object-fit: cover; border: 0; transition: opacity 550ms ease;
+        }
+        /* El overlay solo para imágenes, no para el iframe de YT */
+        .cd-media-overlay {
+          position: absolute; inset: 0; pointer-events: none; z-index: 1;
+          background: linear-gradient(to right, transparent 55%, #050816 100%),
+                      linear-gradient(to top, rgba(5,8,22,.5) 0%, transparent 40%);
+        }
+        .cd-cases-cards-col {
+          display: flex; flex-direction: column; justify-content: center; gap: 10px;
+        }
+        .cd-case-card {
+          border-radius: 14px; padding: 1.3rem 1.5rem;
+          border: 1px solid rgba(255,255,255,0.07);
+          background: rgba(255,255,255,0.03);
+          cursor: pointer; transition: background 280ms, border-color 280ms;
+          position: relative; overflow: hidden;
+          backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        }
+        .cd-case-card.active {
+          background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16);
+        }
+        .cd-case-card:hover:not(.active) {
+          background: rgba(255,255,255,0.055); border-color: rgba(255,255,255,0.11);
+        }
+        .cd-case-tab {
+          font-size: 0.62rem; font-weight: 600; letter-spacing: 0.15em;
+          text-transform: uppercase; color: rgba(255,255,255,0.38);
+          margin-bottom: 0.35rem; display: block;
+        }
+        .cd-case-card.active .cd-case-tab { color: rgba(255,255,255,0.58); }
+        .cd-case-title {
+          font-size: 1rem; font-weight: 500; color: rgba(255,255,255,0.88); line-height: 1.3;
+        }
+        .cd-case-body {
+          max-height: 0; overflow: hidden; opacity: 0;
+          transition: max-height 480ms cubic-bezier(0.22,1,0.36,1), opacity 380ms;
+        }
+        .cd-case-card.active .cd-case-body { max-height: 220px; opacity: 1; }
+        .cd-case-copy {
+          font-size: 0.8rem; font-weight: 300; line-height: 1.7;
+          color: rgba(255,255,255,0.5); margin: 0.65rem 0 0.75rem;
+        }
+        .cd-case-result {
+          display: flex; gap: 0.5rem; align-items: flex-start;
+          font-size: 0.78rem; font-weight: 400; color: rgba(255,255,255,0.78); line-height: 1.5;
+        }
+        .cd-case-result-dot {
+          width: 6px; height: 6px; border-radius: 50%;
+          background: #3b5bdb; flex-shrink: 0; margin-top: 5px;
+        }
+        @media (max-width: 860px) {
+          .cd-cases-wrap { grid-template-columns: 1fr; }
+          .cd-cases-media-col { min-height: 240px; }
+        }
+      </style>
+      <div class="cd-cases-header">
+        <p class="cd-cases-eyebrow">Casos de éxito</p>
+        <h2 class="cd-cases-heading">Resultados que hablan por sí solos.</h2>
+      </div>
+      <div class="cd-cases-wrap">
+        <div class="cd-cases-media-col" id="cd-media-col">
+          <div class="cd-media-overlay" id="cd-media-overlay"></div>
+        </div>
+        <div class="cd-cases-cards-col" id="cd-cards-col"></div>
+      </div>`;
+
+      /* Insertar ANTES de la sección (fuera del árbol de React) */
+      section.parentElement.insertBefore(wrapper, section);
+      buildMediaCol();
+      buildCards();
+      initIntersection();
+    }
+
+    /* ── Media col ────────────────────────────────── */
+    function buildMediaCol() {
+      const col = document.getElementById('cd-media-col');
+      if (!col) return;
+      const overlay = col.querySelector('.cd-media-overlay');
+
+      CASES.forEach((c, i) => {
+        const frame = document.createElement('iframe');
+        frame.id  = `cd-media-${i}`;
+        frame.src = ytSrc(c.media);
+        frame.allow = 'encrypted-media; picture-in-picture; fullscreen';
+        frame.allowFullscreen = true;
+        frame.style.opacity   = i === 0 ? '1' : '0';
+        frame.style.transition = 'opacity 550ms ease';
+        col.insertBefore(frame, overlay);
+      });
+
+      /* El overlay no se necesita para iframes de YT */
+      if (overlay) overlay.style.display = 'none';
+    }
+
+    /* ── Cards ────────────────────────────────────── */
+    function buildCards() {
+      const col = document.getElementById('cd-cards-col');
+      if (!col) return;
+      CASES.forEach((c, i) => {
+        const card = document.createElement('div');
+        card.className = 'cd-case-card' + (i === 0 ? ' active' : '');
+        card.id        = `cd-card-${i}`;
+        card.innerHTML = `
+          <span class="cd-case-tab">${c.tab}</span>
+          <div class="cd-case-title">${c.title}</div>
+          <div class="cd-case-body">
+            <p class="cd-case-copy">${c.copy}</p>
+            <div class="cd-case-result">
+              <span class="cd-case-result-dot"></span>
+              <span>${c.result}</span>
+            </div>
+          </div>`;
+        card.addEventListener('click', () => goTo(i));
+        col.appendChild(card);
+      });
+    }
+
+    /* ── Navegación (solo por click) ──────────────── */
+    function goTo(idx) {
+      const prev = current;
+      /* Detener iframe anterior */
+      stopYT(prev);
+      document.getElementById(`cd-media-${prev}`)?.style.setProperty('opacity','0');
+      /* Mostrar nuevo */
+      document.getElementById(`cd-media-${idx}`)?.style.setProperty('opacity','1');
+      /* Tarjetas */
+      document.getElementById(`cd-card-${prev}`)?.classList.remove('active');
+      document.getElementById(`cd-card-${idx}`)?.classList.add('active');
+      current = idx;
+    }
+
+    /* ── Detener YT al salir del viewport ─────────── */
+    function initIntersection() {
+      const target = document.getElementById('cd-cases-hero-root');
+      if (!target) return;
+      new IntersectionObserver(entries => {
+        if (!entries[0].isIntersecting) stopYT(current);
+      }, { threshold: 0.1 }).observe(target);
+    }
+
+    /* ── Inyección con observer ───────────────────── */
+    function tryInjectCases() {
+      const all = document.querySelectorAll('h2, h3');
+      for (const el of all) {
+        if (el.textContent.includes('Resultados que hablan')) {
+          let section = el;
+          for (let i = 0; i < 6; i++) {
+            if (!section.parentElement) break;
+            section = section.parentElement;
+            if (section.querySelector('.grid, [class*="grid-cols"]')) break;
+          }
+          injectCases(section);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    const obs2 = new MutationObserver(() => {
+      if (tryInjectCases()) obs2.disconnect();
+    });
+    obs2.observe(document.getElementById('root') || document.body, { childList: true, subtree: true });
+    setTimeout(() => { tryInjectCases(); obs2.disconnect(); }, 3500);
+  })();
+  /* ── Fix: números 1-5 visibles en sección Procesos ── */
+  (function fixStepNumbers() {
+    function applyFix() {
+      /* Buscar todos los elementos que contengan solo un dígito 1-5 y estén dentro de la sección de procesos */
+      const headings = [...document.querySelectorAll('h2,h3')];
+      const processH = headings.find(h => h.textContent.includes('De información dispersa'));
+      if (!processH) return false;
+
+      /* Subir hasta la sección contenedora */
+      let section = processH;
+      for (let i = 0; i < 8; i++) {
+        if (!section.parentElement) break;
+        section = section.parentElement;
+        if (section.tagName === 'SECTION' || section.id) break;
+      }
+
+      /* Buscar elementos pequeños cuyo texto sea exactamente "1" a "5" */
+      const allEls = section.querySelectorAll('*');
+      let found = 0;
+      for (const el of allEls) {
+        const txt = el.textContent.trim();
+        if (/^[1-5]$/.test(txt) && el.children.length === 0) {
+          el.style.cssText += `
+            color: #ffffff !important;
+            background: rgba(59,91,219,0.85) !important;
+            border: 2px solid rgba(255,255,255,0.5) !important;
+            border-radius: 50% !important;
+            width: 2rem !important; height: 2rem !important;
+            min-width: 2rem !important;
+            display: flex !important; align-items: center !important; justify-content: center !important;
+            font-weight: 700 !important; font-size: 0.9rem !important;
+            box-shadow: 0 0 0 4px rgba(59,91,219,0.25) !important;
+          `;
+          found++;
+        }
+      }
+      return found >= 3;
+    }
+
+    const obs = new MutationObserver(() => { if (applyFix()) obs.disconnect(); });
+    obs.observe(document.getElementById('root') || document.body, { childList: true, subtree: true });
+    setTimeout(() => { applyFix(); }, 3000);
+  })();
+
+  /* ── Sección Nuestro Equipo — carrusel con timer ── */
+  (function injectTeamCarousel() {
+    const SLIDES = [
+      { src: '/equipo.avif',    label: 'Equipo Guadalajara' },
+      { src: '/equipo-nl.avif', label: 'Equipo Nuevo León'  },
+      { src: '/equipo-sv.avif', label: 'Equipo El Salvador' },
+    ];
+    const DURATION = 5000;
+    let current = 0, raf = null, start = null, paused = false;
+
+    function inject() {
+      if (document.getElementById('cd-team-root')) return true;
+      const section = document.getElementById('equipo');
+      if (!section) return false;
+
+      section.style.setProperty('display', 'none', 'important');
+
+      const wrapper = document.createElement('div');
+      wrapper.id = 'cd-team-root';
+      wrapper.innerHTML = `
+        <style>
+          #cd-team-root {
+            width: 100vw; position: relative; left: 50%; transform: translateX(-50%);
+            overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif;
+            background: #050816;
+          }
+          .cd-team-stage {
+            position: relative; width: 100%; height: 90vh; min-height: 520px;
+          }
+          .cd-team-slide {
+            position: absolute; inset: 0;
+            opacity: 0; transition: opacity 800ms ease;
+          }
+          .cd-team-slide.active { opacity: 1; }
+          .cd-team-slide img {
+            width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;
+          }
+          .cd-team-slide .cd-team-blue {
+            position: absolute; inset: 0;
+            background: linear-gradient(160deg, rgba(30,64,175,0.22) 0%, rgba(59,91,219,0.14) 50%, rgba(5,8,22,0.38) 100%);
+            mix-blend-mode: multiply;
+          }
+          .cd-team-slide .cd-team-grad {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(5,8,22,0.75) 0%, transparent 48%);
+          }
+          /* Texto inferior */
+          .cd-team-bottom {
+            position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
+            padding: clamp(2rem,5vw,3.5rem) clamp(1.5rem,6vw,5rem);
+            display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem;
+          }
+          .cd-team-text-col {}
+          .cd-team-eyebrow {
+            font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em;
+            text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 0.6rem;
+          }
+          .cd-team-title {
+            font-size: clamp(2rem,4vw,3.4rem); font-weight: 300;
+            color: #fff; line-height: 1.1; margin: 0;
+            text-shadow: 0 2px 24px rgba(5,8,22,0.5);
+          }
+          .cd-team-label {
+            font-size: clamp(1rem,2vw,1.4rem); font-weight: 400;
+            color: rgba(255,255,255,0.75); margin: 0.4rem 0 0;
+            transition: opacity 400ms;
+          }
+          /* Dots + timer */
+          .cd-team-dots {
+            display: flex; gap: 10px; align-items: center; flex-shrink: 0;
+          }
+          .cd-team-dot {
+            position: relative; width: 36px; height: 3px; border-radius: 2px;
+            background: rgba(255,255,255,0.25); cursor: pointer; overflow: hidden;
+            transition: background 200ms;
+          }
+          .cd-team-dot.active { background: rgba(255,255,255,0.35); }
+          .cd-team-dot-fill {
+            position: absolute; inset: 0; width: 0%;
+            background: #fff; border-radius: 2px;
+          }
+          .cd-team-dot.active .cd-team-dot-fill { transition: none; }
+        </style>
+
+        <div class="cd-team-stage" id="cd-team-stage">
+          ${SLIDES.map((s,i) => `
+          <div class="cd-team-slide${i===0?' active':''}" id="cd-ts-${i}">
+            <img src="${s.src}" alt="${s.label}" />
+            <div class="cd-team-blue"></div>
+            <div class="cd-team-grad"></div>
+          </div>`).join('')}
+
+          <div class="cd-team-bottom">
+            <div class="cd-team-text-col">
+              <p class="cd-team-eyebrow">Nuestro equipo</p>
+              <h2 class="cd-team-title">CartoData</h2>
+              <p class="cd-team-label" id="cd-team-label">${SLIDES[0].label}</p>
+            </div>
+            <div class="cd-team-dots" id="cd-team-dots">
+              ${SLIDES.map((_,i) => `
+              <div class="cd-team-dot${i===0?' active':''}" id="cd-td-${i}" data-i="${i}">
+                <div class="cd-team-dot-fill" id="cd-tf-${i}"></div>
+              </div>`).join('')}
+            </div>
+          </div>
+        </div>`;
+
+      section.parentElement.insertBefore(wrapper, section);
+
+      /* Eventos en dots */
+      SLIDES.forEach((_,i) => {
+        document.getElementById(`cd-td-${i}`).addEventListener('click', () => goTo(i));
+      });
+
+      /* Pausa al hover */
+      wrapper.addEventListener('mouseenter', () => { paused = true; });
+      wrapper.addEventListener('mouseleave', () => {
+        paused = false;
+        start = performance.now() - (progress() * DURATION);
+      });
+
+      startTimer();
+      return true;
+    }
+
+    function progress() {
+      if (!start) return 0;
+      return Math.min(1, (performance.now() - start) / DURATION);
+    }
+
+    function goTo(idx) {
+      document.getElementById(`cd-ts-${current}`)?.classList.remove('active');
+      document.getElementById(`cd-td-${current}`)?.classList.remove('active');
+      document.getElementById(`cd-tf-${current}`).style.width = '0%';
+      document.getElementById(`cd-ts-${idx}`)?.classList.add('active');
+      document.getElementById(`cd-td-${idx}`)?.classList.add('active');
+      document.getElementById('cd-team-label').textContent = SLIDES[idx].label;
+      current = idx;
+      start = performance.now();
+    }
+
+    function startTimer() {
+      start = performance.now();
+      function tick() {
+        raf = requestAnimationFrame(tick);
+        if (paused) return;
+        const p = progress();
+        const fill = document.getElementById(`cd-tf-${current}`);
+        if (fill) fill.style.width = (p * 100) + '%';
+        if (p >= 1) goTo((current + 1) % SLIDES.length);
+      }
+      raf = requestAnimationFrame(tick);
+    }
+
+    const obs = new MutationObserver(() => { if (inject()) obs.disconnect(); });
+    obs.observe(document.getElementById('root') || document.body, { childList: true, subtree: true });
+    setTimeout(() => { inject(); obs.disconnect(); }, 3500);
+  })();
+  /* ── Modal Aviso de Privacidad ── */
+  (function initPrivacyModal() {
+    const HTML = `
+    <style>
+      #cd-privacy-backdrop {
+        display: none; position: fixed; inset: 0; z-index: 9999;
+        background: rgba(5,8,22,0.72); backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        align-items: center; justify-content: center; padding: 1.5rem;
+      }
+      #cd-privacy-backdrop.open { display: flex; }
+      #cd-privacy-modal {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        width: 100%; max-width: 780px; max-height: 88vh;
+        display: flex; flex-direction: column;
+        box-shadow: 0 32px 80px rgba(5,8,22,0.45);
+        font-family: 'DM Sans', system-ui, sans-serif;
+        color: #0f172a;
+        overflow: hidden;
+      }
+      #cd-privacy-header {
+        display: flex; justify-content: space-between; align-items: flex-start;
+        padding: 2rem 2rem 1.2rem; border-bottom: 1px solid #e2e8f0;
+        flex-shrink: 0; background: #ffffff;
+      }
+      #cd-privacy-header h2 {
+        font-size: 1.15rem; font-weight: 600; margin: 0 0 0.2rem; color: #0f172a;
+      }
+      #cd-privacy-header p {
+        font-size: 0.78rem; font-weight: 400; margin: 0; color: #64748b;
+      }
+      #cd-privacy-close {
+        width: 36px; height: 36px; border-radius: 50%; border: 1px solid #e2e8f0;
+        background: #ffffff; cursor: pointer; display: grid; place-items: center;
+        flex-shrink: 0; margin-left: 1rem; color: #64748b;
+        transition: background 180ms, color 180ms;
+      }
+      #cd-privacy-close:hover { background: #f1f5f9; color: #0f172a; }
+      #cd-privacy-body {
+        overflow-y: auto; padding: 1.8rem 2rem 2rem; background: #ffffff;
+        font-size: 0.84rem; font-weight: 300; line-height: 1.8; color: #475569;
+        scrollbar-width: thin;
+      }
+      #cd-privacy-body h3 {
+        font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+        text-transform: uppercase; color: #0f172a;
+        margin: 1.8rem 0 0.6rem; padding-top: 1.2rem;
+        border-top: 1px solid #e2e8f0;
+      }
+      #cd-privacy-body h3:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+      #cd-privacy-body p { margin: 0 0 0.9rem; }
+      #cd-privacy-body ul { margin: 0.4rem 0 0.9rem 1.2rem; padding: 0; }
+      #cd-privacy-body li { margin-bottom: 0.4rem; }
+      #cd-privacy-body a { color: #3b5bdb; text-decoration: none; }
+      #cd-privacy-body a:hover { text-decoration: underline; }
+      #cd-privacy-body strong { color: #0f172a; font-weight: 500; }
+    </style>
+
+    <div id="cd-privacy-backdrop">
+      <div id="cd-privacy-modal" role="dialog" aria-modal="true" aria-labelledby="cd-privacy-title">
+        <div id="cd-privacy-header">
+          <div>
+            <h2 id="cd-privacy-title">Aviso de Privacidad</h2>
+            <p>CartoData 2.0 SC</p>
+          </div>
+          <button id="cd-privacy-close" aria-label="Cerrar">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/>
+            </svg>
+          </button>
+        </div>
+        <div id="cd-privacy-body">
+          <p>CartoData 2.0 SC., con domicilio en Circunvalación Oriente número 689, Colonia Ciudad Granja, Código Postal 45010, en la ciudad de Zapopan, Jalisco, México, (en adelante "CartoData"), con fundamento en los artículos 15 y 16 de la Ley Federal de Protección de Datos Personales en Posesión de Particulares, reconoce la importancia que tiene el tratamiento legítimo, controlado e informado de sus datos personales, por lo tanto, la información de nuestros clientes y clientes potenciales es tratada de forma estrictamente confidencial, por lo que hacemos un esfuerzo permanente para salvaguardarla.</p>
+          <p>En razón de lo anterior, CartoData pone a su conocimiento y disposición el presente Aviso de Privacidad, con el fin de que conozca los procedimientos que realiza en su carácter de responsable en el tratamiento de sus datos personales.</p>
+
+          <h3>Finalidad</h3>
+          <p>En CartoData estamos comprometidos a resguardar su información personal con los más altos índices de seguridad legal, tecnológica y administrativa, observando en todo momento los principios de licitud, consentimiento, información, calidad, finalidad, lealtad, proporcionalidad y responsabilidad. Su información personal será utilizada exclusivamente para:</p>
+          <ul>
+            <li>Prestarle los servicios o productos solicitados (Fotogrametría, Geodesia, Cartografía, levantamiento de censos, levantamientos topográficos, mapas, planos y bases de datos, teledetección, mapeo terrestre, desarrollo de software, geoprocesamiento de información).</li>
+            <li>Dar cumplimiento a requerimientos legales.</li>
+            <li>Llevar a cabo la facturación y cobro.</li>
+            <li>Formalizar contratos u otros documentos.</li>
+            <li>Mantener actualizados nuestros registros para responder a sus consultas.</li>
+            <li>Invitarle a eventos y comunicaciones relacionadas con nuestros servicios.</li>
+          </ul>
+
+          <h3>Datos Personales Tratados</h3>
+          <p><strong>Datos necesarios para la relación jurídica:</strong> Nombre completo, domicilio particular, fecha de nacimiento, CURP, número de teléfono (fijo o móvil), fax, correo electrónico, domicilio fiscal, RFC, datos de facturación, información de cuentas bancarias, actividad económica, polígonos de áreas de interés.</p>
+          <p><strong>Datos no necesarios para la relación jurídica:</strong> Cuentas de redes sociales.</p>
+
+          <h3>Transferencia de Datos</h3>
+          <p>CartoData no transferirá sin su consentimiento previo sus datos personales a personas ajenas a nuestra empresa, salvo por disposición de la Ley. Existiendo consentimiento, CartoData se obliga a comunicar al receptor de los datos el aviso de privacidad y las finalidades a las que usted sujetó su tratamiento.</p>
+
+          <h3>Medidas de Seguridad</h3>
+          <p>CartoData ha adoptado medidas de seguridad administrativas, físicas y técnicas para proteger sus datos personales contra daño, pérdida, alteración, destrucción o uso no autorizado. Sus datos personales serán tratados exclusivamente por las personas que requieran del conocimiento de dichos datos.</p>
+
+          <h3>Derechos ARCO</h3>
+          <p>Como titular de datos personales, usted puede ejercitar ante el Encargado de Protección de Datos Personales los derechos de <strong>Acceso, Rectificación, Cancelación y Oposición</strong>. Para ello, envíe su solicitud a <a href="mailto:privacidad@cartodata.com">privacidad@cartodata.com</a> o al domicilio indicado en este aviso. La solicitud deberá incluir:</p>
+          <ul>
+            <li>Nombre del titular y medio para comunicarle la respuesta.</li>
+            <li>Documentos que acrediten identidad o representación legal.</li>
+            <li>Descripción clara de los datos personales sobre los que se ejercerá el derecho.</li>
+            <li>Cualquier elemento que facilite la localización de los datos.</li>
+          </ul>
+          <p>La respuesta se emitirá en un plazo no mayor a <strong>15 días hábiles</strong> a partir de la solicitud. Usted también tiene derecho a iniciar un Procedimiento de Protección de Datos ante el IFAI (<a href="https://www.ifai.gob.mx" target="_blank">www.ifai.gob.mx</a>) dentro de los 15 días siguientes a la respuesta de CartoData.</p>
+
+          <h3>Cambios al Aviso de Privacidad</h3>
+          <p>Este aviso podrá ser modificado de tiempo en tiempo. Dichas modificaciones serán informadas a través de <a href="https://www.cartodata.com/privacidad" target="_blank">www.cartodata.com/privacidad</a> o cualquier otro medio de comunicación que CartoData determine.</p>
+
+          <h3>Contacto</h3>
+          <p>Para dudas o comentarios, contacte a nuestro Encargado de Protección de Datos Personales:<br>
+          <a href="mailto:privacidad@cartodata.com">privacidad@cartodata.com</a><br>
+          Circunvalación Oriente 689, Col. Ciudad Granja, C.P. 45010, Zapopan, Jalisco, México.</p>
+          <p>Al leer el presente Aviso de Privacidad, usted otorga su consentimiento a CartoData para recopilar y tratar sus datos personales para los fines descritos.</p>
+          <p style="margin-top:1.5rem; font-size:0.75rem; color:hsl(var(--muted-foreground,215 16% 47%))">Atentamente — <strong>CartoData 2.0 SC</strong></p>
+        </div>
+      </div>
+    </div>`;
+
+    document.body.insertAdjacentHTML('beforeend', HTML);
+
+    const backdrop = document.getElementById('cd-privacy-backdrop');
+    const closeBtn = document.getElementById('cd-privacy-close');
+
+    function openModal(e) {
+      e.preventDefault();
+      backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* Cerrar con botón, backdrop o Escape */
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    /* Interceptar el link del footer en cuanto React lo monte */
+    function hookLink() {
+      const links = document.querySelectorAll('a[href="#aviso-privacidad"], a[href*="privaci"]');
+      links.forEach(l => {
+        if (!l.dataset.cdHooked) {
+          l.dataset.cdHooked = '1';
+          l.addEventListener('click', openModal);
+        }
+      });
+      return links.length > 0;
+    }
+
+    const obs = new MutationObserver(() => hookLink());
+    obs.observe(document.body, { childList: true, subtree: true });
+    setTimeout(() => { hookLink(); }, 4000);
+  })();
+
+  /* ── Modal Términos y Condiciones ── */
+  (function initTermsModal() {
+    const el = document.createElement('div');
+    el.innerHTML = `
+      <style>
+        #cd-terms-backdrop {
+          display: none; position: fixed; inset: 0; z-index: 9999;
+          background: rgba(5,8,22,0.72); backdrop-filter: blur(4px);
+          align-items: center; justify-content: center; padding: 1.5rem;
+        }
+        #cd-terms-backdrop.open { display: flex; }
+        #cd-terms-modal {
+          background: #ffffff; color: #0f172a;
+          border: 1px solid #e2e8f0; border-radius: 16px;
+          width: 100%; max-width: 680px; max-height: 85vh;
+          display: flex; flex-direction: column;
+          box-shadow: 0 24px 80px rgba(5,8,22,0.35);
+          font-family: 'DM Sans', system-ui, sans-serif;
+        }
+        #cd-terms-header {
+          padding: 1.6rem 2rem 1.2rem;
+          border-bottom: 1px solid #e2e8f0;
+          display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+        }
+        #cd-terms-header h2 {
+          font-size: 1.25rem; font-weight: 600; margin: 0; color: #0f172a;
+        }
+        #cd-terms-header p {
+          font-size: 0.78rem; color: #64748b; margin: 0.25rem 0 0;
+        }
+        #cd-terms-close {
+          flex-shrink: 0; background: none; border: 1px solid #e2e8f0;
+          border-radius: 8px; padding: 0.4rem 0.75rem; cursor: pointer;
+          font-size: 0.8rem; color: #64748b; line-height: 1;
+        }
+        #cd-terms-close:hover { background: #f1f5f9; color: #0f172a; }
+        #cd-terms-body {
+          padding: 1.6rem 2rem; overflow-y: auto; font-size: 0.875rem;
+          line-height: 1.7; color: #374151;
+        }
+        #cd-terms-body h3 {
+          font-size: 0.95rem; font-weight: 600; color: #0f172a;
+          margin: 1.4rem 0 0.5rem; padding-top: 1.2rem;
+          border-top: 1px solid #f1f5f9;
+        }
+        #cd-terms-body h3:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+        #cd-terms-body p { margin: 0 0 0.9rem; }
+        #cd-terms-body ul { margin: 0.4rem 0 0.9rem 1.2rem; padding: 0; }
+        #cd-terms-body li { margin-bottom: 0.4rem; }
+        #cd-terms-body a { color: #3b5bdb; text-decoration: none; }
+        #cd-terms-body a:hover { text-decoration: underline; }
+        #cd-terms-body strong { color: #0f172a; font-weight: 500; }
+      </style>
+
+      <div id="cd-terms-backdrop">
+        <div id="cd-terms-modal" role="dialog" aria-modal="true" aria-labelledby="cd-terms-title">
+          <div id="cd-terms-header">
+            <div>
+              <h2 id="cd-terms-title">Términos y Condiciones</h2>
+              <p>Última actualización: junio 2025 · CartoData S. de R.L. de C.V.</p>
+            </div>
+            <button id="cd-terms-close" aria-label="Cerrar">Cerrar ✕</button>
+          </div>
+          <div id="cd-terms-body">
+            <h3>1. Aceptación de los Términos</h3>
+            <p>Al acceder y utilizar el sitio web <strong>www.cartodata.mx</strong> y los servicios de <strong>CartoData S. de R.L. de C.V.</strong> ("CartoData", "nosotros" o "la empresa"), usted acepta quedar vinculado por los presentes Términos y Condiciones. Si no está de acuerdo con alguno de estos términos, le pedimos abstenerse de usar nuestro sitio y servicios.</p>
+
+            <h3>2. Descripción de los Servicios</h3>
+            <p>CartoData ofrece soluciones geoespaciales que incluyen, sin limitarse a:</p>
+            <ul>
+              <li>Cartografía digital y análisis territorial.</li>
+              <li>Procesamiento de datos georreferenciados (GIS).</li>
+              <li>Consultoría en planeación urbana, infraestructura y medio ambiente.</li>
+              <li>Estudios de impacto ambiental y evaluaciones geoespaciales.</li>
+              <li>Desarrollo de plataformas y visualizaciones de datos geográficos.</li>
+            </ul>
+            <p>Los alcances específicos de cada proyecto se definen en el contrato o propuesta técnica firmada entre las partes.</p>
+
+            <h3>3. Propiedad Intelectual</h3>
+            <p>Todo el contenido publicado en este sitio —incluyendo textos, gráficas, mapas, metodologías, logotipos y software— es propiedad exclusiva de CartoData o de sus licenciantes, y está protegido por las leyes mexicanas e internacionales de propiedad intelectual.</p>
+            <p>Queda prohibida la reproducción, distribución o modificación de cualquier material sin autorización previa y por escrito de CartoData.</p>
+
+            <h3>4. Uso Permitido</h3>
+            <p>El usuario se compromete a utilizar el sitio y los servicios únicamente con fines lícitos y de conformidad con la legislación aplicable. En particular, queda prohibido:</p>
+            <ul>
+              <li>Usar el sitio para fines fraudulentos o ilegales.</li>
+              <li>Intentar acceder de forma no autorizada a sistemas o datos de CartoData.</li>
+              <li>Reproducir, revender o explotar comercialmente los servicios sin autorización expresa.</li>
+              <li>Transmitir virus, malware o cualquier código dañino.</li>
+            </ul>
+
+            <h3>5. Confidencialidad</h3>
+            <p>La información técnica, metodológica o estratégica compartida durante la prestación de servicios tendrá carácter confidencial. Ambas partes se obligan a no divulgarla a terceros sin consentimiento previo y por escrito, salvo requerimiento de autoridad competente.</p>
+
+            <h3>6. Limitación de Responsabilidad</h3>
+            <p>CartoData no será responsable de daños directos, indirectos, incidentales o consecuentes derivados del uso o la imposibilidad de uso del sitio o de los servicios, incluyendo errores en datos de terceros, interrupciones del servicio o decisiones tomadas con base en la información proporcionada.</p>
+            <p>La responsabilidad máxima de CartoData ante el cliente, en cualquier caso, se limitará al monto total pagado por el servicio específico que originó el reclamo.</p>
+
+            <h3>7. Protección de Datos Personales</h3>
+            <p>El tratamiento de los datos personales recabados a través de este sitio se rige por nuestro <strong>Aviso de Privacidad</strong>, disponible en el pie de página. CartoData cumple con la <em>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</em> y su Reglamento.</p>
+
+            <h3>8. Modificaciones</h3>
+            <p>CartoData se reserva el derecho de actualizar estos Términos y Condiciones en cualquier momento. Los cambios entrarán en vigor al momento de su publicación en este sitio. El uso continuado de los servicios constituye aceptación de las modificaciones.</p>
+
+            <h3>9. Jurisdicción y Ley Aplicable</h3>
+            <p>Estos términos se rigen por las leyes de los <strong>Estados Unidos Mexicanos</strong>. Para cualquier controversia derivada de su interpretación o cumplimiento, las partes se someten expresamente a la jurisdicción de los tribunales competentes de la ciudad de <strong>Guadalajara, Jalisco</strong>, renunciando a cualquier otro fuero que pudiera corresponderles.</p>
+
+            <h3>10. Contacto</h3>
+            <p>Para dudas o aclaraciones sobre estos Términos y Condiciones, escríbanos a <a href="mailto:contacto@cartodata.mx">contacto@cartodata.mx</a> o visítenos en nuestras oficinas en Guadalajara, Jalisco, México.</p>
+          </div>
+        </div>
+      </div>`;
+
+    document.body.appendChild(el);
+
+    const backdrop = document.getElementById('cd-terms-backdrop');
+    const closeBtn = document.getElementById('cd-terms-close');
+
+    function openModal(e) {
+      if (e) e.preventDefault();
+      backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    /* Exponer globalmente para poder llamar desde el footer */
+    window.openTermsModal = openModal;
+
+    /* Interceptar links del footer */
+    function hookLink() {
+      const links = document.querySelectorAll('a[href*="terminos"], a[href*="términos"], a[href*="terms"]');
+      links.forEach(l => {
+        if (!l.dataset.cdTermsHooked) {
+          l.dataset.cdTermsHooked = '1';
+          l.addEventListener('click', openModal);
+        }
+      });
+    }
+
+    const obs = new MutationObserver(() => hookLink());
+    obs.observe(document.body, { childList: true, subtree: true });
+    setTimeout(() => { hookLink(); }, 4000);
+
+    setTimeout(() => { hookLink(); }, 5000);
+  })();
+
+  /* ── Sección Herramientas — Hero con 3 slides y cards izquierda ── */
+  (function injectToolsHero() {
+    const SLIDES = [
+      {
+        key:   'procesos',
+        tab:   'Procesos',
+        img:   '/herr-procesos.jpg',
+        title: 'Procesos diseñados para la precisión territorial',
+        body:  'Estructuramos flujos de trabajo geoespaciales que transforman datos complejos en decisiones claras. Cada proceso está diseñado para reducir tiempos, eliminar errores y generar resultados reproducibles a cualquier escala.',
+        tags:  ['Metodología GIS', 'Análisis territorial', 'Flujos estructurados'],
+      },
+      {
+        key:   'datos',
+        tab:   'Datos',
+        img:   '/herr-datos.jpg',
+        title: 'Datos geoespaciales con la más alta resolución',
+        body:  'Integramos fuentes propias, satelitales y de campo para construir bases de datos georreferenciadas robustas. Información actualizada, validada y lista para análisis avanzados o visualización en tiempo real.',
+        tags:  ['Imágenes satelitales', 'Levantamiento de campo', 'Bases georef'],
+      },
+      {
+        key:   'software',
+        tab:   'Software',
+        img:   '/herr-software.jpg',
+        title: 'Plataformas propias para cada reto geoespacial',
+        body:  'eCarto y nuestras herramientas propias permiten consultar, analizar y gestionar información geográfica desde cualquier dispositivo. Sin licencias de terceros, sin limitaciones: tecnología hecha a la medida de cada proyecto.',
+        tags:  ['eCarto Platform', 'Web GIS', 'Sin límites de usuario'],
+      },
+    ];
+    const DURATION = 6000;
+    let cur = 0, raf = null, t0 = null, paused = false;
+
+    function inject() {
+      if (document.getElementById('cd-tools-root')) return true;
+
+      /* Buscar sección por heading */
+      const all = document.querySelectorAll('h2, h3');
+      let section = null;
+      for (const el of all) {
+        if (el.textContent.includes('Herramientas que nadie')) {
+          section = el;
+          for (let i = 0; i < 8; i++) {
+            if (!section.parentElement) break;
+            section = section.parentElement;
+            const tag = section.tagName.toLowerCase();
+            if (tag === 'section' || tag === 'article' || section.id) break;
+          }
+          break;
+        }
+      }
+      if (!section) return false;
+
+      section.style.setProperty('display', 'none', 'important');
+
+      const wrapper = document.createElement('div');
+      wrapper.id = 'cd-tools-root';
+      wrapper.innerHTML = `
+        <style>
+          #cd-tools-root {
+            width: 100vw; position: relative; left: 50%; transform: translateX(-50%);
+            font-family: 'DM Sans', system-ui, sans-serif;
+          }
+          .cd-tools-stage {
+            position: relative; width: 100%; height: 100vh; min-height: 600px;
+            overflow: hidden; background: #050816;
+          }
+          /* Slides background */
+          .cd-tools-bg {
+            position: absolute; inset: 0;
+            opacity: 0; transition: opacity 900ms ease;
+          }
+          .cd-tools-bg.active { opacity: 1; }
+          .cd-tools-bg img {
+            width: 100%; height: 100%; object-fit: cover; object-position: center;
+            display: block;
+          }
+          .cd-tools-bg-grad {
+            position: absolute; inset: 0;
+            background: linear-gradient(to right,
+              rgba(5,8,22,0.88) 0%,
+              rgba(5,8,22,0.60) 45%,
+              rgba(5,8,22,0.15) 100%);
+          }
+          /* Layout */
+          .cd-tools-layout {
+            position: absolute; inset: 0;
+            display: flex; align-items: center;
+            padding: clamp(2rem,5vw,4rem) clamp(1.5rem,5vw,4rem);
+          }
+          .cd-tools-left {
+            display: flex; flex-direction: column; gap: 1rem;
+            max-width: 420px; width: 100%;
+          }
+          /* Tab buttons */
+          .cd-tools-tabs {
+            display: flex; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap;
+          }
+          .cd-tools-tab {
+            padding: 0.4rem 1.1rem; border-radius: 999px; cursor: pointer;
+            font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em;
+            text-transform: uppercase; border: 1px solid rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.55);
+            transition: all 200ms;
+          }
+          .cd-tools-tab.active {
+            background: rgba(255,255,255,0.18); color: #fff;
+            border-color: rgba(255,255,255,0.5);
+          }
+          /* Glass card */
+          .cd-tools-card {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border-radius: 20px; padding: 2rem 2rem 1.6rem;
+            opacity: 0; transform: translateY(12px);
+            transition: opacity 500ms ease, transform 500ms ease;
+          }
+          .cd-tools-card.visible { opacity: 1; transform: translateY(0); }
+          .cd-tools-card-eyebrow {
+            font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+            text-transform: uppercase; color: rgba(255,255,255,0.4);
+            margin-bottom: 0.7rem;
+          }
+          .cd-tools-card-title {
+            font-size: clamp(1.1rem,2vw,1.35rem); font-weight: 500;
+            color: #fff; line-height: 1.3; margin: 0 0 0.9rem;
+          }
+          .cd-tools-card-body {
+            font-size: 0.875rem; line-height: 1.7;
+            color: rgba(255,255,255,0.7); margin: 0 0 1.2rem;
+          }
+          .cd-tools-tags {
+            display: flex; flex-wrap: wrap; gap: 0.5rem;
+          }
+          .cd-tools-tag {
+            font-size: 0.72rem; padding: 0.25rem 0.75rem; border-radius: 999px;
+            background: rgba(59,91,219,0.3); border: 1px solid rgba(59,91,219,0.5);
+            color: rgba(255,255,255,0.8);
+          }
+          /* Progress dots (bottom of card) */
+          .cd-tools-dots {
+            display: flex; gap: 8px; margin-top: 1.4rem; align-items: center;
+          }
+          .cd-tools-dot {
+            position: relative; height: 3px; border-radius: 2px; overflow: hidden;
+            background: rgba(255,255,255,0.2); cursor: pointer; flex: 1; max-width: 40px;
+          }
+          .cd-tools-dot.active { background: rgba(255,255,255,0.3); }
+          .cd-tools-dot-fill {
+            position: absolute; inset: 0; width: 0%;
+            background: #fff; border-radius: 2px;
+          }
+          @media (max-width: 640px) {
+            .cd-tools-left { max-width: 100%; }
+            .cd-tools-stage { height: auto; min-height: 100svh; }
+          }
+        </style>
+
+        <div class="cd-tools-stage" id="cd-tools-stage">
+          <!-- Backgrounds -->
+          ${SLIDES.map((s,i) => `
+          <div class="cd-tools-bg${i===0?' active':''}" id="cd-tbg-${i}">
+            <img src="${s.img}" alt="${s.tab}" />
+            <div class="cd-tools-bg-grad"></div>
+          </div>`).join('')}
+
+          <div class="cd-tools-layout">
+            <div class="cd-tools-left">
+              <!-- Tabs -->
+              <div class="cd-tools-tabs">
+                ${SLIDES.map((s,i) => `
+                <button class="cd-tools-tab${i===0?' active':''}" id="cd-ttab-${i}" data-i="${i}">${s.tab}</button>`).join('')}
+              </div>
+
+              <!-- Card (single, updated on slide change) -->
+              <div class="cd-tools-card visible" id="cd-tools-card">
+                <p class="cd-tools-card-eyebrow" id="cd-tc-eye">CartoData</p>
+                <h2 class="cd-tools-card-title" id="cd-tc-title">${SLIDES[0].title}</h2>
+                <p class="cd-tools-card-body" id="cd-tc-body">${SLIDES[0].body}</p>
+                <div class="cd-tools-tags" id="cd-tc-tags">
+                  ${SLIDES[0].tags.map(t=>`<span class="cd-tools-tag">${t}</span>`).join('')}
+                </div>
+                <div class="cd-tools-dots">
+                  ${SLIDES.map((_,i) => `
+                  <div class="cd-tools-dot${i===0?' active':''}" id="cd-tdot-${i}" data-i="${i}">
+                    <div class="cd-tools-dot-fill" id="cd-tfill-${i}"></div>
+                  </div>`).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+
+      section.parentElement.insertBefore(wrapper, section);
+
+      /* Wire tabs & dots */
+      SLIDES.forEach((_,i) => {
+        document.getElementById(`cd-ttab-${i}`).addEventListener('click', () => goTo(i));
+        document.getElementById(`cd-tdot-${i}`).addEventListener('click', () => goTo(i));
+      });
+
+      wrapper.addEventListener('mouseenter', () => { paused = true; });
+      wrapper.addEventListener('mouseleave', () => {
+        paused = false;
+        t0 = performance.now() - (prog() * DURATION);
+      });
+
+      startTimer();
+      return true;
+    }
+
+    function prog() { return t0 ? Math.min(1, (performance.now() - t0) / DURATION) : 0; }
+
+    function goTo(idx) {
+      /* Hide old */
+      document.getElementById(`cd-tbg-${cur}`)?.classList.remove('active');
+      document.getElementById(`cd-ttab-${cur}`)?.classList.remove('active');
+      document.getElementById(`cd-tdot-${cur}`)?.classList.remove('active');
+      document.getElementById(`cd-tfill-${cur}`).style.width = '0%';
+
+      /* Animate card out */
+      const card = document.getElementById('cd-tools-card');
+      card.classList.remove('visible');
+
+      cur = idx;
+      const s = SLIDES[cur];
+
+      /* Show new bg + tab */
+      document.getElementById(`cd-tbg-${cur}`)?.classList.add('active');
+      document.getElementById(`cd-ttab-${cur}`)?.classList.add('active');
+      document.getElementById(`cd-tdot-${cur}`)?.classList.add('active');
+
+      /* Update card content */
+      document.getElementById('cd-tc-eye').textContent = 'CartoData · ' + s.tab;
+      document.getElementById('cd-tc-title').textContent = s.title;
+      document.getElementById('cd-tc-body').textContent = s.body;
+      document.getElementById('cd-tc-tags').innerHTML = s.tags.map(t=>`<span class="cd-tools-tag">${t}</span>`).join('');
+
+      setTimeout(() => card.classList.add('visible'), 80);
+      t0 = performance.now();
+    }
+
+    function startTimer() {
+      t0 = performance.now();
+      function tick() {
+        raf = requestAnimationFrame(tick);
+        if (paused) return;
+        const p = prog();
+        const fill = document.getElementById(`cd-tfill-${cur}`);
+        if (fill) fill.style.width = (p * 100) + '%';
+        if (p >= 1) goTo((cur + 1) % SLIDES.length);
+      }
+      raf = requestAnimationFrame(tick);
+    }
+
+    const obs = new MutationObserver(() => { if (inject()) obs.disconnect(); });
+    obs.observe(document.getElementById('root') || document.body, { childList: true, subtree: true });
+    setTimeout(() => { inject(); obs.disconnect(); }, 3500);
+  })();
+  </script>
+  </body>
+</html>
