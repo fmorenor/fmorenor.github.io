@@ -88,9 +88,9 @@
     .cd-dropdown {
       display: none; position: absolute; top: calc(100% + 10px); left: 50%;
       transform: translateX(-50%);
-      background: rgba(10,14,35,0.97);
-      backdrop-filter: blur(20px) saturate(160%);
-      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      background: rgba(20,20,20,0.75);
+      backdrop-filter: blur(20px) saturate(140%);
+      -webkit-backdrop-filter: blur(20px) saturate(140%);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 10px; padding: 6px;
       min-width: 160px; z-index: 10000;
