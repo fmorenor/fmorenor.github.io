@@ -147,23 +147,18 @@
     /* ── Hamburger button (mobile only) ── */
     .cd-nav-hamburger {
       display: none;
-      flex-direction: column; justify-content: center; align-items: center;
-      width: 36px; height: 36px; gap: 5px;
-      background: none; border: none; cursor: pointer; padding: 4px;
+      align-items: center; justify-content: center;
+      width: 36px; height: 36px;
+      background: none; border: none; cursor: pointer; padding: 0;
       border-radius: 8px; transition: background 150ms;
+      color: rgba(248,250,252,0.75); font-size: 1.5rem; font-weight: 300;
+      line-height: 1;
+      transition: transform 250ms, color 150ms, background 150ms;
     }
-    .cd-nav-hamburger:hover { background: rgba(255,255,255,0.07); }
-    .cd-nav-hamburger span {
-      display: block; width: 20px; height: 1.5px;
-      background: rgba(248,250,252,0.75);
-      border-radius: 2px;
-      transition: transform 250ms, opacity 250ms, width 250ms;
-      transform-origin: center;
-    }
-    .cd-nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-    .cd-nav-hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
-    .cd-nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-    html.light .cd-nav-hamburger span { background: rgba(15,23,42,0.7); }
+    .cd-nav-hamburger:hover { background: rgba(255,255,255,0.07); color: #f8fafc; }
+    .cd-nav-hamburger.open { transform: rotate(45deg); }
+    html.light .cd-nav-hamburger { color: rgba(15,23,42,0.7); }
+    html.light .cd-nav-hamburger:hover { color: #0f172a; }
     /* ── Mobile drawer ── */
     .cd-mobile-menu {
       display: none; position: fixed;
@@ -424,9 +419,7 @@
       <button id="cd-theme-btn" class="cd-nav-theme" aria-label="Cambiar tema">
         ${theme === 'dark' ? SVG_SUN : SVG_MOON}
       </button>
-      <button id="cd-hamburger" class="cd-nav-hamburger" aria-label="Menú" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+      <button id="cd-hamburger" class="cd-nav-hamburger" aria-label="Menú" aria-expanded="false">+</button>
     </div>`;
   document.body.insertBefore(nav, document.body.firstChild);
 
