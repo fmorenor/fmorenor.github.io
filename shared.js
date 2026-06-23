@@ -144,9 +144,100 @@
       .cd-nav { height: 80px; }
       .cd-nav-brand img { height: 40px; }
     }
+    /* ── Hamburger button (mobile only) ── */
+    .cd-nav-hamburger {
+      display: none;
+      flex-direction: column; justify-content: center; align-items: center;
+      width: 36px; height: 36px; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+      border-radius: 8px; transition: background 150ms;
+    }
+    .cd-nav-hamburger:hover { background: rgba(255,255,255,0.07); }
+    .cd-nav-hamburger span {
+      display: block; width: 20px; height: 1.5px;
+      background: rgba(248,250,252,0.75);
+      border-radius: 2px;
+      transition: transform 250ms, opacity 250ms, width 250ms;
+      transform-origin: center;
+    }
+    .cd-nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .cd-nav-hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+    .cd-nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    html.light .cd-nav-hamburger span { background: rgba(15,23,42,0.7); }
+    /* ── Mobile drawer ── */
+    .cd-mobile-menu {
+      display: none; position: fixed;
+      top: 64px; left: 0; right: 0; bottom: 0;
+      background: rgba(13,13,13,0.97);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      z-index: 9998; overflow-y: auto;
+      padding: 1rem 1.25rem 2rem;
+      font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+      flex-direction: column;
+    }
+    .cd-mobile-menu.open { display: flex; }
+    html.light .cd-mobile-menu {
+      background: rgba(248,250,252,0.97);
+      border-top-color: rgba(0,0,0,0.08);
+    }
+    .cd-mobile-item {
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    html.light .cd-mobile-item { border-bottom-color: rgba(0,0,0,0.06); }
+    .cd-mobile-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.9rem 0.25rem;
+      text-decoration: none;
+      color: rgba(248,250,252,0.75);
+      font-size: 0.8rem; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; background: none; border: none; width: 100%;
+      text-align: left; transition: color 150ms;
+    }
+    .cd-mobile-top:hover, .cd-mobile-top.open { color: #f8fafc; }
+    html.light .cd-mobile-top { color: rgba(15,23,42,0.6); }
+    html.light .cd-mobile-top:hover, html.light .cd-mobile-top.open { color: #0f172a; }
+    .cd-mobile-chevron {
+      width: 16px; height: 16px; flex-shrink: 0;
+      border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg); opacity: 0.5;
+      transition: transform 200ms; margin-right: 2px;
+    }
+    .cd-mobile-top.open .cd-mobile-chevron { transform: rotate(-135deg); opacity: 0.8; }
+    .cd-mobile-sub {
+      display: none; flex-direction: column;
+      padding: 0.25rem 0 0.75rem 0.75rem; gap: 0.1rem;
+    }
+    .cd-mobile-sub.open { display: flex; }
+    .cd-mobile-sub a {
+      padding: 0.6rem 0.75rem; border-radius: 8px;
+      text-decoration: none; color: rgba(248,250,252,0.55);
+      font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+      transition: color 120ms, background 120ms;
+    }
+    .cd-mobile-sub a:hover { color: #f8fafc; background: rgba(255,255,255,0.06); }
+    html.light .cd-mobile-sub a { color: rgba(15,23,42,0.5); }
+    html.light .cd-mobile-sub a:hover { color: #0f172a; background: rgba(0,0,0,0.04); }
+    .cd-mobile-link {
+      display: block; padding: 0.9rem 0.25rem;
+      text-decoration: none; color: rgba(248,250,252,0.75);
+      font-size: 0.8rem; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      transition: color 150ms;
+    }
+    .cd-mobile-link:hover { color: #f8fafc; }
+    html.light .cd-mobile-link { color: rgba(15,23,42,0.6); }
+    html.light .cd-mobile-link:hover { color: #0f172a; }
+    .cd-mobile-bottom {
+      margin-top: 1.25rem; display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.25rem;
+    }
     @media (max-width: 768px) {
       .cd-nav-links { display: none; }
       .cd-nav { padding: 0 1rem; }
+      .cd-nav-hamburger { display: flex; }
     }
 
     /* Footer */
@@ -268,6 +359,8 @@
     document.documentElement.classList.toggle('dark',  t === 'dark');
     const btn = document.getElementById('cd-theme-btn');
     if (btn) btn.innerHTML = t === 'dark' ? SVG_SUN : SVG_MOON;
+    const mbtn = document.getElementById('cd-mobile-theme');
+    if (mbtn) mbtn.innerHTML = t === 'dark' ? SVG_SUN : SVG_MOON;
     const logo = document.getElementById('cd-nav-logo');
     if (logo) logo.src = t === 'dark'
       ? './manus-storage/logo-white-h-proper_641226e9.png'
@@ -280,6 +373,8 @@
     document.documentElement.lang = l;
     const btn = document.getElementById('cd-lang-btn');
     if (btn) btn.textContent = l === 'es' ? 'EN' : 'ES';
+    const mbtn = document.getElementById('cd-mobile-lang');
+    if (mbtn) mbtn.textContent = l === 'es' ? 'EN' : 'ES';
     /* Actualizar texto de links del nav según idioma */
     updateNavLabels();
   }
@@ -329,8 +424,35 @@
       <button id="cd-theme-btn" class="cd-nav-theme" aria-label="Cambiar tema">
         ${theme === 'dark' ? SVG_SUN : SVG_MOON}
       </button>
+      <button id="cd-hamburger" class="cd-nav-hamburger" aria-label="Menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>`;
   document.body.insertBefore(nav, document.body.firstChild);
+
+  /* ── Mobile menu ── */
+  const mobileMenu = document.createElement('div');
+  mobileMenu.className = 'cd-mobile-menu';
+  mobileMenu.id = 'cd-mobile-menu';
+  mobileMenu.innerHTML = NAV_LINKS.map(l => {
+    if (l.children) {
+      return `<div class="cd-mobile-item">
+        <button class="cd-mobile-top" data-target="cd-sub-${l.label.replace(/\s/g,'')}">
+          ${l.label}
+          <span class="cd-mobile-chevron"></span>
+        </button>
+        <div class="cd-mobile-sub" id="cd-sub-${l.label.replace(/\s/g,'')}">
+          ${l.children.map(c => `<a href="${c.href}">${c.label}</a>`).join('')}
+        </div>
+      </div>`;
+    }
+    return `<div class="cd-mobile-item"><a href="${l.href}" class="cd-mobile-link">${l.label}</a></div>`;
+  }).join('') + `
+    <div class="cd-mobile-bottom">
+      <button id="cd-mobile-lang" class="cd-nav-lang" aria-label="Cambiar idioma">${lang === 'es' ? 'EN' : 'ES'}</button>
+      <button id="cd-mobile-theme" class="cd-nav-theme" aria-label="Cambiar tema">${theme === 'dark' ? SVG_SUN : SVG_MOON}</button>
+    </div>`;
+  document.body.insertBefore(mobileMenu, nav.nextSibling);
 
   /* Aplicar tema inicial */
   applyTheme(theme);
@@ -341,6 +463,43 @@
   });
   document.getElementById('cd-theme-btn').addEventListener('click', () => {
     applyTheme(theme === 'dark' ? 'light' : 'dark');
+  });
+
+  /* ── Hamburger / mobile menu logic ── */
+  const hamburger = document.getElementById('cd-hamburger');
+  function toggleMobileMenu(force) {
+    const open = force !== undefined ? force : !mobileMenu.classList.contains('open');
+    mobileMenu.classList.toggle('open', open);
+    hamburger.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  hamburger.addEventListener('click', () => toggleMobileMenu());
+
+  /* Mobile sub-accordion */
+  mobileMenu.querySelectorAll('.cd-mobile-top').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sub = document.getElementById(btn.dataset.target);
+      const isOpen = sub.classList.contains('open');
+      mobileMenu.querySelectorAll('.cd-mobile-sub').forEach(s => s.classList.remove('open'));
+      mobileMenu.querySelectorAll('.cd-mobile-top').forEach(b => b.classList.remove('open'));
+      if (!isOpen) { sub.classList.add('open'); btn.classList.add('open'); }
+    });
+  });
+
+  /* Close mobile menu on link click */
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => toggleMobileMenu(false));
+  });
+
+  /* Mobile lang/theme buttons mirror the main ones */
+  document.getElementById('cd-mobile-lang').addEventListener('click', () => {
+    applyLang(lang === 'es' ? 'en' : 'es');
+    document.getElementById('cd-mobile-lang').textContent = lang === 'es' ? 'EN' : 'ES';
+  });
+  document.getElementById('cd-mobile-theme').addEventListener('click', () => {
+    applyTheme(theme === 'dark' ? 'light' : 'dark');
+    document.getElementById('cd-mobile-theme').innerHTML = theme === 'dark' ? SVG_SUN : SVG_MOON;
   });
 
   /* Dropdowns — toggle al click, cerrar al hacer click fuera */
