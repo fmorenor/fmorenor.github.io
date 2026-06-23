@@ -354,8 +354,6 @@
     document.documentElement.classList.toggle('dark',  t === 'dark');
     const btn = document.getElementById('cd-theme-btn');
     if (btn) btn.innerHTML = t === 'dark' ? SVG_SUN : SVG_MOON;
-    const mbtn = document.getElementById('cd-mobile-theme');
-    if (mbtn) mbtn.innerHTML = t === 'dark' ? SVG_SUN : SVG_MOON;
     const logo = document.getElementById('cd-nav-logo');
     if (logo) logo.src = t === 'dark'
       ? './manus-storage/logo-white-h-proper_641226e9.png'
@@ -368,8 +366,6 @@
     document.documentElement.lang = l;
     const btn = document.getElementById('cd-lang-btn');
     if (btn) btn.textContent = l === 'es' ? 'EN' : 'ES';
-    const mbtn = document.getElementById('cd-mobile-lang');
-    if (mbtn) mbtn.textContent = l === 'es' ? 'EN' : 'ES';
     /* Actualizar texto de links del nav según idioma */
     updateNavLabels();
   }
@@ -440,11 +436,7 @@
       </div>`;
     }
     return `<div class="cd-mobile-item"><a href="${l.href}" class="cd-mobile-link">${l.label}</a></div>`;
-  }).join('') + `
-    <div class="cd-mobile-bottom">
-      <button id="cd-mobile-lang" class="cd-nav-lang" aria-label="Cambiar idioma">${lang === 'es' ? 'EN' : 'ES'}</button>
-      <button id="cd-mobile-theme" class="cd-nav-theme" aria-label="Cambiar tema">${theme === 'dark' ? SVG_SUN : SVG_MOON}</button>
-    </div>`;
+  }).join('');
   document.body.insertBefore(mobileMenu, nav.nextSibling);
 
   /* Aplicar tema inicial */
@@ -485,15 +477,6 @@
     a.addEventListener('click', () => toggleMobileMenu(false));
   });
 
-  /* Mobile lang/theme buttons mirror the main ones */
-  document.getElementById('cd-mobile-lang').addEventListener('click', () => {
-    applyLang(lang === 'es' ? 'en' : 'es');
-    document.getElementById('cd-mobile-lang').textContent = lang === 'es' ? 'EN' : 'ES';
-  });
-  document.getElementById('cd-mobile-theme').addEventListener('click', () => {
-    applyTheme(theme === 'dark' ? 'light' : 'dark');
-    document.getElementById('cd-mobile-theme').innerHTML = theme === 'dark' ? SVG_SUN : SVG_MOON;
-  });
 
   /* Dropdowns — toggle al click, cerrar al hacer click fuera */
   nav.querySelectorAll('.cd-has-dropdown > a').forEach(a => {
