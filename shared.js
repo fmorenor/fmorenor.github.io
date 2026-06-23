@@ -16,7 +16,7 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 clamp(1rem,3vw,2.5rem); height: 64px;
-      background: rgba(5,8,22,0.85);
+      background: rgba(13,13,13,0.88);
       backdrop-filter: blur(20px) saturate(160%);
       -webkit-backdrop-filter: blur(20px) saturate(160%);
       border-bottom: 1px solid rgba(255,255,255,0.07);
@@ -152,7 +152,7 @@
     /* Footer */
     .cd-shared-footer {
       font-family: 'DM Sans', system-ui, sans-serif;
-      background: #050816;
+      background: #0d0d0d;
       border-top: 1px solid rgba(255,255,255,0.08);
       padding: 0 clamp(1.5rem,5vw,4rem);
       color: rgba(248,250,252,0.55);
@@ -425,7 +425,7 @@
         <style>
           #cd-privacy-backdrop {
             display:none;position:fixed;inset:0;z-index:99999;
-            background:rgba(5,8,22,0.72);backdrop-filter:blur(6px);
+            background:rgba(13,13,13,0.75);backdrop-filter:blur(6px);
             -webkit-backdrop-filter:blur(6px);
             align-items:center;justify-content:center;padding:1.5rem;
           }
@@ -434,7 +434,7 @@
             background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;
             width:100%;max-width:780px;max-height:88vh;
             display:flex;flex-direction:column;
-            box-shadow:0 32px 80px rgba(5,8,22,0.45);
+            box-shadow:0 32px 80px rgba(0,0,0,0.45);
             font-family:'DM Sans',system-ui,sans-serif;color:#0f172a;overflow:hidden;
           }
           #cd-privacy-header {
@@ -527,14 +527,14 @@
         <style>
           #cd-terms-backdrop {
             display:none;position:fixed;inset:0;z-index:99999;
-            background:rgba(5,8,22,0.72);backdrop-filter:blur(4px);
+            background:rgba(13,13,13,0.75);backdrop-filter:blur(4px);
             align-items:center;justify-content:center;padding:1.5rem;
           }
           #cd-terms-backdrop.open{display:flex;}
           #cd-terms-modal {
             background:#ffffff;color:#0f172a;border:1px solid #e2e8f0;border-radius:16px;
             width:100%;max-width:680px;max-height:85vh;display:flex;flex-direction:column;
-            box-shadow:0 24px 80px rgba(5,8,22,0.35);font-family:'DM Sans',system-ui,sans-serif;
+            box-shadow:0 24px 80px rgba(0,0,0,0.35);font-family:'DM Sans',system-ui,sans-serif;
           }
           #cd-terms-header {
             padding:1.6rem 2rem 1.2rem;border-bottom:1px solid #e2e8f0;
