@@ -1153,6 +1153,27 @@
     setTimeout(hook, 4000);
   })();
 
+  /* ── Redirigir link GeoSoftware del nav a geosoftware.html ── */
+  (function hookGeoSoftwareNav() {
+    function hook() {
+      document.querySelectorAll('a[href="#geosoftware"], a[href*="/geosoftware"]').forEach(a => {
+        if (!a.dataset.cdGeoHooked) {
+          a.dataset.cdGeoHooked = '1';
+          a.href = './geosoftware.html';
+          a.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            window.location.assign('./geosoftware.html');
+          }, true);
+        }
+      });
+    }
+    const obs = new MutationObserver(hook);
+    obs.observe(document.body, { childList: true, subtree: true });
+    setTimeout(hook, 2000);
+    setTimeout(hook, 4000);
+  })();
+
   /* ── Redirigir link Equipo del nav a equipo.html ── */
   (function hookEquipoNav() {
     function hook() {
@@ -1847,7 +1868,7 @@
     const HREFS = [
       ['#procesos'],
       ['#cartografica', './cartografica.html'],
-      ['#geosoftware']
+      ['#geosoftware', './geosoftware.html']
     ];
     function findLink(hrefs) {
       for (const h of hrefs) {
