@@ -6,3 +6,7 @@ Disallow: /source-rebuild/
 Disallow: /.claude/
 
 Sitemap: https://www.cartodata.com/sitemap.xml
+
+# LLM-readable site summary
+# https://llmstxt.org
+LLMs: https://www.cartodata.com/llms.txt

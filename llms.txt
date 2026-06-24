@@ -1,0 +1,39 @@
+# CartoData
+
+> CartoData es una empresa latinoamericana con más de 90 años de experiencia en cartografía y geomática. Desarrolla soluciones geoespaciales para ciudades, infraestructura, minería e instituciones, combinando levantamiento de campo con software propio de fotogrametría y SIG web.
+
+## Quiénes somos
+
+CartoData fue fundada en 1930 y ha operado durante cuatro generaciones como empresa especializada en cartografía de precisión. Está establecida en México y ofrece servicios en toda Latinoamérica. Su enfoque integra captura de datos geoespaciales (LiDAR, fotografía aérea oblicua, visión 360) con desarrollo de software propio para procesamiento y visualización.
+
+## Productos y tecnología
+
+### GeoSoftware
+
+- **AU4** — Software de compilación estereoscópica de alta precisión. Genera curvas de nivel en tiempo real, incluye corrección topológica automática y soporte nativo para datos LiDAR. Orientado a fotogrametría profesional y producción cartográfica.
+- **eCarto** — Plataforma SIG web que unifica datos satelitales, aéreos, LiDAR, terrestres y corporativos en un solo mapa inteligente. Permite colaboración geoespacial en la nube sin instalar software local.
+
+### Cartografía (hardware y sensores)
+
+- **LiDAR 3D** — Captura de nubes de puntos de alta densidad para modelos de elevación y cartografía de precisión.
+- **OBLIX** — Sistema de fotografía oblicua multiángulo para modelado urbano 3D y documentación de fachadas.
+- **Visión 360** — Fotografía panorámica a nivel de calle para documentación geoespacial tipo street-level imagery.
+
+## Sectores atendidos
+
+- **Ciudades** — Catastro, planificación urbana, redes de infraestructura
+- **Infraestructura** — Carreteras, ferroviario, tendidos eléctricos
+- **Minería** — Impacto ambiental, cálculo de volúmenes
+- **Instituciones** — Territorios indígenas, servicios públicos
+
+## Páginas clave
+
+- [Inicio](https://www.cartodata.com/)
+- [Cartografía (LiDAR, OBLIX, Visión 360)](https://www.cartodata.com/cartografica.html)
+- [GeoSoftware (AU4 y eCarto)](https://www.cartodata.com/geosoftware.html)
+- [Historia de CartoData](https://www.cartodata.com/historia.html)
+- [Equipo](https://www.cartodata.com/equipo.html)
+
+## Contacto
+
+Para cotizaciones de software AU4 o eCarto, y para proyectos de levantamiento cartográfico, el contacto es a través de [www.cartodata.com](https://www.cartodata.com/).
