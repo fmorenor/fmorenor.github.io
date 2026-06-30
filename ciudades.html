@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ciudades y Municipios — Cartomorfosis CartoData</title>
+  <meta name="description" content="Aceleramos la recaudación de municipios en México con tecnología, velocidad y sin fricción política. Conoce la Cartomorfosis." />
+  <link rel="canonical" href="https://www.cartodata.com/ciudades.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.cartodata.com/ciudades.html" />
+  <meta property="og:title" content="Ciudades y Municipios — CartoData" />
+  <meta property="og:description" content="Aceleramos la recaudación de municipios con tecnología geoespacial. Conoce la Cartomorfosis." />
+  <meta property="og:image" content="https://www.cartodata.com/images/og-ciudades.jpg" />
+  <meta property="og:locale" content="es_MX" />
+  <meta property="og:site_name" content="CartoData" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ciudades y Municipios — CartoData" />
+  <meta name="twitter:description" content="Aceleramos la recaudación de municipios con tecnología geoespacial." />
+  <meta name="twitter:image" content="https://www.cartodata.com/images/og-ciudades.jpg" />
+  <script src="./shared.js" defer></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; }
+    img, video { display: block; max-width: 100%; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; width: 100%; min-height: 100vh;
+      display: flex; align-items: center; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: -15% 0;
+      background-image: url('./images/bkg_au4.jpg');
+      background-size: cover; background-position: center;
+      will-change: transform;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(5,8,22,0.92) 0%, rgba(5,8,22,0.55) 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 900px; margin: 0 auto;
+      padding: clamp(6rem,12vw,10rem) clamp(1.5rem,6vw,4rem) clamp(4rem,8vw,6rem);
+    }
+    .hero-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 1.2rem;
+    }
+    .hero-h1 {
+      font-size: clamp(2.4rem,5.5vw,4.5rem); font-weight: 200; line-height: 1.1;
+      color: #fff; margin-bottom: 1.5rem;
+    }
+    .hero-h1 strong { font-weight: 800; }
+    .hero-sub {
+      font-size: clamp(1rem,1.8vw,1.25rem); font-weight: 300; line-height: 1.65;
+      color: rgba(255,255,255,0.72); max-width: 640px; margin-bottom: 2.5rem;
+    }
+    .btn-primary {
+      display: inline-block; padding: 1rem 2.4rem;
+      background: #3b5bdb; color: #fff; border-radius: 999px;
+      font-size: 0.95rem; font-weight: 600; text-decoration: none;
+      letter-spacing: 0.02em; transition: background 250ms, transform 200ms;
+    }
+    .btn-primary:hover { background: #2d4bbd; transform: translateY(-2px); }
+    .btn-ghost {
+      display: inline-block; padding: 1rem 2.4rem;
+      border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 999px;
+      font-size: 0.95rem; font-weight: 500; text-decoration: none;
+      transition: border-color 250ms, background 250ms;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.6); }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    /* ── DOLOR ── */
+    .dolor-section {
+      background: #f4f4f2; padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);
+    }
+    .dolor-inner { max-width: 1100px; margin: 0 auto; }
+    .section-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; color: #3b5bdb; margin-bottom: 1rem;
+    }
+    .dolor-h2 {
+      font-size: clamp(1.8rem,3.5vw,2.8rem); font-weight: 300; line-height: 1.2;
+      color: #0f172a; margin-bottom: 2rem; max-width: 780px;
+    }
+    .dolor-h2 strong { font-weight: 800; }
+    .dolor-body {
+      font-size: clamp(1rem,1.6vw,1.15rem); line-height: 1.75;
+      color: #334155; max-width: 800px; margin-bottom: 2.5rem;
+    }
+    .dolor-questions {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem; margin-bottom: 2.5rem;
+    }
+    .dolor-q {
+      background: #fff; border-radius: 12px; padding: 1.25rem 1.5rem;
+      border-left: 3px solid #3b5bdb;
+      font-size: 0.95rem; font-weight: 500; color: #0f172a; line-height: 1.45;
+    }
+
+    /* ── PROOF / RESULTADOS ── */
+    .proof-section {
+      background: #050816; padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);
+    }
+    .proof-inner { max-width: 1200px; margin: 0 auto; }
+    .proof-h2 {
+      font-size: clamp(1.8rem,3.5vw,2.8rem); font-weight: 300; color: #fff;
+      margin-bottom: 0.6rem;
+    }
+    .proof-h2 strong { font-weight: 800; }
+    .proof-sub { color: rgba(255,255,255,0.5); margin-bottom: 3rem; font-size: 1rem; }
+    .proof-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 1.2rem;
+      margin-bottom: 3.5rem;
+    }
+    .proof-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 1.8rem 1.6rem;
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      transition: border-color 250ms, background 250ms;
+    }
+    .proof-card:hover { background: rgba(59,91,219,0.10); border-color: rgba(59,91,219,0.35); }
+    .proof-city { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.5rem; }
+    .proof-num { font-size: clamp(2rem,4vw,3rem); font-weight: 200; color: #fff; line-height: 1; margin-bottom: 0.4rem; }
+    .proof-num span { color: #3b5bdb; font-weight: 700; }
+    .proof-label { font-size: 0.85rem; color: rgba(255,255,255,0.55); }
+
+    /* Municipios strip */
+    .municipios-strip {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 2.5rem; margin-top: 1rem;
+    }
+    .municipios-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 1.2rem; }
+    .municipios-list {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+    }
+    .municipio-tag {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px; padding: 0.35rem 0.9rem;
+      font-size: 0.8rem; color: rgba(255,255,255,0.6);
+    }
+
+    /* ── OBJECIONES ── */
+    .obj-section {
+      background: #0b1022; padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);
+    }
+    .obj-inner { max-width: 1100px; margin: 0 auto; }
+    .obj-h2 {
+      font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 300; color: #fff;
+      margin-bottom: 3rem;
+    }
+    .obj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .obj-item {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px; padding: 2rem;
+    }
+    .obj-q {
+      font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 0.9rem;
+      border-left: 2px solid #3b5bdb; padding-left: 0.9rem;
+    }
+    .obj-a { font-size: 0.93rem; color: rgba(255,255,255,0.62); line-height: 1.7; }
+    @media(max-width: 700px) { .obj-grid { grid-template-columns: 1fr; } }
+
+    /* ── URGENCIA ── */
+    .urgencia-section {
+      position: relative; overflow: hidden;
+      padding: clamp(5rem,10vw,8rem) clamp(1.5rem,6vw,4rem);
+      background: #0f172a;
+    }
+    .urgencia-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+    .urgencia-h2 {
+      font-size: clamp(2rem,4vw,3.2rem); font-weight: 300; color: #fff;
+      margin-bottom: 1.2rem; line-height: 1.15;
+    }
+    .urgencia-h2 strong { font-weight: 800; color: #3b5bdb; }
+    .urgencia-body { font-size: 1.05rem; color: rgba(255,255,255,0.65); line-height: 1.75; margin-bottom: 2rem; }
+    .urgencia-highlight {
+      background: rgba(59,91,219,0.15); border: 1px solid rgba(59,91,219,0.3);
+      border-radius: 12px; padding: 1.2rem 1.8rem; margin-bottom: 2.5rem;
+      font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.6;
+    }
+    .urgencia-highlight strong { color: #fff; }
+
+    /* ── METODOLOGÍA ── */
+    .metodologia-section {
+      background: #f4f4f2; padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);
+    }
+    .metodologia-inner { max-width: 1200px; margin: 0 auto; }
+    .metodologia-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
+    }
+    .metodologia-h2 {
+      font-size: clamp(1.8rem,3.5vw,2.8rem); font-weight: 300; color: #0f172a;
+      margin-bottom: 1.2rem; line-height: 1.2;
+    }
+    .metodologia-h2 strong { font-weight: 800; }
+    .metodologia-body { font-size: 0.97rem; color: #334155; line-height: 1.75; margin-bottom: 2rem; }
+    .steps-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+    .step-item {
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .step-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: #3b5bdb; color: #fff; font-size: 0.78rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .step-text { font-size: 0.95rem; color: #0f172a; font-weight: 500; padding-top: 0.35rem; }
+    .metodologia-img-wrap {
+      border-radius: 20px; overflow: hidden; aspect-ratio: 4/3;
+      background: #e2e8f0;
+    }
+    .metodologia-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .placeholder-img {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg,#e2e8f0,#cbd5e1);
+      font-size: 0.8rem; color: #94a3b8; font-weight: 500;
+    }
+    @media(max-width:900px) { .metodologia-grid { grid-template-columns: 1fr; gap: 3rem; } }
+
+    /* ── UPSCALE / CIUDAD INTELIGENTE ── */
+    .upscale-section {
+      background: #050816; padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);
+    }
+    .upscale-inner { max-width: 1200px; margin: 0 auto; }
+    .upscale-h2 {
+      font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 300; color: #fff;
+      margin-bottom: 0.6rem;
+    }
+    .upscale-h2 strong { font-weight: 800; }
+    .upscale-sub { color: rgba(255,255,255,0.5); font-size: 1rem; margin-bottom: 3rem; }
+    .upscale-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px,1fr));
+      gap: 0.8rem;
+    }
+    .upscale-item {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 1rem 1.2rem;
+      font-size: 0.85rem; color: rgba(255,255,255,0.65);
+      transition: background 250ms, border-color 250ms, color 250ms;
+      cursor: default;
+    }
+    .upscale-item:hover {
+      background: rgba(59,91,219,0.12); border-color: rgba(59,91,219,0.35);
+      color: #fff;
+    }
+    .upscale-highlight {
+      margin-top: 3rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;
+    }
+    .upscale-feat {
+      background: rgba(59,91,219,0.08); border: 1px solid rgba(59,91,219,0.2);
+      border-radius: 16px; padding: 2rem;
+    }
+    .upscale-feat-icon { font-size: 1.5rem; margin-bottom: 0.8rem; }
+    .upscale-feat-title { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+    .upscale-feat-body { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.6; }
+    @media(max-width:700px) { .upscale-highlight { grid-template-columns: 1fr; } }
+
+    /* ── CTA FINAL ── */
+    .cta-section {
+      background: #f4f4f2; padding: clamp(5rem,10vw,8rem) clamp(1.5rem,6vw,4rem);
+      text-align: center;
+    }
+    .cta-inner { max-width: 720px; margin: 0 auto; }
+    .cta-h2 {
+      font-size: clamp(2rem,4vw,3rem); font-weight: 300; color: #0f172a;
+      margin-bottom: 1rem; line-height: 1.15;
+    }
+    .cta-h2 strong { font-weight: 800; }
+    .cta-body { color: #475569; font-size: 1.05rem; line-height: 1.7; margin-bottom: 2.5rem; }
+
+    /* ── FOOTER MUNICIPIOS ── */
+    .footer-munis {
+      background: #050816; padding: clamp(3rem,6vw,5rem) clamp(1.5rem,6vw,4rem);
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .footer-munis-inner { max-width: 1100px; margin: 0 auto; }
+    .footer-munis h3 {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 1.5rem;
+    }
+
+    /* ── IMAGE PLACEHOLDER util ── */
+    .img-placeholder {
+      background: linear-gradient(135deg, rgba(59,91,219,0.15), rgba(59,91,219,0.05));
+      border: 1px dashed rgba(59,91,219,0.3);
+      border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; color: rgba(255,255,255,0.3); font-weight: 500;
+    }
+
+    /* Responsive hero */
+    @media(max-width:640px) {
+      .hero-btns { flex-direction: column; align-items: flex-start; }
+      .dolor-questions { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="hero">
+    <div class="hero-bg" id="ciudades-hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Ciudades · Cartomorfosis</p>
+      <h1 class="hero-h1">Aceleramos la recaudación<br>de municipios en México<br><strong>con tecnología y sin fricción política.</strong></h1>
+      <p class="hero-sub">¿Quieres saber cómo tu municipio pudiera estar generando más recursos para tus proyectos?</p>
+      <div class="hero-btns">
+        <a href="#cta" class="btn-primary">Agenda una cita express</a>
+        <a href="#metodologia" class="btn-ghost">Conocer la Cartomorfosis</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DOLOR ── -->
+  <section class="dolor-section" id="dolor">
+    <div class="dolor-inner">
+      <p class="section-eyebrow">El reto del municipio</p>
+      <h2 class="dolor-h2">¿Cómo fortalecer las finanzas municipales para <strong>cumplir promesas de campaña</strong> y mejorar la confianza ciudadana?</h2>
+      <div class="dolor-questions">
+        <div class="dolor-q">¿Cómo tener fondos para cumplir las promesas de campaña?</div>
+        <div class="dolor-q">¿Cómo mejorar la percepción ciudadana?</div>
+        <div class="dolor-q">¿Cómo mejorar las finanzas municipales?</div>
+        <div class="dolor-q">¿Cómo mejorar la recaudación?</div>
+        <div class="dolor-q">¿Cómo mejorar las participaciones?</div>
+      </div>
+      <p class="dolor-body">Municipios que toman la iniciativa de mejorar su recaudación inmobiliaria a través del impuesto predial, traslativos de dominio y detección de construcciones no declaradas han logrado mejorar sus recursos propios en millones de pesos.<br><br>Una excelente forma de mejorar la recaudación municipal con la menor fricción posible es a través del área inmobiliaria. Descubre todos los municipios que ya lo han hecho y hoy en día están cumpliendo y excediendo todas las expectativas.</p>
+    </div>
+  </section>
+
+  <!-- ── PROOF ── -->
+  <section class="proof-section" id="resultados">
+    <div class="proof-inner">
+      <p class="section-eyebrow" style="color:rgba(255,255,255,0.4);">Los números hablan solos</p>
+      <h2 class="proof-h2">Así otros municipios <strong>lo han logrado</strong></h2>
+      <p class="proof-sub">Resultados reales, en municipios reales, sin subir impuestos.</p>
+      <div class="proof-grid">
+        <div class="proof-card">
+          <p class="proof-city">Tequila, Jalisco</p>
+          <p class="proof-num"><span>+232%</span></p>
+          <p class="proof-label">en recaudación predial · 3 años</p>
+        </div>
+        <div class="proof-card">
+          <p class="proof-city">Santiago, Nuevo León</p>
+          <p class="proof-num"><span>+315%</span></p>
+          <p class="proof-label">en recaudación predial · 4 años</p>
+        </div>
+        <div class="proof-card">
+          <p class="proof-city">Tlajomulco de Zúñiga</p>
+          <p class="proof-num"><span>400 mdp</span></p>
+          <p class="proof-label">generados adicionales · 6 años</p>
+        </div>
+        <div class="proof-card">
+          <p class="proof-city">Guadalajara, Jalisco</p>
+          <p class="proof-num"><span>289 mdp</span></p>
+          <p class="proof-label">en recaudación adicional · 2 años</p>
+        </div>
+      </div>
+
+      <!-- [PLACEHOLDER: logos / fotos de alcaldes] -->
+      <div class="img-placeholder" style="height:180px; margin-bottom: 3rem;">
+        [PLACEHOLDER — Fotos y logos de alcaldes: David de la Peña · Sergio Chávez · Gerardo Quirino · Verónica Delgadillo · Félix Arratia · Christian Agúndez]
+      </div>
+
+      <div class="municipios-strip">
+        <p class="municipios-label">Municipios que ya viven la Cartomorfosis</p>
+        <div class="municipios-list">
+          <span class="municipio-tag">Guadalajara</span>
+          <span class="municipio-tag">Monterrey</span>
+          <span class="municipio-tag">Los Cabos</span>
+          <span class="municipio-tag">Tlajomulco</span>
+          <span class="municipio-tag">Santiago NL</span>
+          <span class="municipio-tag">Tonalá</span>
+          <span class="municipio-tag">Arteaga</span>
+          <span class="municipio-tag">Colima</span>
+          <span class="municipio-tag">San Pedro Garza García</span>
+          <span class="municipio-tag">Mascota</span>
+          <span class="municipio-tag">San Nicolás</span>
+          <span class="municipio-tag">Talpa de Allende</span>
+          <span class="municipio-tag">Ahualulco</span>
+          <span class="municipio-tag">Tequila</span>
+          <span class="municipio-tag">Villa de Álvarez</span>
+          <span class="municipio-tag">Juárez</span>
+          <span class="municipio-tag">Santa Catarina</span>
+          <span class="municipio-tag">Valle de Juárez</span>
+          <span class="municipio-tag">Amatitán</span>
+          <span class="municipio-tag">Amacueca</span>
+          <span class="municipio-tag">Sayula</span>
+          <span class="municipio-tag">Atotonilco</span>
+          <span class="municipio-tag">Etzatlán</span>
+          <span class="municipio-tag">Tamazula</span>
+          <span class="municipio-tag">Guadalupe</span>
+          <span class="municipio-tag">Ameca</span>
+          <span class="municipio-tag">y muchos más…</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── OBJECIONES ── -->
+  <section class="obj-section" id="objeciones">
+    <div class="obj-inner">
+      <p class="section-eyebrow" style="color:rgba(255,255,255,0.35);">Preguntas frecuentes</p>
+      <h2 class="obj-h2">Frecuentemente escuchamos…</h2>
+      <div class="obj-grid">
+        <div class="obj-item">
+          <p class="obj-q">¿El costo político es muy alto?</p>
+          <p class="obj-a">Los alcaldes que han implementado buenas políticas de incremento recaudatorio son reelectos y tienen mejor aceptación al poner los impuestos a trabajar en beneficio de la ciudadanía con mejoras en sus municipios.</p>
+        </div>
+        <div class="obj-item">
+          <p class="obj-q">¿Qué tan caro es implementar esta estrategia?</p>
+          <p class="obj-a">El 100% de nuestros proyectos municipales han tenido un retorno positivo en el primer año. El costo se cubre antes del final del mes de enero con un retorno de inversión superior a 3x.</p>
+        </div>
+        <div class="obj-item">
+          <p class="obj-q">¿No tenemos tiempo suficiente?</p>
+          <p class="obj-a">Los primeros beneficios se logran capitalizar en 3 meses siguiendo la metodología probada de la Cartomorfosis, sin necesidad de esperar una modernización catastral completa.</p>
+        </div>
+        <div class="obj-item">
+          <p class="obj-q">¿Es solo para municipios grandes?</p>
+          <p class="obj-a">La Cartomorfosis se ha llevado a cabo en municipios de todos los tamaños: desde pueblos pequeños como Santiago y Talpa de Allende, hasta destinos turísticos como Los Cabos y ciudades como Guadalajara y Monterrey.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── URGENCIA ── -->
+  <section class="urgencia-section" id="urgencia">
+    <div class="urgencia-inner">
+      <p class="section-eyebrow" style="color:rgba(255,255,255,0.35); text-align:center;">El momento es ahora</p>
+      <h2 class="urgencia-h2">El mejor momento para tomar la decisión fue el mes pasado.<br><strong>El segundo es hoy.</strong></h2>
+      <p class="urgencia-body">Cada día que pasa son más los recursos que se dejan en la mesa y las oportunidades de reinvertirlos en tu ciudad y tu gente. Sabemos que cuando tienes la responsabilidad de un municipio completo, el tiempo es crítico para lograr tus objetivos.</p>
+      <div class="urgencia-highlight">
+        <strong>Los 100 primeros días son críticos:</strong> si logramos iniciar un proyecto en tus primeros cien días de gobierno, lograrás tener los fondos suficientes para la mayoría de tus proyectos.<br><br>¿Y si ya pasaron los 100 días? Es posible lograrlo — pero hay que actuar de inmediato.
+      </div>
+      <a href="#cta" class="btn-primary" style="display:inline-block;">Agenda una cita express →</a>
+    </div>
+  </section>
+
+  <!-- ── METODOLOGÍA ── -->
+  <section class="metodologia-section" id="metodologia">
+    <div class="metodologia-inner">
+      <p class="section-eyebrow">Cómo lo logramos</p>
+      <div class="metodologia-grid">
+        <div>
+          <h2 class="metodologia-h2">La <strong>Cartomorfosis®</strong><br>en 5 pasos</h2>
+          <p class="metodologia-body">La Cartomorfosis® combina en un círculo virtuoso la información geoespacial con tecnología de vanguardia, el geosoftware a la medida y una consultoría especializada que agrega décadas de experiencia — poniendo al ciudadano y la objetividad al centro del proceso.</p>
+          <ul class="steps-list">
+            <li class="step-item">
+              <span class="step-num">1</span>
+              <span class="step-text">Implementación de plataforma tecnológica geográfica</span>
+            </li>
+            <li class="step-item">
+              <span class="step-num">2</span>
+              <span class="step-text">Identificación de diferencias de construcción</span>
+            </li>
+            <li class="step-item">
+              <span class="step-num">3</span>
+              <span class="step-text">Re-evaluación eficiente de propiedades</span>
+            </li>
+            <li class="step-item">
+              <span class="step-num">4</span>
+              <span class="step-text">Información al ciudadano sobre inconsistencias</span>
+            </li>
+            <li class="step-item">
+              <span class="step-num">5</span>
+              <span class="step-text">Incremento sostenido en la recaudación</span>
+            </li>
+          </ul>
+          <div style="margin-top:2rem;">
+            <p style="font-size:0.88rem;color:#475569;margin-bottom:0.5rem;">Pilares del éxito:</p>
+            <div style="display:flex;gap:0.7rem;flex-wrap:wrap;">
+              <span style="background:#e8edff;color:#3b5bdb;border-radius:999px;padding:0.3rem 0.9rem;font-size:0.8rem;font-weight:600;">Tecnología de vanguardia</span>
+              <span style="background:#e8edff;color:#3b5bdb;border-radius:999px;padding:0.3rem 0.9rem;font-size:0.8rem;font-weight:600;">+40 años de experiencia</span>
+              <span style="background:#e8edff;color:#3b5bdb;border-radius:999px;padding:0.3rem 0.9rem;font-size:0.8rem;font-weight:600;">Metodología propia</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="metodologia-img-wrap">
+            <!-- [PLACEHOLDER: imagen del proceso / diagrama de cartomorfosis] -->
+            <div class="placeholder-img">[PLACEHOLDER — Imagen o diagrama Cartomorfosis]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── UPSCALE ── -->
+  <section class="upscale-section" id="ciudad-inteligente">
+    <div class="upscale-inner">
+      <p class="section-eyebrow" style="color:rgba(255,255,255,0.35);">Más allá de la recaudación</p>
+      <h2 class="upscale-h2">Convertimos tu ciudad en una <strong>ciudad inteligente</strong></h2>
+      <p class="upscale-sub">A partir de un catastro ordenado se pueden detonar numerosas áreas del municipio.</p>
+
+      <div class="upscale-highlight" style="margin-bottom:2.5rem;">
+        <div class="upscale-feat">
+          <div class="upscale-feat-icon">🗺️</div>
+          <p class="upscale-feat-title">eCarto como eje conductor</p>
+          <p class="upscale-feat-body">Plataforma SIG web como sistema de inteligencia y coordinación geo-municipal.</p>
+        </div>
+        <div class="upscale-feat">
+          <div class="upscale-feat-icon">🔗</div>
+          <p class="upscale-feat-title">Flujo entre dependencias</p>
+          <p class="upscale-feat-body">Elimina los silos de información entre las dependencias de tu municipio.</p>
+        </div>
+        <div class="upscale-feat">
+          <div class="upscale-feat-icon">📊</div>
+          <p class="upscale-feat-title">Datos inteligentes</p>
+          <p class="upscale-feat-body">Información actualizada y georreferenciada para decisiones en tiempo real.</p>
+        </div>
+      </div>
+
+      <p class="section-eyebrow" style="color:rgba(255,255,255,0.3); margin-bottom:1.2rem;">Catálogo de soluciones municipales</p>
+      <div class="upscale-grid">
+        <div class="upscale-item">Desarrollo urbano</div>
+        <div class="upscale-item">Ejecución fiscal</div>
+        <div class="upscale-item">Medio ambiente</div>
+        <div class="upscale-item">Padrón y licencias</div>
+        <div class="upscale-item">Agua y drenaje</div>
+        <div class="upscale-item">Recolección de basura</div>
+        <div class="upscale-item">Espectaculares</div>
+        <div class="upscale-item">Lotes baldíos</div>
+        <div class="upscale-item">Cementerios</div>
+        <div class="upscale-item">Protección civil</div>
+        <div class="upscale-item">Luminarias</div>
+        <div class="upscale-item">Números oficiales</div>
+        <div class="upscale-item">Anuencias</div>
+        <div class="upscale-item">Mercados</div>
+        <div class="upscale-item">Alineamientos</div>
+        <div class="upscale-item">Incendios</div>
+        <div class="upscale-item">Banco de proyectos</div>
+        <div class="upscale-item">Patrimonio</div>
+        <div class="upscale-item">Apoyos sociales</div>
+        <div class="upscale-item">Estacionamientos</div>
+        <div class="upscale-item">Censos y estadísticas</div>
+        <div class="upscale-item">Control de plagas</div>
+        <div class="upscale-item">Seguimiento de obra</div>
+        <div class="upscale-item">Movilidad</div>
+        <div class="upscale-item">Centros de salud</div>
+        <div class="upscale-item">Contaminación ambiental</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA FINAL ── -->
+  <section class="cta-section" id="cta">
+    <div class="cta-inner">
+      <p class="section-eyebrow">Empieza hoy</p>
+      <h2 class="cta-h2">Iniciar es <strong>rápido y fácil</strong></h2>
+      <p class="cta-body">Podemos empezar de inmediato con nuestro diagnóstico en línea. Como resultado calcularemos el potencial de incremento en la recaudación de acuerdo al índice de madurez geoespacial de tu municipio — y tendrás una presentación personalizada lista para presentar al Alcalde y cabildo.</p>
+      <!-- [PLACEHOLDER: formulario de contacto o integración con CRM] -->
+      <div class="img-placeholder" style="height:200px;max-width:580px;margin:0 auto 2.5rem;border-radius:16px;">
+        [PLACEHOLDER — Formulario: Nombre · Municipio · Cargo · Email · Teléfono]
+      </div>
+      <a href="mailto:info@cartodata.com" class="btn-primary" style="font-size:1rem;">Agenda una cita express →</a>
+    </div>
+  </section>
+
+  <!-- ── NOTICIAS ── -->
+  <section style="background:#0b1022; padding:clamp(3rem,6vw,5rem) clamp(1.5rem,6vw,4rem);">
+    <div style="max-width:1100px;margin:0 auto;">
+      <p class="section-eyebrow" style="color:rgba(255,255,255,0.35);">En los medios</p>
+      <h3 style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;color:#fff;margin-bottom:2rem;">Noticias destacadas de municipios que han implementado la Cartomorfosis</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem;">
+        <a href="https://tlajomulco.gob.mx/comunicacion-institucional/tlajo-logra-incremento-historico-en-recaudacion"
+           target="_blank" rel="noopener"
+           style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:1.5rem;text-decoration:none;transition:border-color 250ms;">
+          <p style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.6rem;">Tlajomulco · Noticia oficial</p>
+          <p style="color:#fff;font-size:0.97rem;font-weight:500;line-height:1.5;">Tlajo logra incremento histórico en recaudación</p>
+          <p style="color:#3b5bdb;font-size:0.8rem;margin-top:0.8rem;">Leer noticia →</p>
+        </a>
+        <!-- [PLACEHOLDER: más noticias] -->
+        <div class="img-placeholder" style="height:120px;border-radius:14px;">[PLACEHOLDER — Noticia 2]</div>
+        <div class="img-placeholder" style="height:120px;border-radius:14px;">[PLACEHOLDER — Noticia 3]</div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    /* Parallax hero bg */
+    (function() {
+      const bg = document.getElementById('ciudades-hero-bg');
+      if (!bg) return;
+      function onScroll() {
+        const progress = window.scrollY / window.innerHeight;
+        bg.style.transform = `translateY(${progress * 30}%)`;
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+    })();
+  </script>
+</body>
+</html>

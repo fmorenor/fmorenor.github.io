@@ -466,7 +466,7 @@
               <div class="cd-stat-card accent">
                 <span class="cd-stat-label">Incremento en la recaudación · Municipio B</span>
                 <span class="cd-stat-number" id="cd-statGrowth">+0%</span>
-                <span class="cd-stat-sub">en 4 años</span>
+                <span class="cd-stat-sub">al año 4</span>
               </div>
             </div>
           </div>
@@ -1226,6 +1226,32 @@
     }
     const obs = new MutationObserver(hook);
     obs.observe(document.body, { childList: true, subtree: true });
+    setTimeout(hook, 2000);
+    setTimeout(hook, 4000);
+  })();
+
+  /* ── Redirigir link Ciudades del nav a ciudades.html ── */
+  (function hookCiudadesNav() {
+    function hook() {
+      /* Buscar <a> o <button> que contengan un H3 con texto "Ciudades" */
+      document.querySelectorAll('a, button').forEach(el => {
+        if (el.dataset.cdCiudHooked) return;
+        const h3 = el.querySelector('h3');
+        const match = h3 && h3.textContent.trim() === 'Ciudades';
+        const directMatch = el.textContent.trim() === 'Ciudades';
+        if (match || directMatch) {
+          el.dataset.cdCiudHooked = '1';
+          el.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            window.location.assign('./ciudades.html');
+          }, true);
+        }
+      });
+    }
+    const obs = new MutationObserver(hook);
+    obs.observe(document.body, { childList: true, subtree: true });
+    setTimeout(hook, 500);
     setTimeout(hook, 2000);
     setTimeout(hook, 4000);
   })();
