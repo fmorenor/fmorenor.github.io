@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Procesos Geoespaciales — Análisis, Profesionalización y Datos — CartoData</title>
+  <meta name="description" content="Servicios especializados de análisis geoespacial, conversión y auditoría de datos, y profesionalización para municipios, infraestructura y sector privado." />
+  <link rel="canonical" href="https://www.cartodata.com/procesos.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.cartodata.com/procesos.html" />
+  <meta property="og:title" content="Procesos Geoespaciales — CartoData" />
+  <meta property="og:description" content="Análisis cartográfico, catastral, de riesgos, geomarketing y más. Profesionalización y conversión de datos geoespaciales." />
+  <meta property="og:image" content="https://www.cartodata.com/images/og-procesos.jpg" />
+  <meta property="og:locale" content="es_MX" />
+  <meta property="og:site_name" content="CartoData" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Procesos Geoespaciales — CartoData" />
+  <meta name="twitter:description" content="Análisis cartográfico, catastral, de riesgos, geomarketing y más." />
+  <meta name="twitter:image" content="https://www.cartodata.com/images/og-procesos.jpg" />
+  <script src="./shared.js" defer></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; }
+    img { display: block; max-width: 100%; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; width: 100%; min-height: 100vh;
+      display: flex; align-items: center; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: -15% 0;
+      background-image: url('./images/herr-procesos.jpg');
+      background-size: cover; background-position: center;
+      will-change: transform;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(5,8,22,0.92) 0%, rgba(5,8,22,0.50) 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 860px;
+      padding: clamp(7rem,14vw,11rem) clamp(1.5rem,6vw,4rem) clamp(5rem,9vw,7rem);
+    }
+    .hero-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 1.2rem;
+    }
+    .hero-h1 {
+      font-size: clamp(2.4rem,5.5vw,4.5rem); font-weight: 200; line-height: 1.1;
+      color: #fff; margin-bottom: 1.5rem;
+    }
+    .hero-h1 strong { font-weight: 800; }
+    .hero-sub {
+      font-size: clamp(1rem,1.8vw,1.2rem); font-weight: 300; line-height: 1.7;
+      color: rgba(255,255,255,0.68); max-width: 600px; margin-bottom: 2.5rem;
+    }
+    .btn-primary {
+      display: inline-block; padding: 1rem 2.4rem;
+      background: #3b5bdb; color: #fff; border-radius: 999px;
+      font-size: 0.95rem; font-weight: 600; text-decoration: none;
+      transition: background 250ms, transform 200ms;
+    }
+    .btn-primary:hover { background: #2d4bbd; transform: translateY(-2px); }
+
+    /* ── SECCIÓN GENÉRICA ── */
+    .section-light { background: #f4f4f2; }
+    .section-dark  { background: #050816; }
+    .section-mid   { background: #0b1022; }
+    .section-pad { padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem); }
+    .inner { max-width: 1200px; margin: 0 auto; }
+
+    .eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; margin-bottom: 0.9rem;
+    }
+    .eyebrow-blue  { color: #3b5bdb; }
+    .eyebrow-dim   { color: rgba(255,255,255,0.35); }
+    .section-h2 {
+      font-size: clamp(1.8rem,3.5vw,2.8rem); font-weight: 300; line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-h2.dark  { color: #0f172a; }
+    .section-h2.light { color: #fff; }
+    .section-h2 strong { font-weight: 800; }
+    .section-lead {
+      font-size: clamp(0.95rem,1.5vw,1.1rem); line-height: 1.75;
+      max-width: 760px; margin-bottom: 3rem;
+    }
+    .section-lead.dark  { color: #334155; }
+    .section-lead.light { color: rgba(255,255,255,0.62); }
+
+    /* ── CATEGORÍAS NAV ── */
+    .cat-nav {
+      display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 3.5rem;
+    }
+    .cat-pill {
+      padding: 0.45rem 1.1rem; border-radius: 999px;
+      font-size: 0.82rem; font-weight: 600; cursor: pointer;
+      border: 1px solid rgba(59,91,219,0.3);
+      background: rgba(59,91,219,0.08); color: #3b5bdb;
+      transition: background 200ms, color 200ms, border-color 200ms;
+      text-decoration: none;
+    }
+    .cat-pill:hover { background: #3b5bdb; color: #fff; border-color: #3b5bdb; }
+
+    /* ── ANÁLISIS GRID ── */
+    .analisis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.3rem;
+    }
+    .analisis-card {
+      background: #fff; border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      padding: 1.8rem 1.8rem 1.6rem;
+      transition: box-shadow 250ms, border-color 250ms, transform 200ms;
+    }
+    .analisis-card:hover {
+      box-shadow: 0 8px 32px rgba(59,91,219,0.12);
+      border-color: rgba(59,91,219,0.3);
+      transform: translateY(-3px);
+    }
+    .analisis-cat {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #3b5bdb; margin-bottom: 0.5rem;
+    }
+    .analisis-title {
+      font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.6rem;
+    }
+    .analisis-desc {
+      font-size: 0.88rem; color: #475569; line-height: 1.65; margin-bottom: 1rem;
+    }
+    .analisis-tags {
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+    }
+    .analisis-tag {
+      background: #f1f5f9; color: #475569;
+      border-radius: 999px; padding: 0.25rem 0.7rem;
+      font-size: 0.75rem; font-weight: 500;
+    }
+    .analisis-img {
+      width: 100%; height: 160px; border-radius: 10px;
+      background: linear-gradient(135deg, #e8edff, #dbeafe);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; color: #94a3b8; margin-bottom: 1rem;
+      border: 1px dashed rgba(59,91,219,0.25);
+    }
+
+    /* ── PROFESIONALIZACIÓN ── */
+    .prof-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    }
+    .prof-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px; padding: 2rem 1.8rem;
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      transition: border-color 250ms, background 250ms;
+    }
+    .prof-card:hover {
+      background: rgba(59,91,219,0.10); border-color: rgba(59,91,219,0.35);
+    }
+    .prof-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: rgba(59,91,219,0.2); display: flex; align-items: center;
+      justify-content: center; font-size: 1.3rem; margin-bottom: 1.2rem;
+    }
+    .prof-title { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 0.6rem; }
+    .prof-body  { font-size: 0.9rem; color: rgba(255,255,255,0.58); line-height: 1.7; }
+    .prof-placeholder {
+      width: 100%; height: 130px; border-radius: 10px; margin-top: 1.2rem;
+      background: rgba(255,255,255,0.04); border: 1px dashed rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; color: rgba(255,255,255,0.2);
+    }
+    @media(max-width:760px) { .prof-grid { grid-template-columns: 1fr; } }
+
+    /* ── DATOS (Conversión + Auditoría) ── */
+    .datos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .datos-card {
+      background: #fff; border-radius: 16px; padding: 2rem;
+      border: 1px solid #e2e8f0;
+    }
+    .datos-title { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 1.2rem; }
+    .datos-list { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
+    .datos-item {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      font-size: 0.93rem; color: #334155; line-height: 1.5;
+    }
+    .datos-item::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: #3b5bdb; margin-top: 0.5rem; flex-shrink: 0;
+    }
+    .datos-placeholder {
+      width: 100%; height: 110px; border-radius: 10px; margin-top: 1.5rem;
+      background: linear-gradient(135deg,#e8edff,#dbeafe);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; color: #94a3b8;
+      border: 1px dashed rgba(59,91,219,0.2);
+    }
+    @media(max-width:700px) { .datos-grid { grid-template-columns: 1fr; } }
+
+    /* ── RIESGOS ATLAS ── */
+    .riesgos-wrap {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    }
+    .riesgos-text h3 {
+      font-size: clamp(1.4rem,2.5vw,2rem); font-weight: 300; color: #0f172a;
+      margin-bottom: 1rem; line-height: 1.25;
+    }
+    .riesgos-text h3 strong { font-weight: 800; }
+    .riesgos-text p { font-size: 0.95rem; color: #475569; line-height: 1.75; margin-bottom: 1.5rem; }
+    .riesgo-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .riesgo-tag {
+      background: #fef2f2; color: #dc2626; border: 1px solid #fecaca;
+      border-radius: 999px; padding: 0.3rem 0.9rem;
+      font-size: 0.8rem; font-weight: 600;
+    }
+    .riesgos-img {
+      border-radius: 20px; overflow: hidden; aspect-ratio: 4/3;
+      background: linear-gradient(135deg,#fff7ed,#fef2f2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; color: #94a3b8;
+      border: 1px dashed rgba(220,38,38,0.2);
+    }
+    @media(max-width:800px) { .riesgos-wrap { grid-template-columns: 1fr; gap: 2rem; } }
+
+    /* ── CATASTRO ── */
+    .catastro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .catastro-feat { border-left: 2px solid #3b5bdb; padding-left: 1rem; margin-bottom: 1.2rem; }
+    .catastro-feat-title { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
+    .catastro-feat-desc { font-size: 0.85rem; color: rgba(255,255,255,0.55); line-height: 1.6; }
+    .catastro-img {
+      border-radius: 20px; aspect-ratio: 4/3;
+      background: rgba(59,91,219,0.08); border: 1px dashed rgba(59,91,219,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; color: rgba(255,255,255,0.25);
+    }
+    @media(max-width:800px) { .catastro-grid { grid-template-columns: 1fr; gap: 2rem; } }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: #f4f4f2; padding: clamp(5rem,10vw,8rem) clamp(1.5rem,6vw,4rem);
+      text-align: center;
+    }
+    .cta-h2 {
+      font-size: clamp(2rem,4vw,3rem); font-weight: 300; color: #0f172a;
+      margin-bottom: 1rem; line-height: 1.15;
+    }
+    .cta-h2 strong { font-weight: 800; }
+    .cta-body { color: #475569; font-size: 1.05rem; line-height: 1.7; max-width: 640px; margin: 0 auto 2.5rem; }
+  </style>
+</head>
+<body>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-bg" id="procesos-hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Procesos · Diagnóstico Geoespacial</p>
+      <h1 class="hero-h1">Re-ingeniería de procesos<br>con inteligencia <strong>geoespacial.</strong></h1>
+      <p class="hero-sub">Análisis especializados, profesionalización y conversión de datos para municipios, infraestructura, minería y sector privado.</p>
+      <a href="#analisis" class="btn-primary">Explorar servicios</a>
+    </div>
+  </section>
+
+  <!-- ── NAVEGACIÓN DE CATEGORÍAS ── -->
+  <section class="section-light section-pad">
+    <div class="inner">
+      <p class="eyebrow eyebrow-blue">Áreas de servicio</p>
+      <h2 class="section-h2 dark">Todo lo que hacemos con tus <strong>datos geoespaciales</strong></h2>
+      <p class="section-lead dark">Desde el diagnóstico inicial hasta la entrega de análisis especializados, nuestros procesos integran tecnología de vanguardia, décadas de experiencia y metodologías probadas.</p>
+      <nav class="cat-nav">
+        <a class="cat-pill" href="#analisis">Análisis</a>
+        <a class="cat-pill" href="#catastro">Catastro</a>
+        <a class="cat-pill" href="#riesgos">Atlas de Riesgos</a>
+        <a class="cat-pill" href="#planeacion">Planeación</a>
+        <a class="cat-pill" href="#geomarketing">Geomarketing</a>
+        <a class="cat-pill" href="#agrotech">Agrotech</a>
+        <a class="cat-pill" href="#mineria">Minería</a>
+        <a class="cat-pill" href="#datos">Conversión de Datos</a>
+        <a class="cat-pill" href="#profesionalizacion">Profesionalización</a>
+      </nav>
+
+      <!-- ── ANÁLISIS GRID ── -->
+      <div class="analisis-grid" id="analisis">
+
+        <!-- Planos cartográficos -->
+        <div class="analisis-card">
+          <p class="analisis-cat">Análisis</p>
+          <p class="analisis-title">Planos Cartográficos</p>
+          <div class="analisis-img">[PLACEHOLDER — Ejemplo de plano cartográfico]</div>
+          <p class="analisis-desc">Generación de planos cartográficos de alta precisión para planificación urbana, catastro y gestión territorial.</p>
+          <div class="analisis-tags">
+            <span class="analisis-tag">Fotogrametría</span>
+            <span class="analisis-tag">LiDAR</span>
+            <span class="analisis-tag">Cartografía digital</span>
+          </div>
+        </div>
+
+        <!-- Catastro -->
+        <div class="analisis-card" id="catastro">
+          <p class="analisis-cat">Análisis · Catastro</p>
+          <p class="analisis-title">Análisis Catastral</p>
+          <div class="analisis-img">[PLACEHOLDER — Mapa de valores catastrales]</div>
+          <p class="analisis-desc">Herramientas y metodologías para modernizar el catastro municipal y maximizar la recaudación predial.</p>
+          <div class="analisis-tags">
+            <span class="analisis-tag">Valuaciones sintéticas</span>
+            <span class="analisis-tag">Planos de valores</span>
+            <span class="analisis-tag">Brecha catastral</span>
+          </div>
+        </div>
+
+        <!-- Riesgos -->
+        <div class="analisis-card" id="riesgos">
+          <p class="analisis-cat">Análisis · Riesgos</p>
+          <p class="analisis-title">Atlas de Riesgos</p>
+          <div class="analisis-img">[PLACEHOLDER — Mapa de riesgos / atlas]</div>
+          <p class="analisis-desc">Elaboración de Atlas de Riesgos para identificar, cartografiar y gestionar amenazas naturales en el territorio.</p>
+          <div class="analisis-tags">
+            <span class="analisis-tag">Ciclones</span>
+            <span class="analisis-tag">Inundación</span>
+            <span class="analisis-tag">Socavones</span>
+            <span class="analisis-tag">Incendios</span>
+            <span class="analisis-tag">Tsunamis</span>
+            <span class="analisis-tag">Deslaves lineales</span>
+          </div>
+        </div>
+
+        <!-- Planeación -->
+        <div class="analisis-card" id="planeacion">
+          <p class="analisis-cat">Análisis · Planeación</p>
+          <p class="analisis-title">Planeación Urbana</p>
+          <div class="analisis-img">[PLACEHOLDER — Imagen planes parciales]</div>
+          <p class="analisis-desc">Elaboración de planes parciales y estudios de planeación territorial para el desarrollo ordenado de la ciudad.</p>
+          <div class="analisis-tags">
+            <span class="analisis-tag">Planes parciales</span>
+            <span class="analisis-tag">Uso de suelo</span>
+            <span class="analisis-tag">Densificación</span>
+          </div>
+        </div>
+
+        <!-- Arbolado -->
+        <div class="analisis-card">
+          <p class="analisis-cat">Análisis · Arbolado</p>
+          <p class="analisis-title">Arbolado y Áreas Verdes</p>
+          <div class="analisis-img">[PLACEHOLDER — Mapa arbolado / áreas verdes]</div>
+          <p class="analisis-desc">Planeación de áreas verdes y programas de reforestación urbana basados en datos geoespaciales precisos.</p>
+          <div class="analisis-tags">
+            <span class="analisis-tag">Inventario arbóreo</span>
+            <span class="analisis-tag">Áreas verdes</span>
+            <span class="analisis-tag">Reforestación urbana</span>
+          </div>
+        </div>
+
+        <!-- Ambientales -->
+        <div class="analisis-card">
+          <p class="analisis-cat">Análisis · Ambientales</p>
+          <p class="analisis-title">Impacto Ambiental</p>
+          <div class="analisis-img">[PLACEHOLDER — Imagen análisis ambiental]</div>
+          <p class="analisis-desc">Estudios de impacto ambiental con soporte geoespacial para proyectos de infraestructura, minería y desarrollo urbano.</p>
+          <div class="analisis-tags">
+            <span class="analisis-tag">MIA</span>
+            <span class="analisis-tag">Zonas de amortiguamiento</span>
+            <span class="analisis-tag">Monitoreo satelital</span>
+          </div>
+        </div>
+
+        <!-- Geomarketing -->
+        <div class="analisis-card" id="geomarketing">
+          <p class="analisis-cat">Análisis · Geomarketing</p>
+          <p class="analisis-title">Geomarketing</p>
+          <div class="analisis-img">[PLACEHOLDER — Mapa de calor / vocaciones territoriales]</div>
+          <p class="analisis-desc">Estudio de mercado y vocaciones territoriales para identificar la localización óptima para el desarrollo de negocios e inversión.</p>
+          <div class="analisis-tags">
+            <span class="analisis-tag">Estudio de mercado</span>
+            <span class="analisis-tag">Vocaciones territoriales</span>
+            <span class="analisis-tag">Localización óptima</span>
+          </div>
+        </div>
+
+        <!-- Minería -->
+        <div class="analisis-card" id="mineria">
+          <p class="analisis-cat">Análisis · Minería</p>
+          <p class="analisis-title">Minería</p>
+          <div class="analisis-img">[PLACEHOLDER — Imagen análisis minero / pozos]</div>
+          <p class="analisis-desc">Inventario de pozos, cálculo de volúmenes de extracción y elaboración de Manifestaciones de Impacto Ambiental para el sector minero.</p>
+          <div class="analisis-tags">
+            <span class="analisis-tag">Inventario de pozos</span>
+            <span class="analisis-tag">Volúmenes de extracción</span>
+            <span class="analisis-tag">MIA</span>
+          </div>
+        </div>
+
+        <!-- Agrotech -->
+        <div class="analisis-card" id="agrotech">
+          <p class="analisis-cat">Análisis · Agrotech</p>
+          <p class="analisis-title">Agrotech</p>
+          <div class="analisis-img">[PLACEHOLDER — Imagen NDVI / campo agrícola]</div>
+          <p class="analisis-desc">Análisis de índices de vegetación (NDVI) y optimización del uso de fertilizantes para una agricultura de precisión.</p>
+          <div class="analisis-tags">
+            <span class="analisis-tag">NDVI</span>
+            <span class="analisis-tag">Fertilizante de precisión</span>
+            <span class="analisis-tag">Monitoreo de cultivos</span>
+          </div>
+        </div>
+
+        <!-- Diagnóstico -->
+        <div class="analisis-card">
+          <p class="analisis-cat">Análisis · Diagnóstico</p>
+          <p class="analisis-title">Diagnóstico Geoespacial</p>
+          <div class="analisis-img">[PLACEHOLDER — Diagrama diagnóstico / reporte]</div>
+          <p class="analisis-desc">Evaluación del índice de madurez geoespacial de tu organización para identificar brechas y oportunidades de mejora.</p>
+          <div class="analisis-tags">
+            <span class="analisis-tag">Índice de madurez</span>
+            <span class="analisis-tag">Brecha geoespacial</span>
+            <span class="analisis-tag">Hoja de ruta</span>
+          </div>
+        </div>
+
+      </div><!-- /analisis-grid -->
+    </div>
+  </section>
+
+  <!-- ── CATASTRO DETALLE ── -->
+  <section class="section-mid section-pad">
+    <div class="inner">
+      <p class="eyebrow eyebrow-dim">Análisis especializado</p>
+      <div class="catastro-grid">
+        <div>
+          <h2 class="section-h2 light" style="margin-bottom:2rem;">Catastro moderno para <strong>municipios que crecen</strong></h2>
+          <div class="catastro-feat">
+            <p class="catastro-feat-title">Valuaciones sintéticas</p>
+            <p class="catastro-feat-desc">Metodología de valuación masiva que actualiza el valor catastral de miles de predios de forma eficiente y objetiva.</p>
+          </div>
+          <div class="catastro-feat">
+            <p class="catastro-feat-title">Planos de valores</p>
+            <p class="catastro-feat-desc">Generación de planos de valores unitarios de suelo para fundamentar tarifas prediales justas y actualizadas.</p>
+          </div>
+          <div class="catastro-feat">
+            <p class="catastro-feat-title">Brecha catastral</p>
+            <p class="catastro-feat-desc">Identificación precisa de la diferencia entre el valor catastral y el valor comercial real de los inmuebles del municipio.</p>
+          </div>
+        </div>
+        <div class="catastro-img">[PLACEHOLDER — Mapa catastral interactivo / eCarto]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ATLAS DE RIESGOS DETALLE ── -->
+  <section class="section-light section-pad">
+    <div class="inner">
+      <p class="eyebrow eyebrow-blue">Análisis de riesgos</p>
+      <div class="riesgos-wrap">
+        <div class="riesgos-text">
+          <h3>Atlas de Riesgos:<br><strong>proteger es planear.</strong></h3>
+          <p>Elaboramos el Atlas de Riesgos de tu municipio identificando, cartografiando y evaluando las amenazas naturales presentes en el territorio para fundamentar decisiones de planeación urbana y protección civil.</p>
+          <div class="riesgo-tags">
+            <span class="riesgo-tag">Ciclones</span>
+            <span class="riesgo-tag">Inundación</span>
+            <span class="riesgo-tag">Socavones</span>
+            <span class="riesgo-tag">Incendios</span>
+            <span class="riesgo-tag">Tsunamis</span>
+            <span class="riesgo-tag">Deslaves lineales</span>
+          </div>
+        </div>
+        <div class="riesgos-img">[PLACEHOLDER — Mapa Atlas de Riesgos]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONVERSIÓN Y AUDITORÍA DE DATOS ── -->
+  <section class="section-light section-pad" style="background:#eef2ff;" id="datos">
+    <div class="inner">
+      <p class="eyebrow eyebrow-blue">Gestión de datos</p>
+      <h2 class="section-h2 dark">Conversión y <strong>auditoría de datos</strong></h2>
+      <p class="section-lead dark">Transformamos tus datos existentes al formato, sistema y estándar que necesitas — con auditoría rigurosa para garantizar su calidad e integridad.</p>
+      <div class="datos-grid">
+        <div class="datos-card">
+          <p class="datos-title">Conversión de datos</p>
+          <ul class="datos-list">
+            <li class="datos-item">
+              <span><strong>De qué sistema vienen:</strong> AutoCAD, ArcGIS, QGIS, bases propietarias, legacy formats — identificamos el origen y planificamos la migración.</span>
+            </li>
+            <li class="datos-item">
+              <span><strong>De qué formato se convierten:</strong> SHP, DWG, DXF, GeoJSON, KML, GDB, CSV georeferenciado y más — conversión sin pérdida de atributos.</span>
+            </li>
+          </ul>
+          <div class="datos-placeholder">[PLACEHOLDER — Diagrama flujo de conversión]</div>
+        </div>
+        <div class="datos-card">
+          <p class="datos-title">Auditoría de datos</p>
+          <ul class="datos-list">
+            <li class="datos-item">
+              <span><strong>Criterios de auditoría:</strong> integridad topológica, consistencia de atributos, precisión posicional, completitud y actualidad de la información.</span>
+            </li>
+            <li class="datos-item">
+              <span><strong>Entregables:</strong> reporte de calidad de datos, matriz de errores, plan de corrección y datos depurados listos para producción.</span>
+            </li>
+          </ul>
+          <div class="datos-placeholder">[PLACEHOLDER — Ejemplo reporte auditoría]</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROFESIONALIZACIÓN ── -->
+  <section class="section-dark section-pad" id="profesionalizacion">
+    <div class="inner">
+      <p class="eyebrow eyebrow-dim">Capital humano geoespacial</p>
+      <h2 class="section-h2 light" style="margin-bottom:0.6rem;">Profesionalización de <strong>equipos</strong></h2>
+      <p class="section-lead light">Formamos y acompañamos a los equipos técnicos de municipios e instituciones para que dominen las herramientas geoespaciales y logren independencia operativa.</p>
+      <div class="prof-grid">
+        <div class="prof-card">
+          <div class="prof-icon">🎓</div>
+          <p class="prof-title">Entrenamiento</p>
+          <p class="prof-body">Programas de capacitación en herramientas GIS, fotogrametría, manejo de LiDAR, eCarto y AU4. Presencial o en línea, adaptado al nivel del equipo.</p>
+          <div class="prof-placeholder">[PLACEHOLDER — Imagen sesión de entrenamiento]</div>
+        </div>
+        <div class="prof-card">
+          <div class="prof-icon">🤝</div>
+          <p class="prof-title">Acompañamiento</p>
+          <p class="prof-body">Consultores geoespaciales integrados a tu equipo durante la implementación del proyecto para garantizar la transferencia de conocimiento y los resultados.</p>
+          <div class="prof-placeholder">[PLACEHOLDER — Imagen trabajo en campo / consultoría]</div>
+        </div>
+        <div class="prof-card">
+          <div class="prof-icon">🛠️</div>
+          <p class="prof-title">Soporte</p>
+          <p class="prof-body">Mesa de ayuda y soporte técnico continuo para equipos en operación. Resolución de incidencias, actualizaciones y consultas especializadas.</p>
+          <div class="prof-placeholder">[PLACEHOLDER — Imagen soporte técnico / remoto]</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta-section">
+    <div style="max-width:680px;margin:0 auto;text-align:center;">
+      <p class="eyebrow eyebrow-blue" style="text-align:center;margin-bottom:0.9rem;">Empieza con un diagnóstico</p>
+      <h2 class="cta-h2">¿Qué proceso necesita<br><strong>tu organización hoy?</strong></h2>
+      <p class="cta-body">Cuéntanos el reto y en 48 horas te presentamos una propuesta con alcance, metodología y tiempos de entrega.</p>
+      <a href="mailto:info@cartodata.com" class="btn-primary" style="font-size:1rem;">Solicitar diagnóstico →</a>
+    </div>
+  </section>
+
+  <script>
+    /* Parallax hero */
+    (function() {
+      const bg = document.getElementById('procesos-hero-bg');
+      if (!bg) return;
+      function onScroll() {
+        bg.style.transform = `translateY(${(window.scrollY / window.innerHeight) * 30}%)`;
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+    })();
+  </script>
+</body>
+</html>

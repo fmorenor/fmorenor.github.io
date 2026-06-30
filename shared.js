@@ -333,7 +333,7 @@
         { label: 'Instituciones',  en: 'Institutions',  href: './index.html#instituciones'  },
       ]},
     { label: 'Tecnología', href: './index.html#tecnologia', children: [
-        { label: 'Procesos',    en: 'Processes',   href: './index.html#procesos'    },
+        { label: 'Procesos',    en: 'Processes',   href: './procesos.html'          },
         { label: 'Cartográfica',en: 'Cartographic',href: './cartografica.html'},
         { label: 'GeoSoftware', en: 'GeoSoftware', href: './geosoftware.html' },
       ]},
