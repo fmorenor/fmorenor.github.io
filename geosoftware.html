@@ -71,7 +71,9 @@
     }
     .hero-slide-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(5,8,22,0.92) 0%, rgba(5,8,22,0.45) 30%, rgba(5,8,22,0.0) 55%, rgba(5,8,22,0.25) 100%);
+      background:
+        linear-gradient(to top,  rgba(5,8,22,0.95) 0%, rgba(5,8,22,0.60) 40%, rgba(5,8,22,0.20) 70%, rgba(5,8,22,0.30) 100%),
+        linear-gradient(to right, rgba(5,8,22,0.70) 0%, rgba(5,8,22,0.30) 50%, rgba(5,8,22,0.0) 100%);
     }
     .hero-content {
       position: absolute; inset: 0;
@@ -364,20 +366,8 @@
 <!-- ═══════════════════════════════════════════ HERO ══════════ -->
 <div class="hero-wrap" id="hero">
 
-    <!-- Slide 1: AU4 -->
+    <!-- Slide 1: eCarto -->
     <div class="hero-slide active" data-slide="0">
-      <div class="hero-slide-bg" style="background-image:url('./images/au4.jpg'); background-position: center center;"></div>
-      <div class="hero-slide-overlay"></div>
-      <div class="hero-content">
-        <span class="hero-eyebrow" style="color:#7b9cff;">GeoSoftware · AU4</span>
-        <h1 class="hero-title">Compilación<br>estereoscópica<br><strong style="font-weight:600;">de alta precisión.</strong></h1>
-        <p class="hero-desc">La herramienta de fotogrametría más completa para la generación de cartografía de alta calidad. Curvas de nivel en tiempo real, corrección topológica automática y soporte LiDAR.</p>
-        <a href="https://wa.me/523336271552" target="_blank" rel="noreferrer" class="hero-cta">Cotizar AU4 ↗</a>
-      </div>
-    </div>
-
-    <!-- Slide 2: eCarto -->
-    <div class="hero-slide" data-slide="1">
       <div class="hero-slide-bg" style="background-image:url('./images/ecarto-hero.png'); background-position: center top;"></div>
       <div class="hero-slide-overlay"></div>
       <div class="hero-content">
@@ -385,6 +375,18 @@
         <h1 class="hero-title">Simple,<br>una necesidad,<br><strong style="font-weight:600;">un mapa.</strong></h1>
         <p class="hero-desc">Plataforma de colaboración geoespacial basada en web. Conecta datos aéreos, LiDAR, terrestres y sistemas legados en un solo mapa inteligente.</p>
         <a href="https://wa.me/523336271552" target="_blank" rel="noreferrer" class="hero-cta">Cotizar eCarto ↗</a>
+      </div>
+    </div>
+
+    <!-- Slide 2: AU4 -->
+    <div class="hero-slide" data-slide="1">
+      <div class="hero-slide-bg" style="background-image:url('./images/au4.jpg'); background-position: center center;"></div>
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-content">
+        <span class="hero-eyebrow" style="color:#7b9cff;">GeoSoftware · AU4</span>
+        <h1 class="hero-title">Compilación<br>estereoscópica<br><strong style="font-weight:600;">de alta precisión.</strong></h1>
+        <p class="hero-desc">La herramienta de fotogrametría más completa para la generación de cartografía de alta calidad. Curvas de nivel en tiempo real, corrección topológica automática y soporte LiDAR.</p>
+        <a href="https://wa.me/523336271552" target="_blank" rel="noreferrer" class="hero-cta">Cotizar AU4 ↗</a>
       </div>
     </div>
 
@@ -404,87 +406,6 @@
     <button class="hero-dot" data-i="1" aria-label="Slide 2"></button>
   </div>
 </div><!-- /hero -->
-
-<!-- ═══════════════════════════ AU4 MAIN ═══════════════════════ -->
-<section class="au4-section" id="au4">
-  <div class="au4-grid">
-    <div>
-      <p class="section-eyebrow" style="color:#7b9cff;">Software de fotogrametría</p>
-      <h2 class="section-title">AU4 — Compilación y edición estereoscópica</h2>
-      <p class="section-body">Una potente herramienta que permite la creación rápida y ágil de cartografía de alta calidad y precisión. Presente en 5 continentes, AU4 combina la compilación estereoscópica con automatización avanzada y soporte para múltiples sensores.</p>
-
-      <div class="au4-features">
-        <div class="au4-feature">
-          <div class="au4-feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/></svg>
-          </div>
-          <div class="au4-feature-text">
-            <h4>Compilación estereoscópica</h4>
-            <p>Herramientas de edición ágiles con control de calidad topológico y revisión en tiempo real.</p>
-          </div>
-        </div>
-        <div class="au4-feature">
-          <div class="au4-feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          </div>
-          <div class="au4-feature-text">
-            <h4>Curvas de nivel en tiempo real</h4>
-            <p>Generación automática con colores, etiquetas e intervalos totalmente personalizables.</p>
-          </div>
-        </div>
-        <div class="au4-feature">
-          <div class="au4-feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          </div>
-          <div class="au4-feature-text">
-            <h4>Integración LiDAR</h4>
-            <p>Importación de datos LiDAR y visualización de nubes de puntos en estereoscopía.</p>
-          </div>
-        </div>
-        <div class="au4-feature">
-          <div class="au4-feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-          </div>
-          <div class="au4-feature-text">
-            <h4>Múltiples sensores y WMS/WFS</h4>
-            <p>Compatible con cámaras aéreas, imágenes satelitales y servicios web estándar.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="au4-img-wrap">
-      <img src="./images/au4-screen.png" alt="AU4 software interface" loading="lazy" />
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════ AU4 CAPABILITIES (parallax) ════════ -->
-<div class="au4-parallax" id="au4-parallax">
-  <div class="au4-parallax-bg" id="au4ParallaxBg"></div>
-  <div class="au4-parallax-overlay"></div>
-  <div class="au4-parallax-content">
-    <p class="section-eyebrow" style="color:#7b9cff;">Capacidades</p>
-    <h2 class="section-title" style="text-align:center;">Tecnología que acelera<br>cada proyecto cartográfico</h2>
-    <div class="au4-caps-grid">
-      <div class="au4-cap">
-        <p class="au4-cap-num">01 · Innovación</p>
-        <h3>Herramientas de compilación avanzadas</h3>
-        <p>Amplio rango de herramientas para proyectos complejos, múltiples algoritmos de análisis y corrección automática de errores, y macros para aumentar la productividad con marcos personalizados.</p>
-      </div>
-      <div class="au4-cap">
-        <p class="au4-cap-num">02 · Automatización</p>
-        <h3>Procesamiento de alto rendimiento</h3>
-        <p>Curvas de nivel en tiempo real con colores y etiquetas personalizables. Gestión de proyectos por áreas de trabajo para analizar el rendimiento de cada usuario.</p>
-      </div>
-      <div class="au4-cap">
-        <p class="au4-cap-num">03 · Versatilidad</p>
-        <h3>Interoperabilidad total</h3>
-        <p>Compatible con cámaras aéreas métricas, imágenes satelitales de alta resolución, servicios web WMS/WFS y visualización oblicua simultánea para interpretación fotogramétrica.</p>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ═══════════════════════════ eCARTO MAIN ════════════════════ -->
 <section class="ecarto-section" id="ecarto">
@@ -571,6 +492,87 @@
           <li>Servicios WMTS/WMS/WFS</li>
           <li>Sistemas legados</li>
         </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ AU4 MAIN ═══════════════════════ -->
+<section class="au4-section" id="au4">
+  <div class="au4-grid">
+    <div>
+      <p class="section-eyebrow" style="color:#7b9cff;">Software de fotogrametría</p>
+      <h2 class="section-title">AU4 — Compilación y edición estereoscópica</h2>
+      <p class="section-body">Una potente herramienta que permite la creación rápida y ágil de cartografía de alta calidad y precisión. Presente en 5 continentes, AU4 combina la compilación estereoscópica con automatización avanzada y soporte para múltiples sensores.</p>
+
+      <div class="au4-features">
+        <div class="au4-feature">
+          <div class="au4-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/></svg>
+          </div>
+          <div class="au4-feature-text">
+            <h4>Compilación estereoscópica</h4>
+            <p>Herramientas de edición ágiles con control de calidad topológico y revisión en tiempo real.</p>
+          </div>
+        </div>
+        <div class="au4-feature">
+          <div class="au4-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="au4-feature-text">
+            <h4>Curvas de nivel en tiempo real</h4>
+            <p>Generación automática con colores, etiquetas e intervalos totalmente personalizables.</p>
+          </div>
+        </div>
+        <div class="au4-feature">
+          <div class="au4-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="au4-feature-text">
+            <h4>Integración LiDAR</h4>
+            <p>Importación de datos LiDAR y visualización de nubes de puntos en estereoscopía.</p>
+          </div>
+        </div>
+        <div class="au4-feature">
+          <div class="au4-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+          </div>
+          <div class="au4-feature-text">
+            <h4>Múltiples sensores y WMS/WFS</h4>
+            <p>Compatible con cámaras aéreas, imágenes satelitales y servicios web estándar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="au4-img-wrap">
+      <img src="./images/au4-screen.png" alt="AU4 software interface" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ AU4 CAPABILITIES (parallax) ════════ -->
+<div class="au4-parallax" id="au4-parallax">
+  <div class="au4-parallax-bg" id="au4ParallaxBg"></div>
+  <div class="au4-parallax-overlay"></div>
+  <div class="au4-parallax-content">
+    <p class="section-eyebrow" style="color:#7b9cff;">Capacidades</p>
+    <h2 class="section-title" style="text-align:center;">Tecnología que acelera<br>cada proyecto cartográfico</h2>
+    <div class="au4-caps-grid">
+      <div class="au4-cap">
+        <p class="au4-cap-num">01 · Innovación</p>
+        <h3>Herramientas de compilación avanzadas</h3>
+        <p>Amplio rango de herramientas para proyectos complejos, múltiples algoritmos de análisis y corrección automática de errores, y macros para aumentar la productividad con marcos personalizados.</p>
+      </div>
+      <div class="au4-cap">
+        <p class="au4-cap-num">02 · Automatización</p>
+        <h3>Procesamiento de alto rendimiento</h3>
+        <p>Curvas de nivel en tiempo real con colores y etiquetas personalizables. Gestión de proyectos por áreas de trabajo para analizar el rendimiento de cada usuario.</p>
+      </div>
+      <div class="au4-cap">
+        <p class="au4-cap-num">03 · Versatilidad</p>
+        <h3>Interoperabilidad total</h3>
+        <p>Compatible con cámaras aéreas métricas, imágenes satelitales de alta resolución, servicios web WMS/WFS y visualización oblicua simultánea para interpretación fotogramétrica.</p>
       </div>
     </div>
   </div>
