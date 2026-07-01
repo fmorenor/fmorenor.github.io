@@ -210,6 +210,37 @@
       font-size: 0.82rem; color: #475569; line-height: 1.55;
     }
 
+    /* ── CARDS GESTIÓN (contraste oscuro) ── */
+    .sistemas-grupo.gestion { background: #0f172a; border-radius: 20px; padding: 2rem; margin-bottom: 4rem; }
+    .sistemas-grupo.gestion .sistemas-grupo-title { color: #e2e8f0; border-bottom-color: rgba(255,255,255,0.1); }
+    .sistemas-grupo.gestion .sistemas-grupo-title span.tag {
+      background: rgba(59,91,219,0.35); color: #93a8f4;
+    }
+    .sistemas-grupo.gestion .sistemas-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 1rem;
+    }
+    .sistema-card-dark {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 1.5rem 1.2rem;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 1rem;
+      transition: background 200ms, border-color 200ms;
+    }
+    .sistema-card-dark:hover {
+      background: rgba(59,91,219,0.18);
+      border-color: rgba(59,91,219,0.5);
+    }
+    .sistema-icon-img {
+      width: 48px; height: 48px; object-fit: contain;
+      filter: brightness(0) invert(1); opacity: 0.85;
+    }
+    .sistema-card-dark h4 {
+      font-size: 0.9rem; font-weight: 700; color: #f1f5f9; margin-bottom: 0.25rem;
+    }
+    .sistema-card-dark p {
+      font-size: 0.8rem; color: rgba(255,255,255,0.5); line-height: 1.55;
+    }
+
     /* ── CTA ── */
     .cta-section {
       background: #3b5bdb;
@@ -397,40 +428,40 @@
       </div>
 
       <!-- Sistemas de control -->
-      <div class="sistemas-grupo">
+      <div class="sistemas-grupo gestion">
         <h3 class="sistemas-grupo-title">Sistemas de control y generación de información <span class="tag">Gestión</span></h3>
         <div class="sistemas-grid">
-          <div class="sistema-card">
-            <div class="sistema-icon">🔏</div>
-            <div class="sistema-body">
+          <div class="sistema-card-dark">
+            <img class="sistema-icon-img" src="./images/icons/esellos_i.png" alt="eSellos" />
+            <div>
               <h4>eSellos</h4>
               <p>Visor de documentos escaneados con capacidad de asignar sellos virtuales con detalles de actos jurídicos.</p>
             </div>
           </div>
-          <div class="sistema-card">
-            <div class="sistema-icon">⚙️</div>
-            <div class="sistema-body">
+          <div class="sistema-card-dark">
+            <img class="sistema-icon-img" src="./images/icons/etramites_i.png" alt="eTrámites" />
+            <div>
               <h4>eTrámites</h4>
               <p>Modela flujos de trabajo e interacciones entre sistemas controlando carga, responsables y tiempos de respuesta.</p>
             </div>
           </div>
-          <div class="sistema-card">
-            <div class="sistema-icon">🔢</div>
-            <div class="sistema-body">
+          <div class="sistema-card-dark">
+            <img class="sistema-icon-img" src="./images/icons/enumeros_i.png" alt="eNúmeros" />
+            <div>
               <h4>eNúmeros</h4>
               <p>Sistema multiusuarios para asignación de números oficiales con algoritmos que garantizan no repetirlos.</p>
             </div>
           </div>
-          <div class="sistema-card">
-            <div class="sistema-icon">📁</div>
-            <div class="sistema-body">
+          <div class="sistema-card-dark">
+            <img class="sistema-icon-img" src="./images/icons/edocumentos_i.png" alt="eDocumentos" />
+            <div>
               <h4>eDocumentos</h4>
               <p>Herramientas de indexación para subir documentos secuenciales de forma masiva o individual.</p>
             </div>
           </div>
-          <div class="sistema-card">
-            <div class="sistema-icon">📐</div>
-            <div class="sistema-body">
+          <div class="sistema-card-dark">
+            <img class="sistema-icon-img" src="./images/icons/eplanos_i.png" alt="ePlanos" />
+            <div>
               <h4>ePlanos</h4>
               <p>La cartografía es el origen de medidas y colindancias de predios. Valida georreferencia y geometrías.</p>
             </div>
