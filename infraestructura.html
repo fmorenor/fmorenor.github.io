@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Infraestructura · Obra 4D — Seguimiento con Drones — CartoData</title>
+  <meta name="description" content="Seguimiento cualitativo y cuantitativo de obra con drones. Video 4K, fotogrametría centimétrica y modelado 3D para constructoras e inversores." />
+  <link rel="canonical" href="https://www.cartodata.com/infraestructura.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.cartodata.com/infraestructura.html" />
+  <meta property="og:title" content="Infraestructura · Obra 4D — CartoData" />
+  <meta property="og:description" content="Seguimiento de obra con drones: video 4K, fotogrametría centimétrica y modelado 3D." />
+  <meta property="og:locale" content="es_MX" />
+  <meta property="og:site_name" content="CartoData" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script src="./shared.js" defer></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; }
+    img { display: block; max-width: 100%; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; width: 100%; min-height: 100vh;
+      display: flex; align-items: center; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: -15% 0;
+      background-image: url('./images/demo_infraestructura.jpg');
+      background-size: cover; background-position: center;
+      will-change: transform;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(5,8,22,0.88) 0%, rgba(5,8,22,0.45) 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 860px;
+      padding: clamp(7rem,14vw,11rem) clamp(1.5rem,6vw,4rem) clamp(5rem,9vw,7rem);
+    }
+    .hero-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 1.2rem;
+    }
+    .hero-h1 {
+      font-size: clamp(2.4rem,5.5vw,4.5rem); font-weight: 200; line-height: 1.1;
+      color: #fff; margin-bottom: 1.5rem;
+    }
+    .hero-h1 strong { font-weight: 800; }
+    .hero-sub {
+      font-size: clamp(1rem,1.8vw,1.2rem); font-weight: 300; line-height: 1.7;
+      color: rgba(255,255,255,0.68); max-width: 600px; margin-bottom: 2.5rem;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-block; padding: 1rem 2.4rem;
+      background: #3b5bdb; color: #fff; border-radius: 999px;
+      font-size: 0.95rem; font-weight: 600; text-decoration: none;
+      transition: background 250ms, transform 200ms;
+    }
+    .btn-primary:hover { background: #2d4bbd; transform: translateY(-2px); }
+    .btn-ghost {
+      display: inline-block; padding: 1rem 2.4rem;
+      background: transparent; color: #fff; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.3);
+      font-size: 0.95rem; font-weight: 500; text-decoration: none;
+      transition: background 250ms, border-color 250ms;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); }
+
+    /* ── SERVICIOS STRIP ── */
+    .servicios-strip {
+      background: #050816;
+      padding: 0;
+    }
+    .servicios-inner { max-width: 100%; }
+    .servicios-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(255,255,255,0.35);
+      padding: clamp(3rem,5vw,4rem) clamp(1.5rem,6vw,4rem) 1.5rem;
+      text-align: center;
+    }
+    .servicios-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 0;
+    }
+    .servicio-card {
+      position: relative; overflow: hidden;
+      min-height: 520px;
+      cursor: pointer; text-decoration: none; display: block;
+    }
+    .servicio-card-bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transition: transform 600ms cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .servicio-card:hover .servicio-card-bg { transform: scale(1.06); }
+    .servicio-card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(5,8,22,0.92) 0%, rgba(5,8,22,0.30) 50%, rgba(5,8,22,0.10) 100%);
+      transition: background 400ms;
+    }
+    .servicio-card:hover .servicio-card-overlay {
+      background: linear-gradient(to top, rgba(5,8,22,0.97) 0%, rgba(5,8,22,0.55) 55%, rgba(59,91,219,0.15) 100%);
+    }
+    .servicio-card-content {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 2rem 2rem 2.5rem;
+    }
+    .servicio-num {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: rgba(255,255,255,0.35);
+      margin-bottom: 0.6rem;
+      transform: translateY(8px); opacity: 0;
+      transition: transform 350ms, opacity 350ms;
+    }
+    .servicio-card:hover .servicio-num { transform: translateY(0); opacity: 1; }
+    .servicio-card h3 {
+      font-size: clamp(1.1rem,1.8vw,1.5rem); font-weight: 300;
+      color: #fff; margin-bottom: 0.5rem; line-height: 1.2;
+    }
+    .servicio-card h3 strong { font-weight: 800; }
+    .servicio-card p {
+      font-size: 0.85rem; color: rgba(255,255,255,0.6); line-height: 1.55;
+      max-height: 0; overflow: hidden;
+      transition: max-height 400ms ease, opacity 350ms;
+      opacity: 0;
+    }
+    .servicio-card:hover p { max-height: 6rem; opacity: 1; }
+    .servicio-card-arrow {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      margin-top: 0.8rem; font-size: 0.8rem; font-weight: 600;
+      color: #3b5bdb; opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 300ms 100ms, transform 300ms 100ms;
+    }
+    .servicio-card:hover .servicio-card-arrow { opacity: 1; transform: translateX(0); }
+    /* divisor vertical entre cards */
+    .servicio-card + .servicio-card { border-left: 1px solid rgba(255,255,255,0.08); }
+
+    /* ── CARACTERÍSTICAS ── */
+    .features-section {
+      background: #f4f4f2;
+      padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);
+    }
+    .features-inner { max-width: 1200px; margin: 0 auto; }
+    .features-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; color: #3b5bdb; margin-bottom: 0.8rem;
+    }
+    .features-h2 {
+      font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 300; color: #0f172a;
+      margin-bottom: 3.5rem; line-height: 1.2;
+    }
+    .features-h2 strong { font-weight: 800; }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 2.5rem;
+    }
+    .feat-item { text-align: center; }
+    .feat-icon {
+      width: 80px; height: 80px;
+      margin: 0 auto 1.2rem;
+    }
+    .feat-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .feat-item h4 {
+      font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;
+    }
+    .feat-item p { font-size: 0.9rem; color: #475569; line-height: 1.65; }
+
+    /* ── SECCIÓN DETALLE (alternada oscuro/claro) ── */
+    .detalle-section {
+      padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);
+    }
+    .detalle-section.dark  { background: #050816; }
+    .detalle-section.mid   { background: #0b1022; }
+    .detalle-section.light { background: #fff; }
+    .detalle-inner { max-width: 1100px; margin: 0 auto; }
+    .detalle-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; margin-bottom: 0.8rem;
+    }
+    .eyebrow-blue  { color: #3b5bdb; }
+    .eyebrow-dim   { color: rgba(255,255,255,0.35); }
+    .detalle-h2 {
+      font-size: clamp(1.6rem,3vw,2.4rem); font-weight: 300; line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .detalle-h2.light-text { color: #fff; }
+    .detalle-h2.dark-text  { color: #0f172a; }
+    .detalle-h2 strong { font-weight: 800; }
+    .detalle-body {
+      font-size: 0.97rem; line-height: 1.75; max-width: 720px; margin-bottom: 2.5rem;
+    }
+    .detalle-body.light-text { color: rgba(255,255,255,0.65); }
+    .detalle-body.dark-text  { color: #334155; }
+    .embed-wrap {
+      border-radius: 16px; overflow: hidden;
+      aspect-ratio: 16/9; background: #0b1022;
+      margin-top: 2rem;
+    }
+    .embed-wrap iframe {
+      width: 100%; height: 100%; border: none;
+    }
+
+    /* ── CTA FINAL ── */
+    .cta-section {
+      background: #3b5bdb;
+      padding: clamp(4rem,8vw,6rem) clamp(1.5rem,6vw,4rem);
+      text-align: center;
+    }
+    .cta-inner { max-width: 700px; margin: 0 auto; }
+    .cta-inner h2 {
+      font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 700; color: #fff;
+      margin-bottom: 1rem; line-height: 1.2;
+    }
+    .cta-inner p {
+      font-size: 1.05rem; color: rgba(255,255,255,0.78); margin-bottom: 2.2rem; line-height: 1.65;
+    }
+    .btn-white {
+      display: inline-block; padding: 1rem 2.8rem;
+      background: #fff; color: #3b5bdb; border-radius: 999px;
+      font-size: 0.95rem; font-weight: 700; text-decoration: none;
+      transition: background 200ms, transform 200ms;
+    }
+    .btn-white:hover { background: #f0f4ff; transform: translateY(-2px); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px) {
+      .features-grid  { grid-template-columns: 1fr; gap: 2rem; }
+    }
+    @media(max-width:600px) {
+      .servicios-grid { grid-template-columns: 1fr; }
+    }
+    @media(max-width:640px) {
+      .hero-btns { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="top">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Infraestructura · Obra 4D</p>
+      <h1 class="hero-h1">Seguimiento de obra<br><strong>con drones 4D</strong></h1>
+      <p class="hero-sub">Visitar obras semanalmente puede ser complicado cuando estás a cargo de varios proyectos en diferentes localidades. CartoData te da la máquina del tiempo que necesitas: registro cualitativo y cuantitativo con precisión centimétrica.</p>
+      <div class="hero-btns">
+        <a href="#cta" class="btn-primary">Conecta con nuestros expertos →</a>
+        <a href="#servicios" class="btn-ghost">Ver servicios</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3 SERVICIOS ── -->
+  <section class="servicios-strip" id="servicios">
+    <div class="servicios-inner">
+      <p class="servicios-eyebrow">Tres servicios · Una plataforma de seguimiento</p>
+      <div class="servicios-grid">
+        <a class="servicio-card" href="#video">
+          <div class="servicio-card-bg" style="background-image:url('./images/segumiento-de-obra-en-video_bw-768x384.jpg')"></div>
+          <div class="servicio-card-overlay"></div>
+          <div class="servicio-card-content">
+            <span class="servicio-num">01</span>
+            <h3>Seguimiento de obra<br><strong>en video</strong></h3>
+            <p>Plan de vuelo repetido semana a semana. Videos 4K comparables por fecha para control de avance y subcontratistas.</p>
+            <span class="servicio-card-arrow">Ver demo →</span>
+          </div>
+        </a>
+        <a class="servicio-card" href="#fotogrametrico">
+          <div class="servicio-card-bg" style="background-image:url('./images/seguimiento-de-obra-fotogrametrico_bw.jpg')"></div>
+          <div class="servicio-card-overlay"></div>
+          <div class="servicio-card-content">
+            <span class="servicio-num">02</span>
+            <h3>Seguimiento de Obra<br><strong>fotogramétrico</strong></h3>
+            <p>Ortofoto de 4 cm/px con actualización semanal. Superposición de planos en eCarto para verificación de avance real.</p>
+            <span class="servicio-card-arrow">Ver demo →</span>
+          </div>
+        </a>
+        <a class="servicio-card" href="#modelado3d">
+          <div class="servicio-card-bg" style="background-image:url('./images/modelado-3d_bw.jpg')"></div>
+          <div class="servicio-card-overlay"></div>
+          <div class="servicio-card-content">
+            <span class="servicio-num">03</span>
+            <h3><strong>Modelado 3D</strong></h3>
+            <p>Modelo 3D del entorno previo al proyecto y modelo <em>as built</em> al final de la construcción.</p>
+            <span class="servicio-card-arrow">Ver demo →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CARACTERÍSTICAS ── -->
+  <section class="features-section">
+    <div class="features-inner">
+      <p class="features-eyebrow">¿Por qué CartoData?</p>
+      <h2 class="features-h2">Lo que distingue a <strong>Obra 4D</strong></h2>
+      <div class="features-grid">
+        <div class="feat-item">
+          <div class="feat-icon">
+            <img src="./images/icons/cartodata_seguimiento_de_obra_con_drones___precision.png" alt="Alta Precisión">
+          </div>
+          <h4>Alta Precisión</h4>
+          <p>Fotogrametría con precisión centimétrica en vertical, oblicuo y video HD. Cada vuelo es idéntico al anterior para comparativas fiables.</p>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon">
+            <img src="./images/icons/cartodata_seguimiento_de_obra_con_drones_informacion_actualizada.png" alt="Información actualizada">
+          </div>
+          <h4>Información actualizada</h4>
+          <p>La información puede ser consultada en línea pocas horas después del vuelo. Sin esperas ni transferencias manuales.</p>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon">
+            <img src="./images/icons/cartodata_seguimiento_de_obra_con_drones_portabilidad.png" alt="Portabilidad">
+          </div>
+          <h4>Portabilidad total</h4>
+          <p>Toda la información está disponible desde cualquier computadora o dispositivo móvil a través de eCarto. Donde estés, cuando lo necesites.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEGUIMIENTO EN VIDEO ── -->
+  <section class="detalle-section dark" id="video">
+    <div class="detalle-inner">
+      <p class="detalle-eyebrow eyebrow-dim">Servicio 1</p>
+      <h2 class="detalle-h2 light-text">Seguimiento de obra en <strong>video</strong></h2>
+      <p class="detalle-body light-text">Diseñamos un plan de vuelo que se ejecuta semana a semana de forma idéntica, poniendo especial énfasis en puntos de interés. Los videos de seguimiento se graban en 4K y se publican en una plataforma que permite comparar dos fechas en paralelo — ideal para socializar avances con clientes e inversores.</p>
+      <div class="embed-wrap">
+        <iframe src="http://demo.cartodata.com/apps/comparadron/1720.html" loading="lazy" allowfullscreen title="Comparador de seguimiento de obra en video"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEGUIMIENTO FOTOGRAMÉTRICO ── -->
+  <section class="detalle-section mid" id="fotogrametrico">
+    <div class="detalle-inner">
+      <p class="detalle-eyebrow eyebrow-dim">Servicio 2</p>
+      <h2 class="detalle-h2 light-text">Seguimiento de obra <strong>4D fotogramétrico</strong></h2>
+      <p class="detalle-body light-text">Habilitado por eCarto en la nube, se sobreponen los planos de la obra a una ortofoto de 4 cm/px de resolución con actualización semanal. Este servicio permite socializar los avances con clientes e inversionistas y contar con una máquina del tiempo para el control de subcontratistas y la toma de decisiones.</p>
+      <div class="embed-wrap">
+        <iframe src="https://player.vimeo.com/video/250319923?autoplay=0&loop=1&rel=0" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Seguimiento fotogramétrico de obra"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MODELADO 3D ── -->
+  <section class="detalle-section dark" id="modelado3d">
+    <div class="detalle-inner">
+      <p class="detalle-eyebrow eyebrow-dim">Servicio 3</p>
+      <h2 class="detalle-h2 light-text"><strong>Modelado 3D</strong></h2>
+      <p class="detalle-body light-text">Antes de comenzar su proyecto, CartoData genera un modelo 3D del entorno. Es de suma utilidad para que los arquitectos comprendan las sombras de edificios vecinos, identifiquen las mejores vistas y evalúen la vegetación que incrementará la plusvalía del proyecto.<br><br>Una vez terminada la obra, generamos un modelo <em>as built</em> para documentar el estado final de la construcción.</p>
+      <div class="embed-wrap">
+        <iframe src="https://player.vimeo.com/video/250320293?autoplay=0&loop=1&rel=0" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Modelado 3D de construcción"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta-section" id="cta">
+    <div class="cta-inner">
+      <h2>¿Listo para tener la máquina del tiempo en tu obra?</h2>
+      <p>Cuéntanos sobre tu proyecto y te diseñamos un plan de seguimiento a la medida.</p>
+      <a href="https://api.whatsapp.com/send?phone=523318520000" target="_blank" rel="noopener" class="btn-white">Conecta con nuestros expertos →</a>
+    </div>
+  </section>
+
+  <script>
+    // Parallax hero
+    (function(){
+      const bg = document.getElementById('heroBg');
+      if(!bg) return;
+      window.addEventListener('scroll', () => {
+        const p = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+        bg.style.transform = `translateY(${p * 30}%)`;
+      }, { passive: true });
+    })();
+  </script>
+
+</body>
+</html>

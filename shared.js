@@ -328,7 +328,7 @@
   const NAV_LINKS = [
     { label: 'Impacto',    href: './index.html#impacto',    children: [
         { label: 'Ciudades',       en: 'Cities',        href: './ciudades.html'             },
-        { label: 'Infraestructura',en: 'Infrastructure',href: './index.html#infraestructura'},
+        { label: 'Infraestructura',en: 'Infrastructure',href: './infraestructura.html'       },
         { label: 'Minería',        en: 'Mining',        href: './index.html#minas'          },
         { label: 'Instituciones',  en: 'Institutions',  href: './index.html#instituciones'  },
       ]},

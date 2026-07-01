@@ -208,15 +208,23 @@
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .step-text { font-size: 0.95rem; color: #0f172a; font-weight: 500; padding-top: 0.35rem; }
-    .metodologia-img-wrap {
-      border-radius: 20px; overflow: hidden; aspect-ratio: 4/3;
-      background: #e2e8f0;
+    .metodologia-texto-col {
+      display: flex; flex-direction: column; gap: 1.25rem; padding-top: 0.5rem;
     }
-    .metodologia-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-    .placeholder-img {
-      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(135deg,#e2e8f0,#cbd5e1);
-      font-size: 0.8rem; color: #94a3b8; font-weight: 500;
+    .metodologia-col-title {
+      font-size: clamp(1.2rem,2.2vw,1.6rem); font-weight: 700; color: #0f172a;
+      line-height: 1.3; margin: 0;
+    }
+    .metodologia-col-body {
+      font-size: 0.97rem; color: #334155; line-height: 1.75; margin: 0;
+    }
+    .metodologia-mantra {
+      margin-top: 1rem; padding: 1.25rem 1.5rem;
+      border-left: 4px solid #3b5bdb;
+      background: #eef2ff;
+      font-size: 0.85rem; font-weight: 700; color: #1e3a8a;
+      line-height: 1.5; letter-spacing: 0.02em;
+      border-radius: 0 0.75rem 0.75rem 0;
     }
     @media(max-width:900px) { .metodologia-grid { grid-template-columns: 1fr; gap: 3rem; } }
 
@@ -445,43 +453,16 @@
       <p class="section-eyebrow">Cómo lo logramos</p>
       <div class="metodologia-grid">
         <div>
-          <h2 class="metodologia-h2">La <strong>Cartomorfosis®</strong><br>en 5 pasos</h2>
-          <p class="metodologia-body">La Cartomorfosis® combina en un círculo virtuoso la información geoespacial con tecnología de vanguardia, el geosoftware a la medida y una consultoría especializada que agrega décadas de experiencia — poniendo al ciudadano y la objetividad al centro del proceso.</p>
-          <ul class="steps-list">
-            <li class="step-item">
-              <span class="step-num">1</span>
-              <span class="step-text">Implementación de plataforma tecnológica geográfica</span>
-            </li>
-            <li class="step-item">
-              <span class="step-num">2</span>
-              <span class="step-text">Identificación de diferencias de construcción</span>
-            </li>
-            <li class="step-item">
-              <span class="step-num">3</span>
-              <span class="step-text">Re-evaluación eficiente de propiedades</span>
-            </li>
-            <li class="step-item">
-              <span class="step-num">4</span>
-              <span class="step-text">Información al ciudadano sobre inconsistencias</span>
-            </li>
-            <li class="step-item">
-              <span class="step-num">5</span>
-              <span class="step-text">Incremento sostenido en la recaudación</span>
-            </li>
-          </ul>
-          <div style="margin-top:2rem;">
-            <p style="font-size:0.88rem;color:#475569;margin-bottom:0.5rem;">Pilares del éxito:</p>
-            <div style="display:flex;gap:0.7rem;flex-wrap:wrap;">
-              <span style="background:#e8edff;color:#3b5bdb;border-radius:999px;padding:0.3rem 0.9rem;font-size:0.8rem;font-weight:600;">Tecnología de vanguardia</span>
-              <span style="background:#e8edff;color:#3b5bdb;border-radius:999px;padding:0.3rem 0.9rem;font-size:0.8rem;font-weight:600;">+40 años de experiencia</span>
-              <span style="background:#e8edff;color:#3b5bdb;border-radius:999px;padding:0.3rem 0.9rem;font-size:0.8rem;font-weight:600;">Metodología propia</span>
-            </div>
-          </div>
+          <img src="./images/cartomorfosis.avif" alt="Metodología Cartomorfosis" loading="lazy" style="width:100%;height:auto;border-radius:1rem;">
         </div>
         <div>
-          <div class="metodologia-img-wrap">
-            <!-- [PLACEHOLDER: imagen del proceso / diagrama de cartomorfosis] -->
-            <div class="placeholder-img">[PLACEHOLDER — Imagen o diagrama Cartomorfosis]</div>
+          <div class="metodologia-texto-col">
+            <h3 class="metodologia-col-title">La transformación a partir de la reingeniería.</h3>
+            <p class="metodologia-col-body">Creemos en un mundo mejor que empodere la toma de decisiones con información precisa. A esto le llamamos Cartomorfosis y sus tres pilares: <strong>omnidata</strong>, <strong>geosoftware</strong> y <strong>profesionalización</strong>.</p>
+            <p class="metodologia-col-body">Integramos tecnologías en nuestros procesos como fotogrametría, LiDAR, Visión360, Drones y soluciones geoespaciales aplicadas en agricultura, minería, inmobiliaria, catastro, fiscalidad territorial y otras áreas para gobiernos de ciudades inteligentes.</p>
+            <div class="metodologia-mantra">
+              LA CARTOMORFOSIS ES UN FENÓMENO ORGANIZACIONAL CON GRANDES BENEFICIOS PARA EL MUNICIPIO, LA SOCIEDAD Y LA CIUDADANÍA
+            </div>
           </div>
         </div>
       </div>
