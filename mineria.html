@@ -192,6 +192,28 @@
     }
     .btn-white:hover { background: #f0f4ff; transform: translateY(-2px); }
 
+    /* ── VIDEO DIVISOR ── */
+    .video-divider {
+      position: relative; width: 100%; height: 100vh; overflow: hidden;
+      background: #000;
+    }
+    .video-divider #yt-divider-player {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+    }
+    .video-divider #yt-divider-player iframe {
+      position: absolute;
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 177.78vh; /* 16:9 */
+      height: 56.25vw; /* 16:9 */
+      min-width: 100%; min-height: 100%;
+      border: none; pointer-events: none;
+    }
+    .video-divider-overlay {
+      position: absolute; inset: 0;
+      background: rgba(5,8,22,0.35);
+      pointer-events: none;
+    }
+
     /* ── RESPONSIVE ── */
     @media(max-width:900px) {
       .intro-inner,
@@ -370,6 +392,12 @@
     </div>
   </section>
 
+  <!-- ── VIDEO DIVISOR ── -->
+  <section class="video-divider" id="video-divider">
+    <div id="yt-divider-player"></div>
+    <div class="video-divider-overlay"></div>
+  </section>
+
   <!-- ── CTA ── -->
   <section class="cta-section" id="cta">
     <div class="cta-inner">
@@ -379,5 +407,42 @@
     </div>
   </section>
 
+  <script>
+    (function() {
+      var player, ready = false;
+
+      window.onYouTubeIframeAPIReady = function() {
+        player = new YT.Player('yt-divider-player', {
+          videoId: 'fEeAMid9hJY',
+          playerVars: {
+            autoplay: 1, mute: 1, loop: 1, controls: 0,
+            playlist: 'fEeAMid9hJY',
+            rel: 0, modestbranding: 1, playsinline: 1
+          },
+          events: {
+            onReady: function() {
+              ready = true;
+              player.mute();
+            }
+          }
+        });
+      };
+
+      var tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(tag);
+
+      var section = document.getElementById('video-divider');
+      var obs = new IntersectionObserver(function(entries) {
+        if (!ready) return;
+        if (entries[0].isIntersecting) {
+          player.playVideo();
+        } else {
+          player.pauseVideo();
+        }
+      }, { threshold: 0.2 });
+      obs.observe(section);
+    })();
+  </script>
 </body>
 </html>
