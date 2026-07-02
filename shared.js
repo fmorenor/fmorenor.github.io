@@ -8,6 +8,20 @@
     document.head.prepend(link);
   }
 
+  /* ── Cargar DM Sans (misma fuente que el home) si no está ya ── */
+  if (!document.querySelector('link[href*="fonts.googleapis.com/css2?family=DM+Sans"]')) {
+    const pre1 = document.createElement('link');
+    pre1.rel = 'preconnect'; pre1.href = 'https://fonts.googleapis.com';
+    const pre2 = document.createElement('link');
+    pre2.rel = 'preconnect'; pre2.href = 'https://fonts.gstatic.com'; pre2.crossOrigin = '';
+    const font = document.createElement('link');
+    font.rel = 'stylesheet';
+    font.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap';
+    document.head.prepend(font);
+    document.head.prepend(pre2);
+    document.head.prepend(pre1);
+  }
+
   /* ── Estilos compartidos ── */
   const style = document.createElement('style');
   style.textContent = `

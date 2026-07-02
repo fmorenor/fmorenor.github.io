@@ -17,7 +17,7 @@
   --border:      rgba(255,255,255,0.08);
 
   --font-sans:    'DM Sans', 'Inter', system-ui, sans-serif;
-  --font-heading: 'Helvetica Neue', 'Neue Haas Grotesk', 'Arial', sans-serif;
+  --font-heading: 'DM Sans', 'Helvetica Neue', 'Neue Haas Grotesk', 'Arial', sans-serif;
 }
 
 /* ── Modo claro — solo cuando .light está explícitamente en <html> ── */
