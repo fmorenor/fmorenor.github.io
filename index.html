@@ -1331,6 +1331,42 @@
   })();
 
   /* ── Redirigir link Cartográfica del nav a cartografica.html ── */
+  (function hookProcesosNav() {
+    function hook() {
+      document.querySelectorAll('a[href="#procesos"], a[href*="/procesos"]').forEach(a => {
+        if (!a.dataset.cdProcHooked) {
+          a.dataset.cdProcHooked = '1';
+          a.href = './procesos.html';
+          a.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            window.location.assign('./procesos.html');
+          }, true);
+        }
+      });
+      document.querySelectorAll('a, button').forEach(el => {
+        if (el.dataset.cdProcHooked) return;
+        const h3 = el.querySelector('h3');
+        const match = h3 && h3.textContent.trim() === 'Procesos';
+        const directMatch = el.textContent.trim() === 'Procesos';
+        if (match || directMatch) {
+          el.dataset.cdProcHooked = '1';
+          el.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            window.location.assign('./procesos.html');
+          }, true);
+        }
+      });
+    }
+    const obs = new MutationObserver(hook);
+    obs.observe(document.body, { childList: true, subtree: true });
+    setTimeout(hook, 500);
+    setTimeout(hook, 2000);
+    setTimeout(hook, 4000);
+  })();
+
+  /* ── Redirigir link Cartográfica del nav a cartografica.html ── */
   (function hookCartograficaNav() {
     function hook() {
       document.querySelectorAll('a[href="#cartografica"], a[href*="/cartografica"]').forEach(a => {
