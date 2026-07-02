@@ -127,9 +127,17 @@
     .flow-header { text-align: center; margin-bottom: clamp(3rem,5vw,5rem); }
     .flow-super {
       font-size: clamp(5rem,14vw,11rem); font-weight: 100; line-height: 1;
-      letter-spacing: -0.04em; color: transparent;
-      -webkit-text-stroke: 1px rgba(123,156,255,0.25);
-      user-select: none; margin-bottom: 0.5rem;
+      letter-spacing: -0.04em; user-select: none; margin-bottom: 0.5rem;
+    }
+    .flow-super-letter {
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(123,156,255,0.55);
+      transition: color 300ms, -webkit-text-stroke-color 300ms, text-shadow 300ms;
+    }
+    .flow-super-letter.active {
+      color: var(--blue-light);
+      -webkit-text-stroke: 1.5px var(--blue-light);
+      text-shadow: 0 0 28px rgba(123,156,255,0.55);
     }
     .flow-subtitle {
       font-size: clamp(0.85rem,1.3vw,1rem); color: var(--muted);
@@ -264,7 +272,7 @@
     <div class="page-inner" style="padding-top:0;padding-bottom:0;">
 
       <div class="flow-header">
-        <div class="flow-super">FLOW</div>
+        <div class="flow-super"><span class="flow-super-letter active" data-flow="f">F</span><span class="flow-super-letter" data-flow="l">L</span><span class="flow-super-letter" data-flow="o">O</span><span class="flow-super-letter" data-flow="w">W</span></div>
         <p class="flow-subtitle">Los valores que nos mueven</p>
       </div>
 
@@ -367,13 +375,15 @@
   <script>
     // FLOW tabs
     (function() {
-      const tabs   = document.querySelectorAll('.flow-tab');
-      const panels = document.querySelectorAll('.flow-panel');
+      const tabs    = document.querySelectorAll('.flow-tab');
+      const panels  = document.querySelectorAll('.flow-panel');
+      const letters = document.querySelectorAll('.flow-super-letter');
       tabs.forEach(tab => {
         tab.addEventListener('click', () => {
           const key = tab.dataset.flow;
           tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
           panels.forEach(p => p.classList.remove('active'));
+          letters.forEach(l => l.classList.toggle('active', l.dataset.flow === key));
           tab.classList.add('active');
           tab.setAttribute('aria-selected','true');
           document.querySelector(`.flow-panel[data-flow="${key}"]`).classList.add('active');
