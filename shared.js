@@ -356,7 +356,7 @@
         { label: 'Equipo',   en: 'Team',    href: './equipo.html'          },
       ]},
     { label: 'Noticias',   href: './index.html#noticias'    },
-    { label: 'X-Ray',      href: './index.html#xray'        },
+    { label: 'X-Ray',      href: './xray.html'              },
   ];
 
   /* ── Estado: idioma y tema ── */

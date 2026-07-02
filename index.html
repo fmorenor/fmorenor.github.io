@@ -1192,13 +1192,19 @@
     setTimeout(() => { hookLink(); }, 4000);
   })();
 
-  /* ── Destacar X-Ray en el nav con blanco y bold ── */
+  /* ── Destacar X-Ray en el nav con blanco y bold + redirigir a xray.html ── */
   (function styleXRayNav() {
     function applyStyle() {
-      document.querySelectorAll('nav a, header a').forEach(a => {
-        if (a.textContent.trim() === 'X-Ray' && !a.dataset.cdXrayStyled) {
-          a.dataset.cdXrayStyled = '1';
-          a.style.cssText += 'color:#ffffff !important; font-weight:700 !important;';
+      document.querySelectorAll('nav a, header a, nav button').forEach(el => {
+        if (el.textContent.trim() === 'X-Ray' && !el.dataset.cdXrayStyled) {
+          el.dataset.cdXrayStyled = '1';
+          el.style.cssText += 'color:#ffffff !important; font-weight:700 !important;';
+          if (el.tagName === 'A') el.setAttribute('href', './xray.html');
+          el.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            window.location.assign('./xray.html');
+          }, true);
         }
       });
     }
@@ -1206,6 +1212,7 @@
     obs.observe(document.body, { childList: true, subtree: true });
     setTimeout(applyStyle, 500);
     setTimeout(applyStyle, 2000);
+    setTimeout(applyStyle, 4000);
   })();
 
   /* ── Redirigir link Historia del nav a historia.html ── */
