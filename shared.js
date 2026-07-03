@@ -557,14 +557,6 @@
           <a href="./index.html#terminos">Términos y condiciones</a>
         </div>
       </div>
-    </div>
-
-    <div class="cd-footer-bottom">
-      <span>© 2026 CartoData S. de R.L. de C.V. Todos los derechos reservados.</span>
-      <div class="cd-footer-legal">
-        <a href="./index.html#aviso-privacidad">Aviso de privacidad</a>
-        <a href="./index.html#terminos">Términos y condiciones</a>
-      </div>
     </div>`;
   document.body.appendChild(footer);
   }
