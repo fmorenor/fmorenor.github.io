@@ -251,80 +251,81 @@
       .cd-nav-hamburger { display: flex; }
     }
 
-    /* Footer */
+    /* Footer — réplica exacta del home (Footer.tsx) */
     .cd-shared-footer {
-      font-family: 'DM Sans', system-ui, sans-serif;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
       background: transparent;
-      padding: clamp(2rem,5vw,2.5rem) clamp(1.5rem,5vw,4rem);
-      color: rgba(248,250,252,0.55);
-      font-size: 0.8rem;
+      padding: clamp(2rem,5vw,2.5rem) clamp(1rem,4vw,1.5rem);
     }
+    /* Modo claro: colores de texto del footer (#737373 muted, #1e1e1c texto) */
+    html.light .cd-footer-copy,
+    html.light .cd-footer-nav-btn,
+    html.light .cd-footer-col-links a { color: #737373; }
+    html.light .cd-footer-col-title,
+    html.light .cd-footer-nav-btn:hover,
+    html.light .cd-footer-col-links a:hover { color: #1e1e1c; }
     .cd-footer-main {
       display: grid;
-      grid-template-columns: 1.6fr auto 1fr 1fr;
-      gap: 3rem;
+      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      gap: 0;
       padding: clamp(1.5rem,4vw,2rem);
       border: 1px solid #3a3a3a;
       border-radius: 12px;
-      align-items: start;
+      align-items: stretch;
     }
+    html.light .cd-footer-main { border-color: #d4d4d4; }
+    .cd-footer-copy-col { display: flex; align-items: center; padding-right: 2rem; }
     .cd-footer-copy {
-      font-size: 0.75rem; line-height: 1.6;
-      color: rgba(248,250,252,0.45); max-width: 280px;
-      text-transform: uppercase; letter-spacing: 0.04em;
+      font-size: 12px; line-height: 1.6; font-weight: 300;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      color: #a3a3a3;
     }
-    .cd-footer-nav-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
-      border-left: 1px solid rgba(255,255,255,0.08);
-      padding-left: 3rem;
+    /* columnas 2-4 con separador izquierdo */
+    .cd-footer-col {
+      border-left: 1px solid #3a3a3a; padding: 0 2rem;
+      display: flex; flex-direction: column; justify-content: center;
     }
+    html.light .cd-footer-col { border-left-color: #d4d4d4; }
+    .cd-footer-nav-col { justify-content: center; }
+    .cd-footer-nav-wrap { position: relative; }
+    .cd-footer-nav-grid { display: grid; grid-template-columns: 1fr 1fr; }
     .cd-footer-nav-btn {
-      display: block; padding: 0.55rem 1.1rem;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 6px; text-decoration: none;
-      color: rgba(248,250,252,0.65); font-size: 0.72rem;
-      font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-      text-align: center; transition: color 200ms, border-color 200ms;
-      white-space: nowrap;
+      border: 1px solid #3a3a3a; padding: 0.75rem 1rem;
+      font-size: 12px; font-weight: 300; letter-spacing: 0.05em;
+      text-transform: uppercase; text-align: center; text-decoration: none;
+      color: #a3a3a3; transition: color 200ms; white-space: nowrap;
     }
-    .cd-footer-nav-btn:hover { color: #f8fafc; border-color: rgba(255,255,255,0.3); }
+    html.light .cd-footer-nav-btn { border-color: #d4d4d4; }
+    .cd-footer-nav-btn:nth-child(2) { margin-left: -1px; }
+    .cd-footer-nav-btn:nth-child(3) { margin-top: -1px; }
+    .cd-footer-nav-btn:nth-child(4) { margin-left: -1px; margin-top: -1px; }
+    .cd-footer-nav-btn:hover { color: #fafafa; }
+    .cd-footer-diamond {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%); line-height: 0;
+      color: #3a3a3a; background: #050816; /* JS lo sincroniza al fondo real de la página */
+    }
+    html.light .cd-footer-diamond { color: #d4d4d4; background: #f8fafc; }
     .cd-footer-col-title {
-      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em;
-      text-transform: uppercase; color: #f8fafc;
+      font-size: 12px; font-weight: 300; letter-spacing: 0.05em;
+      text-transform: uppercase; color: #fafafa;
       margin-bottom: 1rem; display: block;
     }
-    .cd-footer-col-links { display: flex; flex-direction: column; gap: 0.55rem; }
+    .cd-footer-col-links { display: flex; flex-direction: column; gap: 0.5rem; }
     .cd-footer-col-links a {
-      color: rgba(248,250,252,0.55); text-decoration: none;
-      font-size: 0.8rem; transition: color 200ms;
+      color: #a3a3a3; text-decoration: none;
+      font-size: 12px; font-weight: 300; transition: color 200ms;
     }
-    .cd-footer-col-links a:hover { color: #f8fafc; }
-    .cd-footer-social {
-      display: flex; gap: 0.9rem; margin-top: 1.3rem; flex-wrap: wrap;
-    }
-    .cd-footer-social a {
-      display: flex; align-items: center; justify-content: center;
-      color: rgba(248,250,252,0.55); text-decoration: none;
-      transition: color 200ms;
-    }
-    .cd-footer-social a:hover { color: #f8fafc; }
+    .cd-footer-col-links a:hover { color: #fafafa; }
+    .cd-footer-social { display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem; }
+    .cd-footer-social a { display: flex; color: #fafafa; transition: opacity 200ms; }
+    html.light .cd-footer-social a { color: #1E1E1C; }
+    .cd-footer-social a:hover { opacity: 0.6; }
     .cd-footer-social svg { width: 16px; height: 16px; display: block; fill: currentColor; }
-    .cd-footer-bottom {
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 0.75rem; padding: 1.25rem 0;
-      font-size: 0.72rem; color: rgba(248,250,252,0.35);
-    }
-    .cd-footer-legal { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-    .cd-footer-legal a {
-      color: rgba(248,250,252,0.35); text-decoration: none; transition: color 200ms;
-    }
-    .cd-footer-legal a:hover { color: rgba(248,250,252,0.7); }
     @media (max-width: 860px) {
-      .cd-footer-main { grid-template-columns: 1fr 1fr; }
-      .cd-footer-nav-grid { border-left: none; padding-left: 0; }
-    }
-    @media (max-width: 500px) {
-      .cd-footer-main { grid-template-columns: 1fr; }
+      .cd-footer-main { grid-template-columns: 1fr; gap: 2rem; }
+      .cd-footer-copy-col { padding-right: 0; }
+      .cd-footer-col { border-left: none; padding: 0; }
     }
   `;
   document.head.appendChild(style);
@@ -513,22 +514,29 @@
   footer.className = 'cd-shared-footer';
   footer.innerHTML = `
     <div class="cd-footer-main">
-      <!-- Marca -->
-      <div class="cd-footer-brand-col">
-        <p class="cd-footer-copy">© 2026 CartoData — Dando contexto geográfico a tu decisión</p>
+      <!-- Marca / Copyright -->
+      <div class="cd-footer-copy-col">
+        <p class="cd-footer-copy">© 2026 CartoData - Dando contexto geográfico a tu decisión</p>
       </div>
 
-      <!-- Nav grid (estilo index) -->
-      <div class="cd-footer-nav-grid">
-        <a href="./index.html#impacto"        class="cd-footer-nav-btn">Impacto</a>
-        <a href="./index.html#tecnologia"     class="cd-footer-nav-btn">Tecnología</a>
-        <a href="./index.html#cultura"        class="cd-footer-nav-btn">Cultura</a>
-        <a href="./index.html#noticias"       class="cd-footer-nav-btn">Noticias</a>
+      <!-- Nav grid con diamante conector -->
+      <div class="cd-footer-col cd-footer-nav-col">
+        <div class="cd-footer-nav-wrap">
+          <div class="cd-footer-nav-grid">
+            <a href="./index.html#impacto"    class="cd-footer-nav-btn">Impacto</a>
+            <a href="./index.html#tecnologia" class="cd-footer-nav-btn">Tecnología</a>
+            <a href="./index.html#cultura"    class="cd-footer-nav-btn">Cultura</a>
+            <a href="./index.html#noticias"   class="cd-footer-nav-btn">Noticias</a>
+          </div>
+          <div class="cd-footer-diamond">
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><rect x="4" y="0" width="5.66" height="5.66" transform="rotate(45 4 0)" stroke="currentColor" stroke-width="0.8" fill="none"/></svg>
+          </div>
+        </div>
       </div>
 
       <!-- Contacto -->
-      <div>
-        <span class="cd-footer-col-title">Contacto</span>
+      <div class="cd-footer-col">
+        <h4 class="cd-footer-col-title">Contacto</h4>
         <div class="cd-footer-col-links">
           <a href="tel:+523336271552">+52 333 627 1552</a>
           <a href="mailto:info@cartodata.com">info@cartodata.com</a>
@@ -545,8 +553,8 @@
       </div>
 
       <!-- Info -->
-      <div>
-        <span class="cd-footer-col-title">Info</span>
+      <div class="cd-footer-col">
+        <h4 class="cd-footer-col-title">Info</h4>
         <div class="cd-footer-col-links">
           <a href="#">Ubicaciones</a>
           <a href="#">Kit de prensa</a>
@@ -556,6 +564,21 @@
       </div>
     </div>`;
   document.body.appendChild(footer);
+
+  /* El diamante conector debe cubrir el cruce de bordes con el color exacto
+     del fondo de la página (varía entre #050816 y #0d0d0d según la página). */
+  const diamond = footer.querySelector('.cd-footer-diamond');
+  function syncDiamondBg() {
+    let el = document.body, bg = '';
+    while (el) {
+      const c = getComputedStyle(el).backgroundColor;
+      if (c && c !== 'rgba(0, 0, 0, 0)' && c !== 'transparent') { bg = c; break; }
+      el = el.parentElement;
+    }
+    if (diamond && bg) diamond.style.background = bg;
+  }
+  syncDiamondBg();
+  new MutationObserver(syncDiamondBg).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
   }
 
   function initModals() {
