@@ -622,7 +622,11 @@
     }
     function stopYT(i) {
       const f = document.getElementById(`cd-media-${i}`);
-      if (f && CASES[i].type === 'youtube') f.src = ytSrc(CASES[i].media);
+      if (f && CASES[i].type === 'youtube') {
+        // URL única para forzar la recarga del iframe: reasignar el mismo src
+        // suele ser ignorado por el navegador y el audio anterior sigue sonando.
+        f.src = ytSrc(CASES[i].media) + '&_=' + Date.now();
+      }
     }
 
     /* ── Inject ───────────────────────────────────── */
