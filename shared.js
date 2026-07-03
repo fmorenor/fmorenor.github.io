@@ -526,7 +526,7 @@
         <a href="./index.html#impacto"        class="cd-footer-nav-btn">Impacto</a>
         <a href="./index.html#tecnologia"     class="cd-footer-nav-btn">Tecnología</a>
         <a href="./index.html#cultura"        class="cd-footer-nav-btn">Cultura</a>
-        <a href="./historia.html"             class="cd-footer-nav-btn">Historia</a>
+        <a href="./index.html#noticias"       class="cd-footer-nav-btn">Noticias</a>
       </div>
 
       <!-- Contacto -->
@@ -536,14 +536,6 @@
           <a href="tel:+523336271552">+52 333 627 1552</a>
           <a href="mailto:info@cartodata.com">info@cartodata.com</a>
           <a href="https://wa.me/523336271552" target="_blank" rel="noreferrer">WhatsApp</a>
-        </div>
-        <div class="cd-footer-social">
-          <a href="#" aria-label="YouTube">&#9654;</a>
-          <a href="#" aria-label="LinkedIn">in</a>
-          <a href="#" aria-label="Facebook">f</a>
-          <a href="#" aria-label="Instagram">ig</a>
-          <a href="#" aria-label="X">✕</a>
-          <a href="https://wa.me/523336271552" aria-label="WhatsApp" target="_blank" rel="noreferrer">wa</a>
         </div>
       </div>
 
