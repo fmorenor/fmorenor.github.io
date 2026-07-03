@@ -333,28 +333,28 @@
   /* ── Detectar página activa ── */
   const path = window.location.pathname;
   function isActive(href) {
-    if (href === './index.html') return path === '/' || path.endsWith('index.html');
+    if (href === './') return path === '/' || path.endsWith('index.html');
     if (href === './historia.html') return path.endsWith('historia.html');
     return false;
   }
 
   const NAV_LINKS = [
-    { label: 'Impacto',    href: './index.html#impacto',    children: [
+    { label: 'Impacto',    href: './#impacto',    children: [
         { label: 'Ciudades',       en: 'Cities',        href: './ciudades.html'             },
         { label: 'Infraestructura',en: 'Infrastructure',href: './infraestructura.html'       },
         { label: 'Minería',        en: 'Mining',        href: './mineria.html'              },
         { label: 'Instituciones',  en: 'Institutions',  href: './instituciones.html'        },
       ]},
-    { label: 'Tecnología', href: './index.html#tecnologia', children: [
+    { label: 'Tecnología', href: './#tecnologia', children: [
         { label: 'Procesos',    en: 'Processes',   href: './procesos.html'          },
         { label: 'Datos',       en: 'Data',        href: './cartografica.html'},
         { label: 'GeoSoftware', en: 'GeoSoftware', href: './geosoftware.html' },
       ]},
-    { label: 'Cultura',    href: './index.html#cultura',    children: [
+    { label: 'Cultura',    href: './#cultura',    children: [
         { label: 'Historia', en: 'History', href: './historia.html'        },
         { label: 'Equipo',   en: 'Team',    href: './equipo.html'          },
       ]},
-    { label: 'Noticias',   href: './index.html#noticias'    },
+    { label: 'Noticias',   href: './#noticias'    },
     { label: 'X-Ray',      href: './xray.html'              },
   ];
 
@@ -409,7 +409,7 @@
   const nav = document.createElement('nav');
   nav.className = 'cd-nav';
   nav.innerHTML = `
-    <a href="./index.html" class="cd-nav-brand">
+    <a href="./" class="cd-nav-brand">
       <img id="cd-nav-logo" src="./manus-storage/logo-white-h-proper_641226e9.png" alt="CartoData" />
     </a>
     <ul class="cd-nav-links">
@@ -523,10 +523,10 @@
       <div class="cd-footer-col cd-footer-nav-col">
         <div class="cd-footer-nav-wrap">
           <div class="cd-footer-nav-grid">
-            <a href="./index.html#impacto"    class="cd-footer-nav-btn">Impacto</a>
-            <a href="./index.html#tecnologia" class="cd-footer-nav-btn">Tecnología</a>
-            <a href="./index.html#cultura"    class="cd-footer-nav-btn">Cultura</a>
-            <a href="./index.html#noticias"   class="cd-footer-nav-btn">Noticias</a>
+            <a href="./#impacto"    class="cd-footer-nav-btn">Impacto</a>
+            <a href="./#tecnologia" class="cd-footer-nav-btn">Tecnología</a>
+            <a href="./#cultura"    class="cd-footer-nav-btn">Cultura</a>
+            <a href="./#noticias"   class="cd-footer-nav-btn">Noticias</a>
           </div>
           <div class="cd-footer-diamond">
             <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><rect x="4" y="0" width="5.66" height="5.66" transform="rotate(45 4 0)" stroke="currentColor" stroke-width="0.8" fill="none"/></svg>
@@ -558,8 +558,8 @@
         <div class="cd-footer-col-links">
           <a href="#">Ubicaciones</a>
           <a href="#">Kit de prensa</a>
-          <a href="./index.html#aviso-privacidad">Aviso de privacidad</a>
-          <a href="./index.html#terminos">Términos y condiciones</a>
+          <a href="./#aviso-privacidad">Aviso de privacidad</a>
+          <a href="./#terminos">Términos y condiciones</a>
         </div>
       </div>
     </div>`;
