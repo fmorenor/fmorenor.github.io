@@ -348,7 +348,7 @@
       ]},
     { label: 'Tecnología', href: './index.html#tecnologia', children: [
         { label: 'Procesos',    en: 'Processes',   href: './procesos.html'          },
-        { label: 'Cartografía', en: 'Cartographic',href: './cartografica.html'},
+        { label: 'Datos',       en: 'Data',        href: './cartografica.html'},
         { label: 'GeoSoftware', en: 'GeoSoftware', href: './geosoftware.html' },
       ]},
     { label: 'Cultura',    href: './index.html#cultura',    children: [

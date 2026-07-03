@@ -2146,7 +2146,7 @@
   /* Reordena el dropdown de Tecnología: Procesos → Cartográfica → GeoSoftware */
   (function reorderTechMenu() {
     const HREFS = [
-      ['#procesos'],
+      ['#procesos', './procesos.html'],
       ['#cartografica', './cartografica.html'],
       ['#geosoftware', './geosoftware.html']
     ];
@@ -2164,10 +2164,13 @@
       if (!targets.every(Boolean)) return;
       const parent = targets[0].parentElement;
       if (!parent) return;
-      // Check if already in correct order to avoid unnecessary mutations
+      // Renombra "Cartográfica" → "Datos" en el link central
+      const mid = targets[1];
+      if (mid && mid.textContent.trim() !== 'Datos') { busy = true; mid.textContent = 'Datos'; busy = false; }
+      // Reordena a Procesos → Datos → GeoSoftware si hace falta
       const children = Array.from(parent.children);
       const indices = targets.map(el => children.indexOf(el));
-      if (indices[0] < indices[1] && indices[1] < indices[2]) return; // already correct
+      if (indices[0] < indices[1] && indices[1] < indices[2]) return; // ya está en orden
       busy = true;
       targets.forEach(el => parent.appendChild(el));
       busy = false;
