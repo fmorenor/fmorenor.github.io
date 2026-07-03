@@ -754,6 +754,10 @@
         frame.allowFullscreen = true;
         frame.style.opacity   = i === 0 ? '1' : '0';
         frame.style.transition = 'opacity 550ms ease';
+        /* Evita que los iframes ocultos capturen el clic (si no, el último del
+           DOM queda encima y reproduce su video aunque no esté visible). */
+        frame.style.pointerEvents = i === 0 ? 'auto' : 'none';
+        frame.style.zIndex = i === 0 ? '1' : '0';
         col.insertBefore(frame, overlay);
       });
 
@@ -789,9 +793,11 @@
       const prev = current;
       /* Detener iframe anterior */
       stopYT(prev);
-      document.getElementById(`cd-media-${prev}`)?.style.setProperty('opacity','0');
+      const prevFrame = document.getElementById(`cd-media-${prev}`);
+      if (prevFrame) { prevFrame.style.opacity = '0'; prevFrame.style.pointerEvents = 'none'; prevFrame.style.zIndex = '0'; }
       /* Mostrar nuevo */
-      document.getElementById(`cd-media-${idx}`)?.style.setProperty('opacity','1');
+      const idxFrame = document.getElementById(`cd-media-${idx}`);
+      if (idxFrame) { idxFrame.style.opacity = '1'; idxFrame.style.pointerEvents = 'auto'; idxFrame.style.zIndex = '1'; }
       /* Tarjetas */
       document.getElementById(`cd-card-${prev}`)?.classList.remove('active');
       document.getElementById(`cd-card-${idx}`)?.classList.add('active');
