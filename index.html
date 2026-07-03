@@ -1192,13 +1192,23 @@
     setTimeout(() => { hookLink(); }, 4000);
   })();
 
-  /* ── Destacar X-Ray en el nav con blanco y bold + redirigir a xray.html ── */
+  /* ── Destacar X-Ray en el nav (bold; blanco en dark, negro en light) + redirigir a xray.html ── */
   (function styleXRayNav() {
+    function xrayColor() {
+      // El modo oscuro marca la clase "dark" en <html>; en claro se quita.
+      return document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a';
+    }
+    function paint() {
+      const color = xrayColor();
+      document.querySelectorAll('[data-cd-xray="1"]').forEach(el => {
+        el.style.setProperty('color', color, 'important');
+        el.style.setProperty('font-weight', '700', 'important');
+      });
+    }
     function applyStyle() {
       document.querySelectorAll('nav a, header a, nav button').forEach(el => {
-        if (el.textContent.trim() === 'X-Ray' && !el.dataset.cdXrayStyled) {
-          el.dataset.cdXrayStyled = '1';
-          el.style.cssText += 'color:#ffffff !important; font-weight:700 !important;';
+        if (el.textContent.trim() === 'X-Ray' && !el.dataset.cdXray) {
+          el.dataset.cdXray = '1';
           if (el.tagName === 'A') el.setAttribute('href', './xray.html');
           el.addEventListener('click', e => {
             e.preventDefault();
@@ -1207,9 +1217,12 @@
           }, true);
         }
       });
+      paint();
     }
     const obs = new MutationObserver(applyStyle);
     obs.observe(document.body, { childList: true, subtree: true });
+    // Repinta cuando cambia el tema (clase de <html>)
+    new MutationObserver(paint).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     setTimeout(applyStyle, 500);
     setTimeout(applyStyle, 2000);
     setTimeout(applyStyle, 4000);
