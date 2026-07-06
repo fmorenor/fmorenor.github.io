@@ -142,12 +142,15 @@
       font-size: 0.75rem; font-weight: 500;
     }
     .analisis-img {
-      width: 100%; height: 160px; border-radius: 10px;
+      width: 100%; height: 160px; border-radius: 10px; overflow: hidden;
       background: linear-gradient(135deg, #e8edff, #dbeafe);
       display: flex; align-items: center; justify-content: center;
       font-size: 0.75rem; color: #94a3b8; margin-bottom: 1rem;
       border: 1px dashed rgba(59,91,219,0.25);
     }
+    /* Tarjeta con foto real: misma altura fija, imagen recortada al centro */
+    .analisis-img.has-photo { border: none; background: none; }
+    .analisis-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     /* ── PROFESIONALIZACIÓN ── */
     .prof-grid {
@@ -394,7 +397,7 @@
         <div class="analisis-card" id="agrotech">
           <p class="analisis-cat">Análisis · Agrotech</p>
           <p class="analisis-title">Agrotech</p>
-          <div class="analisis-img">[PLACEHOLDER — Imagen NDVI / campo agrícola]</div>
+          <div class="analisis-img has-photo"><img src="./images/agrotech-agave.jpg" alt="Campo de agave azul — Agrotech" loading="lazy" /></div>
           <p class="analisis-desc">Análisis de índices de vegetación (NDVI) y optimización del uso de fertilizantes para una agricultura de precisión.</p>
           <div class="analisis-tags">
             <span class="analisis-tag">NDVI</span>
