@@ -262,7 +262,15 @@
       background: rgba(59,91,219,0.08); border: 1px solid rgba(59,91,219,0.2);
       border-radius: 16px; padding: 2rem;
     }
-    .upscale-feat-icon { font-size: 1.5rem; margin-bottom: 0.8rem; }
+    .upscale-feat-icon {
+      width: 46px; height: 46px; border-radius: 12px; margin-bottom: 0.9rem;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .upscale-feat-icon img {
+      width: 24px; height: 24px; object-fit: contain;
+      filter: brightness(0) invert(1); opacity: 0.9;
+    }
     .upscale-feat-title { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
     .upscale-feat-body { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.6; }
     @media(max-width:700px) { .upscale-highlight { grid-template-columns: 1fr; } }
@@ -478,17 +486,17 @@
 
       <div class="upscale-highlight" style="margin-bottom:2.5rem;">
         <div class="upscale-feat">
-          <div class="upscale-feat-icon">🗺️</div>
+          <div class="upscale-feat-icon"><img src="./images/icons/ecarto_i.png" alt="eCarto" /></div>
           <p class="upscale-feat-title">eCarto como eje conductor</p>
           <p class="upscale-feat-body">Plataforma SIG web como sistema de inteligencia y coordinación geo-municipal.</p>
         </div>
         <div class="upscale-feat">
-          <div class="upscale-feat-icon">🔗</div>
+          <div class="upscale-feat-icon"><img src="./images/icons/web_services_i.png" alt="Interoperabilidad" /></div>
           <p class="upscale-feat-title">Flujo entre dependencias</p>
           <p class="upscale-feat-body">Elimina los silos de información entre las dependencias de tu municipio.</p>
         </div>
         <div class="upscale-feat">
-          <div class="upscale-feat-icon">📊</div>
+          <div class="upscale-feat-icon"><img src="./images/icons/gdb_i.png" alt="Base de datos geográfica" /></div>
           <p class="upscale-feat-title">Datos inteligentes</p>
           <p class="upscale-feat-body">Información actualizada y georreferenciada para decisiones en tiempo real.</p>
         </div>
