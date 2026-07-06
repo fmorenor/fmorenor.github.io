@@ -211,6 +211,15 @@
     }
     .flow-panel-desc strong { color: var(--text); font-weight: 600; }
     .flow-panel-right {}
+    .flow-big-text {
+      font-size: clamp(5rem,12vw,9rem); font-weight: 100; letter-spacing: -0.05em;
+      line-height: 1; text-align: center;
+      color: transparent; -webkit-text-stroke: 1px rgba(123,156,255,0.3);
+    }
+    /* En modo claro el contorno tenue se pierde: más grueso y en azul de marca */
+    html.light .flow-big-text {
+      -webkit-text-stroke: 1.5px rgba(59,91,219,0.65);
+    }
     .flow-bullets {
       list-style: none; display: flex; flex-direction: column; gap: 0.65rem;
     }
@@ -346,7 +355,7 @@
             <p class="flow-panel-desc">El DNA de CartoData es de <strong>innovación</strong>. Escribimos nuestras propias herramientas, integramos piezas de forma poco común y tenemos modelos de negocio diferentes. Lo cuál nos hace <strong>únicos</strong>.<br><br>No copiamos — creamos.</p>
           </div>
           <div class="flow-panel-right" style="display:flex;align-items:center;justify-content:center;">
-            <div style="font-size:clamp(5rem,12vw,9rem);font-weight:100;letter-spacing:-0.05em;color:transparent;-webkit-text-stroke:1px rgba(123,156,255,0.3);line-height:1;text-align:center;">
+            <div class="flow-big-text">
               No<br>copiamos,<br>creamos.
             </div>
           </div>
