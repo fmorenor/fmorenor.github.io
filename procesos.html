@@ -198,6 +198,8 @@
       font-size: 0.75rem; color: #94a3b8;
       border: 1px dashed rgba(59,91,219,0.2);
     }
+    .datos-placeholder.has-photo { height: 200px; border: none; background: #fff; padding: 0.5rem; }
+    .datos-placeholder.has-photo img { width: 100%; height: 100%; object-fit: contain; display: block; }
     @media(max-width:700px) { .datos-grid { grid-template-columns: 1fr; } }
 
     /* ── RIESGOS ATLAS ── */
@@ -503,7 +505,7 @@
               <span><strong>Entregables:</strong> reporte de calidad de datos, matriz de errores, plan de corrección y datos depurados listos para producción.</span>
             </li>
           </ul>
-          <div class="datos-placeholder">[PLACEHOLDER — Ejemplo reporte auditoría]</div>
+          <div class="datos-placeholder has-photo"><img src="./images/cedula.png" alt="Cédula Única Registral y Catastral — ejemplo de reporte de auditoría" loading="lazy" /></div>
         </div>
       </div>
     </div>
