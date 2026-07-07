@@ -2178,6 +2178,67 @@
     const obs = new MutationObserver(tryReorder);
     obs.observe(document.body, { childList: true, subtree: true });
   })();
+
+  /* ── Inyectar noticias reales en la sección Noticias del home ── */
+  (function injectNoticias() {
+    const NEWS = [
+      { eyebrow: 'Tlajomulco · Noticia oficial',
+        title: 'Tlajo logra incremento histórico en recaudación',
+        href: 'https://tlajomulco.gob.mx/comunicacion-institucional/tlajo-logra-incremento-historico-en-recaudacion',
+        cta: 'Leer noticia →' },
+      { eyebrow: 'Nix El Salvador',
+        title: 'UNESCO destacó plataforma NIX como referente de la IA para el liderazgo regional del país',
+        href: 'https://diarioelsalvador.com/dedinero/unesco-destaco-plataforma-nix-como-referente-de-la-ia-para-el-liderazgo-regional-del-pais/804778',
+        cta: 'Leer noticia →' },
+      { eyebrow: 'Mundial de futbol 2026',
+        title: 'Desarrollamos una guía práctica con toda la información geoespacial para moverte mejor en los días de partido en Guadalajara.',
+        href: 'https://futbolgdl.cartodata.com',
+        cta: 'Ver guía →' },
+    ];
+    if (!document.getElementById('cd-news-style')) {
+      const st = document.createElement('style');
+      st.id = 'cd-news-style';
+      st.textContent = `
+        .cd-news-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+          gap:1.2rem; max-width:1100px; margin:2.5rem auto 0; text-align:left; }
+        .cd-news-card { display:flex; flex-direction:column; background:transparent;
+          border:1px solid var(--border); border-radius:14px; padding:1.5rem;
+          text-decoration:none; transition:border-color 250ms, transform 200ms; }
+        .cd-news-card:hover { border-color:#3b5bdb; transform:translateY(-2px); }
+        .cd-news-eyebrow { font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase;
+          color:var(--muted-foreground); margin-bottom:0.6rem; }
+        .cd-news-title { color:var(--foreground); font-size:0.97rem; font-weight:500; line-height:1.5; }
+        .cd-news-link { color:#3b5bdb; font-size:0.8rem; margin-top:0.8rem; font-weight:500; }
+      `;
+      document.head.appendChild(st);
+    }
+    function inject() {
+      const sec = document.getElementById('noticias');
+      if (!sec || sec.dataset.cdNewsDone) return;
+      const cont = sec.querySelector('.container') || sec.firstElementChild;
+      if (!cont) return;
+      sec.dataset.cdNewsDone = '1';
+      // Reemplaza el texto "Próximamente…" por el subtítulo de En los medios
+      const p = cont.querySelector('p');
+      if (p) { p.textContent = 'Noticias destacadas de municipios que han implementado la Cartomorfosis'; p.style.opacity = '1'; p.style.transform = 'none'; }
+      const h2 = cont.querySelector('h2');
+      if (h2) { h2.style.opacity = '1'; h2.style.transform = 'none'; }
+      const grid = document.createElement('div');
+      grid.className = 'cd-news-grid';
+      grid.innerHTML = NEWS.map(n => `
+        <a href="${n.href}" target="_blank" rel="noopener" class="cd-news-card">
+          <span class="cd-news-eyebrow">${n.eyebrow}</span>
+          <span class="cd-news-title">${n.title}</span>
+          <span class="cd-news-link">${n.cta}</span>
+        </a>`).join('');
+      cont.appendChild(grid);
+    }
+    const obs = new MutationObserver(inject);
+    obs.observe(document.body, { childList: true, subtree: true });
+    setTimeout(inject, 500);
+    setTimeout(inject, 2000);
+    setTimeout(inject, 4000);
+  })();
   </script>
   </body>
 </html>
