@@ -2245,6 +2245,36 @@
     setTimeout(inject, 2000);
     setTimeout(inject, 4000);
   })();
+
+  /* ── Título "Nuestro Equipo" entre el separador de aviones y el carrusel ── */
+  (function injectEquipoTitle() {
+    if (!document.getElementById('cd-equipo-title-style')) {
+      const st = document.createElement('style');
+      st.id = 'cd-equipo-title-style';
+      st.textContent = `
+        .cd-equipo-title { text-align:center; padding:clamp(3.5rem,8vw,6.5rem) 1.5rem clamp(2rem,4vw,3rem); }
+        .cd-equipo-title .eyebrow { font-size:0.68rem; font-weight:600; letter-spacing:0.18em;
+          text-transform:uppercase; color:var(--muted-foreground); margin-bottom:0.9rem; }
+        .cd-equipo-title h2 { font-size:clamp(2rem,4.5vw,3.4rem); font-weight:200; line-height:1.1;
+          letter-spacing:-0.01em; color:var(--foreground); }
+      `;
+      document.head.appendChild(st);
+    }
+    function inject() {
+      if (document.querySelector('.cd-equipo-title')) return;
+      const div = document.querySelector('.cd-aviones-divider');
+      if (!div || !div.parentNode) return;
+      const block = document.createElement('div');
+      block.className = 'cd-equipo-title';
+      block.innerHTML = '<p class="eyebrow">Cultura · CartoData</p><h2>Nuestro Equipo</h2>';
+      div.parentNode.insertBefore(block, div.nextSibling);
+    }
+    const obs = new MutationObserver(inject);
+    obs.observe(document.body, { childList: true, subtree: true });
+    setTimeout(inject, 500);
+    setTimeout(inject, 2000);
+    setTimeout(inject, 4000);
+  })();
   </script>
   </body>
 </html>
