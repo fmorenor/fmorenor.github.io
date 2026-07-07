@@ -2239,6 +2239,36 @@
     setTimeout(inject, 2000);
     setTimeout(inject, 4000);
   })();
+
+  /* ── Separador full-width con imagen de aviones tras el CTA "Municipio B" ── */
+  (function injectAvionesDivider() {
+    if (!document.getElementById('cd-aviones-style')) {
+      const st = document.createElement('style');
+      st.id = 'cd-aviones-style';
+      st.textContent = `
+        .cd-aviones-divider { width:100%; height:clamp(240px,32vw,420px); overflow:hidden; }
+        .cd-aviones-divider img { width:100%; height:100%; object-fit:cover; object-position:center; display:block; }
+      `;
+      document.head.appendChild(st);
+    }
+    function inject() {
+      if (document.querySelector('.cd-aviones-divider')) return;
+      const a = [...document.querySelectorAll('a')].find(e => /Quiero saber qué hizo el Municipio B/i.test(e.textContent));
+      if (!a) return;
+      let sec = a;
+      while (sec && sec.tagName !== 'SECTION') sec = sec.parentElement;
+      if (!sec || !sec.parentNode) return;
+      const div = document.createElement('div');
+      div.className = 'cd-aviones-divider';
+      div.innerHTML = '<img src="./images/aviones.avif" alt="Aviones — CartoData" loading="lazy" />';
+      sec.parentNode.insertBefore(div, sec.nextSibling);
+    }
+    const obs = new MutationObserver(inject);
+    obs.observe(document.body, { childList: true, subtree: true });
+    setTimeout(inject, 500);
+    setTimeout(inject, 2000);
+    setTimeout(inject, 4000);
+  })();
   </script>
   </body>
 </html>
