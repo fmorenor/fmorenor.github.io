@@ -223,6 +223,8 @@
       font-size: 0.8rem; color: #94a3b8;
       border: 1px dashed rgba(220,38,38,0.2);
     }
+    .riesgos-img.has-photo { border: none; background: none; }
+    .riesgos-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
     @media(max-width:800px) { .riesgos-wrap { grid-template-columns: 1fr; gap: 2rem; } }
 
     /* ── CATASTRO ── */
@@ -467,7 +469,7 @@
             <span class="riesgo-tag">Deslaves lineales</span>
           </div>
         </div>
-        <div class="riesgos-img">[PLACEHOLDER — Mapa Atlas de Riesgos]</div>
+        <div class="riesgos-img has-photo"><img src="./images/atlas-riesgos.jpg" alt="Mapa Atlas de Riesgos — zonificación de amenazas" loading="lazy" /></div>
       </div>
     </div>
   </section>
