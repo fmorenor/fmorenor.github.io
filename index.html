@@ -548,30 +548,6 @@
           ancestor = ancestor.parentElement;
         }
         injectHTML(tableWrap);
-
-        /* Insertar separador aviones FUERA del rounded-xl, como hermano */
-        const roundedBox = tableWrap.closest('.rounded-xl') || tableWrap;
-        if (!document.querySelector('.cd-aviones-separator')) {
-          const sep = document.createElement('div');
-          sep.className = 'cd-aviones-separator';
-          sep.innerHTML = `<img src="./images/aviones.avif" alt="Flota CartoData" loading="lazy">`;
-          roundedBox.insertAdjacentElement('afterend', sep);
-
-          /* Inyectar estilos una sola vez */
-          const st = document.createElement('style');
-          st.textContent = `
-            .cd-aviones-separator {
-              width: 100vw; height: 100vh;
-              position: relative; left: 50%; transform: translateX(-50%);
-              overflow: hidden; display: block;
-            }
-            .cd-aviones-separator img {
-              position: absolute; inset: 0; width: 100%; height: 100%;
-              object-fit: cover; display: block;
-            }
-          `;
-          document.head.appendChild(st);
-        }
       }
       return true;
     }
