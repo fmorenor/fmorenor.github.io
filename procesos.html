@@ -169,12 +169,6 @@
     }
     .prof-title { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 0.6rem; }
     .prof-body  { font-size: 0.9rem; color: rgba(255,255,255,0.58); line-height: 1.7; }
-    .prof-placeholder {
-      width: 100%; height: 130px; border-radius: 10px; margin-top: 1.2rem;
-      background: rgba(255,255,255,0.04); border: 1px dashed rgba(255,255,255,0.12);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.72rem; color: rgba(255,255,255,0.2);
-    }
     @media(max-width:760px) { .prof-grid { grid-template-columns: 1fr; } }
 
     /* ── DATOS (Conversión + Auditoría) ── */
@@ -200,8 +194,10 @@
       font-size: 0.75rem; color: #94a3b8;
       border: 1px dashed rgba(59,91,219,0.2);
     }
-    .datos-placeholder.has-photo { height: 200px; border: none; background: #fff; padding: 0.5rem; }
-    .datos-placeholder.has-photo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .datos-placeholder.has-photo { height: 200px; border: none; overflow: hidden; }
+    .datos-placeholder.has-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .datos-placeholder.has-photo.doc { background: #fff; padding: 0.5rem; }
+    .datos-placeholder.has-photo.doc img { object-fit: contain; }
     @media(max-width:700px) { .datos-grid { grid-template-columns: 1fr; } }
 
     /* ── RIESGOS ATLAS ── */
@@ -298,7 +294,7 @@
         <div class="analisis-card">
           <p class="analisis-cat">Análisis</p>
           <p class="analisis-title">Planos Cartográficos</p>
-          <div class="analisis-img">[PLACEHOLDER — Ejemplo de plano cartográfico]</div>
+          <div class="analisis-img has-photo"><img src="./images/au4-contour.png" alt="Plano cartográfico — curvas de nivel sobre ortofoto" loading="lazy" /></div>
           <p class="analisis-desc">Generación de planos cartográficos de alta precisión para planificación urbana, catastro y gestión territorial.</p>
           <div class="analisis-tags">
             <span class="analisis-tag">Fotogrametría</span>
@@ -340,7 +336,7 @@
         <div class="analisis-card" id="planeacion">
           <p class="analisis-cat">Análisis · Planeación</p>
           <p class="analisis-title">Planeación Urbana</p>
-          <div class="analisis-img">[PLACEHOLDER — Imagen planes parciales]</div>
+          <div class="analisis-img has-photo"><img src="./images/ecarto-screen.jpg" alt="Planeación urbana — traza de predios y curvas de nivel" loading="lazy" /></div>
           <p class="analisis-desc">Elaboración de planes parciales y estudios de planeación territorial para el desarrollo ordenado de la ciudad.</p>
           <div class="analisis-tags">
             <span class="analisis-tag">Planes parciales</span>
@@ -495,7 +491,7 @@
               <span><strong>De qué formato se convierten:</strong> SHP, DWG, DXF, GeoJSON, KML, GDB, CSV georeferenciado y más — conversión sin pérdida de atributos.</span>
             </li>
           </ul>
-          <div class="datos-placeholder">[PLACEHOLDER — Diagrama flujo de conversión]</div>
+          <div class="datos-placeholder has-photo"><img src="./images/herr-datos.jpg" alt="Conversión de datos — información geoespacial vectorizada" loading="lazy" /></div>
         </div>
         <div class="datos-card">
           <p class="datos-title">Auditoría de datos</p>
@@ -507,7 +503,7 @@
               <span><strong>Entregables:</strong> reporte de calidad de datos, matriz de errores, plan de corrección y datos depurados listos para producción.</span>
             </li>
           </ul>
-          <div class="datos-placeholder has-photo"><img src="./images/cedula.png" alt="Cédula Única Registral y Catastral — ejemplo de reporte de auditoría" loading="lazy" /></div>
+          <div class="datos-placeholder has-photo doc"><img src="./images/cedula.png" alt="Cédula Única Registral y Catastral — ejemplo de reporte de auditoría" loading="lazy" /></div>
         </div>
       </div>
     </div>
@@ -523,17 +519,14 @@
         <div class="prof-card">
           <p class="prof-title">Entrenamiento</p>
           <p class="prof-body">Programas de capacitación en herramientas GIS, fotogrametría, manejo de LiDAR, eCarto y AU4. Presencial o en línea, adaptado al nivel del equipo.</p>
-          <div class="prof-placeholder">[PLACEHOLDER — Imagen sesión de entrenamiento]</div>
         </div>
         <div class="prof-card">
           <p class="prof-title">Acompañamiento</p>
           <p class="prof-body">Consultores geoespaciales integrados a tu equipo durante la implementación del proyecto para garantizar la transferencia de conocimiento y los resultados.</p>
-          <div class="prof-placeholder">[PLACEHOLDER — Imagen trabajo en campo / consultoría]</div>
         </div>
         <div class="prof-card">
           <p class="prof-title">Soporte</p>
           <p class="prof-body">Mesa de ayuda y soporte técnico continuo para equipos en operación. Resolución de incidencias, actualizaciones y consultas especializadas.</p>
-          <div class="prof-placeholder">[PLACEHOLDER — Imagen soporte técnico / remoto]</div>
         </div>
       </div>
     </div>
