@@ -231,11 +231,13 @@
     .catastro-feat-title { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
     .catastro-feat-desc { font-size: 0.85rem; color: rgba(255,255,255,0.55); line-height: 1.6; }
     .catastro-img {
-      border-radius: 20px; aspect-ratio: 4/3;
+      border-radius: 20px; aspect-ratio: 4/3; overflow: hidden;
       background: rgba(59,91,219,0.08); border: 1px dashed rgba(59,91,219,0.25);
       display: flex; align-items: center; justify-content: center;
       font-size: 0.8rem; color: rgba(255,255,255,0.25);
     }
+    .catastro-img.has-photo { border: none; background: none; }
+    .catastro-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
     @media(max-width:800px) { .catastro-grid { grid-template-columns: 1fr; gap: 2rem; } }
 
     /* ── CTA ── */
@@ -443,7 +445,7 @@
             <p class="catastro-feat-desc">Identificación precisa de la diferencia entre el valor catastral y el valor comercial real de los inmuebles del municipio.</p>
           </div>
         </div>
-        <div class="catastro-img">[PLACEHOLDER — Mapa catastral interactivo / eCarto]</div>
+        <div class="catastro-img has-photo"><img src="./images/catastro-solar.jpg" alt="Catastro solar — eCarto" loading="lazy" /></div>
       </div>
     </div>
   </section>
