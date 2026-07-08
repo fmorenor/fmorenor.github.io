@@ -2222,9 +2222,8 @@
       const st = document.createElement('style');
       st.id = 'cd-aviones-style';
       st.textContent = `
-        .cd-aviones-divider { position:relative; width:100%; height:clamp(240px,32vw,420px); overflow:hidden; }
-        .cd-aviones-divider img { position:absolute; left:0; top:-15%; width:100%; height:130%; object-fit:cover; object-position:center 62%; display:block; will-change:transform; }
-        @media (prefers-reduced-motion: reduce) { .cd-aviones-divider img { top:0; height:100%; transform:none !important; } }
+        .cd-aviones-divider { width:100%; height:clamp(240px,32vw,420px); overflow:hidden; }
+        .cd-aviones-divider img { width:100%; height:100%; object-fit:cover; object-position:center 62%; display:block; }
       `;
       document.head.appendChild(st);
     }
@@ -2239,29 +2238,7 @@
       div.className = 'cd-aviones-divider';
       div.innerHTML = '<img src="./images/bimotor.avif" alt="Aeronaves CartoData en hangar" />';
       sec.parentNode.insertBefore(div, sec.nextSibling);
-      parallax();
     }
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    function parallax() {
-      if (reduceMotion) return;
-      const div = document.querySelector('.cd-aviones-divider');
-      if (!div) return;
-      const img = div.querySelector('img');
-      if (!img) return;
-      const rect = div.getBoundingClientRect();
-      const vh = window.innerHeight || document.documentElement.clientHeight;
-      const progress = Math.max(0, Math.min(1, (vh - rect.top) / (vh + rect.height)));
-      const shift = (0.5 - progress) * div.offsetHeight * 0.30;
-      img.style.transform = 'translate3d(0,' + shift.toFixed(1) + 'px,0)';
-    }
-    let ticking = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(function () { parallax(); ticking = false; });
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
     const obs = new MutationObserver(inject);
     obs.observe(document.body, { childList: true, subtree: true });
     setTimeout(inject, 500);
