@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Página no encontrada — CartoData</title>
+  <meta name="description" content="La página que buscas no existe o se movió. Vuelve al inicio de CartoData." />
+  <meta name="robots" content="noindex, follow" />
+  <!-- site.css, fuentes, nav y footer los inyecta shared.js automáticamente -->
+  <style>
+    .cd-404 {
+      min-height: 72vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: clamp(6rem, 14vw, 10rem) 1.5rem clamp(4rem, 8vw, 6rem);
+    }
+    .cd-404-eyebrow {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem;
+    }
+    .cd-404-code {
+      font-family: var(--font-heading); font-weight: 100;
+      font-size: clamp(5rem, 20vw, 12rem); line-height: 0.9; letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--blue-light), var(--blue));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .cd-404 h1 {
+      font-weight: 200; font-size: clamp(1.5rem, 4vw, 2.6rem);
+      margin: 1rem 0 1.1rem; letter-spacing: -0.01em;
+    }
+    .cd-404 p {
+      color: var(--muted); max-width: 520px; margin: 0 auto 2.4rem;
+      font-size: 1.05rem; line-height: 1.7;
+    }
+    .cd-404-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .cd-404 a.cd-404-btn {
+      display: inline-block; padding: 0.85rem 1.7rem; border-radius: 999px;
+      font-weight: 600; font-size: 0.95rem; text-decoration: none;
+      transition: transform .15s ease, background .2s ease, border-color .2s ease;
+    }
+    .cd-404-primary { background: var(--blue); color: #fff; }
+    .cd-404-primary:hover { background: var(--blue-dark); transform: translateY(-2px); }
+    .cd-404-ghost { border: 1px solid var(--border); color: var(--text); }
+    .cd-404-ghost:hover { background: var(--surface); border-color: var(--blue-light); }
+  </style>
+</head>
+<body>
+  <main class="cd-404">
+    <p class="cd-404-eyebrow">Error 404</p>
+    <div class="cd-404-code">404</div>
+    <h1>Esta ruta no está en el mapa</h1>
+    <p>La página que buscas se movió, cambió de nombre o nunca existió. Volvamos a terreno conocido.</p>
+    <div class="cd-404-actions">
+      <a href="./" class="cd-404-btn cd-404-primary">Ir al inicio</a>
+      <a href="./procesos" class="cd-404-btn cd-404-ghost">Ver procesos</a>
+    </div>
+  </main>
+  <script src="./shared.js"></script>
+</body>
+</html>
