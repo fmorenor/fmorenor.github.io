@@ -200,9 +200,10 @@
   <script>
   (function() {
     // ─────────────────────────────────────────────────────────────
-    //  PROTOTIPO X-RAY — flujo de captura de lead con respuestas
-    //  SIMULADAS. Cuando migremos a Cloudflare, la función
-    //  `botRespond()` se reemplaza por un fetch al Worker /chat.
+    //  X-RAY — asistente conversacional con IA.
+    //  El navegador solo habla con /api/chat (Cloudflare Pages Function),
+    //  que hace de proxy seguro a Claude y registra el lead en CartoFlow.
+    //  La API key vive únicamente en el servidor, nunca aquí.
     // ─────────────────────────────────────────────────────────────
 
     const messagesEl = document.getElementById('messages');
@@ -210,47 +211,26 @@
     const form       = document.getElementById('inputForm');
     const input      = document.getElementById('msgInput');
     const sendBtn    = document.getElementById('sendBtn');
+    const chat       = document.getElementById('chat');
 
-    // Datos que iremos capturando (mapean a los campos de CartoFlow)
-    const lead = {
-      problem_statement: '', type: '', institution: '',
-      contact_name: '', contact_email: '', contact_phone: '',
-      target_date: ''
-    };
+    // Historial de la conversación en formato de la API (solo turnos de texto).
+    const history = [];
+    let lastLead = null;
 
-    // Guion conversacional (cada paso: pregunta del bot + dónde guarda la respuesta)
-    const steps = [
-      { key: 'problem_statement',
-        bot: '¡Hola! 👋 Soy el asistente de CartoData. Te ayudo a encontrar la solución geoespacial correcta para tu proyecto.\n\nPara empezar, cuéntame: ¿qué reto o necesidad estás buscando resolver?' },
-      { key: 'type',
-        bot: 'Entiendo. ¿En qué sector te ubicas?',
-        quick: ['Municipio / Gobierno', 'Minería', 'Infraestructura', 'Sector privado'] },
-      { key: 'institution',
-        bot: 'Perfecto. ¿Cómo se llama tu empresa o institución?' },
-      { key: 'contact_name',
-        bot: 'Un gusto. ¿Con quién tengo el placer? (tu nombre)' },
-      { key: 'contact_email',
-        bot: '¿A qué correo o teléfono te podemos contactar?' },
-      { key: 'target_date',
-        bot: '¿Para cuándo necesitarías tener esto resuelto? (o escribe "sin fecha")',
-        quick: ['Lo antes posible', 'Este trimestre', 'Sin fecha definida'] }
-    ];
-
-    let stepIndex = -1;
-
-    const SECTOR_MAP = {
-      'Municipio / Gobierno': 'Municipio', 'Minería': 'Empresa',
-      'Infraestructura': 'Empresa', 'Sector privado': 'Empresa'
-    };
+    const GREETING = '¡Hola! 👋 Soy el asistente de CartoData. Cuéntame: ¿qué reto o necesidad geoespacial estás buscando resolver?';
 
     function scrollDown() { messagesEl.scrollTop = messagesEl.scrollHeight; }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+    }
 
     function addMessage(text, who) {
       const wrap = document.createElement('div');
       wrap.className = 'msg ' + who;
       const bubble = document.createElement('div');
       bubble.className = 'msg-bubble';
-      bubble.innerHTML = text.replace(/\n/g, '<br>');
+      bubble.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
       wrap.appendChild(bubble);
       messagesEl.appendChild(wrap);
       scrollDown();
@@ -266,120 +246,56 @@
     }
     function hideTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
 
-    // onSelect opcional: si se pasa, reemplaza el manejo por defecto (flujo de pasos)
-    function showQuickReplies(options, onSelect) {
-      quickEl.innerHTML = '';
-      if (!options) { quickEl.style.display = 'none'; return; }
-      options.forEach(opt => {
-        const b = document.createElement('button');
-        b.type = 'button'; b.className = 'quick-reply'; b.textContent = opt;
-        b.addEventListener('click', () => {
-          showQuickReplies(null);
-          if (onSelect) onSelect(opt); else handleUserInput(opt);
-        });
-        quickEl.appendChild(b);
-      });
-      quickEl.style.display = 'flex';
-    }
-
-    // Simula la "respuesta" del bot con retardo de tecleo.
-    // enableInput=false deja el turno solo con quick-replies (resumen/confirmación).
-    function botRespond(text, cb, opts, enableInput, onSelect) {
-      setInputEnabled(false);
-      showTyping();
-      const delay = 600 + Math.min(text.length * 12, 1400);
-      setTimeout(() => {
-        hideTyping();
-        addMessage(text, 'bot');
-        showQuickReplies(opts || null, onSelect);
-        if (enableInput !== false) setInputEnabled(true);
-        if (cb) cb();
-      }, delay);
-    }
-
-    function nextStep() {
-      stepIndex++;
-      if (stepIndex >= steps.length) { finish(); return; }
-      const step = steps[stepIndex];
-      botRespond(step.bot, null, step.quick);
-    }
-
-    function handleUserInput(value) {
-      value = value.trim();
-      if (!value) return;
-      showQuickReplies(null);        // limpia chips previos
-      addMessage(value, 'user');
-      // Guarda la respuesta del paso actual
-      if (stepIndex >= 0 && stepIndex < steps.length) {
-        const key = steps[stepIndex].key;
-        if (key === 'type') {
-          lead.type = SECTOR_MAP[value] || 'Empresa';
-          lead.sector_label = value;
-        } else if (key === 'contact_email') {
-          if (/@/.test(value)) lead.contact_email = value; else lead.contact_phone = value;
-        } else if (key === 'target_date') {
-          lead.target_date = /sin/i.test(value) ? '' : value;
-        } else {
-          lead[key] = value;
-        }
-      }
-      setInputEnabled(false);
-      setTimeout(nextStep, 250);
-    }
-
     function setInputEnabled(on) {
       input.disabled = !on; sendBtn.disabled = !on;
       if (on) input.focus();
     }
 
-    function finish() {
-      // Resumen del lead capturado
-      const rows = [
-        ['Necesidad', lead.problem_statement],
-        ['Sector', lead.sector_label || lead.type],
-        ['Institución', lead.institution],
-        ['Contacto', lead.contact_name],
-        ['Email / Tel', lead.contact_email || lead.contact_phone],
-        ['Fecha objetivo', lead.target_date || 'Sin definir']
-      ];
-      botRespond('¡Excelente! Esto es lo que registré de tu proyecto:', () => {
-        const summary = document.createElement('div');
-        summary.className = 'lead-summary';
-        summary.innerHTML = '<h4>Radiografía del proyecto</h4>' +
-          rows.map(r => `<div class="row"><span>${r[0]}</span><span>${(r[1]||'—')}</span></div>`).join('');
-        messagesEl.appendChild(summary);
-        scrollDown();
-        botRespond('¿Confirmas que envíe esta información a nuestro equipo para que te contacten?',
-          null, ['Sí, enviar', 'Editar algo'], false,
-          (choice) => {
-            if (/enviar/i.test(choice)) submitLead();
-            else botRespond('Sin problema. Escribe el dato corregido y lo actualizo (en el prototipo puedes reiniciar abajo).', null, null, true);
-          });
-      }, null, false);
+    async function sendToAssistant() {
+      showTyping();
+      setInputEnabled(false);
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ messages: history })
+        });
+        const data = await res.json().catch(() => ({}));
+        hideTyping();
+        const reply = (data && data.reply) ? data.reply : 'Perdona, no pude procesar eso. ¿Puedes intentarlo de nuevo?';
+        addMessage(reply, 'bot');
+        history.push({ role: 'assistant', content: reply });
+
+        if (data && data.lead_submitted) {
+          lastLead = data.lead || null;
+          setTimeout(renderDone, 700);
+          return;
+        }
+        setInputEnabled(true);
+      } catch (e) {
+        hideTyping();
+        addMessage('Ups, tuve un problema de conexión. Intenta de nuevo en un momento.', 'bot');
+        setInputEnabled(true);
+      }
     }
 
-    // ── AQUÍ irá la llamada real al Worker → webhook CartoFlow ──
-    function submitLead() {
-      addMessage('Sí, enviar', 'user');
-      showTyping();
-      setTimeout(() => {
-        hideTyping();
-        // MOCK: en producción, POST al Worker que dispara el webhook.
-        console.log('[X-Ray DEMO] Lead que se enviaría a CartoFlow:', lead);
-        renderDone();
-      }, 1200);
+    function handleUserInput(value) {
+      value = (value || '').trim();
+      if (!value) return;
+      addMessage(value, 'user');
+      history.push({ role: 'user', content: value });
+      sendToAssistant();
     }
 
     function renderDone() {
-      const chat = document.getElementById('chat');
+      const name = (lastLead && (lastLead.contact_name || lastLead.name)) || 'gracias';
       const done = document.createElement('div');
       done.className = 'chat-done';
       done.innerHTML =
         '<div class="check">✓</div>' +
-        '<h3>¡Listo, ' + (lead.contact_name || 'gracias') + '!</h3>' +
+        '<h3>¡Listo, ' + escapeHtml(name) + '!</h3>' +
         '<p>Recibimos tu información. Un especialista de CartoData te contactará muy pronto para dar el siguiente paso en tu proyecto.</p>' +
         '<button class="chat-restart" id="restartBtn">Iniciar otra conversación</button>';
-      // reemplaza mensajes + input por la pantalla final
       messagesEl.style.display = 'none';
       quickEl.style.display = 'none';
       form.style.display = 'none';
@@ -387,18 +303,18 @@
       document.getElementById('restartBtn').addEventListener('click', () => location.reload());
     }
 
-    function renderDoneControls(reset) { /* placeholder para edición futura */ }
-
-    // Arranque
     form.addEventListener('submit', e => {
       e.preventDefault();
       if (input.disabled) return;
-      handleUserInput(input.value);
+      const v = input.value;
       input.value = '';
+      handleUserInput(v);
     });
 
-    setInputEnabled(false);
-    setTimeout(nextStep, 600);
+    // Arranque: saludo estático (sin llamada a la API). El historial arranca
+    // vacío para que el primer mensaje enviado a la API sea del usuario.
+    addMessage(GREETING, 'bot');
+    setInputEnabled(true);
   })();
   </script>
 </body>
