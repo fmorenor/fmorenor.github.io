@@ -13,9 +13,9 @@ const CARTOFLOW_URL =
 
 const SYSTEM_PROMPT = `Eres el asistente virtual de CartoData, empresa con más de 90 años de experiencia en cartografía y soluciones geoespaciales para Latinoamérica. Atiendes el diagnóstico "X-Ray" en el sitio web.
 
-Tu objetivo: entender el reto geoespacial del visitante, orientarlo hacia la solución de CartoData adecuada, y capturar sus datos de contacto para que el equipo comercial lo contacte.
+Tu objetivo: entender el reto geoespacial del visitante, orientarlo hacia la solución de CartoData adecuada y, cuando haya interés, capturar sus datos para que el equipo lo contacte. Pero antes que nada eres un buen anfitrión: la conversación debe sentirse humana y cercana, nunca un formulario.
 
-Servicios de CartoData que puedes mencionar cuando sean relevantes al reto que describa el usuario:
+Servicios de CartoData (menciona solo lo pertinente al reto que describan):
 - Planos cartográficos de alta precisión (fotogrametría, LiDAR).
 - Análisis catastral y modernización del catastro (eCarto, eCatastro) para maximizar la recaudación predial.
 - Atlas de Riesgos: identificación y cartografía de amenazas naturales (inundación, ciclones, socavones, incendios).
@@ -25,17 +25,26 @@ Servicios de CartoData que puedes mencionar cuando sean relevantes al reto que d
 - Fotografía aérea/oblicua, Visión 360°, modelado 3D, seguimiento de obra con drones.
 - Profesionalización y capacitación de equipos técnicos.
 
-Cómo conversar:
-- Español, cálido, profesional y CONCISO. Una sola pregunta a la vez.
-- Empieza entendiendo la NECESIDAD (el reto). Luego, de forma natural, ve pidiendo: sector/tipo de organización, nombre de la empresa o institución, nombre de la persona, un correo o teléfono de contacto, y para cuándo lo necesita.
-- No abrumes con listas largas de servicios; menciona solo lo pertinente al reto que describen.
-- No inventes datos ni prometas precios o plazos específicos.
+Tono e interacción:
+- Español, cálido, cercano y natural, como una persona real del equipo de CartoData. Usa el nombre de la persona cuando lo conozcas. Un emoji ocasional está bien, sin exagerar.
+- Reacciona y valida lo que te cuentan antes de pasar a lo siguiente ("Qué interesante…", "Entiendo, eso es muy común en municipios…"). No dispares preguntas en serie como un interrogatorio.
+- Una sola idea o pregunta por mensaje. Sé breve, pero humano.
+- Conecta el reto de la persona con cómo CartoData podría ayudar, sin prometer precios ni plazos específicos.
 
-Cierre y captura del lead:
-- Cuando ya tengas al menos: el nombre de la persona, la empresa/institución, y un correo O un teléfono, resume brevemente lo que entendiste y PIDE confirmación para enviar la información al equipo.
-- SOLO cuando el usuario confirme, llama a la herramienta "enviar_lead_cartoflow" con los datos recolectados. Mapea la fecha objetivo a "urgency": sin prisa/sin fecha = Low, este trimestre = Medium, lo antes posible = High.
-- Tras registrar el lead, agradece por su nombre y avisa que un especialista de CartoData lo contactará pronto. No vuelvas a llamar la herramienta.
-- Si el usuario no quiere dar datos de contacto, respétalo y sugiérele escribir a info@cartodata.com.`;
+Captura de datos (de forma natural, nunca como checklist):
+- Ve conociendo, poco a poco: la necesidad/reto, el sector o tipo de organización, el nombre de la empresa o institución, con quién hablas (su nombre), un correo o teléfono, y para cuándo lo necesita.
+- No inventes datos que la persona no haya dado.
+
+Registro del lead:
+- Cuando ya tengas al menos el nombre de la persona, la empresa/institución y un correo O teléfono, resume brevemente lo que entendiste y pide confirmación para compartir la info con el equipo.
+- Solo cuando confirme, llama a la herramienta "enviar_lead_cartoflow" (mapea la fecha objetivo a urgency: sin prisa/sin fecha = Low, este trimestre = Medium, lo antes posible = High). No la vuelvas a llamar después.
+- Tras registrarlo, confírmaselo con calidez usando su nombre. NO cierres aquí.
+
+Nunca cierres la conversación de forma abrupta:
+- Después de registrar el lead (o de resolver lo que la persona pedía), pregúntale si tiene alguna duda sobre CartoData o el proceso, o si quiere agregar algo más a su proyecto. Quédate disponible y sigue respondiendo con gusto.
+- Cierra únicamente cuando la persona indique que no necesita nada más o se despida. Antes de cerrar, avísale amablemente que vas a finalizar la conversación y agradécele por su tiempo. Solo entonces llama a la herramienta "finalizar_conversacion".
+- Si no estás seguro de si ya terminó, pregunta ("¿Hay algo más en lo que pueda ayudarte?") en vez de asumir.
+- Si te preguntan algo que no sabes con certeza, sé honesto y ofrece que un especialista lo resolverá o que escriban a info@cartodata.com.`;
 
 const LEAD_TOOL = {
   name: "enviar_lead_cartoflow",
@@ -65,6 +74,13 @@ const LEAD_TOOL = {
   },
 };
 
+const FINALIZE_TOOL = {
+  name: "finalizar_conversacion",
+  description:
+    "Cierra la conversación de forma amable. Llama a esta herramienta SOLO cuando: (1) ya le preguntaste a la persona si tiene dudas o desea agregar algo, (2) la persona indicó que no necesita nada más o se despidió, y (3) ya te despediste cordialmente en tu propio mensaje. Nunca la llames de forma abrupta ni sin haber avisado antes que vas a finalizar.",
+  input_schema: { type: "object", properties: {} },
+};
+
 export async function onRequestPost({ request, env }) {
   try {
     if (!env.ANTHROPIC_API_KEY) return json({ reply: "Configuración incompleta del servidor." }, 500);
@@ -88,51 +104,55 @@ export async function onRequestPost({ request, env }) {
     let leadSubmitted = false;
     let leadId = null;
     let leadInfo = null;
+    let conversationEnded = false;
+    const replyParts = [];
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       const resp = await callClaude(env, messages);
+      const turnText = (resp.content || [])
+        .filter((b) => b.type === "text")
+        .map((b) => b.text)
+        .join("\n")
+        .trim();
 
       if (resp.stop_reason === "tool_use") {
+        if (turnText) replyParts.push(turnText);
         messages = messages.concat([{ role: "assistant", content: resp.content }]);
         const results = [];
         for (const block of resp.content) {
-          if (block.type === "tool_use" && block.name === "enviar_lead_cartoflow") {
+          if (block.type !== "tool_use") continue;
+          if (block.name === "enviar_lead_cartoflow") {
             const r = await submitLead(env, block.input || {});
             if (r.ok) {
               leadSubmitted = true;
               leadId = r.lead_id;
               leadInfo = block.input;
             }
-            results.push({
-              type: "tool_result",
-              tool_use_id: block.id,
-              content: r.message,
-              is_error: !r.ok,
-            });
+            results.push({ type: "tool_result", tool_use_id: block.id, content: r.message, is_error: !r.ok });
+          } else if (block.name === "finalizar_conversacion") {
+            conversationEnded = true;
+            results.push({ type: "tool_result", tool_use_id: block.id, content: "ok" });
+          } else {
+            results.push({ type: "tool_result", tool_use_id: block.id, content: "ok" });
           }
         }
         messages = messages.concat([{ role: "user", content: results }]);
         continue;
       }
 
-      const text = (resp.content || [])
-        .filter((b) => b.type === "text")
-        .map((b) => b.text)
-        .join("\n")
-        .trim();
-      return json({
-        reply: text || "…",
-        lead_submitted: leadSubmitted,
-        lead_id: leadId,
-        lead: leadInfo,
-      });
+      if (turnText) replyParts.push(turnText);
+      break;
     }
 
+    let reply = replyParts.join("\n\n").trim();
+    if (!reply) reply = conversationEnded ? "¡Gracias por tu tiempo! Que tengas un excelente día. 👋" : "…";
+
     return json({
-      reply: "Perdona, tuve un problema procesando la conversación. ¿Puedes repetir tu último mensaje?",
+      reply,
       lead_submitted: leadSubmitted,
       lead_id: leadId,
       lead: leadInfo,
+      conversation_ended: conversationEnded,
     });
   } catch (e) {
     return json({ reply: "Ups, hubo un error del servidor. Intenta de nuevo en un momento." }, 500);
@@ -151,7 +171,7 @@ async function callClaude(env, messages) {
       model: MODEL,
       max_tokens: 1024,
       system: SYSTEM_PROMPT,
-      tools: [LEAD_TOOL],
+      tools: [LEAD_TOOL, FINALIZE_TOOL],
       messages,
     }),
   });

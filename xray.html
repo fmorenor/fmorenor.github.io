@@ -162,6 +162,13 @@
     }
     .chat-restart:hover { background: rgba(255,255,255,0.08); }
 
+    .chat-close {
+      display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
+      padding: 1.1rem 1.3rem; border-top: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.02);
+    }
+    .chat-close span { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+
     @media(max-width:600px) {
       .msg { max-width: 90%; }
       .chat { height: min(600px, 82vh); }
@@ -215,7 +222,6 @@
 
     // Historial de la conversación en formato de la API (solo turnos de texto).
     const history = [];
-    let lastLead = null;
 
     const GREETING = '¡Hola! 👋 Soy el asistente de CartoData. Cuéntame: ¿qué reto o necesidad geoespacial estás buscando resolver?';
 
@@ -266,9 +272,10 @@
         addMessage(reply, 'bot');
         history.push({ role: 'assistant', content: reply });
 
-        if (data && data.lead_submitted) {
-          lastLead = data.lead || null;
-          setTimeout(renderDone, 700);
+        // El registro del lead NO cierra la conversación: seguimos disponibles.
+        // Solo cerramos cuando el asistente se despide y finaliza explícitamente.
+        if (data && data.conversation_ended) {
+          setTimeout(closeConversation, 500);
           return;
         }
         setInputEnabled(true);
@@ -287,19 +294,16 @@
       sendToAssistant();
     }
 
-    function renderDone() {
-      const name = (lastLead && (lastLead.contact_name || lastLead.name)) || 'gracias';
-      const done = document.createElement('div');
-      done.className = 'chat-done';
-      done.innerHTML =
-        '<div class="check">✓</div>' +
-        '<h3>¡Listo, ' + escapeHtml(name) + '!</h3>' +
-        '<p>Recibimos tu información. Un especialista de CartoData te contactará muy pronto para dar el siguiente paso en tu proyecto.</p>' +
-        '<button class="chat-restart" id="restartBtn">Iniciar otra conversación</button>';
-      messagesEl.style.display = 'none';
-      quickEl.style.display = 'none';
+    // Cierre suave: conserva toda la conversación a la vista, desactiva el input
+    // y ofrece reiniciar. Nunca borra el historial de golpe.
+    function closeConversation() {
+      setInputEnabled(false);
       form.style.display = 'none';
-      chat.appendChild(done);
+      const bar = document.createElement('div');
+      bar.className = 'chat-close';
+      bar.innerHTML = '<span>Conversación finalizada · gracias por tu visita</span>' +
+        '<button class="chat-restart" id="restartBtn">Iniciar otra conversación</button>';
+      chat.appendChild(bar);
       document.getElementById('restartBtn').addEventListener('click', () => location.reload());
     }
 
