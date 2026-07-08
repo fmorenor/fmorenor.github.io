@@ -132,6 +132,23 @@
     }
     .chat-send:hover { background: #2d4bbd; transform: translateY(-1px); }
     .chat-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .chat-attach {
+      width: 46px; height: 46px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; background: rgba(255,255,255,0.05); color: #c7d2fe;
+      font-size: 1.15rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 180ms, transform 150ms;
+    }
+    .chat-attach:hover { background: rgba(255,255,255,0.1); transform: translateY(-1px); }
+    .chat-attach:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    /* Notas del sistema (archivos adjuntos, avisos) */
+    .chat-note {
+      align-self: center; max-width: 92%; text-align: center;
+      font-size: 0.76rem; color: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; padding: 0.45rem 0.85rem;
+      animation: fadeUp 300ms ease both;
+    }
 
     /* ── RESUMEN / CONFIRMACIÓN ── */
     .lead-summary {
@@ -198,6 +215,10 @@
       <div class="quick-replies" id="quickReplies" style="display:none;"></div>
 
       <form class="chat-input" id="inputForm" autocomplete="off">
+        <input type="file" id="fileInput" multiple hidden
+          accept=".kml,.kmz,.shp,.zip,.geojson,.json,.dwg,.dxf,.pdf,.png,.jpg,.jpeg,.tif,.tiff,.csv" />
+        <button type="button" class="chat-attach" id="attachBtn" aria-label="Adjuntar archivo"
+          title="Adjuntar archivo (KML, KMZ, SHP, PDF…)">📎</button>
         <input type="text" id="msgInput" placeholder="Escribe tu respuesta…" aria-label="Mensaje" />
         <button type="submit" class="chat-send" id="sendBtn" aria-label="Enviar">→</button>
       </form>
@@ -223,7 +244,18 @@
     // Historial de la conversación en formato de la API (solo turnos de texto).
     const history = [];
 
-    const GREETING = '¡Bienvenido a CartoData! 👋 Con gusto te ayudo — somos especialistas en soluciones geoespaciales y llegaste al lugar indicado para tu proyecto.\n\nPara ser ágiles con tu cotización, empecemos por tus datos de contacto: ¿me compartes tu nombre, un correo o teléfono, y el nombre de tu empresa?';
+    // Estado de adjuntos / lead
+    let leadUuid = null;          // UUID interno del lead (llega al registrarlo)
+    let transcriptSent = false;   // evita subir la transcripción dos veces
+    const pendingFiles = [];      // archivos elegidos antes de existir el lead
+    const attachedNames = [];     // nombres ya subidos (para la transcripción)
+
+    const fileInput = document.getElementById('fileInput');
+    const attachBtn = document.getElementById('attachBtn');
+    const ALLOWED_EXT = ['kml','kmz','shp','zip','geojson','json','dwg','dxf','pdf','png','jpg','jpeg','tif','tiff','csv'];
+    const MAX_BYTES = 20 * 1024 * 1024;
+
+    const GREETING ='¡Bienvenido a CartoData! 👋 Con gusto te ayudo — somos especialistas en soluciones geoespaciales y llegaste al lugar indicado para tu proyecto.\n\nPara ser ágiles con tu cotización, empecemos por tus datos de contacto: ¿me compartes tu nombre, un correo o teléfono, y el nombre de tu empresa?';
 
     function scrollDown() { messagesEl.scrollTop = messagesEl.scrollHeight; }
 
@@ -272,10 +304,17 @@
         addMessage(reply, 'bot');
         history.push({ role: 'assistant', content: reply });
 
+        // Al registrar el lead recibimos su UUID interno → habilita adjuntar
+        // archivos y sube los que hayan quedado pendientes.
+        if (data && data.lead_uuid && !leadUuid) {
+          leadUuid = data.lead_uuid;
+          flushPending();
+        }
+
         // El registro del lead NO cierra la conversación: seguimos disponibles.
         // Solo cerramos cuando el asistente se despide y finaliza explícitamente.
         if (data && data.conversation_ended) {
-          setTimeout(closeConversation, 500);
+          uploadTranscript().finally(() => setTimeout(closeConversation, 600));
           return;
         }
         setInputEnabled(true);
@@ -298,6 +337,7 @@
     // y ofrece reiniciar. Nunca borra el historial de golpe.
     function closeConversation() {
       setInputEnabled(false);
+      attachBtn.disabled = true;
       form.style.display = 'none';
       const bar = document.createElement('div');
       bar.className = 'chat-close';
@@ -306,6 +346,89 @@
       chat.appendChild(bar);
       document.getElementById('restartBtn').addEventListener('click', () => location.reload());
     }
+
+    // ── Notas del sistema (avisos de archivos, etc.) ──
+    function addNote(text) {
+      const n = document.createElement('div');
+      n.className = 'chat-note';
+      n.textContent = text;
+      messagesEl.appendChild(n);
+      scrollDown();
+    }
+
+    // ── Adjuntos ──
+    function validFile(file) {
+      if (file.size > MAX_BYTES) { addNote('⚠️ ' + file.name + ' supera el límite de 20 MB.'); return false; }
+      const ext = (file.name.split('.').pop() || '').toLowerCase();
+      if (!ALLOWED_EXT.includes(ext)) { addNote('⚠️ Tipo de archivo no permitido: .' + ext); return false; }
+      return true;
+    }
+
+    async function postUpload(file, fileName) {
+      const fd = new FormData();
+      fd.append('file', file, fileName || file.name);
+      fd.append('lead_id', leadUuid);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      return res.json().catch(() => ({}));
+    }
+
+    async function uploadOne(file, fileName) {
+      const name = fileName || file.name;
+      try {
+        const d = await postUpload(file, name);
+        if (d && d.success) { attachedNames.push(name); addNote('📎 ' + name + ' · adjuntado ✓'); return true; }
+        addNote('⚠️ No pude adjuntar ' + name + (d && d.error ? ' (' + d.error + ')' : '') + '.');
+      } catch (e) {
+        addNote('⚠️ Error al subir ' + name + '.');
+      }
+      return false;
+    }
+
+    // El usuario elige uno o varios archivos.
+    async function handleFiles(files) {
+      for (const file of files) {
+        if (!validFile(file)) continue;
+        if (leadUuid) {
+          await uploadOne(file);
+        } else {
+          pendingFiles.push(file);
+          addNote('📎 ' + file.name + ' — se adjuntará en cuanto registremos tus datos.');
+        }
+      }
+      // Si ya subimos algún archivo directo, avisa al asistente para que reaccione.
+      if (leadUuid && attachedNames.length) {
+        history.push({ role: 'user', content: 'Adjunté mi archivo: ' + files[files.length - 1].name });
+        sendToAssistant();
+      }
+    }
+
+    // Sube los archivos que quedaron pendientes (una vez que existe el lead).
+    async function flushPending() {
+      if (!leadUuid || pendingFiles.length === 0) return;
+      const files = pendingFiles.splice(0);
+      for (const f of files) await uploadOne(f);
+      history.push({ role: 'user', content: 'Adjunté: ' + files.map(f => f.name).join(', ') });
+      sendToAssistant();
+    }
+
+    // Sube la conversación completa como archivo a la pestaña Archivos del lead.
+    async function uploadTranscript() {
+      if (!leadUuid || transcriptSent) return;
+      transcriptSent = true;
+      const lines = ['# Conversación X-Ray — CartoData', 'Fecha: ' + new Date().toISOString(), '', 'Asistente: ' + GREETING];
+      for (const m of history) lines.push((m.role === 'user' ? 'Usuario' : 'Asistente') + ': ' + m.content);
+      if (attachedNames.length) { lines.push(''); lines.push('Archivos adjuntos: ' + attachedNames.join(', ')); }
+      const stamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '');
+      const blob = new File([lines.join('\n\n')], 'conversacion-xray-' + stamp + '.md', { type: 'text/markdown' });
+      try { await postUpload(blob, blob.name); } catch (e) { /* no bloquea el cierre */ }
+    }
+
+    attachBtn.addEventListener('click', () => { if (!attachBtn.disabled) fileInput.click(); });
+    fileInput.addEventListener('change', () => {
+      const files = [...fileInput.files];
+      fileInput.value = '';
+      if (files.length) handleFiles(files);
+    });
 
     form.addEventListener('submit', e => {
       e.preventDefault();

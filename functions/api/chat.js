@@ -123,6 +123,7 @@ export async function onRequestPost({ request, env }) {
 
     let leadSubmitted = false;
     let leadId = null;
+    let leadUuid = null;
     let leadInfo = null;
     let conversationEnded = false;
     const replyParts = [];
@@ -146,6 +147,7 @@ export async function onRequestPost({ request, env }) {
             if (r.ok) {
               leadSubmitted = true;
               leadId = r.lead_id;
+              leadUuid = r.lead_uuid;
               leadInfo = block.input;
             }
             results.push({ type: "tool_result", tool_use_id: block.id, content: r.message, is_error: !r.ok });
@@ -171,6 +173,7 @@ export async function onRequestPost({ request, env }) {
       reply,
       lead_submitted: leadSubmitted,
       lead_id: leadId,
+      lead_uuid: leadUuid,
       lead: leadInfo,
       conversation_ended: conversationEnded,
     });
@@ -233,8 +236,13 @@ async function submitLead(env, input) {
     });
     const data = await r.json().catch(() => ({}));
     if (r.ok && data.success) {
-      const lead_id = data.leads && data.leads[0] && data.leads[0].lead_id;
-      return { ok: true, lead_id, message: "Lead registrado con éxito. lead_id: " + (lead_id || "n/a") };
+      const lead0 = (data.leads && data.leads[0]) || {};
+      return {
+        ok: true,
+        lead_id: lead0.lead_id,
+        lead_uuid: lead0.id,
+        message: "Lead registrado con éxito. lead_id: " + (lead0.lead_id || "n/a"),
+      };
     }
     return { ok: false, message: "No se pudo registrar el lead: " + (data.error || ("HTTP " + r.status)) };
   } catch (e) {
