@@ -1,0 +1,12 @@
+{
+  // Cloudflare Workers — sitio estático (assets-only, sin código de Worker).
+  // Sirve los .html/imagenes/css/videos de la raíz del repo.
+  "name": "cartodata-web",
+  "compatibility_date": "2026-07-08",
+  "assets": {
+    "directory": ".",
+    // URLs limpias: /procesos -> procesos.html (comportamiento por defecto)
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  }
+}

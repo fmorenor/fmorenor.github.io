@@ -1,0 +1,4 @@
+# Archivos que NO deben subirse como assets estáticos a Cloudflare.
+manus-storage/
+source-rebuild/
+*.md
