@@ -306,6 +306,17 @@
       border-radius: 12px; display: flex; align-items: center; justify-content: center;
       font-size: 0.8rem; color: rgba(255,255,255,0.3); font-weight: 500;
     }
+    .escudos-row {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 3rem;
+    }
+    .escudo-card {
+      background: #fff; border-radius: 14px; padding: 1.1rem 0.8rem 0.9rem;
+      display: flex; flex-direction: column; align-items: center; gap: 0.65rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .escudo-card img { height: 74px; width: auto; object-fit: contain; display: block; }
+    .escudo-card span { font-size: 0.72rem; font-weight: 600; color: #1e293b; text-align: center; }
+    @media(max-width:640px) { .escudos-row { grid-template-columns: repeat(2, 1fr); } }
 
     /* Responsive hero */
     @media(max-width:640px) {
@@ -376,9 +387,11 @@
         </div>
       </div>
 
-      <!-- [PLACEHOLDER: logos / fotos de alcaldes] -->
-      <div class="img-placeholder" style="height:180px; margin-bottom: 3rem;">
-        [PLACEHOLDER — Fotos y logos de alcaldes: David de la Peña · Sergio Chávez · Gerardo Quirino · Verónica Delgadillo · Félix Arratia · Christian Agúndez]
+      <div class="escudos-row">
+        <div class="escudo-card"><img src="./images/escudo-guadalajara.png" alt="Escudo de Guadalajara, Jalisco" loading="lazy" /><span>Guadalajara</span></div>
+        <div class="escudo-card"><img src="./images/escudo-santiago-nl.png" alt="Escudo de Santiago, Nuevo León" loading="lazy" /><span>Santiago, N.L.</span></div>
+        <div class="escudo-card"><img src="./images/escudo-mascota.png" alt="Escudo de Mascota, Jalisco" loading="lazy" /><span>Mascota</span></div>
+        <div class="escudo-card"><img src="./images/escudo-ahualulco.png" alt="Escudo de Ahualulco de Mercado, Jalisco" loading="lazy" /><span>Ahualulco de Mercado</span></div>
       </div>
 
       <div class="municipios-strip">
