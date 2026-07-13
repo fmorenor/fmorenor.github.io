@@ -749,7 +749,7 @@
               <h3>9. Jurisdicción y Ley Aplicable</h3>
               <p>Estos términos se rigen por las leyes de los <strong>Estados Unidos Mexicanos</strong>. Para cualquier controversia, las partes se someten a la jurisdicción de los tribunales de <strong>Guadalajara, Jalisco</strong>.</p>
               <h3>10. Contacto</h3>
-              <p>Para dudas, escríbanos a <a href="mailto:contacto@cartodata.mx">contacto@cartodata.mx</a>.</p>
+              <p>Para dudas, escríbanos a <a href="mailto:contacto@cartodata.com">contacto@cartodata.com</a>.</p>
             </div>
           </div>
         </div>`);
