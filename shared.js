@@ -725,13 +725,13 @@
             <div id="cd-terms-header">
               <div>
                 <h2 id="cd-terms-title">Términos y Condiciones</h2>
-                <p>Última actualización: junio 2025 · CartoData S. de R.L. de C.V.</p>
+                <p>Última actualización: junio 2025 · CartoData 2.0 SC</p>
               </div>
               <button id="cd-terms-close" aria-label="Cerrar">Cerrar ✕</button>
             </div>
             <div id="cd-terms-body">
               <h3>1. Aceptación de los Términos</h3>
-              <p>Al acceder y utilizar el sitio web <strong>www.cartodata.mx</strong> y los servicios de <strong>CartoData S. de R.L. de C.V.</strong>, usted acepta quedar vinculado por los presentes Términos y Condiciones.</p>
+              <p>Al acceder y utilizar el sitio web <strong>www.cartodata.mx</strong> y los servicios de <strong>CartoData 2.0 SC</strong>, usted acepta quedar vinculado por los presentes Términos y Condiciones.</p>
               <h3>2. Descripción de los Servicios</h3>
               <p>CartoData ofrece soluciones geoespaciales que incluyen: cartografía digital y análisis territorial, procesamiento de datos GIS, consultoría en planeación urbana e infraestructura, estudios de impacto ambiental y desarrollo de plataformas de visualización geográfica.</p>
               <h3>3. Propiedad Intelectual</h3>
