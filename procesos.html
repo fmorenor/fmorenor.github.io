@@ -240,7 +240,26 @@
     }
     .catastro-img.has-photo { border: none; background: none; }
     .catastro-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    @media(max-width:800px) { .catastro-grid { grid-template-columns: 1fr; gap: 2rem; } }
+    /* Imagen ancha (infográfico) a ancho completo para legibilidad */
+    .catastro-feats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 0 0 2.5rem; }
+    .catastro-feats-row .catastro-feat { margin-bottom: 0; }
+    .catastro-fullimg {
+      position: relative; display: block; max-width: 1100px; margin: 0 auto;
+      border-radius: 16px; overflow: hidden; background: #fff;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.35);
+    }
+    .catastro-fullimg img { width: 100%; height: auto; display: block; }
+    .catastro-fullimg-hint {
+      position: absolute; bottom: 0.85rem; right: 0.85rem;
+      background: rgba(15,23,42,0.72); color: #fff;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em;
+      padding: 0.35rem 0.7rem; border-radius: 999px; opacity: 0; transition: opacity 200ms;
+    }
+    .catastro-fullimg:hover .catastro-fullimg-hint { opacity: 1; }
+    @media(max-width:800px) {
+      .catastro-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .catastro-feats-row { grid-template-columns: 1fr; gap: 1rem; }
+    }
 
     /* ── CTA ── */
     .cta-section {
@@ -431,24 +450,25 @@
   <section class="section-mid section-pad">
     <div class="inner">
       <p class="eyebrow eyebrow-dim">Análisis especializado</p>
-      <div class="catastro-grid">
-        <div>
-          <h2 class="section-h2 light" style="margin-bottom:2rem;">Catastro moderno para <strong>municipios que crecen</strong></h2>
-          <div class="catastro-feat">
-            <p class="catastro-feat-title">Valuaciones sintéticas</p>
-            <p class="catastro-feat-desc">Metodología de valuación masiva que actualiza el valor catastral de miles de predios de forma eficiente y objetiva.</p>
-          </div>
-          <div class="catastro-feat">
-            <p class="catastro-feat-title">Planos de valores</p>
-            <p class="catastro-feat-desc">Generación de planos de valores unitarios de suelo para fundamentar tarifas prediales justas y actualizadas.</p>
-          </div>
-          <div class="catastro-feat">
-            <p class="catastro-feat-title">Brecha catastral</p>
-            <p class="catastro-feat-desc">Identificación precisa de la diferencia entre el valor catastral y el valor comercial real de los inmuebles del municipio.</p>
-          </div>
+      <h2 class="section-h2 light" style="margin-bottom:2rem;">Catastro moderno para <strong>municipios que crecen</strong></h2>
+      <div class="catastro-feats-row">
+        <div class="catastro-feat">
+          <p class="catastro-feat-title">Valuaciones sintéticas</p>
+          <p class="catastro-feat-desc">Metodología de valuación masiva que actualiza el valor catastral de miles de predios de forma eficiente y objetiva.</p>
         </div>
-        <div class="catastro-img has-photo"><img src="./images/catastro-solar.jpg" alt="Catastro solar — eCarto" loading="lazy" /></div>
+        <div class="catastro-feat">
+          <p class="catastro-feat-title">Planos de valores</p>
+          <p class="catastro-feat-desc">Generación de planos de valores unitarios de suelo para fundamentar tarifas prediales justas y actualizadas.</p>
+        </div>
+        <div class="catastro-feat">
+          <p class="catastro-feat-title">Brecha catastral</p>
+          <p class="catastro-feat-desc">Identificación precisa de la diferencia entre el valor catastral y el valor comercial real de los inmuebles del municipio.</p>
+        </div>
       </div>
+      <a class="catastro-fullimg" href="./images/modernizacion-catastral.png" target="_blank" rel="noopener" title="Ver en grande">
+        <img src="./images/modernizacion-catastral.png" alt="Modernización Catastral — eCarto CartoData" loading="lazy" />
+        <span class="catastro-fullimg-hint">Ver en grande ⤢</span>
+      </a>
     </div>
   </section>
 
@@ -503,7 +523,7 @@
               <span><strong>Entregables:</strong> reporte de calidad de datos, matriz de errores, plan de corrección y datos depurados listos para producción.</span>
             </li>
           </ul>
-          <div class="datos-placeholder has-photo doc"><img src="./images/cedula.png" alt="Cédula Única Registral y Catastral — ejemplo de reporte de auditoría" loading="lazy" /></div>
+          <div class="datos-placeholder has-photo doc"><img src="./images/auditoriadedatos.png" alt="Auditoría de datos — reporte de calidad e integridad" loading="lazy" /></div>
         </div>
       </div>
     </div>
