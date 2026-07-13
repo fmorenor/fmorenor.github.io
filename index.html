@@ -1287,20 +1287,20 @@
     setTimeout(hook, 4000);
   })();
 
+  /* ── Ocultar temporalmente "Instituciones" de menús y tarjetas del home ──
+     La página de Instituciones se rehará. Para restaurarla, volver a la versión
+     anterior de esta IIFE (redirigía a ./instituciones.html en vez de ocultar). ── */
   (function hookInstitucionesNav() {
+    const NAMES = ['Instituciones', 'Institutions'];
     function hook() {
       document.querySelectorAll('a, button').forEach(el => {
-        if (el.dataset.cdInstHooked) return;
+        if (el.dataset.cdInstHidden) return;
         const h3 = el.querySelector('h3');
-        const match = h3 && h3.textContent.trim() === 'Instituciones';
-        const directMatch = el.textContent.trim() === 'Instituciones';
+        const match = h3 && NAMES.includes(h3.textContent.trim());
+        const directMatch = NAMES.includes(el.textContent.trim());
         if (match || directMatch) {
-          el.dataset.cdInstHooked = '1';
-          el.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.assign('./instituciones.html');
-          }, true);
+          el.dataset.cdInstHidden = '1';
+          el.style.display = 'none';
         }
       });
     }

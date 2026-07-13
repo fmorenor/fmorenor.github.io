@@ -343,7 +343,8 @@
         { label: 'Ciudades',       en: 'Cities',        href: './ciudades.html'             },
         { label: 'Infraestructura',en: 'Infrastructure',href: './infraestructura.html'       },
         { label: 'Minería',        en: 'Mining',        href: './mineria.html'              },
-        { label: 'Instituciones',  en: 'Institutions',  href: './instituciones.html'        },
+        // Oculto temporalmente: la página de Instituciones se rehará. Restaurar cuando esté lista.
+        // { label: 'Instituciones',  en: 'Institutions',  href: './instituciones.html'        },
       ]},
     { label: 'Tecnología', href: './#tecnologia', children: [
         { label: 'Procesos',    en: 'Processes',   href: './procesos.html'          },
