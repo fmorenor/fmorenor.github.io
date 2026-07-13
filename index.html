@@ -2155,6 +2155,27 @@
     obs.observe(document.body, { childList: true, subtree: true });
   })();
 
+  /* ── Antepone "años"/"years" a la etiqueta de la estadística de tradición cartográfica (ES + EN) ── */
+  (function fixTradicionStat() {
+    const MAP = [
+      ['de tradición cartográfica', 'años de tradición cartográfica'],
+      ['of cartographic tradition', 'years of cartographic tradition'],
+    ];
+    let busy = false;
+    function apply() {
+      if (busy) return;
+      document.querySelectorAll('p').forEach(p => {
+        const t = p.textContent.trim();
+        for (const [from, to] of MAP) {
+          if (t === from) { busy = true; p.textContent = to; busy = false; }
+        }
+      });
+    }
+    apply();
+    const obs = new MutationObserver(apply);
+    obs.observe(document.body, { childList: true, subtree: true, characterData: true });
+  })();
+
   /* ── Inyectar noticias reales en la sección Noticias del home ── */
   (function injectNoticias() {
     const NEWS = [
