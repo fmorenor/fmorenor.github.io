@@ -154,6 +154,10 @@
       color: rgba(248,250,252,0.65); max-width: 540px;
     }
     html.light .section-body { color: rgba(15,23,42,0.65); }
+    /* La sección de fuentes tiene fondo siempre oscuro (overlay): forzar texto claro en ambos temas */
+    .ecarto-sources-inner .section-title { color: #f8fafc; }
+    .ecarto-sources-inner .section-body,
+    html.light .ecarto-sources-inner .section-body { color: rgba(248,250,252,0.72); }
 
     /* ── AU4 main section ── */
     .au4-section { background: var(--bg, #0d0d0d); }
