@@ -656,7 +656,7 @@
               <h3>Derechos ARCO</h3>
               <p>Como titular de datos personales, puede ejercitar los derechos de <strong>Acceso, Rectificación, Cancelación y Oposición</strong> enviando su solicitud a <a href="mailto:privacidad@cartodata.com">privacidad@cartodata.com</a>. La respuesta se emitirá en un plazo no mayor a <strong>15 días hábiles</strong>.</p>
               <h3>Cambios al Aviso</h3>
-              <p>Este aviso podrá ser modificado. Las modificaciones serán informadas a través de <a href="https://www.cartodata.com/privacidad" target="_blank">www.cartodata.com/privacidad</a>.</p>
+              <p>Este aviso podrá ser modificado. Las modificaciones serán informadas a través de <a href="https://www.cartodata.com/privacidad" target="_blank" data-cd-realpage>www.cartodata.com/privacidad</a>.</p>
               <h3>Contacto</h3>
               <p><a href="mailto:privacidad@cartodata.com">privacidad@cartodata.com</a><br>
               Circunvalación Oriente 689, Col. Ciudad Granja, C.P. 45010, Zapopan, Jalisco, México.</p>
@@ -674,7 +674,7 @@
       window.openPrivacyModal = openPrivacy;
 
       function hookPrivacyLinks() {
-        document.querySelectorAll('a[href="#aviso-privacidad"],a[href*="privaci"]').forEach(l => {
+        document.querySelectorAll('a[href="#aviso-privacidad"],a[href*="privaci"]:not([data-cd-realpage])').forEach(l => {
           if (!l.dataset.cdPrivHooked) { l.dataset.cdPrivHooked='1'; l.addEventListener('click', openPrivacy); }
         });
       }

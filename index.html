@@ -1129,7 +1129,7 @@
           <p>La respuesta se emitirá en un plazo no mayor a <strong>15 días hábiles</strong> a partir de la solicitud. Usted también tiene derecho a iniciar un Procedimiento de Protección de Datos ante el IFAI (<a href="https://www.ifai.gob.mx" target="_blank">www.ifai.gob.mx</a>) dentro de los 15 días siguientes a la respuesta de CartoData.</p>
 
           <h3>Cambios al Aviso de Privacidad</h3>
-          <p>Este aviso podrá ser modificado de tiempo en tiempo. Dichas modificaciones serán informadas a través de <a href="https://www.cartodata.com/privacidad" target="_blank">www.cartodata.com/privacidad</a> o cualquier otro medio de comunicación que CartoData determine.</p>
+          <p>Este aviso podrá ser modificado de tiempo en tiempo. Dichas modificaciones serán informadas a través de <a href="https://www.cartodata.com/privacidad" target="_blank" data-cd-realpage>www.cartodata.com/privacidad</a> o cualquier otro medio de comunicación que CartoData determine.</p>
 
           <h3>Contacto</h3>
           <p>Para dudas o comentarios, contacte a nuestro Encargado de Protección de Datos Personales:<br>
@@ -1163,7 +1163,7 @@
 
     /* Interceptar el link del footer en cuanto React lo monte */
     function hookLink() {
-      const links = document.querySelectorAll('a[href="#aviso-privacidad"], a[href*="privaci"]');
+      const links = document.querySelectorAll('a[href="#aviso-privacidad"], a[href*="privaci"]:not([data-cd-realpage])');
       links.forEach(l => {
         if (!l.dataset.cdHooked) {
           l.dataset.cdHooked = '1';
