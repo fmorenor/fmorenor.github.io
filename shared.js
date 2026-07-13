@@ -747,7 +747,7 @@
               <h3>8. Modificaciones</h3>
               <p>CartoData se reserva el derecho de actualizar estos Términos en cualquier momento. El uso continuado de los servicios constituye aceptación de las modificaciones.</p>
               <h3>9. Jurisdicción y Ley Aplicable</h3>
-              <p>Estos términos se rigen por las leyes de los <strong>Estados Unidos Mexicanos</strong>. Para cualquier controversia, las partes se someten a la jurisdicción de los tribunales de <strong>Guadalajara, Jalisco</strong>.</p>
+              <p>Los presentes Términos y Condiciones se rigen e interpretan de conformidad con las leyes de los <strong>Estados Unidos Mexicanos</strong>. Para la interpretación, cumplimiento y resolución de cualquier controversia derivada de estos Términos, las partes se someten expresamente a la jurisdicción de los tribunales competentes de <strong>Zapopan, Jalisco</strong>, renunciando a cualquier otro fuero que pudiera corresponderles por razón de su domicilio presente o futuro.</p>
               <h3>10. Contacto</h3>
               <p>Para dudas, escríbanos a <a href="mailto:contacto@cartodata.com">contacto@cartodata.com</a>.</p>
             </div>
