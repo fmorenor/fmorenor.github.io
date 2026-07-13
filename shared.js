@@ -731,7 +731,7 @@
             </div>
             <div id="cd-terms-body">
               <h3>1. Aceptación de los Términos</h3>
-              <p>Al acceder y utilizar el sitio web <strong>www.cartodata.mx</strong> y los servicios de <strong>CartoData 2.0 SC</strong>, usted acepta quedar vinculado por los presentes Términos y Condiciones.</p>
+              <p>Al acceder y utilizar el sitio web <strong>www.cartodata.com</strong> y los servicios de <strong>CartoData 2.0 SC</strong>, usted acepta quedar vinculado por los presentes Términos y Condiciones.</p>
               <h3>2. Descripción de los Servicios</h3>
               <p>CartoData ofrece soluciones geoespaciales que incluyen: cartografía digital y análisis territorial, procesamiento de datos GIS, consultoría en planeación urbana e infraestructura, estudios de impacto ambiental y desarrollo de plataformas de visualización geográfica.</p>
               <h3>3. Propiedad Intelectual</h3>
