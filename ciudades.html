@@ -208,8 +208,24 @@
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .step-text { font-size: 0.95rem; color: #0f172a; font-weight: 500; padding-top: 0.35rem; }
+    /* Diagrama a ancho completo (antes iba en media columna y no se leía) */
+    .metodologia-diagram {
+      position: relative; display: block; max-width: 1080px;
+      margin: 2rem auto 3.5rem; border-radius: 1rem; overflow: hidden;
+      background: #fff; box-shadow: 0 12px 44px rgba(15,23,42,0.10);
+    }
+    .metodologia-diagram img { width: 100%; height: auto; display: block; }
+    .metodologia-diagram-hint {
+      position: absolute; bottom: 0.85rem; right: 0.85rem;
+      background: rgba(15,23,42,0.72); color: #fff;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em;
+      padding: 0.35rem 0.7rem; border-radius: 999px;
+      opacity: 0; transition: opacity 200ms;
+    }
+    .metodologia-diagram:hover .metodologia-diagram-hint { opacity: 1; }
     .metodologia-texto-col {
       display: flex; flex-direction: column; gap: 1.25rem; padding-top: 0.5rem;
+      max-width: 860px; margin: 0 auto;
     }
     .metodologia-col-title {
       font-size: clamp(1.2rem,2.2vw,1.6rem); font-weight: 700; color: #0f172a;
@@ -472,19 +488,16 @@
   <section class="metodologia-section" id="metodologia">
     <div class="metodologia-inner">
       <p class="section-eyebrow">Cómo lo logramos</p>
-      <div class="metodologia-grid">
-        <div>
-          <img src="./images/cartomorfosis.png" alt="Metodología Cartomorfosis" loading="lazy" style="width:100%;height:auto;border-radius:1rem;">
-        </div>
-        <div>
-          <div class="metodologia-texto-col">
-            <h3 class="metodologia-col-title">La transformación a partir de la reingeniería.</h3>
-            <p class="metodologia-col-body">Creemos en un mundo mejor que empodere la toma de decisiones con información precisa. A esto le llamamos Cartomorfosis y sus tres pilares: <strong>omnidata</strong>, <strong>geosoftware</strong> y <strong>profesionalización</strong>.</p>
-            <p class="metodologia-col-body">Integramos tecnologías en nuestros procesos como fotogrametría, LiDAR, Visión360, Drones y soluciones geoespaciales aplicadas en agricultura, minería, inmobiliaria, catastro, fiscalidad territorial y otras áreas para gobiernos de ciudades inteligentes.</p>
-            <div class="metodologia-mantra">
-              LA CARTOMORFOSIS ES UN FENÓMENO ORGANIZACIONAL CON GRANDES BENEFICIOS PARA EL MUNICIPIO, LA SOCIEDAD Y LA CIUDADANÍA
-            </div>
-          </div>
+      <a class="metodologia-diagram" href="./images/cartomorfosis.png" target="_blank" rel="noopener" title="Ver el diagrama en grande">
+        <img src="./images/cartomorfosis.png" alt="Metodología Cartomorfosis — ciclo: adquirir, analizar, transformar y empoderar" loading="lazy">
+        <span class="metodologia-diagram-hint">Ver en grande ⤢</span>
+      </a>
+      <div class="metodologia-texto-col">
+        <h3 class="metodologia-col-title">La transformación a partir de la reingeniería.</h3>
+        <p class="metodologia-col-body">Creemos en un mundo mejor que empodere la toma de decisiones con información precisa. A esto le llamamos Cartomorfosis y sus tres pilares: <strong>omnidata</strong>, <strong>geosoftware</strong> y <strong>profesionalización</strong>.</p>
+        <p class="metodologia-col-body">Integramos tecnologías en nuestros procesos como fotogrametría, LiDAR, Visión360, Drones y soluciones geoespaciales aplicadas en agricultura, minería, inmobiliaria, catastro, fiscalidad territorial y otras áreas para gobiernos de ciudades inteligentes.</p>
+        <div class="metodologia-mantra">
+          LA CARTOMORFOSIS ES UN FENÓMENO ORGANIZACIONAL CON GRANDES BENEFICIOS PARA EL MUNICIPIO, LA SOCIEDAD Y LA CIUDADANÍA
         </div>
       </div>
     </div>
