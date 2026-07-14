@@ -1320,77 +1320,50 @@
     setTimeout(applyStyle, 4000);
   })();
 
-  /* ── Redirigir link Historia del nav a historia.html ── */
-  (function hookHistoriaNav() {
+  /* ── Redirigir enlaces/tarjetas del home a sus páginas estáticas (data-driven) ──
+     Reemplaza 8 IIFEs "hookXNav" casi idénticas. Cada destino se matchea por:
+       · hash: el <a href="#x"|"/x"> del nav (se le fija el href y se fuerza recarga),
+       · text: cualquier <a>/<button> cuyo texto o <h3> sea exactamente ese (tarjetas).
+     Para agregar una página nueva, añade una fila a TARGETS.
+     (Instituciones NO va aquí: se oculta en vez de redirigir — ver IIFE de abajo.) ── */
+  (function hookNavRedirects() {
+    const TARGETS = [
+      { url: './historia.html',        hash: 'historia',     text: null },
+      { url: './cartografica.html',    hash: 'cartografica', text: null },
+      { url: './geosoftware.html',     hash: 'geosoftware',  text: null },
+      { url: './equipo.html',          hash: 'equipo',       text: null },
+      { url: './ciudades.html',        hash: null,           text: 'Ciudades' },
+      { url: './mineria.html',         hash: null,           text: 'Minería' },
+      { url: './infraestructura.html', hash: null,           text: 'Infraestructura' },
+      { url: './procesos.html',        hash: 'procesos',     text: 'Procesos' },
+    ];
+    const redirect = url => e => { e.preventDefault(); e.stopPropagation(); window.location.assign(url); };
     function hook() {
-      document.querySelectorAll('a[href="#historia"], a[href*="/historia"]').forEach(a => {
-        if (!a.dataset.cdHistHooked) {
-          a.dataset.cdHistHooked = '1';
-          a.href = './historia.html';
-          /* Forzar recarga completa para salir del router de React */
-          a.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.assign('./historia.html');
-          }, true);
+      TARGETS.forEach(t => {
+        if (t.hash) {
+          document.querySelectorAll(`a[href="#${t.hash}"], a[href*="/${t.hash}"]`).forEach(a => {
+            if (a.dataset.cdNavHooked) return;
+            a.dataset.cdNavHooked = '1';
+            a.href = t.url;                       // salir del router de React
+            a.addEventListener('click', redirect(t.url), true);
+          });
+        }
+        if (t.text) {
+          document.querySelectorAll('a, button').forEach(el => {
+            if (el.dataset.cdNavHooked) return;
+            const h3 = el.querySelector('h3');
+            if ((h3 && h3.textContent.trim() === t.text) || el.textContent.trim() === t.text) {
+              el.dataset.cdNavHooked = '1';
+              el.addEventListener('click', redirect(t.url), true);
+            }
+          });
         }
       });
     }
+    hook();
     const obs = new MutationObserver(hook);
     obs.observe(document.body, { childList: true, subtree: true });
-    setTimeout(hook, 2000);
-    setTimeout(hook, 4000);
-  })();
-
-  /* ── Redirigir link Ciudades del nav a ciudades.html ── */
-  (function hookCiudadesNav() {
-    function hook() {
-      /* Buscar <a> o <button> que contengan un H3 con texto "Ciudades" */
-      document.querySelectorAll('a, button').forEach(el => {
-        if (el.dataset.cdCiudHooked) return;
-        const h3 = el.querySelector('h3');
-        const match = h3 && h3.textContent.trim() === 'Ciudades';
-        const directMatch = el.textContent.trim() === 'Ciudades';
-        if (match || directMatch) {
-          el.dataset.cdCiudHooked = '1';
-          el.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.assign('./ciudades.html');
-          }, true);
-        }
-      });
-    }
-    const obs = new MutationObserver(hook);
-    obs.observe(document.body, { childList: true, subtree: true });
-    setTimeout(hook, 500);
-    setTimeout(hook, 2000);
-    setTimeout(hook, 4000);
-  })();
-
-  /* ── Redirigir tarjeta Instituciones a instituciones.html ── */
-  (function hookMineriaNav() {
-    function hook() {
-      document.querySelectorAll('a, button').forEach(el => {
-        if (el.dataset.cdMinHooked) return;
-        const h3 = el.querySelector('h3');
-        const match = h3 && h3.textContent.trim() === 'Minería';
-        const directMatch = el.textContent.trim() === 'Minería';
-        if (match || directMatch) {
-          el.dataset.cdMinHooked = '1';
-          el.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.assign('./mineria.html');
-          }, true);
-        }
-      });
-    }
-    const obs = new MutationObserver(hook);
-    obs.observe(document.body, { childList: true, subtree: true });
-    setTimeout(hook, 500);
-    setTimeout(hook, 2000);
-    setTimeout(hook, 4000);
+    [500, 2000, 4000].forEach(ms => setTimeout(hook, ms));
   })();
 
   /* ── Ocultar temporalmente "Instituciones" SOLO de los menús del home ──
@@ -1415,130 +1388,6 @@
     const obs = new MutationObserver(hook);
     obs.observe(document.body, { childList: true, subtree: true });
     setTimeout(hook, 500);
-    setTimeout(hook, 2000);
-    setTimeout(hook, 4000);
-  })();
-
-  /* ── Redirigir tarjeta Infraestructura a infraestructura.html ── */
-  (function hookInfraestructuraNav() {
-    function hook() {
-      document.querySelectorAll('a, button').forEach(el => {
-        if (el.dataset.cdInfraHooked) return;
-        const h3 = el.querySelector('h3');
-        const match = h3 && h3.textContent.trim() === 'Infraestructura';
-        const directMatch = el.textContent.trim() === 'Infraestructura';
-        if (match || directMatch) {
-          el.dataset.cdInfraHooked = '1';
-          el.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.assign('./infraestructura.html');
-          }, true);
-        }
-      });
-    }
-    const obs = new MutationObserver(hook);
-    obs.observe(document.body, { childList: true, subtree: true });
-    setTimeout(hook, 500);
-    setTimeout(hook, 2000);
-    setTimeout(hook, 4000);
-  })();
-
-  /* ── Redirigir link Cartográfica del nav a cartografica.html ── */
-  (function hookProcesosNav() {
-    function hook() {
-      document.querySelectorAll('a[href="#procesos"], a[href*="/procesos"]').forEach(a => {
-        if (!a.dataset.cdProcHooked) {
-          a.dataset.cdProcHooked = '1';
-          a.href = './procesos.html';
-          a.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.assign('./procesos.html');
-          }, true);
-        }
-      });
-      document.querySelectorAll('a, button').forEach(el => {
-        if (el.dataset.cdProcHooked) return;
-        const h3 = el.querySelector('h3');
-        const match = h3 && h3.textContent.trim() === 'Procesos';
-        const directMatch = el.textContent.trim() === 'Procesos';
-        if (match || directMatch) {
-          el.dataset.cdProcHooked = '1';
-          el.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.assign('./procesos.html');
-          }, true);
-        }
-      });
-    }
-    const obs = new MutationObserver(hook);
-    obs.observe(document.body, { childList: true, subtree: true });
-    setTimeout(hook, 500);
-    setTimeout(hook, 2000);
-    setTimeout(hook, 4000);
-  })();
-
-  /* ── Redirigir link Cartográfica del nav a cartografica.html ── */
-  (function hookCartograficaNav() {
-    function hook() {
-      document.querySelectorAll('a[href="#cartografica"], a[href*="/cartografica"]').forEach(a => {
-        if (!a.dataset.cdCartHooked) {
-          a.dataset.cdCartHooked = '1';
-          a.href = './cartografica.html';
-          a.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.assign('./cartografica.html');
-          }, true);
-        }
-      });
-    }
-    const obs = new MutationObserver(hook);
-    obs.observe(document.body, { childList: true, subtree: true });
-    setTimeout(hook, 2000);
-    setTimeout(hook, 4000);
-  })();
-
-  /* ── Redirigir link GeoSoftware del nav a geosoftware.html ── */
-  (function hookGeoSoftwareNav() {
-    function hook() {
-      document.querySelectorAll('a[href="#geosoftware"], a[href*="/geosoftware"]').forEach(a => {
-        if (!a.dataset.cdGeoHooked) {
-          a.dataset.cdGeoHooked = '1';
-          a.href = './geosoftware.html';
-          a.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.assign('./geosoftware.html');
-          }, true);
-        }
-      });
-    }
-    const obs = new MutationObserver(hook);
-    obs.observe(document.body, { childList: true, subtree: true });
-    setTimeout(hook, 2000);
-    setTimeout(hook, 4000);
-  })();
-
-  /* ── Redirigir link Equipo del nav a equipo.html ── */
-  (function hookEquipoNav() {
-    function hook() {
-      document.querySelectorAll('a[href="#equipo"], a[href*="/equipo"]').forEach(a => {
-        if (!a.dataset.cdEquHooked) {
-          a.dataset.cdEquHooked = '1';
-          a.href = './equipo.html';
-          a.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.assign('./equipo.html');
-          }, true);
-        }
-      });
-    }
-    const obs = new MutationObserver(hook);
-    obs.observe(document.body, { childList: true, subtree: true });
     setTimeout(hook, 2000);
     setTimeout(hook, 4000);
   })();
