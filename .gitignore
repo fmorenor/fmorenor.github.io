@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Directorios que NO son el sitio desplegado
+source-rebuild/
+manus-storage/
+
+# Temporales / editor
+*.log
+.vscode/
+.idea/
