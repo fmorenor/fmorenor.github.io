@@ -1,8 +1,8 @@
 # CartoData — Sitio Web
 
-Sitio web de [CartoData](https://www.cartodata.mx) — soluciones geoespaciales para ciudades, infraestructura, minería e instituciones.
+Sitio web de [CartoData](https://www.cartodata.com) — soluciones geoespaciales para ciudades, infraestructura, minería e instituciones.
 
-Publicado en GitHub Pages: **https://fmorenor.github.io/cartodata-web/**
+**En vivo (Cloudflare Pages):** https://cartodata-web.pages.dev
 
 ---
 
@@ -11,78 +11,70 @@ Publicado en GitHub Pages: **https://fmorenor.github.io/cartodata-web/**
 ```
 CartoData/
 ├── index.html            # Página principal (bundle React compilado + inyecciones JS)
-├── shared.js             # Nav + Footer + CSS base compartidos para páginas estáticas
+├── shared.js             # Nav + Footer + modales + CSS base para páginas estáticas
 ├── site.css              # Design tokens: variables CSS, tipografía, colores, reset
+├── 404.html              # Página 404 con branding (la sirve Pages automáticamente)
 │
 │   ── Páginas estáticas (Impacto) ──
 ├── ciudades.html         # Ciudades y Municipios · Cartomorfosis
 ├── infraestructura.html  # Infraestructura · Obra 4D (seguimiento con drones)
 ├── mineria.html          # Minería · Geointeligencia para la industria extractiva
-├── instituciones.html    # Instituciones · Modernización catastral y registral
+├── instituciones.html    # Instituciones · Modernización catastral (oculta del menú; se rehará)
 │
 │   ── Páginas estáticas (Tecnología) ──
 ├── procesos.html         # Procesos geoespaciales
-├── cartografica.html     # Cartografía (fotogrametría, LiDAR, OBLIX, Visión 360)
+├── cartografica.html     # Cartografía (fotogrametría, LiDAR, OBLIX, Visión 360) — nav: "Datos"
 ├── geosoftware.html      # GeoSoftware (AU4 y eCarto)
 │
 │   ── Páginas estáticas (Cultura) ──
 ├── historia.html         # 90 años de historia (1930–hoy)
 ├── equipo.html           # Equipo · valores FLOW
 │
-│   ── X-Ray ──
-├── xray.html             # Chat conversacional de captura de leads (PROTOTIPO, modo demo)
+│   ── X-Ray (chatbot con IA, funcional en producción) ──
+├── xray.html             # Chat de captura de leads con Claude
+│
+│   ── Legal ──
+├── privacidad.html       # Aviso de Privacidad (URL: /privacidad)
+├── terminos.html         # Términos y Condiciones (URL: /terminos)
+│
+├── functions/            # Cloudflare Pages Functions (backend de X-Ray)
+│   └── api/
+│       ├── chat.js       # Proxy seguro a la API de Claude + tools (lead / cierre)
+│       └── upload.js     # Subida de archivos del lead a CartoFlow
 │
 ├── assets/
 │   ├── index-*.js        # Bundle React compilado (NO editar)
 │   └── index-*.css       # CSS del bundle React (NO editar)
 ├── images/               # Imágenes de todas las páginas estáticas
 │   └── icons/            # Iconos PNG de sistemas (eSellos, GDB, Oblix, mineria…)
-└── manus-storage/        # Videos y assets fuente (logos, videos hero originales)
+└── .gitignore            # Ignora .DS_Store, source-rebuild/, manus-storage/, logs
 ```
+
+> `source-rebuild/` y `manus-storage/` **no** forman parte del sitio desplegado y están en `.gitignore`.
 
 ---
 
 ## Arquitectura
 
-El sitio combina **un bundle React** (index.html) con **páginas estáticas HTML** que comparten nav/footer vía `shared.js`. Todo se sirve como archivos estáticos en GitHub Pages — **no hay backend**.
+El sitio combina **un bundle React** (`index.html`) con **páginas estáticas HTML** que comparten nav/footer/modales vía `shared.js`. El frontend es 100 % estático; la única lógica de servidor son las **Cloudflare Pages Functions** de `functions/api/*` que dan servicio al chatbot X-Ray.
 
 ### index.html — Página principal (bundle React)
 
-El bundle React compilado **no se edita directamente**. Todas las modificaciones se hacen mediante **inyección de scripts** al final del `<body>`.
+El bundle React compilado **no se edita directamente**. Todas las modificaciones se hacen mediante **inyección de scripts** al final del `<body>` (IIFE tipo `inject…()` / `hook…()`).
 
-**Inyecciones de contenido:**
+**Inyecciones de contenido (selección):** `injectCostCharts()`, `injectCasesHero()`, `injectTeamCarousel()`, `injectToolsHero()`, `injectNoticias()`, `reorderTechMenu()` (renombra "Cartográfica" → "Datos"), `fixTradicionStat()` (etiqueta de estadística ES/EN), modales de Privacidad / Términos / Ubicaciones.
+
+**Navegación (React → páginas estáticas):** el nav lo renderiza React y sus items no apuntan a las páginas estáticas. Se interceptan con una única función data-driven:
 
 | Función | Qué hace |
 |---|---|
-| `injectCostCharts()` | Gráfica SVG animada en la sección de costos comparativos |
-| `injectCasesHero()` | Sección Casos de éxito con videos YouTube y tarjetas interactivas |
-| `fixStepNumbers()` | Círculos azules con números en la sección de proceso |
-| `injectTeamCarousel()` | Carrusel de fotos del equipo con timer automático |
-| `injectToolsHero()` | Sección Herramientas con hero de 3 slides (Procesos, Datos, Software) |
-| `injectHistoria()` | Contenido de la sección Historia |
-| `initPrivacyModal()` / `initTermsModal()` | Modales de Aviso de privacidad y Términos |
-| `patchInfraText()` | Reemplaza "Puertos" → "Líneas eléctricas" en el hero de Infraestructura |
-| `patchMineriaHref()` | Parcha el href `#minas` heredado del bundle |
-| `reorderTechMenu()` | Reordena dropdown Tecnología: Procesos → Cartográfica → GeoSoftware |
+| `hookNavRedirects()` | **Unifica** la redirección de 8 destinos (Historia, Ciudades, Minería, Infraestructura, Procesos, Cartográfica, GeoSoftware, Equipo). Cada destino se matchea por `href` ancla (`#x`/`/x`) o por texto/`h3` de la tarjeta. Config en el arreglo `TARGETS` — agregar una página nueva es una línea. |
+| `hookInstitucionesNav()` | **Oculta** "Instituciones" de los menús (fuera de `<main>`) sin tocar la sección de contenido del hero. Temporal, mientras se rehace la página. |
+| `styleXRayNav()` | Estiliza X-Ray (blanco/bold) y navega a `xray.html`. |
 
-**Hooks de navegación** — el nav lo renderiza React; sus items del dropdown son `<button>`/`<a>` sin ruta a la página estática. Cada hook intercepta el click (por texto del botón o por `href` ancla) y navega a la página correspondiente:
+> **Patrón de hook:** `MutationObserver` sobre `document.body` + `setTimeout` de respaldo (500/2000/4000 ms), porque el nav de React se re-renderiza. Cada elemento se marca con un `dataset` (`cdNavHooked`, etc.) para no enganchar dos veces.
 
-| Hook | Destino |
-|---|---|
-| `hookCiudadesNav()` | `ciudades.html` |
-| `hookInfraestructuraNav()` | `infraestructura.html` |
-| `hookMineriaNav()` | `mineria.html` |
-| `hookInstitucionesNav()` | `instituciones.html` |
-| `hookProcesosNav()` | `procesos.html` |
-| `hookCartograficaNav()` | `cartografica.html` |
-| `hookGeoSoftwareNav()` | `geosoftware.html` |
-| `hookHistoriaNav()` | `historia.html` |
-| `hookEquipoNav()` | `equipo.html` |
-| `styleXRayNav()` | Estiliza X-Ray (blanco/bold) y navega a `xray.html` |
-
-> **Patrón de hook:** `MutationObserver` sobre `document.body` + varios `setTimeout` de respaldo (500/2000/4000 ms), porque el nav de React se re-renderiza. Se marca cada elemento con un `dataset` (`cdMinHooked`, etc.) para no enganchar dos veces.
-
-### shared.js — Nav y Footer compartidos
+### shared.js — Nav, Footer y modales compartidos
 
 Se carga en **todas** las páginas estáticas con una línea al final del `<body>`:
 
@@ -92,62 +84,64 @@ Se carga en **todas** las páginas estáticas con una línea al final del `<body
 
 Inyecta automáticamente:
 
-1. **`site.css`** — design tokens y tipografía, y la fuente DM Sans de Google Fonts
-2. **Nav fijo** con logo, dropdowns (Impacto / Tecnología / Cultura / Noticias / X-Ray), toggle idioma ES/EN y toggle tema claro/oscuro
-3. **Footer** con logo, grid de navegación, contacto y links legales
+1. **`site.css`** + la fuente **DM Sans**.
+2. **Nav fijo** con dropdowns (Impacto / Tecnología / Cultura / Noticias / X-Ray), toggle idioma ES/EN y toggle tema claro/oscuro.
+3. **Footer** con grid de navegación, contacto y links legales.
+4. **Modales**: Aviso de Privacidad, Términos y Condiciones, y **Ubicaciones** (data-driven, arreglo `CD_LOCATIONS`).
 
-Los enlaces del nav (`NAV_LINKS`) apuntan a las páginas estáticas — p. ej. Impacto → {ciudades, infraestructura, mineria, instituciones}, Tecnología → {procesos, cartografica, geosoftware}, X-Ray → `xray.html`.
-
-Estado persistente entre páginas vía `localStorage` (mismas claves que el bundle React):
-- `localStorage["theme"]` → `"dark"` / `"light"`
-- `localStorage["cartodata-lang"]` → `"es"` / `"en"`
+Los enlaces del nav viven en `NAV_LINKS`. Estado persistente entre páginas vía `localStorage` (mismas claves que el bundle): `localStorage["theme"]` (`dark`/`light`) y `localStorage["cartodata-lang"]` (`es`/`en`).
 
 ### site.css — Design system
 
+Tokens principales (dark = default; `.light` en `<html>` conmuta a claro):
+
 | Token | Dark | Light |
 |---|---|---|
-| `--font-sans` | `"DM Sans", "Inter", system-ui` | ← igual |
-| `--blue` | `#3b5bdb` | ← igual |
+| `--blue` | `#3b5bdb` (hover `#2d4bbd`) | ← igual |
 | `--blue-light` | `#7b9cff` | ← igual |
-| `--bg` | `#050816` | `#f8fafc` |
+| `--bg` | `#0d0d0d` | `#f8fafc` |
 | `--text` | `#f8fafc` | `#0f172a` |
+| `--font-sans` | `"DM Sans", "Inter", system-ui` | ← igual |
 
-Las páginas estáticas comparten estos tokens: fondo oscuro `#050816` / `#0b1022` / `#0f172a`, azul de marca `#3b5bdb` (hover `#2d4bbd`), fuente **DM Sans**, botones `border-radius: 999px`.
-
----
-
-## Páginas
-
-### Impacto
-- **ciudades.html** — Hero (izquierda) → Dolor → Metodología Cartomorfosis (imagen + 3 pilares) → CTA
-- **infraestructura.html** — Hero video → 3 tarjetas de servicio con imagen (video / fotogramétrico / 3D) → Características (iconos) → Demos (ComparaDrone + Vimeo) → CTA
-- **mineria.html** — Hero video → Intro (video drone) → 5 secciones alternas (Impacto Ambiental · Cálculo de Volúmenes · Topografía · LiDAR · Reportes) → **Video divisor YouTube full-screen** (play/pausa según viewport) → CTA
-- **instituciones.html** — Hero video → Caso de éxito Los Cabos (YouTube) → Métricas animadas → Constelación de sistemas (Info & Tecnologías, Gestión con cards oscuras, Sistemas de gestión) con divisores full-width → CTA
-
-### Tecnología
-- **procesos.html** — Hero parallax → Catálogo de análisis → Profesionalización de equipos → CTA
-- **cartografica.html** / **geosoftware.html** — Fotogrametría, LiDAR, OBLIX, Visión 360, AU4, eCarto
-
-### Cultura
-- **historia.html** — Hero (`legacy.jpg`) → Timeline 1930–hoy → Valores → CTA
-- **equipo.html** — Hero carrusel → Sección **FLOW** (la letra grande se ilumina según el valor seleccionado) → equipos por oficina
-
-### X-Ray
-- **xray.html** — **Prototipo** de asistente conversacional para captura de leads. Ver sección abajo.
+> ⚠️ Cada página estática **redefine sus propios componentes** (`.btn-primary`, `.section-eyebrow`, `.hero`…) en su `<style>` inline, y esas definiciones **divergen intencionalmente** entre páginas. No consolidarlas a ciegas en `site.css` (rompería overrides por orden de cascada).
 
 ---
 
-## X-Ray — Asistente de captura de leads (prototipo)
+## X-Ray — Chatbot de captura de leads (funcional en producción)
 
-`xray.html` es un chat que conversa con el visitante, reúne los datos de un lead (necesidad, sector, institución, contacto, fecha) y muestra un resumen + confirmación.
+`xray.html` es un chat que conversa con el visitante, reúne los datos de un lead y los registra en el CRM. **Ya está en producción**, no es un prototipo.
 
-**Estado actual: PROTOTIPO en modo demo.** Las respuestas del bot son **simuladas** (guion lineal en JS); `submitLead()` solo hace `console.log`. **No hay ninguna API key ni webhook embebidos en el HTML.**
+- **Modelo:** Claude **Haiku 4.5** (`claude-haiku-4-5`) vía `functions/api/chat.js` (proxy seguro; la API key nunca toca el navegador).
+- **Flujo comercial guiado:** bienvenida → datos de contacto → proyecto → área de interés (SHP/KMZ/KML) → si no hay archivos, ofrece reunión / tutoriales / WhatsApp. Cierra suave con la tool `finalizar_conversacion`.
+- **Tools del modelo:** `enviar_lead_cartoflow`, `finalizar_conversacion`.
+- **Adjuntos:** botón 📎 → `functions/api/upload.js` → CartoFlow (buffer si el lead aún no existe).
+- **Conversación completa:** al cerrar, se sube como `conversacion-xray-*.md` a la pestaña Archivos del lead.
 
-**Plan de producción (pendiente, al migrar a Cloudflare):**
-- Un **Cloudflare Worker** guarda la `ANTHROPIC_API_KEY` del lado servidor y conduce la conversación con **Claude** (tool-use para extraer los campos de forma estructurada).
-- Al completar el lead, se envía a **CartoFlow** mediante el edge function `submit-landing-lead` (Supabase) o el Worker, que agrega el `x-webhook-secret` del lado servidor.
-- ⚠️ **Regla de seguridad:** el `x-webhook-secret` y las API keys **nunca** van en el HTML público — siempre del lado servidor.
-- En el código, el comentario `// AQUÍ irá la llamada real al Worker → webhook CartoFlow` marca el punto de integración.
+### CRM — CartoFlow / Supabase
+
+- Crear lead (público): `POST …/functions/v1/submit-landing-lead` (`project_id`, `name`, `institution`).
+- Subir archivo (requiere `x-webhook-secret`): `POST …/functions/v1/upload-lead-file`.
+
+### Variables de entorno (Cloudflare Pages, ya configuradas)
+
+`ANTHROPIC_API_KEY`, `CARTOFLOW_PROJECT_ID`, `SOCIAL_WEBHOOK_SECRET`.
+
+> 🔒 **Nunca** poner API keys ni secretos en archivos del repo (sitio público).
+> ⚠️ Cloudflare aplica las variables solo a despliegues creados **después** de agregarlas — redesplegar si se cambian.
+
+---
+
+## Desarrollo local
+
+```bash
+npx serve -p 3000 .     # resuelve URLs limpias (/procesos), como Cloudflare Pages
+# o:  python3 -m http.server 3000   ← NO resuelve URLs limpias (solo rutas .html)
+```
+
+- `http://localhost:3000/` — index.html
+- `http://localhost:3000/mineria` o `/mineria.html` — páginas estáticas
+
+> ⚠️ Las **Pages Functions** (`/api/*`) solo corren en Cloudflare (o con `wrangler pages dev`); en un server estático dan 404. Se prueban en producción o con fetch mockeado.
 
 ---
 
@@ -162,42 +156,34 @@ Las páginas estáticas comparten estos tokens: fondo oscuro `#050816` / `#0b102
   <title>Mi página — CartoData</title>
 </head>
 <body>
-
   <!-- Tu contenido aquí (usa los tokens de site.css) -->
-
   <script src="./shared.js" defer></script>
 </body>
 </html>
 ```
 
-`shared.js` inyecta nav + dropdowns + footer + tipografía + colores + tema + idioma.
-
-Si la página debe abrirse desde el nav del **index** (bundle React), agrega también un hook de navegación en `index.html` siguiendo el patrón de `hookMineriaNav()`.
-
----
-
-## Servidor local
-
-```bash
-# Sin flag -s para servir múltiples archivos HTML estáticos
-npx serve -p 3000 /ruta/a/CartoData
-```
-
-- `http://localhost:3000/` — index.html
-- `http://localhost:3000/mineria.html` — cualquier página estática
-
-> No usar `-s` (SPA mode) — redirige todo a index.html y las páginas estáticas dan 404.
+`shared.js` inyecta nav + dropdowns + footer + modales + tipografía + tema + idioma.
+Si la página debe abrirse desde el nav del **index** (bundle React), añade una fila al arreglo `TARGETS` de `hookNavRedirects()` en `index.html`.
 
 ---
 
-## Deploy a GitHub Pages
+## Convenciones
 
-El sitio se publica en cada push a `main`:
+- **Fotos en tarjetas:** clase `.has-photo` + `object-fit: cover`.
+- **Documentos/escaneos** (no recortar): modificador `.doc` → `object-fit: contain` + fondo blanco.
+- **Screenshots del preview no decodifican AVIF** → para **fotos** usar **JPEG/PNG**, no AVIF.
+- **Límite Cloudflare:** 25 MiB por archivo.
+
+---
+
+## Deploy — Cloudflare Pages
+
+Proyecto Pages **`cartodata-web`**. **Auto-despliega en cada push a `main`.** Sitio estático, sin build, output dir `/`. Las URLs limpias (`/procesos`, `/ciudades`…) las resuelve Pages solo.
 
 ```bash
 git add <archivos>
 git commit -m "Descripción del cambio"
-git push
+git push origin main
 ```
 
-Publicado en: **https://fmorenor.github.io/cartodata-web/**
+**En vivo:** https://cartodata-web.pages.dev
