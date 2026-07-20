@@ -8,6 +8,10 @@ source-rebuild/
 # 12 archivos de ahí (videos e imágenes del hero del home). Sacarlo del repo
 # rompe la media del home en producción.
 
+# Documentos administrativos / entregables (no forman parte del sitio)
+*.docx
+*.pdf
+
 # Temporales / editor
 *.log
 .vscode/
