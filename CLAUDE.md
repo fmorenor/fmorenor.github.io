@@ -49,4 +49,6 @@ Sitio de CartoData: **frontend estático** (bundle React en `index.html` + pági
 
 - Remoto: `github.com/fmorenor/cartodata-web` (el push muestra un aviso de "repository moved" a `fmorenor.github.io` — es inofensivo, el push llega bien y Cloudflare despliega).
 - La identidad de git no está configurada global (commits como `franciscomoreno@Carto-MacBook.local`) — inofensivo, no lo "arregles".
-- `source-rebuild/` y `manus-storage/` están en `.gitignore` (no son el sitio desplegado).
+- `source-rebuild/` está en `.gitignore` (no es el sitio desplegado).
+- ⚠️ **`manus-storage/` SÍ es parte del sitio desplegado.** El bundle de React (`assets/index-*.js`) referencia 12 archivos de ahí (videos e imágenes del hero del home) y `shared.js` usaba sus logos. Sacarlo del repo rompió la media del home en producción. **No lo ignores ni lo borres.**
+- 🔒 **Antes de untrackear/borrar CUALQUIER carpeta o archivo**, grepear si el sitio lo referencia — incluyendo **`assets/*.js`** (el bundle minificado), no solo los `.html` y `shared.js`.

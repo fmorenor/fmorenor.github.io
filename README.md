@@ -47,10 +47,13 @@ CartoData/
 │   └── index-*.css       # CSS del bundle React (NO editar)
 ├── images/               # Imágenes de todas las páginas estáticas
 │   └── icons/            # Iconos PNG de sistemas (eSellos, GDB, Oblix, mineria…)
-└── .gitignore            # Ignora .DS_Store, source-rebuild/, manus-storage/, logs
+├── manus-storage/        # ⚠️ SÍ se despliega: videos e imágenes del hero que
+│                         #    referencia el bundle de React (12 archivos)
+└── .gitignore            # Ignora .DS_Store, source-rebuild/, logs
 ```
 
-> `source-rebuild/` y `manus-storage/` **no** forman parte del sitio desplegado y están en `.gitignore`.
+> `source-rebuild/` **no** forma parte del sitio desplegado (está en `.gitignore`).
+> **`manus-storage/` sí forma parte del sitio**: el bundle `assets/index-*.js` referencia 12 archivos de ahí (videos e imágenes del hero del home). No borrarlo ni ignorarlo.
 
 ---
 
