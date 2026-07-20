@@ -5,6 +5,18 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+
+    <!-- Google tag (gtag.js) — GA4.
+         El home no carga shared.js, por eso lleva el snippet aquí.
+         Las páginas estáticas lo reciben inyectado desde shared.js. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-50RR7V0FYB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-50RR7V0FYB');
+    </script>
+
     <title>CartoData — Contexto geográfico para tus decisiones</title>
     <meta name="description" content="Damos contexto geográfico a tus decisiones. Soluciones geoespaciales para ciudades, infraestructura, minería e instituciones." />
     <link rel="canonical" href="https://www.cartodata.com/" />

@@ -1,5 +1,21 @@
 /* shared.js — Nav, Footer y CSS base compartidos para todas las páginas de CartoData */
 (function () {
+  /* ── Google Analytics 4 (gtag.js) ──
+     Se inyecta aquí para cubrir todas las páginas estáticas de una sola vez.
+     El home (index.html) NO carga shared.js: lleva el snippet en su propio <head>.
+     El guard evita doble carga (y por tanto doble page_view). ── */
+  const GA_ID = 'G-50RR7V0FYB';
+  if (!document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) {
+    const ga = document.createElement('script');
+    ga.async = true;
+    ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(ga);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', GA_ID);
+  }
+
   /* ── Inyectar site.css (design system) si no está ya cargado ── */
   if (!document.querySelector('link[href*="site.css"]')) {
     const link = document.createElement('link');
