@@ -372,8 +372,8 @@
     if (btn) btn.innerHTML = t === 'dark' ? SVG_SUN : SVG_MOON;
     const logo = document.getElementById('cd-nav-logo');
     if (logo) logo.src = t === 'dark'
-      ? './manus-storage/logo-white-h-proper_641226e9.png'
-      : './manus-storage/logo-black-h-proper_e8a1da9d.png';
+      ? './images/logo-white-h.png'
+      : './images/logo-black-h.png';
   }
 
   function applyLang(l) {
@@ -411,7 +411,7 @@
   nav.className = 'cd-nav';
   nav.innerHTML = `
     <a href="./" class="cd-nav-brand">
-      <img id="cd-nav-logo" src="./manus-storage/logo-white-h-proper_641226e9.png" alt="CartoData" />
+      <img id="cd-nav-logo" src="./images/logo-white-h.png" alt="CartoData" />
     </a>
     <ul class="cd-nav-links">
       ${NAV_LINKS.map(l => `
