@@ -1335,7 +1335,10 @@
   /* ── Redirigir enlaces/tarjetas del home a sus páginas estáticas (data-driven) ──
      Reemplaza 8 IIFEs "hookXNav" casi idénticas. Cada destino se matchea por:
        · hash: el <a href="#x"|"/x"> del nav (se le fija el href y se fuerza recarga),
-       · text: cualquier <a>/<button> cuyo texto o <h3> sea exactamente ese (tarjetas).
+       · text: cualquier <a>/<button> cuyo texto o <h3> coincida (nav y tarjetas).
+     ⚠️ El nav del home es bilingüe: React reescribe las etiquetas al cambiar de
+     idioma, así que `text` DEBE incluir la variante en inglés o el enlace deja de
+     funcionar en EN (el matcher por `hash` sí es independiente del idioma).
      Para agregar una página nueva, añade una fila a TARGETS.
      (Instituciones NO va aquí: se oculta en vez de redirigir — ver IIFE de abajo.) ── */
   (function hookNavRedirects() {
@@ -1344,10 +1347,10 @@
       { url: './cartografica.html',    hash: 'cartografica', text: null },
       { url: './geosoftware.html',     hash: 'geosoftware',  text: null },
       { url: './equipo.html',          hash: 'equipo',       text: null },
-      { url: './ciudades.html',        hash: null,           text: 'Ciudades' },
-      { url: './mineria.html',         hash: null,           text: 'Minería' },
-      { url: './infraestructura.html', hash: null,           text: 'Infraestructura' },
-      { url: './procesos.html',        hash: 'procesos',     text: 'Procesos' },
+      { url: './ciudades.html',        hash: null,           text: ['Ciudades', 'Cities'] },
+      { url: './mineria.html',         hash: null,           text: ['Minería', 'Mining'] },
+      { url: './infraestructura.html', hash: null,           text: ['Infraestructura', 'Infrastructure'] },
+      { url: './procesos.html',        hash: 'procesos',     text: ['Procesos', 'Processes'] },
     ];
     const redirect = url => e => { e.preventDefault(); e.stopPropagation(); window.location.assign(url); };
     function hook() {
@@ -1361,10 +1364,12 @@
           });
         }
         if (t.text) {
+          const labels = Array.isArray(t.text) ? t.text : [t.text];
           document.querySelectorAll('a, button').forEach(el => {
             if (el.dataset.cdNavHooked) return;
             const h3 = el.querySelector('h3');
-            if ((h3 && h3.textContent.trim() === t.text) || el.textContent.trim() === t.text) {
+            const own = el.textContent.trim();
+            if (labels.includes(own) || (h3 && labels.includes(h3.textContent.trim()))) {
               el.dataset.cdNavHooked = '1';
               el.addEventListener('click', redirect(t.url), true);
             }

@@ -400,7 +400,36 @@
     if (btn) btn.textContent = l === 'es' ? 'EN' : 'ES';
     /* Actualizar texto de links del nav según idioma */
     updateNavLabels();
+    /* Traducir el contenido de la página */
+    applyI18n();
   }
+
+  /* ── Traducción del contenido de la página ──
+     Cualquier elemento con atributo data-en se traduce al conmutar el idioma.
+     El español original (innerHTML) se guarda en memoria la primera vez, así que
+     el atributo solo necesita llevar el inglés. Admite HTML dentro (p. ej. <strong>).
+
+     Uso en las páginas:
+        <h2 data-en="Modern cadastre for <strong>growing cities</strong>">
+          Catastro moderno para <strong>municipios que crecen</strong>
+        </h2>
+
+     Los textos SIN data-en simplemente no se traducen (degradación limpia). ── */
+  const I18N_ORIG = new WeakMap();
+  function applyI18n() {
+    document.querySelectorAll('[data-en]').forEach(el => {
+      if (!I18N_ORIG.has(el)) I18N_ORIG.set(el, el.innerHTML);
+      const en = el.getAttribute('data-en');
+      el.innerHTML = (lang === 'en' && en) ? en : I18N_ORIG.get(el);
+    });
+    /* Atributos traducibles: data-en-alt / data-en-placeholder / data-en-title */
+    document.querySelectorAll('[data-en-alt]').forEach(el => {
+      if (!I18N_ORIG.has(el)) I18N_ORIG.set(el, el.getAttribute('alt') || '');
+      el.setAttribute('alt', lang === 'en' ? el.getAttribute('data-en-alt') : I18N_ORIG.get(el));
+    });
+  }
+  /* Se expone por si el contenido se inyecta después (p. ej. tras un fetch) */
+  window.cdApplyI18n = applyI18n;
 
   function updateNavLabels() {
     NAV_LINKS.forEach((item, i) => {
@@ -473,6 +502,11 @@
 
   /* Aplicar tema inicial */
   applyTheme(theme);
+
+  /* Aplicar idioma inicial al contenido: si el visitante dejó el sitio en inglés,
+     la página debe cargar ya traducida (el HTML viene en español por defecto). */
+  document.documentElement.lang = lang;
+  applyI18n();
 
   /* Event listeners — lang / theme */
   document.getElementById('cd-lang-btn').addEventListener('click', () => {
