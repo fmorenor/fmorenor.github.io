@@ -132,6 +132,17 @@ export async function onRequestPost({ request, env }) {
       );
     }
 
+    // ── Rate limit por IP ────────────────────────────────────────────────
+    // Turnstile no frena a quien automatice un navegador real y consiga
+    // tokens legítimos; esto sí acota cuántos puede gastar.
+    const rl = await checkRateLimit(env, request);
+    if (!rl.ok) {
+      return json(
+        { reply: "Has enviado muchos mensajes seguidos. Espera un momento y vuelve a intentarlo." },
+        429
+      );
+    }
+
     const incoming = Array.isArray(body.messages) ? body.messages : [];
     if (incoming.length === 0) return json({ reply: "No recibí ningún mensaje." }, 400);
 
@@ -223,6 +234,47 @@ export async function onRequestPost({ request, env }) {
   } catch (e) {
     return json({ reply: "Ups, hubo un error del servidor. Intenta de nuevo en un momento." }, 500);
   }
+}
+
+// Ventana fija por IP sobre KV. Dos escalas: ráfagas y goteo sostenido.
+//
+// Limitaciones asumidas a conciencia:
+//  - KV es eventualmente consistente (hasta ~60 s entre centros de datos), así
+//    que el conteo es APROXIMADO: un atacante repartido por varias regiones
+//    puede colarse por encima del límite durante un rato. Frena el abuso
+//    sostenido, que es el que cuesta dinero, no la ráfaga puntual.
+//  - Ventana fija, no deslizante: en el borde de dos ventanas se puede llegar
+//    a 2x el límite. Aceptable para lo que buscamos.
+//  - Si el binding no existe, NO bloquea. Un fallo de configuración aquí
+//    dejaría el chat inservible para todo el mundo, y Turnstile + los topes
+//    de longitud siguen en pie. Se prefiere degradar a romper.
+//  Si algún día hace falta conteo exacto, esto se rehace con Durable Objects.
+const RATE_WINDOWS = [
+  { label: "m", ms: 60 * 1000, max: 10 },
+  { label: "h", ms: 60 * 60 * 1000, max: 60 },
+];
+
+async function checkRateLimit(env, request) {
+  if (!env.RATE_LIMIT) return { ok: true, skipped: true };
+  const ip = request.headers.get("CF-Connecting-IP");
+  if (!ip) return { ok: true, skipped: true };
+
+  const now = Date.now();
+  try {
+    for (const w of RATE_WINDOWS) {
+      const key = `rl:${ip}:${w.label}:${Math.floor(now / w.ms)}`;
+      const count = parseInt((await env.RATE_LIMIT.get(key)) || "0", 10) || 0;
+      if (count >= w.max) return { ok: false, window: w.label };
+      // TTL al doble de la ventana: cubre el desfase de consistencia de KV.
+      await env.RATE_LIMIT.put(key, String(count + 1), {
+        expirationTtl: Math.max(60, Math.ceil((w.ms / 1000) * 2)),
+      });
+    }
+  } catch (e) {
+    // KV caído no debe tumbar el chat.
+    return { ok: true, skipped: true };
+  }
+  return { ok: true };
 }
 
 async function verifyTurnstile(env, request, token) {
