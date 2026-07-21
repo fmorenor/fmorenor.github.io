@@ -45,3 +45,24 @@
 
 /manus-storage/*
   Cache-Control: public, max-age=86400
+
+# ⚠️ ESTE ARCHIVO ES WebP AUNQUE SE LLAME .png. NO BORRAR ESTA REGLA.
+#
+# Es el fondo topográfico claro del home. Pesaba 2,58 MB en PNG (el equivalente
+# oscuro, ya en WebP, pesa 61 KB) y se descargaba SIEMPRE, incluso en modo
+# oscuro, porque el bundle lo pinta con Tailwind `dark:hidden` — y el navegador
+# descarga igual las imágenes con display:none. Era un tercio del peso del home
+# para algo que la mayoría de visitantes no llega a ver.
+#
+# En WebP pesa 69 KB (97 % menos) sin diferencia visible: se muestra al 40 % de
+# opacidad y la diferencia media por canal es de 1 sobre 255.
+#
+# Se conserva el nombre .png porque la ruta está incrustada en el bundle de
+# React compilado (assets/index-*.js), que no se puede editar. Como el sitio
+# manda `X-Content-Type-Options: nosniff`, el navegador NO deduce el formato
+# por el contenido: sin esta cabecera la imagen NO se ve.
+#
+# Si algún día se recompila el bundle, lo correcto es renombrar el archivo a
+# .webp, arreglar la referencia en el código fuente y borrar esta regla.
+/manus-storage/process-steps-bg-light_1e333a90.png
+  Content-Type: image/webp
