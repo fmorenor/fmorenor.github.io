@@ -436,7 +436,12 @@
       const li = document.querySelector(`.cd-nav-links li:nth-child(${i + 1})`);
       if (!li) return;
       const topA = li.querySelector(':scope > a');
-      if (topA) topA.firstChild.textContent = (lang === 'en' && item.en) ? item.en : item.label;
+      if (topA) {
+        /* Los ítems de primer nivel no llevan `en:` en NAV_LINKS: su traducción
+           vive en NAV_LABELS_EN. Sin este fallback el nav se quedaba en español. */
+        const topEn = item.en || NAV_LABELS_EN[item.label];
+        topA.firstChild.textContent = (lang === 'en' && topEn) ? topEn : item.label;
+      }
       if (item.children) {
         item.children.forEach((child, j) => {
           const childA = li.querySelectorAll('.cd-dropdown a')[j];
@@ -503,9 +508,11 @@
   /* Aplicar tema inicial */
   applyTheme(theme);
 
-  /* Aplicar idioma inicial al contenido: si el visitante dejó el sitio en inglés,
-     la página debe cargar ya traducida (el HTML viene en español por defecto). */
+  /* Aplicar idioma inicial: si el visitante dejó el sitio en inglés, tanto el nav
+     como el contenido deben cargar ya traducidos (el HTML viene en español y el
+     nav se inyecta siempre con las etiquetas en español). */
   document.documentElement.lang = lang;
+  updateNavLabels();
   applyI18n();
 
   /* Event listeners — lang / theme */
