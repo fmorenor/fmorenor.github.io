@@ -1,0 +1,41 @@
+# Cabeceras HTTP para Cloudflare Pages.
+# Sintaxis: una ruta, y debajo las cabeceras indentadas. Se aplican todas las
+# reglas que casen con la URL.
+#
+# OJO: el CSP está en modo Report-Only a propósito. Solo reporta violaciones en
+# la consola, no bloquea. El sitio carga 12 iframes de YouTube, Google
+# Analytics, Google Fonts y scripts inline; hay que confirmar que la política
+# no rompe nada antes de activarla de verdad. Para activarla, renombrar
+# Content-Security-Policy-Report-Only → Content-Security-Policy.
+
+/*
+  # ── Seguridad ──────────────────────────────────────────────────────────
+  # Fuerza HTTPS durante un año. Sin "preload": eso es difícil de revertir.
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  # Nadie debe poder embeber el sitio (clickjacking). Verificado: el sitio de
+  # Wix en www.cartodata.com NO lo embebe, así que DENY es seguro.
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  # 'unsafe-inline' es inevitable sin build: el chat entero y las inyecciones
+  # del home son scripts inline. Aun así la política limita DE DÓNDE puede
+  # venir el código externo, que es la mitad que sí podemos cerrar.
+  # img-src usa https: porque el píxel de Analytics sale del dominio de Google
+  # del país del visitante (google.com.mx, google.de…), imposible de enumerar.
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com https://www.googletagmanager.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob:; connect-src 'self' https://challenges.cloudflare.com https://analytics.google.com https://*.google-analytics.com https://stats.g.doubleclick.net; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+
+# ── Caché ────────────────────────────────────────────────────────────────
+# Por defecto Pages sirve TODO con max-age=0, must-revalidate: cada visita
+# revalida cada recurso. Los bundles llevan hash en el nombre, así que pueden
+# cachearse indefinidamente; al cambiar el contenido cambia el nombre.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Estas NO llevan hash: si se reemplaza una imagen conservando el nombre, un
+# TTL largo la dejaría obsoleta. Un día es el equilibrio razonable.
+/images/*
+  Cache-Control: public, max-age=86400
+
+/manus-storage/*
+  Cache-Control: public, max-age=86400
