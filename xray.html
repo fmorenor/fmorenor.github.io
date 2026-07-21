@@ -403,6 +403,8 @@
       const fd = new FormData();
       fd.append('file', file, fileName || file.name);
       fd.append('lead_id', leadUuid);
+      // /api/upload también exige Turnstile: sin esto devuelve 403.
+      fd.append('turnstile_token', await getTurnstileToken());
       const res = await fetch('/api/upload', { method: 'POST', body: fd });
       return res.json().catch(() => ({}));
     }
