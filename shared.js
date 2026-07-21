@@ -422,10 +422,15 @@
       const en = el.getAttribute('data-en');
       el.innerHTML = (lang === 'en' && en) ? en : I18N_ORIG.get(el);
     });
-    /* Atributos traducibles: data-en-alt / data-en-placeholder / data-en-title */
-    document.querySelectorAll('[data-en-alt]').forEach(el => {
-      if (!I18N_ORIG.has(el)) I18N_ORIG.set(el, el.getAttribute('alt') || '');
-      el.setAttribute('alt', lang === 'en' ? el.getAttribute('data-en-alt') : I18N_ORIG.get(el));
+    /* Atributos traducibles: data-en-alt, data-en-placeholder, data-en-title,
+       data-en-aria (→ aria-label). El original se guarda por atributo. */
+    [['alt','data-en-alt'], ['placeholder','data-en-placeholder'],
+     ['title','data-en-title'], ['aria-label','data-en-aria']].forEach(([attr, dataAttr]) => {
+      document.querySelectorAll('[' + dataAttr + ']').forEach(el => {
+        const key = '__cd_' + attr;
+        if (el[key] === undefined) el[key] = el.getAttribute(attr) || '';
+        el.setAttribute(attr, lang === 'en' ? el.getAttribute(dataAttr) : el[key]);
+      });
     });
   }
   /* Se expone por si el contenido se inyecta después (p. ej. tras un fetch) */
@@ -574,17 +579,17 @@
     <div class="cd-footer-main">
       <!-- Marca / Copyright -->
       <div class="cd-footer-copy-col">
-        <p class="cd-footer-copy">© 2026 CartoData - Dando contexto geográfico a tu decisión</p>
+        <p class="cd-footer-copy" data-en="© 2026 CartoData - Giving geographic context to your decisions">© 2026 CartoData - Dando contexto geográfico a tu decisión</p>
       </div>
 
       <!-- Nav grid con diamante conector -->
       <div class="cd-footer-col cd-footer-nav-col">
         <div class="cd-footer-nav-wrap">
           <div class="cd-footer-nav-grid">
-            <a href="./#impacto"    class="cd-footer-nav-btn">Impacto</a>
-            <a href="./#tecnologia" class="cd-footer-nav-btn">Tecnología</a>
-            <a href="./#cultura"    class="cd-footer-nav-btn">Cultura</a>
-            <a href="./#noticias"   class="cd-footer-nav-btn">Noticias</a>
+            <a href="./#impacto"    class="cd-footer-nav-btn" data-en="Impact">Impacto</a>
+            <a href="./#tecnologia" class="cd-footer-nav-btn" data-en="Technology">Tecnología</a>
+            <a href="./#cultura"    class="cd-footer-nav-btn" data-en="Culture">Cultura</a>
+            <a href="./#noticias"   class="cd-footer-nav-btn" data-en="News">Noticias</a>
           </div>
           <div class="cd-footer-diamond">
             <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><rect x="4" y="0" width="5.66" height="5.66" transform="rotate(45 4 0)" stroke="currentColor" stroke-width="0.8" fill="none"/></svg>
@@ -594,7 +599,7 @@
 
       <!-- Contacto -->
       <div class="cd-footer-col">
-        <h4 class="cd-footer-col-title">Contacto</h4>
+        <h4 class="cd-footer-col-title" data-en="Contact">Contacto</h4>
         <div class="cd-footer-col-links">
           <a href="tel:+523336271552">+52 333 627 1552</a>
           <a href="mailto:info@cartodata.com">info@cartodata.com</a>
@@ -614,10 +619,10 @@
       <div class="cd-footer-col">
         <h4 class="cd-footer-col-title">Info</h4>
         <div class="cd-footer-col-links">
-          <a href="#ubicaciones">Ubicaciones</a>
-          <a href="#">Kit de prensa</a>
-          <a href="./#aviso-privacidad">Aviso de privacidad</a>
-          <a href="./#terminos">Términos y condiciones</a>
+          <a href="#ubicaciones" data-en="Locations">Ubicaciones</a>
+          <a href="#" data-en="Press kit">Kit de prensa</a>
+          <a href="./#aviso-privacidad" data-en="Privacy notice">Aviso de privacidad</a>
+          <a href="./#terminos" data-en="Terms and conditions">Términos y condiciones</a>
         </div>
       </div>
     </div>`;
@@ -938,11 +943,14 @@
     }
   }
 
+  /* El footer y los modales se inyectan después del nav, así que hay que volver a
+     aplicar la traducción cuando ya existen en el DOM (si no, quedan en español). */
+  function injectLate() { injectFooter(); initModals(); applyI18n(); }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { injectFooter(); initModals(); });
+    document.addEventListener('DOMContentLoaded', injectLate);
   } else {
-    injectFooter();
-    initModals();
+    injectLate();
   }
 
 })();

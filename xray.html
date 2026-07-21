@@ -196,17 +196,17 @@
 
   <div class="xray-wrap">
     <div class="xray-head">
-      <p class="xray-eyebrow"><span class="dot"></span> X-Ray · Diagnóstico geoespacial</p>
-      <h1 class="xray-h1">Cuéntanos tu reto,<br><strong>te orientamos al instante</strong></h1>
-      <p class="xray-sub">Nuestro asistente hace una radiografía de tu proyecto en un par de minutos y te conecta con el equipo de CartoData indicado para resolverlo.</p>
+      <p class="xray-eyebrow" data-en="&lt;span class=&quot;dot&quot;&gt;&lt;/span&gt; X-Ray · Geospatial diagnostic"><span class="dot"></span> X-Ray · Diagnóstico geoespacial</p>
+      <h1 class="xray-h1" data-en="Tell us your challenge,&lt;br&gt;&lt;strong&gt;we&#39;ll point you the right way&lt;/strong&gt;">Cuéntanos tu reto,<br><strong>te orientamos al instante</strong></h1>
+      <p class="xray-sub" data-en="Our assistant runs an X-ray of your project in a couple of minutes and connects you with the right CartoData team to solve it.">Nuestro asistente hace una radiografía de tu proyecto en un par de minutos y te conecta con el equipo de CartoData indicado para resolverlo.</p>
     </div>
 
     <div class="chat" id="chat">
       <div class="chat-topbar">
         <div class="chat-avatar">CD</div>
         <div class="chat-topbar-info">
-          <h3>Asistente CartoData</h3>
-          <p><span class="dot"></span> En línea</p>
+          <h3 data-en="CartoData Assistant">Asistente CartoData</h3>
+          <p><span class="dot"></span> <span data-en="Online">En línea</span></p>
         </div>
         <span class="chat-demo-pill">Demo</span>
       </div>
@@ -217,10 +217,10 @@
       <form class="chat-input" id="inputForm" autocomplete="off">
         <input type="file" id="fileInput" multiple hidden
           accept=".kml,.kmz,.shp,.zip,.geojson,.json,.dwg,.dxf,.pdf,.png,.jpg,.jpeg,.tif,.tiff,.csv" />
-        <button type="button" class="chat-attach" id="attachBtn" aria-label="Adjuntar archivo"
-          title="Adjuntar archivo (KML, KMZ, SHP, PDF…)">📎</button>
-        <input type="text" id="msgInput" placeholder="Escribe tu respuesta…" aria-label="Mensaje" />
-        <button type="submit" class="chat-send" id="sendBtn" aria-label="Enviar">→</button>
+        <button type="button" class="chat-attach" id="attachBtn" aria-label="Adjuntar archivo" data-en-aria="Attach file"
+          title="Adjuntar archivo (KML, KMZ, SHP, PDF…)" data-en-title="Attach file (KML, KMZ, SHP, PDF…)">📎</button>
+        <input type="text" id="msgInput" placeholder="Escribe tu respuesta…" data-en-placeholder="Type your reply…" aria-label="Mensaje" data-en-aria="Message" />
+        <button type="submit" class="chat-send" id="sendBtn" aria-label="Enviar" data-en-aria="Send">→</button>
       </form>
     </div>
   </div>
@@ -255,7 +255,13 @@
     const ALLOWED_EXT = ['kml','kmz','shp','zip','geojson','json','dwg','dxf','pdf','png','jpg','jpeg','tif','tiff','csv'];
     const MAX_BYTES = 20 * 1024 * 1024;
 
-    const GREETING ='¡Bienvenido a CartoData! 👋 Con gusto te ayudo — somos especialistas en soluciones geoespaciales y llegaste al lugar indicado para tu proyecto.\n\nPara ser ágiles con tu cotización, empecemos por tus datos de contacto: ¿me compartes tu nombre, un correo o teléfono, y el nombre de tu empresa?';
+    /* El saludo sigue el idioma en que el visitante dejó el sitio (mismo
+       localStorage que usa shared.js). El modelo continúa la conversación en
+       el idioma en que le escriban — ver SYSTEM_PROMPT en functions/api/chat.js. */
+    const XRAY_LANG = (localStorage.getItem('cartodata-lang') || 'es');
+    const GREETING = XRAY_LANG === 'en'
+      ? 'Welcome to CartoData! 👋 Happy to help — we specialize in geospatial solutions, so you are in the right place for your project.\n\nTo move quickly on your quote, let\'s start with your contact details: could you share your name, an email or phone number, and your company name?'
+      : '¡Bienvenido a CartoData! 👋 Con gusto te ayudo — somos especialistas en soluciones geoespaciales y llegaste al lugar indicado para tu proyecto.\n\nPara ser ágiles con tu cotización, empecemos por tus datos de contacto: ¿me compartes tu nombre, un correo o teléfono, y el nombre de tu empresa?';
 
     function scrollDown() { messagesEl.scrollTop = messagesEl.scrollHeight; }
 
