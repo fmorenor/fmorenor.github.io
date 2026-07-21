@@ -191,6 +191,7 @@
       .chat { height: min(600px, 82vh); }
     }
   </style>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
@@ -222,6 +223,13 @@
         <input type="text" id="msgInput" placeholder="Escribe tu respuesta…" data-en-placeholder="Type your reply…" aria-label="Mensaje" data-en-aria="Message" />
         <button type="submit" class="chat-send" id="sendBtn" aria-label="Enviar" data-en-aria="Send">→</button>
       </form>
+
+      <!-- Turnstile: invisible salvo que Cloudflare sospeche (interaction-only).
+           El token viaja en cada POST a /api/chat, que lo verifica server-side. -->
+      <div class="cf-turnstile" id="turnstileBox"
+        data-sitekey="0x4AAAAAAD6sqdVk00kt3s8e"
+        data-action="turnstile-spin-v1"
+        data-appearance="interaction-only"></div>
     </div>
   </div>
 
@@ -295,14 +303,35 @@
       if (on) input.focus();
     }
 
+    // Los tokens de Turnstile son de un solo uso y caducan (~5 min), así que
+    // pedimos uno nuevo en cada envío. Tras consumirlo llamamos a reset() para
+    // que el widget vaya resolviendo el siguiente en segundo plano.
+    function getTurnstileToken(timeoutMs) {
+      return new Promise(resolve => {
+        if (typeof turnstile === 'undefined') return resolve('');
+        const t0 = Date.now();
+        (function poll() {
+          let tok = '';
+          try { tok = turnstile.getResponse() || ''; } catch (_) {}
+          if (tok) {
+            try { turnstile.reset(); } catch (_) {}
+            return resolve(tok);
+          }
+          if (Date.now() - t0 > (timeoutMs || 15000)) return resolve('');
+          setTimeout(poll, 250);
+        })();
+      });
+    }
+
     async function sendToAssistant() {
       showTyping();
       setInputEnabled(false);
       try {
+        const tsToken = await getTurnstileToken();
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ messages: history })
+          body: JSON.stringify({ messages: history, turnstile_token: tsToken })
         });
         const data = await res.json().catch(() => ({}));
         hideTyping();

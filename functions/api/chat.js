@@ -107,6 +107,21 @@ export async function onRequestPost({ request, env }) {
     if (!env.ANTHROPIC_API_KEY) return json({ reply: "Configuración incompleta del servidor." }, 500);
 
     const body = await request.json().catch(() => ({}));
+
+    // ── Turnstile ────────────────────────────────────────────────────────
+    // Verificación obligatoria ANTES de gastar un solo token de Anthropic.
+    // Tiene que vivir aquí y no en un Worker aparte: este endpoint es el que
+    // se protege, así que la comprobación no debe poder esquivarse.
+    if (!env.TURNSTILE_SECRET_KEY) {
+      return json({ reply: "Configuración incompleta del servidor." }, 500);
+    }
+    const verified = await verifyTurnstile(env, request, body.turnstile_token);
+    if (!verified) {
+      return json(
+        { reply: "No pudimos verificar que eres una persona. Recarga la página e inténtalo de nuevo." },
+        403
+      );
+    }
     const incoming = Array.isArray(body.messages) ? body.messages : [];
     if (incoming.length === 0) return json({ reply: "No recibí ningún mensaje." }, 400);
 
@@ -180,6 +195,27 @@ export async function onRequestPost({ request, env }) {
     });
   } catch (e) {
     return json({ reply: "Ups, hubo un error del servidor. Intenta de nuevo en un momento." }, 500);
+  }
+}
+
+async function verifyTurnstile(env, request, token) {
+  if (typeof token !== "string" || token === "") return false;
+  try {
+    const r = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        secret: env.TURNSTILE_SECRET_KEY,
+        response: token,
+        remoteip: request.headers.get("CF-Connecting-IP") || undefined,
+      }),
+    });
+    const data = await r.json().catch(() => ({}));
+    return data.success === true;
+  } catch (e) {
+    // Ante un fallo de red contra siteverify preferimos rechazar: el endpoint
+    // gasta dinero real, así que "fail closed".
+    return false;
   }
 }
 
