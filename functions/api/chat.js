@@ -8,6 +8,15 @@
 // La API key NUNCA llega al navegador: el HTML solo habla con /api/chat.
 
 const MODEL = "claude-haiku-4-5";
+
+// Topes de entrada. Acotan el coste máximo de UNA petición aunque el cliente
+// haya pasado Turnstile: sin esto, 40 mensajes de longitud arbitraria pueden
+// quemar cientos de miles de tokens de entrada en un solo request.
+// Truncamos en vez de rechazar para no romper la conversación a quien pegue
+// unas especificaciones largas de buena fe.
+const MAX_MSGS = 40;
+const MAX_CHARS_PER_MSG = 4000;
+const MAX_CHARS_TOTAL = 20000;
 const CARTOFLOW_URL =
   "https://nxzoiesnejqaofgwxlde.supabase.co/functions/v1/submit-landing-lead";
 
@@ -122,17 +131,35 @@ export async function onRequestPost({ request, env }) {
         403
       );
     }
+
     const incoming = Array.isArray(body.messages) ? body.messages : [];
     if (incoming.length === 0) return json({ reply: "No recibí ningún mensaje." }, 400);
 
     // Normaliza y acota el historial que reenviamos a la API.
     let messages = incoming
-      .slice(-40)
+      .slice(-MAX_MSGS)
       .map((m) => ({
         role: m.role === "assistant" ? "assistant" : "user",
-        content: typeof m.content === "string" ? m.content : String(m.content ?? ""),
+        content: (typeof m.content === "string" ? m.content : String(m.content ?? "")).slice(
+          0,
+          MAX_CHARS_PER_MSG
+        ),
       }))
       .filter((m) => m.content.trim() !== "");
+
+    // Presupuesto global de caracteres: conservamos los mensajes más recientes
+    // (los que importan para el contexto) y descartamos los más antiguos.
+    // Como cada mensaje ya viene truncado a MAX_CHARS_PER_MSG, siempre entra
+    // al menos el último.
+    let budget = MAX_CHARS_TOTAL;
+    const kept = [];
+    for (let i = messages.length - 1; i >= 0; i--) {
+      budget -= messages[i].content.length;
+      if (budget < 0) break;
+      kept.unshift(messages[i]);
+    }
+    messages = kept;
+
     // La primera debe ser del usuario.
     while (messages.length && messages[0].role !== "user") messages.shift();
     if (messages.length === 0) return json({ reply: "No recibí ningún mensaje." }, 400);
