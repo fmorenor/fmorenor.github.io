@@ -13,9 +13,16 @@ const MAX_BYTES = 20 * 1024 * 1024; // el endpoint rechaza > 20 MB
 // Debe coincidir con ALLOWED_EXT de xray.html. Allí la comprobación es solo
 // para dar feedback al usuario; la de verdad es esta, porque la del navegador
 // se salta con un curl. Si se añade un tipo allí, añadirlo también aquí.
+//
+// OJO con "md": NO está en la lista del navegador y aun así hace falta. La
+// transcripción de la conversación (uploadTranscript en xray.html) se sube
+// como .md sin pasar por validFile(), así que si se quita de aquí las
+// transcripciones dejan de guardarse — y en silencio, porque esa subida va
+// envuelta en try/catch para no bloquear el cierre del chat.
 const ALLOWED_EXT = [
   "kml", "kmz", "shp", "zip", "geojson", "json",
   "dwg", "dxf", "pdf", "png", "jpg", "jpeg", "tif", "tiff", "csv",
+  "md",
 ];
 
 // Subidas por IP. Más restrictivo que el chat: subir es caro en almacenamiento
