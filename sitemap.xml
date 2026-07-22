@@ -1,33 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Las <loc> deben coincidir EXACTAMENTE con la etiqueta rel="canonical" de cada
+  página, o se envían señales contradictorias a los buscadores. Ojo: las páginas
+  legales declaran su canónica SIN extensión (/privacidad, /terminos).
+
+  instituciones.html se excluye a propósito: su enlace está comentado en
+  shared.js porque la página se va a rehacer. Cuando esté lista, restaurar el
+  enlace del menú y añadirla aquí.
+
+  404.html se excluye por definición: una página de error no se indexa.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.cartodata.com/</loc>
-    <lastmod>2026-06-23</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Páginas de sector: las de mayor valor comercial -->
+  <url>
+    <loc>https://www.cartodata.com/ciudades.html</loc>
+    <lastmod>2026-07-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.cartodata.com/infraestructura.html</loc>
+    <lastmod>2026-07-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.cartodata.com/mineria.html</loc>
+    <lastmod>2026-07-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Capacidades técnicas -->
   <url>
     <loc>https://www.cartodata.com/cartografica.html</loc>
-    <lastmod>2026-06-23</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.cartodata.com/geosoftware.html</loc>
-    <lastmod>2026-06-23</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://www.cartodata.com/procesos.html</loc>
+    <lastmod>2026-07-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Herramienta de captación -->
+  <url>
+    <loc>https://www.cartodata.com/xray.html</loc>
+    <lastmod>2026-07-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Institucional -->
+  <url>
     <loc>https://www.cartodata.com/historia.html</loc>
-    <lastmod>2026-06-23</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.cartodata.com/equipo.html</loc>
-    <lastmod>2026-06-23</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
+  </url>
+
+  <!-- Legales: canónica sin extensión -->
+  <url>
+    <loc>https://www.cartodata.com/privacidad</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.cartodata.com/terminos</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>
