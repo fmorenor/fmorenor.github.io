@@ -160,6 +160,28 @@
       .hero-tab { border-left: 0; border-top: 1px solid rgba(255,255,255,0.10); }
       .hero-tab:first-child { border-top: 0; }
     }
+
+    /* ══════════════════════════════════════════════
+       COSTO — intro "…tiene un costo" (encabezado +
+       párrafo sobre textura process-steps)
+       ══════════════════════════════════════════════ */
+    .costo {
+      position: relative; overflow: hidden;
+      padding: clamp(5rem,10vw,8rem) clamp(1.5rem,6vw,4.5rem);
+    }
+    .costo-bg {
+      position: absolute; inset: 0; z-index: 0;
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .costo-inner { position: relative; z-index: 1; max-width: 768px; }
+    .costo-h2 {
+      font-size: clamp(1.9rem,4vw,3rem); font-weight: 200; line-height: 1.15;
+      color: #fff; margin-bottom: 1.5rem;
+    }
+    .costo-p {
+      font-size: clamp(1rem,1.6vw,1.2rem); font-weight: 300; line-height: 1.7;
+      color: rgba(255,255,255,0.72);
+    }
   </style>
 </head>
 <body>
@@ -240,8 +262,17 @@
     </div>
   </section>
 
-  <!-- TODO Fase 2+: tarjetas de audiencia, costos, 5 pasos, cartomorfosis,
-       slider herramientas, resultados, equipo, noticias, CTA final. -->
+  <!-- ══════════════ COSTO — "…tiene un costo" ══════════════ -->
+  <section class="costo" id="costo">
+    <img class="costo-bg" src="./manus-storage/process-steps-bg-dark.webp" alt="" aria-hidden="true" />
+    <div class="costo-inner">
+      <h2 class="costo-h2" data-en="Making decisions without knowing exactly where the problem is has a cost">Tomar decisiones sin saber exactamente dónde está el problema tiene un costo</h2>
+      <p class="costo-p" data-en="Your organization faces complex decisions every day with incomplete, scattered, or hard-to-interpret information. The geographic context you need exists — it just needs to be made visible.">Tu organización enfrenta decisiones complejas todos los días con información incompleta, dispersa o difícil de interpretar. El contexto geográfico que necesitas existe, hay que hacerlo visible.</p>
+    </div>
+  </section>
+
+  <!-- TODO siguientes secciones: 5 pasos, cartomorfosis, slider herramientas,
+       resultados, equipo, noticias, CTA final. -->
 
   <script>
     /* ── Hero: cambia el fondo según la pestaña de sector activa ──
