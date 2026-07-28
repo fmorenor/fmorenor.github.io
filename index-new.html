@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CartoData — Contexto geográfico para tus decisiones</title>
+  <meta name="description" content="Damos contexto geográfico a tus decisiones. Soluciones geoespaciales para ciudades, infraestructura, minería e instituciones." />
+  <link rel="canonical" href="https://www.cartodata.com/" />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.cartodata.com/" />
+  <meta property="og:title" content="CartoData — Contexto geográfico para tus decisiones" />
+  <meta property="og:description" content="Damos contexto geográfico a tus decisiones. Soluciones geoespaciales para ciudades, infraestructura, minería e instituciones." />
+  <meta property="og:image" content="https://www.cartodata.com/images/og-home.jpg" />
+  <meta property="og:locale" content="es_MX" />
+  <meta property="og:site_name" content="CartoData" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="CartoData — Contexto geográfico para tus decisiones" />
+  <meta name="twitter:description" content="Damos contexto geográfico a tus decisiones. Soluciones geoespaciales para ciudades, infraestructura, minería e instituciones." />
+  <meta name="twitter:image" content="https://www.cartodata.com/images/og-home.jpg" />
+  <!-- Schema.org Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "CartoData",
+    "url": "https://www.cartodata.com",
+    "logo": "https://www.cartodata.com/images/logo.svg",
+    "description": "Soluciones geoespaciales para ciudades, infraestructura, minería e instituciones. Más de 90 años de experiencia en cartografía y geomática.",
+    "foundingDate": "1930",
+    "areaServed": "Latinoamérica",
+    "sameAs": [],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "sales",
+      "availableLanguage": ["Spanish"]
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Soluciones Geoespaciales",
+      "itemListElement": [
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Cartografía de Precisión" } },
+        { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "AU4", "applicationCategory": "Photogrammetry Software" } },
+        { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "eCarto", "applicationCategory": "GIS Software" } }
+      ]
+    }
+  }
+  </script>
+
+  <!-- nav, footer, modales, tema, idioma, fuente DM Sans, site.css y GA -->
+  <script src="./shared.js" defer></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; }
+    img, video { display: block; max-width: 100%; }
+
+    /* ══════════════════════════════════════════════
+       HERO — carrusel por sector (fondo imagen/video
+       que cambia al pasar por cada pestaña)
+       ══════════════════════════════════════════════ */
+    .home-hero {
+      position: relative; width: 100%;
+      min-height: 90vh; display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Pila de fondos: uno por sector, sólo el activo visible */
+    .hero-media { position: absolute; inset: 0; z-index: 0; background: #05060d; }
+    .hero-layer {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover;
+      opacity: 0; transition: opacity 600ms ease;
+      pointer-events: none;
+    }
+    .hero-layer.is-active { opacity: 1; }
+
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(105deg, rgba(5,8,22,0.90) 0%, rgba(5,8,22,0.55) 45%, rgba(5,8,22,0.35) 100%);
+    }
+
+    .hero-inner {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; flex: 1;
+      min-height: 90vh;
+    }
+
+    /* Bloque de texto */
+    .hero-content {
+      flex: 1; display: flex; flex-direction: column; justify-content: center;
+      max-width: 1000px;
+      padding: clamp(7rem,12vw,10rem) clamp(1.5rem,6vw,4.5rem) clamp(2rem,5vw,3.5rem);
+    }
+    .hero-h1 {
+      font-size: clamp(2.4rem,5.5vw,4.6rem); font-weight: 200; line-height: 1.06;
+      color: #fff; margin-bottom: 1.6rem; max-width: 15ch;
+    }
+    .hero-sub {
+      font-size: clamp(1rem,1.7vw,1.2rem); font-weight: 300; line-height: 1.7;
+      color: rgba(255,255,255,0.78); max-width: 620px; margin-bottom: 1.3rem;
+    }
+    .hero-tagline {
+      font-size: clamp(0.95rem,1.5vw,1.08rem); font-style: italic; font-weight: 300;
+      color: rgba(255,255,255,0.55); max-width: 560px; margin-bottom: 2.4rem;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      align-self: flex-start;
+      padding: 1rem 2.2rem;
+      background: #3b5bdb; color: #fff; border-radius: 999px;
+      font-size: 0.95rem; font-weight: 600; text-decoration: none;
+      letter-spacing: 0.02em; transition: background 250ms, transform 200ms;
+    }
+    .btn-primary:hover { background: #2d4bbd; transform: translateY(-2px); }
+    .btn-primary svg { width: 1.05em; height: 1.05em; }
+
+    /* Franja de pestañas por sector */
+    .hero-tabs {
+      position: relative; z-index: 2;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid rgba(255,255,255,0.14);
+      background: rgba(5,8,22,0.30);
+      backdrop-filter: blur(4px);
+    }
+    .hero-tab {
+      text-align: left; cursor: pointer;
+      padding: clamp(1rem,2.2vw,1.6rem) clamp(1rem,2vw,1.6rem);
+      background: transparent; border: 0;
+      border-left: 1px solid rgba(255,255,255,0.10);
+      color: inherit; font-family: inherit;
+      transition: background 300ms;
+    }
+    .hero-tab:first-child { border-left: 0; }
+    .hero-tab:hover, .hero-tab:focus-visible, .hero-tab.is-active {
+      background: rgba(59,91,219,0.22); outline: none;
+    }
+    .hero-tab-head {
+      display: block; font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.10em; color: #fff; margin-bottom: 0.7rem;
+    }
+    .hero-tab-list { list-style: none; display: flex; flex-direction: column; gap: 0.28rem; }
+    .hero-tab-list li {
+      font-size: 0.82rem; font-weight: 300; line-height: 1.35;
+      color: rgba(255,255,255,0.62);
+    }
+
+    @media (max-width: 860px) {
+      .home-hero, .hero-inner { min-height: auto; }
+      .hero-content { padding-top: clamp(6rem,20vw,8rem); padding-bottom: 2.5rem; }
+      .hero-tabs { grid-template-columns: repeat(2, 1fr); }
+      .hero-tab { border-top: 1px solid rgba(255,255,255,0.10); }
+      .hero-tab:nth-child(-n+2) { border-top: 0; }
+      .hero-tab:nth-child(odd) { border-left: 0; }
+    }
+    @media (max-width: 480px) {
+      .hero-tabs { grid-template-columns: 1fr; }
+      .hero-tab { border-left: 0; border-top: 1px solid rgba(255,255,255,0.10); }
+      .hero-tab:first-child { border-top: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════ HERO ══════════════ -->
+  <section class="home-hero" id="hero">
+    <div class="hero-media">
+      <img class="hero-layer is-active" data-sector="default"
+           src="./manus-storage/general-hero-web_246bc89e.jpg" alt="" fetchpriority="high" />
+      <img class="hero-layer" data-sector="ciudades"
+           src="./manus-storage/ciudades-1-web_a181cbca.jpg" alt="" loading="lazy" />
+      <img class="hero-layer" data-sector="infra"
+           src="./manus-storage/infra-3-web_399b16a8.jpg" alt="" loading="lazy" />
+      <video class="hero-layer" data-sector="mineria"
+             muted loop playsinline preload="none"
+             poster="./manus-storage/mineras-1-web_480e2070.jpg"
+             src="./manus-storage/mineras-video_c364ca64.mp4"></video>
+      <video class="hero-layer" data-sector="instituciones"
+             muted loop playsinline preload="none"
+             src="./manus-storage/instituciones-video_62efcdb2.mp4"></video>
+    </div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-inner">
+      <div class="hero-content">
+        <h1 class="hero-h1" data-en="We give geographic context to your decisions.">Damos contexto geográfico a tus decisiones.</h1>
+        <p class="hero-sub" data-en="Your decisions improve when you know exactly where the problem is. Capturing geographic information, building the right tools, and structuring the right processes turns any challenge into a clear answer with real impact. At CartoData, we make it possible.">Tu decisión mejora cuando sabes exactamente dónde está el problema. Capturar información geográfica, construir las herramientas correctas y estructurar los procesos adecuados convierte cualquier reto en una respuesta clara con impacto real. En CartoData lo hacemos posible.</p>
+        <p class="hero-tagline" data-en="We turn complex problems into clear solutions by putting them on the map.">Convertimos problemas complejos en soluciones claras poniéndolos en el mapa.</p>
+        <a class="btn-primary" href="https://api.whatsapp.com/send?phone=523318520000"
+           target="_blank" rel="noopener" data-en="Let's solve your challenge">
+          Solucionemos tu reto
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+
+      <div class="hero-tabs" role="tablist" aria-label="Sectores">
+        <button class="hero-tab" type="button" data-sector="ciudades">
+          <span class="hero-tab-head" data-en="CITIES">CIUDADES</span>
+          <ul class="hero-tab-list">
+            <li data-en="Cadastre">Catastro</li>
+            <li data-en="Urban planning">Planeación urbana</li>
+            <li data-en="Permits &amp; licenses">Permisos y licencias</li>
+            <li data-en="Civil protection">Protección civil</li>
+            <li data-en="Ecology">Ecología</li>
+          </ul>
+        </button>
+        <button class="hero-tab" type="button" data-sector="infra">
+          <span class="hero-tab-head" data-en="INFRASTRUCTURE">INFRAESTRUCTURA</span>
+          <ul class="hero-tab-list">
+            <li data-en="Highways">Carreteras</li>
+            <li data-en="Railways">Trenes</li>
+            <li data-en="Pipelines">Gasoductos</li>
+            <li data-en="Airports">Aeropuertos</li>
+            <li data-en="Electric lines">Líneas eléctricas</li>
+          </ul>
+        </button>
+        <button class="hero-tab" type="button" data-sector="mineria">
+          <span class="hero-tab-head" data-en="MINING">MINERÍA</span>
+          <ul class="hero-tab-list">
+            <li data-en="Environmental Impact">Impacto Ambiental</li>
+            <li data-en="Volume calculation">Cálculo de volúmenes</li>
+            <li data-en="Topography">Topografía</li>
+            <li data-en="LiDAR">LiDAR</li>
+            <li data-en="Reports">Reportes</li>
+          </ul>
+        </button>
+        <button class="hero-tab" type="button" data-sector="instituciones">
+          <span class="hero-tab-head" data-en="INSTITUTIONS">INSTITUCIONES</span>
+          <ul class="hero-tab-list">
+            <li data-en="Online procedures">Trámites en línea</li>
+            <li data-en="One-stop shop">Ventanilla única</li>
+            <li data-en="Program implementation">Implementación de programas</li>
+            <li data-en="Georeference of subsidies">Georeferenciación de apoyos</li>
+            <li data-en="Field verification">Verificación en campo</li>
+          </ul>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TODO Fase 2+: tarjetas de audiencia, costos, 5 pasos, cartomorfosis,
+       slider herramientas, resultados, equipo, noticias, CTA final. -->
+
+  <script>
+    /* ── Hero: cambia el fondo según la pestaña de sector activa ──
+       Al pasar el ratón / enfocar una pestaña se muestra su fondo; al salir
+       de la franja se vuelve al fondo general. En táctil, un toque fija el
+       sector hasta tocar otro. Los videos sólo se reproducen cuando su
+       sector está activo (ahorra ancho de banda). */
+    (function () {
+      const hero   = document.getElementById('hero');
+      if (!hero) return;
+      const layers = hero.querySelectorAll('.hero-layer');
+      const tabs   = hero.querySelectorAll('.hero-tab');
+      const bySector = s => hero.querySelector('.hero-layer[data-sector="' + s + '"]');
+
+      function activate(sector) {
+        layers.forEach(l => {
+          const on = l.dataset.sector === sector;
+          l.classList.toggle('is-active', on);
+          if (l.tagName === 'VIDEO') {
+            if (on) { if (l.preload === 'none') l.preload = 'auto'; l.play().catch(() => {}); }
+            else l.pause();
+          }
+        });
+        tabs.forEach(t => t.classList.toggle('is-active', t.dataset.sector === sector));
+      }
+      const reset = () => activate('default');
+
+      tabs.forEach(tab => {
+        const s = tab.dataset.sector;
+        tab.addEventListener('mouseenter', () => activate(s));
+        tab.addEventListener('focus',      () => activate(s));
+        tab.addEventListener('click',      () => activate(s)); /* táctil */
+      });
+      const strip = hero.querySelector('.hero-tabs');
+      strip.addEventListener('mouseleave', reset);
+    })();
+  </script>
+
+</body>
+</html>
