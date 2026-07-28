@@ -421,7 +421,89 @@
     </div>
   </section>
 
-  <!-- TODO siguientes secciones: cartomorfosis, slider herramientas,
+  <!-- ════════════════════════════════════════════════════════════════════
+       CARTOMORFOSIS — diagrama Venn de 3 círculos (DATOS/PROCESOS/SOFTWARE)
+       ════════════════════════════════════════════════════════════════════ -->
+  <section id="cartomorfosis" style="background: #050816; color: #f8fafc; padding: clamp(5rem, 12vw, 8rem) clamp(1.5rem, 6vw, 4.5rem);">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <!-- Eyebrow + H2 -->
+      <div style="text-align: center; margin-bottom: 3.5rem;">
+        <p style="font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 1rem;" data-en="Core proposition">Propuesta principal</p>
+        <h2 style="font-size: clamp(2rem, 4.5vw, 3.4rem); font-weight: 200; line-height: 1.1; letter-spacing: -0.01em; margin-bottom: 1.5rem; max-width: 900px; margin-left: auto; margin-right: auto;" data-en="Processes, data, and software working together.">Procesos, datos y software trabajando juntos.</h2>
+        <p style="font-size: 0.95rem; line-height: 1.6; color: rgba(255,255,255,0.65); max-width: 800px; margin: 0 auto;" data-en="Having technology is not enough. Many organizations have data, but it's not ready for decision-making. They have processes, but they're not always organized. They have software, but it doesn't always solve the real operation. CartoData integrates all three pieces into a complete geospatial solution.">Tener tecnología no es suficiente. Muchas organizaciones tienen datos, pero no están listos para decidir. Tienen procesos, pero no siempre están ordenados. Tienen software, pero no siempre resuelve la operación real. CartoData integra las tres piezas en una solución geoespacial completa.</p>
+      </div>
+
+      <!-- Grid: 3 componentes + diagrama Venn -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-bottom: 3rem;">
+        <!-- Componentes lista -->
+        <div style="display: flex; flex-direction: column; gap: 2.2rem;">
+          <!-- DATOS -->
+          <div style="padding-left: 1.5rem; border-left: 3px solid #3b5bdb;">
+            <h3 style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #3b5bdb; margin-bottom: 0.6rem;" data-en="DATA">DATOS</h3>
+            <p style="font-size: 0.95rem; line-height: 1.6; color: rgba(255,255,255,0.65);" data-en="Reliable information to know what's really happening in your operation.">Información confiable para saber qué está pasando realmente en tu operación.</p>
+          </div>
+          <!-- PROCESOS -->
+          <div style="padding-left: 1.5rem; border-left: 3px solid #3b5bdb;">
+            <h3 style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #3b5bdb; margin-bottom: 0.6rem;" data-en="PROCESSES">PROCESOS</h3>
+            <p style="font-size: 0.95rem; line-height: 1.6; color: rgba(255,255,255,0.65);" data-en="Methodology to organize how information is captured, interpreted, and used.">Metodología para ordenar cómo se captura, interpreta y usa la información.</p>
+          </div>
+          <!-- SOFTWARE -->
+          <div style="padding-left: 1.5rem; border-left: 3px solid #3b5bdb;">
+            <h3 style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #3b5bdb; margin-bottom: 0.6rem;" data-en="SOFTWARE">SOFTWARE</h3>
+            <p style="font-size: 0.95rem; line-height: 1.6; color: rgba(255,255,255,0.65);" data-en="Digital tools to visualize, manage, and turn information into action.">Herramientas digitales para visualizar, administrar y convertir la información en acción.</p>
+          </div>
+        </div>
+
+        <!-- Diagrama Venn SVG -->
+        <div style="display: flex; justify-content: center; align-items: center; min-height: 380px;">
+          <svg viewBox="0 0 400 400" style="max-width: 100%; height: auto;" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="venn-glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            <!-- Círculo 1: DATOS (izquierda) -->
+            <circle cx="140" cy="200" r="110" fill="#3b5bdb" opacity="0.15" filter="url(#venn-glow)"/>
+            <!-- Círculo 2: PROCESOS (derecha) -->
+            <circle cx="260" cy="200" r="110" fill="#3b5bdb" opacity="0.15" filter="url(#venn-glow)"/>
+            <!-- Círculo 3: SOFTWARE (arriba) -->
+            <circle cx="200" cy="100" r="110" fill="#3b5bdb" opacity="0.15" filter="url(#venn-glow)"/>
+
+            <!-- Textos de los círculos -->
+            <text x="110" y="210" font-family="DM Sans, system-ui, sans-serif" font-size="16" font-weight="600" fill="#7b9cff" text-anchor="middle" data-en="DATA">DATOS</text>
+            <text x="290" y="210" font-family="DM Sans, system-ui, sans-serif" font-size="16" font-weight="600" fill="#7b9cff" text-anchor="middle" data-en="PROCESSES">PROCESOS</text>
+            <text x="200" y="70" font-family="DM Sans, system-ui, sans-serif" font-size="16" font-weight="600" fill="#7b9cff" text-anchor="middle" data-en="SOFTWARE">SOFTWARE</text>
+
+            <!-- Centro: CARTOMORFOSIS -->
+            <circle cx="200" cy="200" r="50" fill="rgba(59, 91, 219, 0.25)" filter="url(#venn-glow)"/>
+            <text x="200" y="195" font-family="DM Sans, system-ui, sans-serif" font-size="13" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="middle">CARTO</text>
+            <text x="200" y="210" font-family="DM Sans, system-ui, sans-serif" font-size="13" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="middle">MORFOSIS</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Mensaje de conclusión + CTA -->
+      <div style="text-align: center; margin-top: 4rem;">
+        <h3 style="font-size: 1.6rem; font-weight: 300; line-height: 1.3; margin-bottom: 2rem;" data-en="We call this Cartomorphosis.">A esto le llamamos Cartomorfosis.</h3>
+        <a href="https://api.whatsapp.com/send?phone=523318520000" style="display: inline-block; padding: 1rem 2rem; background: #3b5bdb; color: #fff; border-radius: 10px; text-decoration: none; font-weight: 500; font-size: 0.95rem; transition: background 200ms;" data-en="I want my geospatial diagnosis">Quiero mi diagnóstico geoespacial</a>
+      </div>
+
+      <!-- Responsive: en móvil, cambiar a una sola columna -->
+      <style>
+        @media (max-width: 768px) {
+          #cartomorfosis > div > div:first-of-type {
+            grid-template-columns: 1fr;
+          }
+        }
+      </style>
+    </div>
+  </section>
+
+  <!-- TODO siguientes secciones: proceso-3d, slider herramientas,
        resultados, equipo, noticias, CTA final. -->
 
   <script>
