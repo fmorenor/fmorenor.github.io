@@ -182,6 +182,86 @@
       font-size: clamp(1rem,1.6vw,1.2rem); font-weight: 300; line-height: 1.7;
       color: rgba(255,255,255,0.72);
     }
+
+    /* ══════════════════════════════════════════════
+       HISTORIA — "Desde 1930…" (logo + stats + CTA)
+       ══════════════════════════════════════════════ */
+    .historia {
+      background: #0a0a0c; text-align: center;
+      padding: clamp(4rem,9vw,7rem) clamp(1.5rem,6vw,4rem);
+    }
+    .historia-logo {
+      width: clamp(120px,18vw,200px); height: auto;
+      margin: 0 auto clamp(1.5rem,3vw,2.5rem);
+    }
+    .historia-h2 {
+      font-size: clamp(1.7rem,3.5vw,2.6rem); font-weight: 100; line-height: 1.2;
+      color: #fff; margin-bottom: clamp(2.5rem,5vw,3.5rem);
+    }
+    .historia-stats {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem;
+      max-width: 900px; margin: 0 auto clamp(2.5rem,5vw,3.5rem);
+    }
+    .hist-num {
+      font-size: clamp(2rem,4vw,2.6rem); font-weight: 100; line-height: 1;
+      color: #f5f5f5; margin-bottom: 0.6rem;
+    }
+    .hist-label {
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(255,255,255,0.5); line-height: 1.4;
+    }
+    .historia-cta {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 0.9rem 2rem; border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 999px; color: #fff; text-decoration: none;
+      font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      transition: background 250ms, border-color 250ms;
+    }
+    .historia-cta:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.6); }
+    .historia-cta svg { width: 1.05em; height: 1.05em; }
+    @media (max-width: 640px) { .historia-stats { grid-template-columns: repeat(2,1fr); } }
+
+    /* ══════════════════════════════════════════════
+       PASOS — "De información dispersa…" (5 pasos
+       numerados sobre la textura process-steps)
+       ══════════════════════════════════════════════ */
+    .pasos {
+      position: relative; overflow: hidden;
+      padding: clamp(4rem,9vw,7rem) clamp(1.5rem,6vw,4.5rem);
+    }
+    .pasos-bg {
+      position: absolute; inset: 0; z-index: 0;
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .pasos-inner { position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; }
+    .pasos-head { max-width: 720px; margin-bottom: clamp(2.5rem,5vw,3.5rem); }
+    .pasos-h2 {
+      font-size: clamp(1.9rem,4vw,3rem); font-weight: 200; line-height: 1.15;
+      color: #fff; margin-bottom: 1rem;
+    }
+    .pasos-intro {
+      font-size: clamp(1rem,1.6vw,1.15rem); font-weight: 300; line-height: 1.65;
+      color: rgba(255,255,255,0.70);
+    }
+    .pasos-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 1.5rem; }
+    .paso-card {
+      position: relative; padding: 1.6rem 1.4rem; border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(10,14,30,0.55); backdrop-filter: blur(6px);
+    }
+    .paso-num {
+      display: flex; align-items: center; justify-content: center;
+      width: 2rem; height: 2rem; border-radius: 50%;
+      background: rgba(59,91,219,0.85); border: 2px solid rgba(255,255,255,0.5);
+      color: #fff; font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem;
+    }
+    .paso-title { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 0.5rem; }
+    .paso-desc {
+      font-size: 0.85rem; font-weight: 300; line-height: 1.55;
+      color: rgba(255,255,255,0.65);
+    }
+    @media (max-width: 1000px) { .pasos-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 560px)  { .pasos-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -262,8 +342,8 @@
     </div>
   </section>
 
-  <!-- ══════════════ COSTO — "…tiene un costo" ══════════════ -->
-  <section class="costo" id="costo">
+  <!-- ══════════════ COSTO — "…tiene un costo" (ancla del nav IMPACTO) ══════════════ -->
+  <section class="costo" id="impacto">
     <img class="costo-bg" src="./manus-storage/process-steps-bg-dark.webp" alt="" aria-hidden="true" />
     <div class="costo-inner">
       <h2 class="costo-h2" data-en="Making decisions without knowing exactly where the problem is has a cost">Tomar decisiones sin saber exactamente dónde está el problema tiene un costo</h2>
@@ -271,7 +351,77 @@
     </div>
   </section>
 
-  <!-- TODO siguientes secciones: 5 pasos, cartomorfosis, slider herramientas,
+  <!-- ══════════════ HISTORIA — "Desde 1930…" ══════════════ -->
+  <section class="historia" id="historia">
+    <img class="historia-logo" src="./manus-storage/cartodata-isotype-white_445925d2.png"
+         alt="CartoData" width="200" height="200" loading="lazy" />
+    <h2 class="historia-h2" data-en="Since 1930 solving problems with maps.">Desde 1930 resolviendo problemas con mapas.</h2>
+
+    <div class="historia-stats">
+      <div class="hist-stat">
+        <div class="hist-num">+90</div>
+        <div class="hist-label" data-en="years of cartographic tradition">años de tradición cartográfica</div>
+      </div>
+      <div class="hist-stat">
+        <div class="hist-num">+375</div>
+        <div class="hist-label" data-en="projects completed">proyectos completados</div>
+      </div>
+      <div class="hist-stat">
+        <div class="hist-num">+700</div>
+        <div class="hist-label" data-en="municipalities across 24 states">municipios en 24 estados</div>
+      </div>
+      <div class="hist-stat">
+        <div class="hist-num">16</div>
+        <div class="hist-label" data-en="countries across 4 continents">países en 4 continentes</div>
+      </div>
+    </div>
+
+    <a class="historia-cta" href="#cultura" data-en="Meet CartoData">
+      Conoce CartoData
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </section>
+
+  <!-- ══════════════ PASOS — "De información dispersa…" ══════════════ -->
+  <section class="pasos" id="proceso">
+    <img class="pasos-bg" src="./manus-storage/process-steps-bg-dark.webp" alt="" aria-hidden="true" />
+    <div class="pasos-inner">
+      <div class="pasos-head">
+        <h2 class="pasos-h2" data-en="From scattered information to actionable decisions.">De información dispersa a decisiones accionables.</h2>
+        <p class="pasos-intro" data-en="A process proven in 375 projects and 16 countries to turn your challenge into a clear solution.">Un proceso probado en 375 proyectos y 16 países para convertir tu reto en una solución clara.</p>
+      </div>
+
+      <div class="pasos-grid">
+        <article class="paso-card">
+          <span class="paso-num">1</span>
+          <h3 class="paso-title" data-en="The challenge">El reto</h3>
+          <p class="paso-desc" data-en="We analyze your context, your operation, your objectives, and available information. Without understanding the problem, no map makes sense.">Analizamos tu contexto, tu operación, tus objetivos y la información disponible. Sin entender bien el problema, ningún mapa tiene sentido.</p>
+        </article>
+        <article class="paso-card">
+          <span class="paso-num">2</span>
+          <h3 class="paso-title" data-en="The data">Los datos</h3>
+          <p class="paso-desc" data-en="We collect, update, and structure geographic information so it can be used, not just stored.">Levantamos, actualizamos y estructuramos la información geográfica para que pueda ser usada, no solo almacenada.</p>
+        </article>
+        <article class="paso-card">
+          <span class="paso-num">3</span>
+          <h3 class="paso-title" data-en="The processes">Los procesos</h3>
+          <p class="paso-desc" data-en="We turn information into clear workflows so your teams operate better without relying on interpretations.">Convertimos la información en flujos claros para que tus equipos operen mejor sin depender de interpretaciones.</p>
+        </article>
+        <article class="paso-card">
+          <span class="paso-num">4</span>
+          <h3 class="paso-title" data-en="The software">El software</h3>
+          <p class="paso-desc" data-en="We create visual tools to consult, analyze, and decide with greater clarity from anywhere.">Creamos herramientas visuales para consultar, analizar y decidir con mayor claridad desde cualquier lugar.</p>
+        </article>
+        <article class="paso-card">
+          <span class="paso-num">5</span>
+          <h3 class="paso-title" data-en="The adoption">La adopción</h3>
+          <p class="paso-desc" data-en="The most precise information is useless if nobody uses it. We ensure it integrates into your real operation.">La información más precisa no sirve si nadie la usa. Nos aseguramos de que se integre a tu operación real.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- TODO siguientes secciones: cartomorfosis, slider herramientas,
        resultados, equipo, noticias, CTA final. -->
 
   <script>
