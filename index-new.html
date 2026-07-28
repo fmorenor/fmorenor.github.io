@@ -503,8 +503,52 @@
     </div>
   </section>
 
-  <!-- TODO siguientes secciones: proceso-3d, slider herramientas,
-       resultados, equipo, noticias, CTA final. -->
+  <!-- ════════════════════════════════════════════════════════════════════
+       PROCESO 3D — "El proceso, visualizado" con 3 etapas
+       ════════════════════════════════════════════════════════════════════ -->
+  <section id="proceso-3d" style="background: #050816; color: #f8fafc; padding: clamp(5rem, 12vw, 8rem) clamp(1.5rem, 6vw, 4.5rem);">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <!-- Eyebrow -->
+      <p style="font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 2rem; text-align: center;" data-en="The process, visualized">El proceso, visualizado</p>
+
+      <!-- 3 Etapas en grid -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 4rem;">
+        <!-- Etapa 1: Datos dispersos -->
+        <div style="text-align: center;">
+          <h3 style="font-size: 1.4rem; font-weight: 300; line-height: 1.3; margin-bottom: 1.2rem;" data-en="Scattered data">Datos dispersos</h3>
+          <p style="font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65);" data-en="Information in multiple sources, formats, and locations. No unified view.">Información en múltiples fuentes, formatos y ubicaciones. Sin vista unificada.</p>
+        </div>
+
+        <!-- Etapa 2: Información integrada -->
+        <div style="text-align: center;">
+          <h3 style="font-size: 1.4rem; font-weight: 300; line-height: 1.3; margin-bottom: 1.2rem;" data-en="Integrated information">Información integrada</h3>
+          <p style="font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65);" data-en="Consolidated geographic structure. Validated and ready for analysis.">Estructura geográfica consolidada. Validada y lista para análisis.</p>
+        </div>
+
+        <!-- Etapa 3: Decisiones con certeza -->
+        <div style="text-align: center;">
+          <h3 style="font-size: 1.4rem; font-weight: 300; line-height: 1.3; margin-bottom: 1.2rem;" data-en="Decisions with certainty">Decisiones con certeza</h3>
+          <p style="font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65);" data-en="Clear, actionable intelligence. Confident decision-making across your organization.">Inteligencia clara y accionable. Toma de decisiones confiada en toda tu organización.</p>
+        </div>
+      </div>
+
+      <!-- Descripción de la transformación -->
+      <div style="text-align: center; max-width: 800px; margin: 0 auto; padding: 2.5rem; background: rgba(59, 91, 219, 0.08); border-radius: 16px; border: 1px solid rgba(59, 91, 219, 0.15);">
+        <p style="font-size: 0.95rem; line-height: 1.8; color: rgba(255,255,255,0.75);" data-en="We consolidate scattered sources into a unified geographic structure within eCarto — ready for analysis, visualization, and real-time decision-making. That's the transformation.">Consolidamos fuentes dispersas en una estructura geográfica unificada dentro de eCarto — lista para análisis, visualización y toma de decisiones en tiempo real. Esa es la transformación.</p>
+      </div>
+
+      <!-- Responsive: en móvil, cambiar a 1 columna -->
+      <style>
+        @media (max-width: 768px) {
+          #proceso-3d > div > div:first-of-type {
+            grid-template-columns: 1fr;
+          }
+        }
+      </style>
+    </div>
+  </section>
+
+  <!-- TODO siguientes secciones: slider herramientas, resultados, equipo, noticias, CTA final. -->
 
   <script>
     /* ── Hero: cambia el fondo según la pestaña de sector activa ──
