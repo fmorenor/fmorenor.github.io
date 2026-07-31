@@ -944,7 +944,79 @@
     </div>
   </section>
 
-  <!-- TODO siguientes secciones: noticias, CTA final. -->
+  <!-- ════════════════════════════════════════════════════════════════════
+       NOTICIAS — "Noticias destacadas"
+       3 noticias en grid: Tlajomulco, NIX El Salvador, Mundial Fútbol 2026
+       ════════════════════════════════════════════════════════════════════ -->
+  <section id="noticias" style="background: #050816; color: #f8fafc; padding: clamp(5rem, 12vw, 8rem) clamp(1.5rem, 6vw, 4.5rem);">
+    <style>
+      #noticias-container {
+        max-width: 1200px; margin: 0 auto;
+      }
+      .noticias-eyebrow {
+        font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em;
+        text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.9rem;
+      }
+      .noticias-heading {
+        font-size: clamp(1.6rem,3vw,2.4rem); font-weight: 300;
+        color: rgba(255,255,255,0.92); line-height: 1.15; margin: 0 0 0.8rem;
+      }
+      .noticias-subtitle {
+        font-size: 0.95rem; color: rgba(255,255,255,0.6);
+        margin-bottom: 2rem; opacity: 1; transform: none;
+      }
+      .cd-news-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.2rem; max-width: 1100px; margin: 2.5rem auto 0; text-align: left;
+      }
+      .cd-news-card {
+        display: flex; flex-direction: column; background: transparent;
+        border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 1.5rem;
+        text-decoration: none; transition: border-color 250ms, transform 200ms;
+      }
+      .cd-news-card:hover {
+        border-color: #3b5bdb; transform: translateY(-2px);
+      }
+      .cd-news-eyebrow {
+        font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+        color: rgba(255,255,255,0.5); margin-bottom: 0.6rem;
+      }
+      .cd-news-title {
+        color: #f8fafc; font-size: 0.97rem; font-weight: 500; line-height: 1.5;
+      }
+      .cd-news-link {
+        color: #7b9cff; font-size: 0.8rem; margin-top: 0.8rem; font-weight: 500;
+      }
+    </style>
+
+    <div id="noticias-container">
+      <p class="noticias-eyebrow" data-en="News">Noticias</p>
+      <h2 class="noticias-heading" data-en="Featured news">Noticias destacadas</h2>
+      <p class="noticias-subtitle" data-en="Featured news from municipalities that have implemented Cartomorfosis">Noticias destacadas de municipios que han implementado la Cartomorfosis</p>
+
+      <div class="cd-news-grid">
+        <a href="https://tlajomulco.gob.mx/comunicacion-institucional/tlajo-logra-incremento-historico-en-recaudacion" target="_blank" rel="noopener" class="cd-news-card">
+          <span class="cd-news-eyebrow" data-en="Tlajomulco · Official news">Tlajomulco · Noticia oficial</span>
+          <span class="cd-news-title" data-en="Tlajo achieves historic increase in tax collection">Tlajo logra incremento histórico en recaudación</span>
+          <span class="cd-news-link" data-en="Read news →">Leer noticia →</span>
+        </a>
+
+        <a href="https://diarioelsalvador.com/dedinero/unesco-destaco-plataforma-nix-como-referente-de-la-ia-para-el-liderazgo-regional-del-pais/804778" target="_blank" rel="noopener" class="cd-news-card">
+          <span class="cd-news-eyebrow" data-en="Nix El Salvador">Nix El Salvador</span>
+          <span class="cd-news-title" data-en="UNESCO highlighted NIX platform as a reference for AI for the country's regional leadership">UNESCO destacó plataforma NIX como referente de la IA para el liderazgo regional del país</span>
+          <span class="cd-news-link" data-en="Read news →">Leer noticia →</span>
+        </a>
+
+        <a href="https://futbolgdl.cartodata.com" target="_blank" rel="noopener" class="cd-news-card">
+          <span class="cd-news-eyebrow" data-en="2026 World Cup">Mundial de futbol 2026</span>
+          <span class="cd-news-title" data-en="We developed a practical guide with all the geospatial information to move better on game days in Guadalajara.">Desarrollamos una guía práctica con toda la información geoespacial para moverte mejor en los días de partido en Guadalajara.</span>
+          <span class="cd-news-link" data-en="View guide →">Ver guía →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TODO última sección: CTA final. -->
 
   <script>
     /* ── Hero: cambia el fondo según la pestaña de sector activa ──
