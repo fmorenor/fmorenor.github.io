@@ -548,7 +548,166 @@
     </div>
   </section>
 
-  <!-- TODO siguientes secciones: slider herramientas, resultados, equipo, noticias, CTA final. -->
+  <!-- ════════════════════════════════════════════════════════════════════
+       HERRAMIENTAS — "Herramientas que nadie más combina de esta forma"
+       Hero con 3 slides (Procesos/Datos/Software) + carousel de imágenes
+       ════════════════════════════════════════════════════════════════════ -->
+  <section id="tecnologia" style="background: #050816; color: #f8fafc;">
+    <style>
+      #cd-tools-root {
+        width: 100vw; position: relative; left: 50%; transform: translateX(-50%);
+        font-family: 'DM Sans', system-ui, sans-serif;
+      }
+      .cd-tools-stage {
+        position: relative; width: 100%; height: 100vh; min-height: 600px;
+        overflow: hidden; background: #050816;
+      }
+      /* Slides background */
+      .cd-tools-bg {
+        position: absolute; inset: 0;
+        opacity: 0; transition: opacity 900ms ease;
+      }
+      .cd-tools-bg.active { opacity: 1; }
+      .cd-tools-bg img {
+        width: 100%; height: 100%; object-fit: cover; object-position: center;
+        display: block;
+      }
+      .cd-tools-bg-grad {
+        position: absolute; inset: 0;
+        background: linear-gradient(to right,
+          rgba(5,8,22,0.88) 0%,
+          rgba(5,8,22,0.60) 45%,
+          rgba(5,8,22,0.15) 100%);
+      }
+      /* Layout */
+      .cd-tools-layout {
+        position: absolute; inset: 0;
+        display: flex; align-items: center;
+        padding: clamp(2rem,5vw,4rem) clamp(1.5rem,5vw,4rem);
+      }
+      .cd-tools-left {
+        display: flex; flex-direction: column; gap: 1rem;
+        max-width: 420px; width: 100%;
+      }
+      /* Tab buttons */
+      .cd-tools-tabs {
+        display: flex; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap;
+      }
+      .cd-tools-tab {
+        padding: 0.4rem 1.1rem; border-radius: 999px; cursor: pointer;
+        font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em;
+        text-transform: uppercase; border: 1px solid rgba(255,255,255,0.25);
+        background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.55);
+        transition: all 200ms;
+      }
+      .cd-tools-tab.active {
+        background: rgba(255,255,255,0.18); color: #fff;
+        border-color: rgba(255,255,255,0.5);
+      }
+      /* Glass card */
+      .cd-tools-card {
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.15);
+        backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+        border-radius: 20px; padding: 2rem 2rem 1.6rem;
+        opacity: 0; transform: translateY(12px);
+        transition: opacity 500ms ease, transform 500ms ease;
+      }
+      .cd-tools-card.visible { opacity: 1; transform: translateY(0); }
+      .cd-tools-card-eyebrow {
+        font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+        text-transform: uppercase; color: rgba(255,255,255,0.4);
+        margin-bottom: 0.7rem;
+      }
+      .cd-tools-card-title {
+        font-size: clamp(1.1rem,2vw,1.35rem); font-weight: 500;
+        color: #fff; line-height: 1.3; margin: 0 0 0.9rem;
+      }
+      .cd-tools-card-body {
+        font-size: 0.875rem; line-height: 1.7;
+        color: rgba(255,255,255,0.7); margin: 0 0 1.2rem;
+      }
+      .cd-tools-tags {
+        display: flex; flex-wrap: wrap; gap: 0.5rem;
+      }
+      .cd-tools-tag {
+        font-size: 0.72rem; padding: 0.25rem 0.75rem; border-radius: 999px;
+        background: rgba(59,91,219,0.3); border: 1px solid rgba(59,91,219,0.5);
+        color: rgba(255,255,255,0.8);
+      }
+      /* Progress dots */
+      .cd-tools-dots {
+        display: flex; gap: 8px; margin-top: 1.4rem; align-items: center;
+      }
+      .cd-tools-dot {
+        position: relative; height: 3px; border-radius: 2px; overflow: hidden;
+        background: rgba(255,255,255,0.2); cursor: pointer; flex: 1; max-width: 40px;
+      }
+      .cd-tools-dot.active { background: rgba(255,255,255,0.3); }
+      .cd-tools-dot-fill {
+        position: absolute; inset: 0; width: 0%;
+        background: #fff; border-radius: 2px;
+      }
+      @media (max-width: 640px) {
+        .cd-tools-left { max-width: 100%; }
+        .cd-tools-stage { height: auto; min-height: 100svh; }
+      }
+    </style>
+
+    <div id="cd-tools-root">
+      <div class="cd-tools-stage" id="cd-tools-stage">
+        <!-- Backgrounds for Procesos, Datos, Software -->
+        <div class="cd-tools-bg active" id="cd-tbg-0">
+          <img src="./images/herr-procesos.jpg" alt="Procesos" />
+          <div class="cd-tools-bg-grad"></div>
+        </div>
+        <div class="cd-tools-bg" id="cd-tbg-1">
+          <img src="./images/herr-datos.jpg" alt="Datos" />
+          <div class="cd-tools-bg-grad"></div>
+        </div>
+        <div class="cd-tools-bg" id="cd-tbg-2">
+          <img src="./images/herr-software.jpg" alt="Software" />
+          <div class="cd-tools-bg-grad"></div>
+        </div>
+
+        <div class="cd-tools-layout">
+          <div class="cd-tools-left">
+            <!-- Tabs -->
+            <div class="cd-tools-tabs">
+              <button class="cd-tools-tab active" id="cd-ttab-0" data-i="0" data-en="Processes">Procesos</button>
+              <button class="cd-tools-tab" id="cd-ttab-1" data-i="1" data-en="Data">Datos</button>
+              <button class="cd-tools-tab" id="cd-ttab-2" data-i="2" data-en="Software">Software</button>
+            </div>
+
+            <!-- Card (single, updated on slide change) -->
+            <div class="cd-tools-card visible" id="cd-tools-card">
+              <p class="cd-tools-card-eyebrow" id="cd-tc-eye" data-en="CartoData · Processes">CartoData · Procesos</p>
+              <h2 class="cd-tools-card-title" id="cd-tc-title" data-en="Processes designed for territorial precision">Procesos diseñados para la precisión territorial</h2>
+              <p class="cd-tools-card-body" id="cd-tc-body" data-en="We structure geospatial workflows that transform complex data into clear decisions. Each process is designed to reduce time, eliminate errors, and generate reproducible results at any scale.">Estructuramos flujos de trabajo geoespaciales que transforman datos complejos en decisiones claras. Cada proceso está diseñado para reducir tiempos, eliminar errores y generar resultados reproducibles a cualquier escala.</p>
+              <div class="cd-tools-tags" id="cd-tc-tags">
+                <span class="cd-tools-tag">Diagnóstico geoespacial</span>
+                <span class="cd-tools-tag">Re-ingeniería de procesos</span>
+                <span class="cd-tools-tag">Análisis especializados</span>
+              </div>
+              <div class="cd-tools-dots">
+                <div class="cd-tools-dot active" id="cd-tdot-0" data-i="0">
+                  <div class="cd-tools-dot-fill" id="cd-tfill-0"></div>
+                </div>
+                <div class="cd-tools-dot" id="cd-tdot-1" data-i="1">
+                  <div class="cd-tools-dot-fill" id="cd-tfill-1"></div>
+                </div>
+                <div class="cd-tools-dot" id="cd-tdot-2" data-i="2">
+                  <div class="cd-tools-dot-fill" id="cd-tfill-2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TODO siguientes secciones: resultados, equipo, noticias, CTA final. -->
 
   <script>
     /* ── Hero: cambia el fondo según la pestaña de sector activa ──
@@ -584,6 +743,131 @@
       });
       const strip = hero.querySelector('.hero-tabs');
       strip.addEventListener('mouseleave', reset);
+    })();
+
+    /* ── Sección Herramientas — Hero con 3 slides y cards izquierda ── */
+    (function initToolsHero() {
+      const SLIDES = [
+        {
+          key:   'procesos',
+          tab:   'Procesos',
+          img:   './images/herr-procesos.jpg',
+          tabEn: 'Processes',
+          title: 'Procesos diseñados para la precisión territorial',
+          titleEn: 'Processes designed for territorial precision',
+          body:  'Estructuramos flujos de trabajo geoespaciales que transforman datos complejos en decisiones claras. Cada proceso está diseñado para reducir tiempos, eliminar errores y generar resultados reproducibles a cualquier escala.',
+          bodyEn: 'We structure geospatial workflows that transform complex data into clear decisions. Each process is designed to reduce time, eliminate errors, and generate reproducible results at any scale.',
+          tags:  ['Diagnóstico geoespacial', 'Re-ingeniería de procesos', 'Análisis especializados'],
+          tagsEn: ['Geospatial diagnosis', 'Process re-engineering', 'Specialized analysis'],
+        },
+        {
+          key:   'datos',
+          tab:   'Datos',
+          img:   './images/herr-datos.jpg',
+          tabEn: 'Data',
+          title: 'Datos geoespaciales con la más alta resolución',
+          titleEn: 'Geospatial data with the highest resolution',
+          body:  'Integramos fuentes propias, satelitales y de campo para construir bases de datos georreferenciadas robustas. Información actualizada, validada y lista para análisis avanzados o visualización en tiempo real.',
+          bodyEn: 'We integrate proprietary, satellite, and field sources to build robust georeferenced databases. Updated, validated information ready for advanced analysis or real-time visualization.',
+          tags:  ['LiDAR', 'OBLiX', 'Visión 360'],
+          tagsEn: ['LiDAR', 'OBLiX', 'Vision 360'],
+        },
+        {
+          key:   'software',
+          tab:   'Software',
+          img:   './images/herr-software.jpg',
+          tabEn: 'Software',
+          title: 'Plataformas propias para cada reto geoespacial',
+          titleEn: 'Proprietary platforms for every geospatial challenge',
+          body:  'eCarto y nuestras herramientas propias permiten consultar, analizar y gestionar información geográfica desde cualquier dispositivo. Sin licencias de terceros, sin limitaciones: tecnología hecha a la medida de cada proyecto.',
+          bodyEn: 'eCarto and our proprietary tools allow you to query, analyze, and manage geographic information from any device. No third-party licenses, no limitations: technology tailored to each project.',
+          tags:  ['eCarto', 'AU4', 'Midas'],
+          tagsEn: ['eCarto', 'AU4', 'Midas'],
+        },
+      ];
+      const DURATION = 6000;
+      let cur = 0, raf = null, t0 = null, paused = false;
+
+      function prog() { return t0 ? Math.min(1, (performance.now() - t0) / DURATION) : 0; }
+
+      function goTo(idx) {
+        /* Hide old */
+        document.getElementById(`cd-tbg-${cur}`)?.classList.remove('active');
+        document.getElementById(`cd-ttab-${cur}`)?.classList.remove('active');
+        document.getElementById(`cd-tdot-${cur}`)?.classList.remove('active');
+        document.getElementById(`cd-tfill-${cur}`).style.width = '0%';
+
+        /* Animate card out */
+        const card = document.getElementById('cd-tools-card');
+        card.classList.remove('visible');
+
+        cur = idx;
+        const s = SLIDES[cur];
+
+        /* Show new bg + tab */
+        document.getElementById(`cd-tbg-${cur}`)?.classList.add('active');
+        document.getElementById(`cd-ttab-${cur}`)?.classList.add('active');
+        document.getElementById(`cd-tdot-${cur}`)?.classList.add('active');
+
+        /* Update card content */
+        const eyebrow = document.getElementById('cd-tc-eye');
+        const title = document.getElementById('cd-tc-title');
+        const body = document.getElementById('cd-tc-body');
+        const tags = document.getElementById('cd-tc-tags');
+
+        const isEn = document.documentElement.lang === 'en';
+        eyebrow.textContent = 'CartoData · ' + (isEn ? s.tabEn : s.tab);
+        eyebrow.setAttribute('data-es', 'CartoData · ' + s.tab);
+        eyebrow.setAttribute('data-en', 'CartoData · ' + s.tabEn);
+
+        title.textContent = isEn ? s.titleEn : s.title;
+        title.setAttribute('data-es', s.title);
+        title.setAttribute('data-en', s.titleEn);
+
+        body.textContent = isEn ? s.bodyEn : s.body;
+        body.setAttribute('data-es', s.body);
+        body.setAttribute('data-en', s.bodyEn);
+
+        const tagList = isEn ? s.tagsEn : s.tags;
+        tags.innerHTML = tagList.map(t=>`<span class="cd-tools-tag">${t}</span>`).join('');
+
+        setTimeout(() => card.classList.add('visible'), 80);
+        t0 = performance.now();
+      }
+
+      function startTimer() {
+        t0 = performance.now();
+        function tick() {
+          raf = requestAnimationFrame(tick);
+          if (paused) return;
+          const p = prog();
+          const fill = document.getElementById(`cd-tfill-${cur}`);
+          if (fill) fill.style.width = (p * 100) + '%';
+          if (p >= 1) goTo((cur + 1) % SLIDES.length);
+        }
+        raf = requestAnimationFrame(tick);
+      }
+
+      /* Wire tabs & dots */
+      setTimeout(() => {
+        SLIDES.forEach((_,i) => {
+          const tab = document.getElementById(`cd-ttab-${i}`);
+          const dot = document.getElementById(`cd-tdot-${i}`);
+          if (tab) tab.addEventListener('click', () => goTo(i));
+          if (dot) dot.addEventListener('click', () => goTo(i));
+        });
+
+        const stage = document.getElementById('cd-tools-stage');
+        if (stage) {
+          stage.addEventListener('mouseenter', () => { paused = true; });
+          stage.addEventListener('mouseleave', () => {
+            paused = false;
+            t0 = performance.now() - (prog() * DURATION);
+          });
+        }
+
+        startTimer();
+      }, 100);
     })();
   </script>
 
