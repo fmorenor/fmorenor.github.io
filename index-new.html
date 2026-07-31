@@ -707,7 +707,122 @@
     </div>
   </section>
 
-  <!-- TODO siguientes secciones: resultados, equipo, noticias, CTA final. -->
+  <!-- ════════════════════════════════════════════════════════════════════
+       RESULTADOS — "Resultados que hablan por sí solos"
+       3 Casos de éxito con media (YouTube) + cards interactivas
+       ════════════════════════════════════════════════════════════════════ -->
+  <section id="resultados" style="background: #050816; color: #f8fafc;">
+    <style>
+      #cd-cases-section {
+        width: 100vw; position: relative; left: 50%; transform: translateX(-50%);
+        background: #050816; overflow: hidden;
+        font-family: 'DM Sans', system-ui, sans-serif;
+      }
+      .cd-cases-header {
+        max-width: 1400px; margin: 0 auto;
+        padding: 3.5rem clamp(1.5rem,4vw,3rem) 0;
+      }
+      .cd-cases-eyebrow {
+        font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+        text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.9rem;
+        data-en: 'Success cases';
+      }
+      .cd-cases-heading {
+        font-size: clamp(1.6rem,3vw,2.4rem); font-weight: 300;
+        color: rgba(255,255,255,0.92); line-height: 1.15; margin: 0;
+        data-en: 'Results speak for themselves.';
+      }
+      .cd-cases-wrap {
+        display: grid; grid-template-columns: 1fr 460px;
+        min-height: 560px; max-width: 1400px; margin: 0 auto;
+        padding: 2.5rem clamp(1.5rem,4vw,3rem) 3.5rem; gap: 2rem;
+      }
+      .cd-cases-media-col {
+        position: relative; overflow: hidden; border-radius: 20px; background: #0b1226;
+        min-height: 400px;
+      }
+      .cd-cases-media-col img,
+      .cd-cases-media-col iframe {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        object-fit: cover; border: 0; transition: opacity 550ms ease;
+      }
+      .cd-media-overlay {
+        position: absolute; inset: 0; pointer-events: none; z-index: 1;
+        background: linear-gradient(to right, transparent 55%, #050816 100%),
+                    linear-gradient(to top, rgba(5,8,22,.5) 0%, transparent 40%);
+        display: none;
+      }
+      .cd-cases-cards-col {
+        display: flex; flex-direction: column; justify-content: center; gap: 10px;
+      }
+      .cd-case-card {
+        border-radius: 14px; padding: 1.3rem 1.5rem;
+        border: 1px solid rgba(255,255,255,0.07);
+        background: rgba(255,255,255,0.03);
+        cursor: pointer; transition: background 280ms, border-color 280ms;
+        position: relative; overflow: hidden;
+        backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      }
+      .cd-case-card.active {
+        background: rgba(59,91,219,0.18);
+        border-color: rgba(59,91,219,0.6);
+        border-left: 3px solid #3b5bdb;
+        box-shadow: 0 0 0 1px rgba(59,91,219,0.25), inset 0 0 24px rgba(59,91,219,0.08);
+      }
+      .cd-case-card:hover:not(.active) {
+        background: rgba(255,255,255,0.055); border-color: rgba(255,255,255,0.11);
+      }
+      .cd-case-tab {
+        font-size: 0.62rem; font-weight: 600; letter-spacing: 0.15em;
+        text-transform: uppercase; color: rgba(255,255,255,0.38);
+        margin-bottom: 0.35rem; display: block;
+      }
+      .cd-case-card.active .cd-case-tab { color: #7b9cff; }
+      .cd-case-title {
+        font-size: 1rem; font-weight: 500; color: rgba(255,255,255,0.88); line-height: 1.3;
+      }
+      .cd-case-card.active .cd-case-title { color: #ffffff; font-weight: 600; }
+      .cd-case-body {
+        max-height: 0; overflow: hidden; opacity: 0;
+        transition: max-height 480ms cubic-bezier(0.22,1,0.36,1), opacity 380ms;
+      }
+      .cd-case-card.active .cd-case-body { max-height: 220px; opacity: 1; }
+      .cd-case-copy {
+        font-size: 0.8rem; font-weight: 300; line-height: 1.7;
+        color: rgba(255,255,255,0.5); margin: 0.65rem 0 0.75rem;
+      }
+      .cd-case-result {
+        display: flex; gap: 0.5rem; align-items: flex-start;
+        font-size: 0.78rem; font-weight: 400; color: rgba(255,255,255,0.78); line-height: 1.5;
+      }
+      .cd-case-result-dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: #3b5bdb; flex-shrink: 0; margin-top: 5px;
+      }
+      @media (max-width: 860px) {
+        .cd-cases-wrap { grid-template-columns: 1fr; }
+        .cd-cases-media-col { min-height: 240px; }
+      }
+    </style>
+
+    <div id="cd-cases-section">
+      <div class="cd-cases-header">
+        <p class="cd-cases-eyebrow" data-en="Success cases">Casos de éxito</p>
+        <h2 class="cd-cases-heading" data-en="Results speak for themselves.">Resultados que hablan por sí solos.</h2>
+      </div>
+      <div class="cd-cases-wrap">
+        <div class="cd-cases-media-col" id="cd-media-col">
+          <div class="cd-media-overlay"></div>
+          <!-- YouTube iframes will be injected by JS -->
+        </div>
+        <div class="cd-cases-cards-col" id="cd-cards-col">
+          <!-- Cards will be injected by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TODO siguientes secciones: equipo, noticias, CTA final. -->
 
   <script>
     /* ── Hero: cambia el fondo según la pestaña de sector activa ──
@@ -743,6 +858,138 @@
       });
       const strip = hero.querySelector('.hero-tabs');
       strip.addEventListener('mouseleave', reset);
+    })();
+
+    /* ── Sección Resultados — Casos de éxito con videos YouTube ── */
+    (function initResultados() {
+      const CASES = [
+        {
+          tab:    'Ente Normativo',
+          tabEn:  'Regulatory Body',
+          title:  'El Salvador NIX',
+          titleEn: 'El Salvador NIX',
+          copy:   'NIX es una plataforma de inteligencia geoespacial desarrollada por la Oficina de Planificación del Área Metropolitana de San Salvador (OPAMSS) diseñada para el desarrollo urbano. Se complementa con El Salvador Maps, el portal del Centro Nacional de Registros (CNR) para cartografía, imágenes oblicuas y vistas panorámicas.',
+          copyEn: 'NIX is a geospatial intelligence platform developed by the San Salvador Metropolitan Planning Office (OPAMSS) designed for urban development. It is complemented by El Salvador Maps, the Central Registry Center (CNR) portal for cartography, oblique imagery and panoramic views.',
+          result: 'Hoy El Salvador cuenta con infraestructura geoespacial de clase mundial al servicio del desarrollo urbano y la planificación territorial.',
+          resultEn: 'Today El Salvador has world-class geospatial infrastructure serving urban development and territorial planning.',
+          media:  'XwLL0j4woHc',
+          type:   'youtube',
+        },
+        {
+          tab:    'Infraestructura',
+          tabEn:  'Infrastructure',
+          title:  'Tren Maya',
+          titleEn: 'Tren Maya',
+          copy:   'Trazar una vía férrea a través de selva densa sin visibilidad del terreno ni certeza sobre lo que hay debajo.',
+          copyEn: 'Plotting a railway through dense jungle without terrain visibility or certainty about what lies below.',
+          result: 'El proyecto avanzó con certeza técnica, información precisa y sin sorpresas en campo.',
+          resultEn: 'The project advanced with technical certainty, precise information, and no field surprises.',
+          media:  'ltVx39NTzrE',
+          type:   'youtube',
+        },
+        {
+          tab:    'Ciudad',
+          tabEn:  'City',
+          title:  'Tequila, Jalisco',
+          titleEn: 'Tequila, Jalisco',
+          copy:   'El municipio de Tequila recaudaba menos de lo que le correspondía porque su catastro no reflejaba la realidad.',
+          copyEn: 'The Tequila municipality was collecting less than it should because its cadastre did not reflect reality.',
+          result: 'La recaudación predial creció 232%. Sin subir un solo impuesto.',
+          resultEn: 'Property tax collection grew 232%. Without raising a single tax.',
+          media:  'WQ3NXpvWvhs',
+          type:   'youtube',
+        },
+      ];
+
+      let current = 0;
+
+      function ytSrc(id) {
+        return `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`;
+      }
+
+      function stopYT(i) {
+        const f = document.getElementById(`cd-media-${i}`);
+        if (f && CASES[i].type === 'youtube') {
+          f.src = ytSrc(CASES[i].media) + '&_=' + Date.now();
+        }
+      }
+
+      function buildMediaCol() {
+        const col = document.getElementById('cd-media-col');
+        if (!col) return;
+
+        CASES.forEach((c, i) => {
+          const frame = document.createElement('iframe');
+          frame.id  = `cd-media-${i}`;
+          frame.src = ytSrc(c.media);
+          frame.allow = 'encrypted-media; picture-in-picture; fullscreen';
+          frame.allowFullscreen = true;
+          frame.style.opacity = i === 0 ? '1' : '0';
+          frame.style.transition = 'opacity 550ms ease';
+          frame.style.pointerEvents = i === 0 ? 'auto' : 'none';
+          frame.style.zIndex = i === 0 ? '1' : '0';
+          col.appendChild(frame);
+        });
+      }
+
+      function buildCards() {
+        const col = document.getElementById('cd-cards-col');
+        if (!col) return;
+
+        CASES.forEach((c, i) => {
+          const card = document.createElement('div');
+          card.className = 'cd-case-card' + (i === 0 ? ' active' : '');
+          card.id = `cd-card-${i}`;
+
+          const isEn = document.documentElement.lang === 'en';
+          const tab = isEn ? c.tabEn : c.tab;
+          const title = isEn ? c.titleEn : c.title;
+          const copy = isEn ? c.copyEn : c.copy;
+          const result = isEn ? c.resultEn : c.result;
+
+          card.innerHTML = `
+            <span class="cd-case-tab" data-es="${c.tab}" data-en="${c.tabEn}">${tab}</span>
+            <div class="cd-case-title" data-es="${c.title}" data-en="${c.titleEn}">${title}</div>
+            <div class="cd-case-body">
+              <p class="cd-case-copy" data-es="${c.copy}" data-en="${c.copyEn}">${copy}</p>
+              <div class="cd-case-result">
+                <span class="cd-case-result-dot"></span>
+                <span data-es="${c.result}" data-en="${c.resultEn}">${result}</span>
+              </div>
+            </div>`;
+
+          card.addEventListener('click', () => goTo(i));
+          col.appendChild(card);
+        });
+      }
+
+      function goTo(idx) {
+        const prev = current;
+        stopYT(prev);
+
+        const prevFrame = document.getElementById(`cd-media-${prev}`);
+        if (prevFrame) {
+          prevFrame.style.opacity = '0';
+          prevFrame.style.pointerEvents = 'none';
+          prevFrame.style.zIndex = '0';
+        }
+
+        const idxFrame = document.getElementById(`cd-media-${idx}`);
+        if (idxFrame) {
+          idxFrame.style.opacity = '1';
+          idxFrame.style.pointerEvents = 'auto';
+          idxFrame.style.zIndex = '1';
+        }
+
+        document.getElementById(`cd-card-${prev}`)?.classList.remove('active');
+        document.getElementById(`cd-card-${idx}`)?.classList.add('active');
+        current = idx;
+      }
+
+      setTimeout(() => {
+        buildMediaCol();
+        buildCards();
+      }, 100);
     })();
 
     /* ── Sección Herramientas — Hero con 3 slides y cards izquierda ── */
