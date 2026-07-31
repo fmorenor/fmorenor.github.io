@@ -424,140 +424,301 @@
   <!-- ════════════════════════════════════════════════════════════════════
        CARTOMORFOSIS — diagrama Venn de 3 círculos (DATOS/PROCESOS/SOFTWARE)
        ════════════════════════════════════════════════════════════════════ -->
-  <section id="cartomorfosis" style="background: #050816; color: #f8fafc; padding: clamp(5rem, 12vw, 8rem) clamp(1.5rem, 6vw, 4.5rem);">
-    <div style="max-width: 1200px; margin: 0 auto;">
-      <!-- Grid: 2 columnas (izquierda: contenido, derecha: diagrama) -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-bottom: 3rem;">
-        <!-- COLUMNA IZQUIERDA: Eyebrow + H2 + Intro + Componentes -->
-        <div>
-          <p style="font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 1rem;" data-en="Core proposition">Propuesta principal</p>
+  <section id="cartomorfosis">
+    <div class="container">
+      <div class="cartomorfosis__grid">
+        <div class="cartomorfosis__left">
+          <p class="eyebrow" data-en="Core proposition">Propuesta principal</p>
+          <h2 class="cartomorfosis__title" data-en="Processes, data, and software working together.">Procesos, datos y software trabajando juntos.</h2>
+          <p class="cartomorfosis__intro" data-en="Having technology is not enough. Many organizations have data, but it's not ready for decision-making. They have processes, but they're not always organized. They have software, but it doesn't always solve the real operation. CartoData integrates all three pieces into a complete geospatial solution.">Tener tecnología no es suficiente. Muchas organizaciones tienen datos, pero no están listos para decidir. Tienen procesos, pero no siempre están ordenados. Tienen software, pero no siempre resuelve la operación real. CartoData integra las tres piezas en una solución geoespacial completa.</p>
 
-          <h2 style="font-size: clamp(2rem, 4.5vw, 3.4rem); font-weight: 200; line-height: 1.1; letter-spacing: -0.01em; margin-bottom: 1.5rem;" data-en="Processes, data, and software working together.">Procesos, datos y software trabajando juntos.</h2>
-
-          <p style="font-size: 0.95rem; line-height: 1.6; color: rgba(255,255,255,0.65); margin-bottom: 2.5rem;" data-en="Having technology is not enough. Many organizations have data, but it's not ready for decision-making. They have processes, but they're not always organized. They have software, but it doesn't always solve the real operation. CartoData integrates all three pieces into a complete geospatial solution.">Tener tecnología no es suficiente. Muchas organizaciones tienen datos, pero no están listos para decidir. Tienen procesos, pero no siempre están ordenados. Tienen software, pero no siempre resuelve la operación real. CartoData integra las tres piezas en una solución geoespacial completa.</p>
-
-          <!-- Componentes lista -->
-          <div style="display: flex; flex-direction: column; gap: 2rem;">
-            <!-- DATOS -->
-            <div style="padding-left: 1.5rem; border-left: 3px solid #3b5bdb;">
-              <h3 style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #3b5bdb; margin-bottom: 0.6rem;" data-en="DATA">DATOS</h3>
-              <p style="font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65); margin: 0;" data-en="Reliable information to know what's really happening in your operation.">Información confiable para saber qué está pasando realmente en tu operación.</p>
+          <div class="cartomorfosis__components">
+            <div class="component" style="border-left-color: #3b5bdb;">
+              <h3 data-en="DATA">DATOS</h3>
+              <p data-en="Reliable information to know what's really happening in your operation.">Información confiable para saber qué está pasando realmente en tu operación.</p>
             </div>
-            <!-- PROCESOS -->
-            <div style="padding-left: 1.5rem; border-left: 3px solid #3b5bdb;">
-              <h3 style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #3b5bdb; margin-bottom: 0.6rem;" data-en="PROCESSES">PROCESOS</h3>
-              <p style="font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65); margin: 0;" data-en="Methodology to organize how information is captured, interpreted, and used.">Metodología para ordenar cómo se captura, interpreta y usa la información.</p>
+            <div class="component" style="border-left-color: #3b5bdb;">
+              <h3 data-en="PROCESSES">PROCESOS</h3>
+              <p data-en="Methodology to organize how information is captured, interpreted, and used.">Metodología para ordenar cómo se captura, interpreta y usa la información.</p>
             </div>
-            <!-- SOFTWARE -->
-            <div style="padding-left: 1.5rem; border-left: 3px solid #3b5bdb;">
-              <h3 style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #3b5bdb; margin-bottom: 0.6rem;" data-en="SOFTWARE">SOFTWARE</h3>
-              <p style="font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65); margin: 0;" data-en="Digital tools to visualize, manage, and turn information into action.">Herramientas digitales para visualizar, administrar y convertir la información en acción.</p>
+            <div class="component" style="border-left-color: #3b5bdb;">
+              <h3 data-en="SOFTWARE">SOFTWARE</h3>
+              <p data-en="Digital tools to visualize, manage, and turn information into action.">Herramientas digitales para visualizar, administrar y convertir la información en acción.</p>
             </div>
           </div>
         </div>
 
-        <!-- COLUMNA DERECHA: Diagrama de Cartomorfosis -->
-        <div style="display: flex; justify-content: center; align-items: flex-start;">
-          <img src="/images/cartomorfosis.avif" alt="Diagrama de Cartomorfosis" style="max-width: 100%; height: auto; max-height: 500px;" />
+        <div class="cartomorfosis__right">
+          <img src="/images/cartomorfosis.avif" alt="Diagrama de Cartomorfosis" class="venn-diagram" />
         </div>
       </div>
 
-      <!-- Mensaje de conclusión + CTA -->
-      <div style="text-align: center; margin-top: 4rem;">
-        <h3 style="font-size: 1.6rem; font-weight: 300; line-height: 1.3; margin-bottom: 2rem;" data-en="We call this Cartomorphosis.">A esto le llamamos Cartomorfosis.</h3>
-        <a href="https://api.whatsapp.com/send?phone=523318520000" style="display: inline-block; padding: 1rem 2rem; background: #3b5bdb; color: #fff; border-radius: 10px; text-decoration: none; font-weight: 500; font-size: 0.95rem; transition: background 200ms;" data-en="I want my geospatial diagnosis">Quiero mi diagnóstico geoespacial</a>
+      <div class="cartomorfosis__cta">
+        <h3 data-en="We call this Cartomorphosis.">A esto le llamamos Cartomorfosis.</h3>
+        <a href="https://api.whatsapp.com/send?phone=523318520000" class="btn btn--primary" data-en="I want my geospatial diagnosis">Quiero mi diagnóstico geoespacial</a>
       </div>
-
-      <!-- Responsive: en móvil, cambiar a una sola columna -->
-      <style>
-        @media (max-width: 768px) {
-          #cartomorfosis > div > div:first-of-type {
-            grid-template-columns: 1fr;
-          }
-        }
-      </style>
     </div>
+
+    <style>
+      #cartomorfosis {
+        background: #050816;
+        color: #f8fafc;
+        padding: clamp(5rem, 12vw, 8rem) clamp(1.5rem, 6vw, 4.5rem);
+      }
+      #cartomorfosis .container { max-width: 1200px; margin: 0 auto; }
+      #cartomorfosis .eyebrow {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.5);
+        margin-bottom: 1rem;
+      }
+      #cartomorfosis .cartomorfosis__grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: start;
+        margin-bottom: 3rem;
+      }
+      #cartomorfosis .cartomorfosis__title {
+        font-size: clamp(2rem, 4.5vw, 3.4rem);
+        font-weight: 200;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        margin-bottom: 1.5rem;
+      }
+      #cartomorfosis .cartomorfosis__intro {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: rgba(255,255,255,0.65);
+        margin-bottom: 2.5rem;
+      }
+      #cartomorfosis .cartomorfosis__components {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+      #cartomorfosis .component {
+        padding-left: 1.5rem;
+        border-left: 3px solid;
+      }
+      #cartomorfosis .component h3 {
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #3b5bdb;
+        margin-bottom: 0.6rem;
+      }
+      #cartomorfosis .component p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: rgba(255,255,255,0.65);
+        margin: 0;
+      }
+      #cartomorfosis .cartomorfosis__right {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+      }
+      #cartomorfosis .venn-diagram {
+        max-width: 100%;
+        height: auto;
+        max-height: 500px;
+      }
+      #cartomorfosis .cartomorfosis__cta {
+        text-align: center;
+        margin-top: 4rem;
+      }
+      #cartomorfosis .cartomorfosis__cta h3 {
+        font-size: 1.6rem;
+        font-weight: 300;
+        line-height: 1.3;
+        margin-bottom: 2rem;
+      }
+      @media (max-width: 768px) {
+        #cartomorfosis .cartomorfosis__grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
   </section>
 
   <!-- ════════════════════════════════════════════════════════════════════
        PROCESO 3D — "El proceso, visualizado" con 3 etapas
        ════════════════════════════════════════════════════════════════════ -->
-  <section id="proceso-3d" style="background: #050816; color: #f8fafc; padding: clamp(5rem, 12vw, 8rem) clamp(1.5rem, 6vw, 4.5rem);">
-    <div style="max-width: 1200px; margin: 0 auto;">
-      <!-- Eyebrow -->
-      <p style="font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 2rem; text-align: center;" data-en="The process, visualized">El proceso, visualizado</p>
+  <section id="proceso-3d">
+    <div class="container">
+      <p class="eyebrow" style="text-align: center;" data-en="The process, visualized">El proceso, visualizado</p>
 
-      <!-- 3 Etapas en grid -->
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 4rem;">
-        <!-- Etapa 1: Datos dispersos -->
-        <div style="text-align: center;">
-          <h3 style="font-size: 1.4rem; font-weight: 300; line-height: 1.3; margin-bottom: 1.2rem;" data-en="Scattered data">Datos dispersos</h3>
-          <p style="font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65);" data-en="Information in multiple sources, formats, and locations. No unified view.">Información en múltiples fuentes, formatos y ubicaciones. Sin vista unificada.</p>
+      <!-- 3 Etapas -->
+      <div class="proceso__stages">
+        <div class="stage">
+          <h3 data-en="Scattered data">Datos dispersos</h3>
+          <p data-en="Information in multiple sources, formats, and locations. No unified view.">Información en múltiples fuentes, formatos y ubicaciones. Sin vista unificada.</p>
         </div>
-
-        <!-- Etapa 2: Información integrada -->
-        <div style="text-align: center;">
-          <h3 style="font-size: 1.4rem; font-weight: 300; line-height: 1.3; margin-bottom: 1.2rem;" data-en="Integrated information">Información integrada</h3>
-          <p style="font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65);" data-en="Consolidated geographic structure. Validated and ready for analysis.">Estructura geográfica consolidada. Validada y lista para análisis.</p>
+        <div class="stage">
+          <h3 data-en="Integrated information">Información integrada</h3>
+          <p data-en="Consolidated geographic structure. Validated and ready for analysis.">Estructura geográfica consolidada. Validada y lista para análisis.</p>
         </div>
-
-        <!-- Etapa 3: Decisiones con certeza -->
-        <div style="text-align: center;">
-          <h3 style="font-size: 1.4rem; font-weight: 300; line-height: 1.3; margin-bottom: 1.2rem;" data-en="Decisions with certainty">Decisiones con certeza</h3>
-          <p style="font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65);" data-en="Clear, actionable intelligence. Confident decision-making across your organization.">Inteligencia clara y accionable. Toma de decisiones confiada en toda tu organización.</p>
+        <div class="stage">
+          <h3 data-en="Decisions with certainty">Decisiones con certeza</h3>
+          <p data-en="Clear, actionable intelligence. Confident decision-making across your organization.">Inteligencia clara y accionable. Toma de decisiones confiada en toda tu organización.</p>
         </div>
       </div>
 
-      <!-- Descripción de la transformación -->
-      <div style="text-align: center; max-width: 800px; margin: 0 auto; padding: 2.5rem; background: rgba(59, 91, 219, 0.08); border-radius: 16px; border: 1px solid rgba(59, 91, 219, 0.15); margin-bottom: 5rem;">
-        <p style="font-size: 0.95rem; line-height: 1.8; color: rgba(255,255,255,0.75);" data-en="We consolidate scattered sources into a unified geographic structure within eCarto — ready for analysis and real-time decision-making.">Consolidamos fuentes dispersas en una estructura geográfica unificada dentro de eCarto — lista para consultar, analizar y decidir.</p>
+      <!-- Descripción -->
+      <div class="proceso__description">
+        <p data-en="We consolidate scattered sources into a unified geographic structure within eCarto — ready for analysis and real-time decision-making.">Consolidamos fuentes dispersas en una estructura geográfica unificada dentro de eCarto — lista para consultar, analizar y decidir.</p>
       </div>
 
-      <!-- 3 imágenes + botones (Procesos, Datos, Software) -->
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 5rem;">
-        <div style="text-align: center;">
-          <img src="/images/herr-procesos.jpg" alt="Procesos" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 1rem; display: block;" />
-          <button style="padding: 0.75rem 1.5rem; background: #3b5bdb; color: #fff; border: none; border-radius: 8px; font-size: 0.9rem; cursor: pointer; font-weight: 500; transition: background 200ms;" data-en="Processes">Procesos</button>
+      <!-- 3 Herramientas (imágenes + botones) -->
+      <div class="proceso__tools">
+        <div class="tool">
+          <img src="/images/herr-procesos.jpg" alt="Procesos" class="tool__image" />
+          <button class="btn btn--primary" data-en="Processes">Procesos</button>
         </div>
-        <div style="text-align: center;">
-          <img src="/images/herr-datos.jpg" alt="Datos" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 1rem; display: block;" />
-          <button style="padding: 0.75rem 1.5rem; background: #3b5bdb; color: #fff; border: none; border-radius: 8px; font-size: 0.9rem; cursor: pointer; font-weight: 500; transition: background 200ms;" data-en="Data">Datos</button>
+        <div class="tool">
+          <img src="/images/herr-datos.jpg" alt="Datos" class="tool__image" />
+          <button class="btn btn--primary" data-en="Data">Datos</button>
         </div>
-        <div style="text-align: center;">
-          <img src="/images/herr-software.jpg" alt="Software" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 1rem; display: block;" />
-          <button style="padding: 0.75rem 1.5rem; background: #3b5bdb; color: #fff; border: none; border-radius: 8px; font-size: 0.9rem; cursor: pointer; font-weight: 500; transition: background 200ms;" data-en="Software">Software</button>
+        <div class="tool">
+          <img src="/images/herr-software.jpg" alt="Software" class="tool__image" />
+          <button class="btn btn--primary" data-en="Software">Software</button>
         </div>
       </div>
 
-      <!-- Sección: Procesos diseñados para la precisión territorial -->
-      <div style="text-align: center; padding: 3rem 0; border-top: 1px solid rgba(59, 91, 219, 0.2); border-bottom: 1px solid rgba(59, 91, 219, 0.2);">
-        <p style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #3b5bdb; margin-bottom: 1rem;" data-en="CartoData">CartoData</p>
-        <h3 style="font-size: 1.8rem; font-weight: 300; line-height: 1.3; margin-bottom: 1.5rem; max-width: 800px; margin-left: auto; margin-right: auto;" data-en="Processes designed for territorial precision">Procesos diseñados para la precisión territorial</h3>
-        <p style="font-size: 0.95rem; line-height: 1.6; color: rgba(255,255,255,0.65); max-width: 800px; margin: 0 auto; margin-bottom: 2.5rem;" data-en="We structure geospatial workflows that transform complex data into clear decisions. Each process is designed to reduce time, eliminate errors, and generate reproducible results at any scale.">Estructuramos flujos de trabajo geoespaciales que transforman datos complejos en decisiones claras. Cada proceso está diseñado para reducir tiempos, eliminar errores y generar resultados reproducibles a cualquier escala.</p>
+      <!-- Procesos diseñados -->
+      <div class="proceso__precision">
+        <p class="eyebrow" data-en="CartoData">CartoData</p>
+        <h3 data-en="Processes designed for territorial precision">Procesos diseñados para la precisión territorial</h3>
+        <p class="proceso__precision-desc" data-en="We structure geospatial workflows that transform complex data into clear decisions. Each process is designed to reduce time, eliminate errors, and generate reproducible results at any scale.">Estructuramos flujos de trabajo geoespaciales que transforman datos complejos en decisiones claras. Cada proceso está diseñado para reducir tiempos, eliminar errores y generar resultados reproducibles a cualquier escala.</p>
 
-        <!-- 3 items -->
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; margin-top: 2rem;">
-          <div style="text-align: center;">
-            <p style="font-size: 0.9rem; font-weight: 500; color: #f8fafc;" data-en="Geospatial diagnosis">Diagnóstico geoespacial</p>
+        <div class="proceso__services">
+          <div class="service">
+            <p data-en="Geospatial diagnosis">Diagnóstico geoespacial</p>
           </div>
-          <div style="text-align: center;">
-            <p style="font-size: 0.9rem; font-weight: 500; color: #f8fafc;" data-en="Process re-engineering">Re-ingeniería de procesos</p>
+          <div class="service">
+            <p data-en="Process re-engineering">Re-ingeniería de procesos</p>
           </div>
-          <div style="text-align: center;">
-            <p style="font-size: 0.9rem; font-weight: 500; color: #f8fafc;" data-en="Specialized analyses">Análisis especializados</p>
+          <div class="service">
+            <p data-en="Specialized analyses">Análisis especializados</p>
           </div>
         </div>
       </div>
-
-      <!-- Responsive -->
-      <style>
-        @media (max-width: 768px) {
-          #proceso-3d [style*="grid-template-columns: repeat(3"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      </style>
     </div>
+
+    <style>
+      #proceso-3d {
+        background: #050816;
+        color: #f8fafc;
+        padding: clamp(5rem, 12vw, 8rem) clamp(1.5rem, 6vw, 4.5rem);
+      }
+      #proceso-3d .container { max-width: 1200px; margin: 0 auto; }
+      #proceso-3d .eyebrow {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.5);
+        margin-bottom: 2rem;
+      }
+      #proceso-3d .proceso__stages {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-bottom: 4rem;
+      }
+      #proceso-3d .stage {
+        text-align: center;
+      }
+      #proceso-3d .stage h3 {
+        font-size: 1.4rem;
+        font-weight: 300;
+        line-height: 1.3;
+        margin-bottom: 1.2rem;
+      }
+      #proceso-3d .stage p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: rgba(255,255,255,0.65);
+      }
+      #proceso-3d .proceso__description {
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2.5rem;
+        background: rgba(59, 91, 219, 0.08);
+        border-radius: 16px;
+        border: 1px solid rgba(59, 91, 219, 0.15);
+        margin-bottom: 5rem;
+      }
+      #proceso-3d .proceso__description p {
+        font-size: 0.95rem;
+        line-height: 1.8;
+        color: rgba(255,255,255,0.75);
+        margin: 0;
+      }
+      #proceso-3d .proceso__tools {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-bottom: 5rem;
+      }
+      #proceso-3d .tool {
+        text-align: center;
+      }
+      #proceso-3d .tool__image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        display: block;
+      }
+      #proceso-3d .proceso__precision {
+        text-align: center;
+        padding: 3rem 0;
+        border-top: 1px solid rgba(59, 91, 219, 0.2);
+        border-bottom: 1px solid rgba(59, 91, 219, 0.2);
+      }
+      #proceso-3d .proceso__precision h3 {
+        font-size: 1.8rem;
+        font-weight: 300;
+        line-height: 1.3;
+        margin-bottom: 1.5rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      #proceso-3d .proceso__precision-desc {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: rgba(255,255,255,0.65);
+        max-width: 800px;
+        margin: 0 auto 2.5rem;
+      }
+      #proceso-3d .proceso__services {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3rem;
+        margin-top: 2rem;
+      }
+      #proceso-3d .service p {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #f8fafc;
+        margin: 0;
+      }
+      @media (max-width: 768px) {
+        #proceso-3d .proceso__stages,
+        #proceso-3d .proceso__tools,
+        #proceso-3d .proceso__services {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
   </section>
 
   <!-- ════════════════════════════════════════════════════════════════════
