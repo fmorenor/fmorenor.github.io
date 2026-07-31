@@ -822,7 +822,129 @@
     </div>
   </section>
 
-  <!-- TODO siguientes secciones: equipo, noticias, CTA final. -->
+  <!-- ════════════════════════════════════════════════════════════════════
+       EQUIPO — "Nuestro Equipo" con carrusel automático
+       3 equipos: Guadalajara, Nuevo León, El Salvador
+       ════════════════════════════════════════════════════════════════════ -->
+  <section id="equipo" style="background: #050816; overflow: hidden;">
+    <style>
+      #cd-team-root {
+        width: 100vw; position: relative; left: 50%; transform: translateX(-50%);
+        overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif;
+        background: #050816;
+      }
+      .cd-team-stage {
+        position: relative; width: 100%; height: 90vh; min-height: 520px;
+      }
+      .cd-team-slide {
+        position: absolute; inset: 0;
+        opacity: 0; transition: opacity 800ms ease;
+      }
+      .cd-team-slide.active { opacity: 1; }
+      .cd-team-slide img {
+        width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;
+      }
+      .cd-team-slide .cd-team-blue {
+        position: absolute; inset: 0;
+        background: linear-gradient(160deg, rgba(30,64,175,0.22) 0%, rgba(59,91,219,0.14) 50%, rgba(5,8,22,0.38) 100%);
+        mix-blend-mode: multiply;
+      }
+      .cd-team-slide .cd-team-grad {
+        position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(5,8,22,0.75) 0%, transparent 48%);
+      }
+      /* Texto inferior */
+      .cd-team-bottom {
+        position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
+        padding: clamp(2rem,5vw,3.5rem) clamp(1.5rem,6vw,5rem);
+        display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem;
+      }
+      .cd-team-text-col {}
+      .cd-team-eyebrow {
+        font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em;
+        text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 0.6rem;
+      }
+      .cd-team-title {
+        font-size: clamp(2rem,4vw,3.4rem); font-weight: 300;
+        color: #fff; line-height: 1.1; margin: 0;
+        text-shadow: 0 2px 24px rgba(5,8,22,0.5);
+      }
+      .cd-team-label {
+        font-size: clamp(1rem,2vw,1.4rem); font-weight: 400;
+        color: rgba(255,255,255,0.75); margin: 0.4rem 0 0;
+        transition: opacity 400ms;
+      }
+      .cd-team-link {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        margin-top: 1rem; font-size: 0.82rem; font-weight: 600;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: #7b9cff; text-decoration: none;
+      }
+      .cd-team-link:hover { opacity: 0.8; }
+      /* Dots + timer */
+      .cd-team-dots {
+        display: flex; gap: 10px; align-items: center; flex-shrink: 0;
+      }
+      .cd-team-dot {
+        position: relative; width: 36px; height: 3px; border-radius: 2px;
+        background: rgba(255,255,255,0.25); cursor: pointer; overflow: hidden;
+        transition: background 200ms;
+      }
+      .cd-team-dot.active { background: rgba(255,255,255,0.35); }
+      .cd-team-dot-fill {
+        position: absolute; inset: 0; width: 0%;
+        background: #fff; border-radius: 2px;
+      }
+      .cd-team-dot.active .cd-team-dot-fill { transition: none; }
+      @media (max-width: 768px) {
+        .cd-team-bottom { flex-direction: column; align-items: flex-start; }
+        .cd-team-dots { margin-top: 1rem; }
+      }
+    </style>
+
+    <div id="cd-team-root">
+      <div class="cd-team-stage" id="cd-team-stage">
+        <!-- Slides (will be injected by JS) -->
+        <div class="cd-team-slide active" id="cd-ts-0">
+          <img src="./images/EquipoCartData.JPG" alt="Equipo Guadalajara" />
+          <div class="cd-team-blue"></div>
+          <div class="cd-team-grad"></div>
+        </div>
+        <div class="cd-team-slide" id="cd-ts-1">
+          <img src="./images/equipo-nl.avif" alt="Equipo Nuevo León" />
+          <div class="cd-team-blue"></div>
+          <div class="cd-team-grad"></div>
+        </div>
+        <div class="cd-team-slide" id="cd-ts-2">
+          <img src="./images/equipo-sv.avif" alt="Equipo El Salvador" />
+          <div class="cd-team-blue"></div>
+          <div class="cd-team-grad"></div>
+        </div>
+
+        <div class="cd-team-bottom">
+          <div class="cd-team-text-col">
+            <p class="cd-team-eyebrow" data-en="Our team">Nuestro equipo</p>
+            <h2 class="cd-team-title">CartoData</h2>
+            <p class="cd-team-label" id="cd-team-label" data-en="Guadalajara Team">Equipo Guadalajara</p>
+            <a href="./equipo.html" class="cd-team-link" data-en="Meet the team →">Conoce al equipo →</a>
+          </div>
+          <div class="cd-team-dots" id="cd-team-dots">
+            <div class="cd-team-dot active" id="cd-td-0" data-i="0">
+              <div class="cd-team-dot-fill" id="cd-tf-0"></div>
+            </div>
+            <div class="cd-team-dot" id="cd-td-1" data-i="1">
+              <div class="cd-team-dot-fill" id="cd-tf-1"></div>
+            </div>
+            <div class="cd-team-dot" id="cd-td-2" data-i="2">
+              <div class="cd-team-dot-fill" id="cd-tf-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TODO siguientes secciones: noticias, CTA final. -->
 
   <script>
     /* ── Hero: cambia el fondo según la pestaña de sector activa ──
@@ -858,6 +980,74 @@
       });
       const strip = hero.querySelector('.hero-tabs');
       strip.addEventListener('mouseleave', reset);
+    })();
+
+    /* ── Sección Equipo — Carrusel automático con 3 equipos ── */
+    (function initTeamCarousel() {
+      const SLIDES = [
+        { src: './images/EquipoCartData.JPG', label: 'Equipo Guadalajara', labelEn: 'Guadalajara Team' },
+        { src: './images/equipo-nl.avif', label: 'Equipo Nuevo León', labelEn: 'Nuevo León Team' },
+        { src: './images/equipo-sv.avif', label: 'Equipo El Salvador', labelEn: 'El Salvador Team' },
+      ];
+      const DURATION = 5000;
+      let current = 0, raf = null, start = null, paused = false;
+
+      function progress() {
+        if (!start) return 0;
+        return Math.min(1, (performance.now() - start) / DURATION);
+      }
+
+      function goTo(idx) {
+        document.getElementById(`cd-ts-${current}`)?.classList.remove('active');
+        document.getElementById(`cd-td-${current}`)?.classList.remove('active');
+        const fillCurrent = document.getElementById(`cd-tf-${current}`);
+        if (fillCurrent) fillCurrent.style.width = '0%';
+
+        document.getElementById(`cd-ts-${idx}`)?.classList.add('active');
+        document.getElementById(`cd-td-${idx}`)?.classList.add('active');
+
+        const isEn = document.documentElement.lang === 'en';
+        const labelElem = document.getElementById('cd-team-label');
+        if (labelElem) {
+          labelElem.textContent = isEn ? SLIDES[idx].labelEn : SLIDES[idx].label;
+        }
+
+        current = idx;
+        start = performance.now();
+      }
+
+      function startTimer() {
+        start = performance.now();
+        function tick() {
+          raf = requestAnimationFrame(tick);
+          if (paused) return;
+          const p = progress();
+          const fill = document.getElementById(`cd-tf-${current}`);
+          if (fill) fill.style.width = (p * 100) + '%';
+          if (p >= 1) goTo((current + 1) % SLIDES.length);
+        }
+        raf = requestAnimationFrame(tick);
+      }
+
+      setTimeout(() => {
+        // Wire dots
+        SLIDES.forEach((_,i) => {
+          const dot = document.getElementById(`cd-td-${i}`);
+          if (dot) dot.addEventListener('click', () => goTo(i));
+        });
+
+        // Pause on hover
+        const root = document.getElementById('cd-team-root');
+        if (root) {
+          root.addEventListener('mouseenter', () => { paused = true; });
+          root.addEventListener('mouseleave', () => {
+            paused = false;
+            start = performance.now() - (progress() * DURATION);
+          });
+        }
+
+        startTimer();
+      }, 100);
     })();
 
     /* ── Sección Resultados — Casos de éxito con videos YouTube ── */
