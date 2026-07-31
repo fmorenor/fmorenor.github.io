@@ -2270,6 +2270,32 @@
     setTimeout(inject, 2000);
     setTimeout(inject, 4000);
   })();
+
+  /* Cambia "Infraestructura" → "Construcción" en el menú superior */
+  (function renameInfrastructureMenu() {
+    function updateLabel() {
+      // Buscar h3 con "Infraestructura" y cambiar a "Construcción"
+      document.querySelectorAll('h3').forEach(h3 => {
+        if (h3.textContent.trim() === 'Infraestructura') {
+          h3.textContent = 'Construcción';
+          h3.dataset.cdRenamed = '1';
+        }
+      });
+      // También cambiar en elementos con data-test o que contengan solo "Infraestructura"
+      document.querySelectorAll('button, a, div, span').forEach(el => {
+        if (el.dataset.cdRenamed || el.querySelector('h3')) return;
+        const text = el.textContent.trim();
+        if (text === 'Infraestructura') {
+          el.textContent = 'Construcción';
+          el.dataset.cdRenamed = '1';
+        }
+      });
+    }
+    updateLabel();
+    const obs = new MutationObserver(updateLabel);
+    obs.observe(document.body, { childList: true, subtree: true });
+    [100, 500, 1500, 3000].forEach(ms => setTimeout(updateLabel, ms));
+  })();
   </script>
   </body>
 </html>
