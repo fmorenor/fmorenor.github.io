@@ -180,11 +180,33 @@
     .chat-restart:hover { background: rgba(255,255,255,0.08); }
 
     .chat-close {
-      display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
-      padding: 1.1rem 1.3rem; border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex; flex-direction: column; align-items: center; gap: 1.2rem;
+      padding: 1.5rem 1.3rem; border-top: 1px solid rgba(255,255,255,0.07);
       background: rgba(255,255,255,0.02);
     }
     .chat-close span { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+
+    /* ── Sección de redes sociales ── */
+    .social-cta {
+      display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
+      width: 100%;
+    }
+    .social-msg { font-size: 0.85rem; color: rgba(255,255,255,0.7); text-align: center; line-height: 1.5; }
+    .social-links {
+      display: flex; gap: 0.6rem; justify-content: center;
+    }
+    .social-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 44px; height: 44px; border-radius: 12px; text-decoration: none;
+      transition: background 180ms, transform 150ms;
+      font-weight: 600; font-size: 0.9rem;
+    }
+    .social-btn.linkedin { background: rgba(0,119,181,0.2); color: #0077b5; border: 1px solid rgba(0,119,181,0.3); }
+    .social-btn.linkedin:hover { background: rgba(0,119,181,0.35); transform: translateY(-2px); }
+    .social-btn.facebook { background: rgba(59,89,152,0.2); color: #3b5998; border: 1px solid rgba(59,89,152,0.3); }
+    .social-btn.facebook:hover { background: rgba(59,89,152,0.35); transform: translateY(-2px); }
+    .social-btn.instagram { background: rgba(217,83,91,0.2); color: #d9535b; border: 1px solid rgba(217,83,91,0.3); }
+    .social-btn.instagram:hover { background: rgba(217,83,91,0.35); transform: translateY(-2px); }
 
     @media(max-width:600px) {
       .msg { max-width: 90%; }
@@ -376,8 +398,16 @@
       form.style.display = 'none';
       const bar = document.createElement('div');
       bar.className = 'chat-close';
-      bar.innerHTML = '<span>Conversación finalizada · gracias por tu visita</span>' +
-        '<button class="chat-restart" id="restartBtn">Iniciar otra conversación</button>';
+      bar.innerHTML = '<span data-en="Conversation ended · thank you for visiting">Conversación finalizada · gracias por tu visita</span>' +
+        '<div class="social-cta">' +
+          '<p class="social-msg" data-en="Stay connected — follow us for more geospatial insights">Síguenos en redes para más insights geoespaciales</p>' +
+          '<div class="social-links">' +
+            '<a href="https://www.linkedin.com/company/cartodata" target="_blank" rel="noopener noreferrer" class="social-btn linkedin" title="LinkedIn" data-en-title="LinkedIn">in</a>' +
+            '<a href="https://www.facebook.com/CartoData" target="_blank" rel="noopener noreferrer" class="social-btn facebook" title="Facebook" data-en-title="Facebook">f</a>' +
+            '<a href="https://www.instagram.com/cartodata" target="_blank" rel="noopener noreferrer" class="social-btn instagram" title="Instagram" data-en-title="Instagram">📷</a>' +
+          '</div>' +
+        '</div>' +
+        '<button class="chat-restart" id="restartBtn" data-en="Start another conversation">Iniciar otra conversación</button>';
       chat.appendChild(bar);
       document.getElementById('restartBtn').addEventListener('click', () => location.reload());
     }
