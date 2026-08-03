@@ -357,7 +357,8 @@
   const NAV_LINKS = [
     { label: 'Impacto',    href: './#impacto',    children: [
         { label: 'Ciudades',       en: 'Cities',        href: './ciudades.html'             },
-        { label: 'Construcción',en: 'Construction',href: './infraestructura.html'       },
+        { label: 'Construcción', en: 'Construction', href: './construccion.html'       },
+        { label: 'Infraestructura', en: 'Infrastructure', href: './infraestructura.html'    },
         { label: 'Minería',        en: 'Mining',        href: './mineria.html'              },
         // Oculto temporalmente: la página de Instituciones se rehará. Restaurar cuando esté lista.
         // { label: 'Instituciones',  en: 'Institutions',  href: './instituciones.html'        },

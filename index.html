@@ -1349,7 +1349,8 @@
       { url: './equipo.html',          hash: 'equipo',       text: null },
       { url: './ciudades.html',        hash: null,           text: ['Ciudades', 'Cities'] },
       { url: './mineria.html',         hash: null,           text: ['Minería', 'Mining'] },
-      { url: './construccion.html', hash: null,           text: ['Construcción', 'Construction'] },
+      { url: './construccion.html',    hash: null,           text: ['Construcción', 'Construction'] },
+      { url: './infraestructura.html', hash: null,           text: ['Infraestructura', 'Infrastructure'] },
       { url: './procesos.html',        hash: 'procesos',     text: ['Procesos', 'Processes'] },
     ];
     const redirect = url => e => { e.preventDefault(); e.stopPropagation(); window.location.assign(url); };
@@ -2295,6 +2296,47 @@
     const obs = new MutationObserver(updateLabel);
     obs.observe(document.body, { childList: true, subtree: true });
     [100, 500, 1500, 3000].forEach(ms => setTimeout(updateLabel, ms));
+  })();
+
+  /* Inyecta "Infraestructura" en el menú después de "Construcción" */
+  (function injectInfraestructuraMenuItem() {
+    function inject() {
+      const menuItems = document.querySelectorAll('a, button, div');
+      let construccionEl = null;
+
+      menuItems.forEach(el => {
+        const h3 = el.querySelector('h3');
+        const text = el.textContent.trim();
+        if ((h3 && h3.textContent.trim() === 'Construcción') || text === 'Construcción') {
+          if (!el.dataset.cdInfraInjected) {
+            construccionEl = el;
+          }
+        }
+      });
+
+      if (construccionEl && !construccionEl.dataset.cdInfraInjected) {
+        const infraEl = construccionEl.cloneNode(true);
+        const h3 = infraEl.querySelector('h3');
+        if (h3) {
+          h3.textContent = 'Infraestructura';
+        } else {
+          infraEl.textContent = 'Infraestructura';
+        }
+        infraEl.dataset.cdInfraInjected = '1';
+        infraEl.dataset.cdNavHooked = '1';
+        infraEl.addEventListener('click', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.assign('./infraestructura.html');
+        }, true);
+        construccionEl.parentNode.insertBefore(infraEl, construccionEl.nextSibling);
+        construccionEl.dataset.cdInfraInjected = '1';
+      }
+    }
+    inject();
+    const obs = new MutationObserver(inject);
+    obs.observe(document.body, { childList: true, subtree: true });
+    [100, 500, 1500, 3000].forEach(ms => setTimeout(inject, ms));
   })();
   </script>
   </body>
