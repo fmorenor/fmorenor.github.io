@@ -334,6 +334,16 @@
     .escudo-card span { font-size: 0.72rem; font-weight: 600; color: #1e293b; text-align: center; }
     @media(max-width:640px) { .escudos-row { grid-template-columns: repeat(2, 1fr); } }
 
+    /* Casos de estudio */
+    .caso-embed-wrap {
+      border-radius: 16px; overflow: hidden;
+      aspect-ratio: 16/9; background: #0b1022;
+      margin-top: 2rem;
+    }
+    .caso-embed-wrap iframe {
+      width: 100%; height: 100%; border: none;
+    }
+
     /* Responsive hero */
     @media(max-width:640px) {
       .hero-btns { flex-direction: column; align-items: flex-start; }
@@ -574,14 +584,10 @@
   <section style="background:#050816; padding:clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);">
     <div style="max-width:1100px;margin:0 auto;">
       <p class="section-eyebrow" style="color:rgba(255,255,255,0.35);" data-en="Research &amp; case studies">Investigación y casos de estudio</p>
-      <h3 style="font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;color:#fff;margin-bottom:3rem;line-height:1.2;" data-en="Geospatial research applied to your city">Investigación geoespacial <strong>aplicada a tu ciudad</strong></h3>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;">
-        <a href="https://cartodata.ecarto.mx/map/1483" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:1.5rem;text-decoration:none;transition:border-color 250ms, background 250ms;display:flex;flex-direction:column;">
-          <p style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:0.8rem;" data-en="Urban canopy · Guadalajara">Dosel urbano · Guadalajara</p>
-          <p style="color:#fff;font-size:1rem;font-weight:500;line-height:1.5;margin-bottom:0.8rem;" data-en="Urban canopy coverage and green space distribution">Cobertura del dosel urbano y distribución de espacios verdes</p>
-          <p style="color:rgba(255,255,255,0.65);font-size:0.9rem;line-height:1.6;margin-bottom:1rem;flex-grow:1;" data-en="Analysis of vegetation coverage and green infrastructure in Guadalajara using high-resolution geospatial data to support urban planning and environmental management decisions.">Análisis de cobertura vegetal e infraestructura verde en Guadalajara usando datos geoespaciales de alta resolución para apoyar decisiones de planificación urbana y gestión ambiental.</p>
-          <p style="color:#3b5bdb;font-size:0.8rem;font-weight:600;" data-en="Explore interactive map →">Explorar mapa interactivo →</p>
-        </a>
+      <h3 style="font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;color:#fff;margin-bottom:1rem;line-height:1.2;" data-en="Urban canopy coverage<br><strong>and green spaces</strong> in Guadalajara">Cobertura del dosel urbano<br><strong>y espacios verdes</strong> en Guadalajara</h3>
+      <p style="font-size:0.97rem;line-height:1.75;color:rgba(255,255,255,0.65);max-width:720px;margin-bottom:2.5rem;" data-en="Analysis of vegetation coverage and green infrastructure distribution using high-resolution geospatial data. This research supports urban planning decisions and environmental management strategies for the city.">Análisis de cobertura vegetal y distribución de infraestructura verde usando datos geoespaciales de alta resolución. Esta investigación apoya decisiones de planificación urbana y estrategias de gestión ambiental para la ciudad.</p>
+      <div class="caso-embed-wrap">
+        <iframe src="https://cartodata.ecarto.mx/map/1483" loading="lazy" allowfullscreen title="Cobertura del dosel urbano · Guadalajara"></iframe>
       </div>
     </div>
   </section>
