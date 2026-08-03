@@ -1,0 +1,27 @@
+# Redirecciones 301 permanentes - URLs antiguas del sitio anterior
+# Cloudflare Pages lee este archivo automáticamente
+
+# Redirecciones a páginas equivalentes nuevas
+/cartografía           /cartografica.html  301
+/cartografia           /cartografica.html  301
+/lidar                 /ciudades.html      301
+/vision_360            /ciudades.html      301
+/visor_nuevo_leon      /ciudades.html      301
+/tradicion             /historia.html      301
+
+# Redirecciones a home (páginas que no tienen equivalente directo)
+/contacto              /                   301
+/nosotros              /                   301
+/ecarto                /                   301
+/en                    /                   301
+/perro                 /                   301
+/audio                 /                   301
+
+# Borradores y ramas de desarrollo (todos a home)
+/copia-de-oblix        /                   301
+/copia-de-lidar        /                   301
+/rebuild-home          /                   301
+/rebuilt-home          /                   301
+
+# Wildcard para cualquier otra ruta no encontrada (opcional - mantén esto al final)
+# /*                   /404.html           200
