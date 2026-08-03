@@ -2313,21 +2313,29 @@
   /* Inyecta "Infraestructura" en el menú después de "Construcción" */
   (function injectInfraestructuraMenuItem() {
     function inject() {
-      const menuItems = document.querySelectorAll('a, button, div');
+      // Solo busca en el menú de navegación, no en los servicios (evita duplicar cuadros)
+      const navMenus = document.querySelectorAll('[role="navigation"], nav, .navbar, .menu, [class*="menu"], [class*="nav"]');
       let construccionEl = null;
 
-      menuItems.forEach(el => {
-        const h3 = el.querySelector('h3');
-        const text = el.textContent.trim();
-        if ((h3 && h3.textContent.trim() === 'Construcción') || text === 'Construcción') {
-          if (!el.dataset.cdInfraInjected) {
+      for (const nav of navMenus) {
+        const items = nav.querySelectorAll('a, button, li, div');
+        for (const el of items) {
+          const h3 = el.querySelector('h3');
+          const text = el.textContent.trim();
+          if ((h3 && h3.textContent.trim() === 'Construcción') || (text === 'Construcción' && el.textContent.length < 100)) {
             construccionEl = el;
+            break;
           }
         }
-      });
+        if (construccionEl) break;
+      }
 
       if (construccionEl && !construccionEl.dataset.cdInfraInjected) {
         const infraEl = construccionEl.cloneNode(true);
+        // Limpia atributos de tracking para evitar conflictos
+        infraEl.removeAttribute('data-cdInfraInjected');
+        infraEl.removeAttribute('data-cdNavHooked');
+
         const h3 = infraEl.querySelector('h3');
         if (h3) {
           h3.textContent = 'Infraestructura';
