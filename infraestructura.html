@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Infraestructura · Monitoreo Geoespacial — CartoData</title>
+  <meta name="description" content="Monitoreo de infraestructura crítica: trenes, carreteras, líneas de transmisión, gasoductos y espacios aéreos. Soluciones geoespaciales para gestión integral de proyectos." />
+  <link rel="canonical" href="https://www.cartodata.com/infraestructura.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.cartodata.com/infraestructura.html" />
+  <meta property="og:title" content="Infraestructura · Monitoreo Geoespacial — CartoData" />
+  <meta property="og:description" content="Monitoreo integral de infraestructura con información geoespacial: trenes, carreteras, líneas de transmisión y gasoductos." />
+  <meta property="og:locale" content="es_MX" />
+  <meta property="og:site_name" content="CartoData" />
+  <meta property="og:image" content="https://www.cartodata.com/images/og-infraestructura.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Infraestructura · Monitoreo Geoespacial — CartoData" />
+  <meta name="twitter:description" content="Monitoreo de infraestructura crítica con soluciones geoespaciales." />
+  <meta name="twitter:image" content="https://www.cartodata.com/images/og-infraestructura.jpg" />
+  <script src="./shared.js" defer></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; }
+    img { display: block; max-width: 100%; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; width: 100%; min-height: 100vh;
+      display: flex; align-items: center; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: -15% 0;
+      background-image: url('./images/demo_infraestructura.jpg');
+      background-size: cover; background-position: center;
+      will-change: transform;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(5,8,22,0.88) 0%, rgba(5,8,22,0.45) 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 860px;
+      padding: clamp(7rem,14vw,11rem) clamp(1.5rem,6vw,4rem) clamp(5rem,9vw,7rem);
+    }
+    .hero-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 1.2rem;
+    }
+    .hero-h1 {
+      font-size: clamp(2.4rem,5.5vw,4.5rem); font-weight: 200; line-height: 1.1;
+      color: #fff; margin-bottom: 1.5rem;
+    }
+    .hero-h1 strong { font-weight: 800; }
+    .hero-sub {
+      font-size: clamp(1rem,1.8vw,1.2rem); font-weight: 300; line-height: 1.7;
+      color: rgba(255,255,255,0.68); max-width: 600px; margin-bottom: 2.5rem;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-block; padding: 1rem 2.4rem;
+      background: #3b5bdb; color: #fff; border-radius: 999px;
+      font-size: 0.95rem; font-weight: 600; text-decoration: none;
+      transition: background 250ms, transform 200ms;
+    }
+    .btn-primary:hover { background: #2d4bbd; transform: translateY(-2px); }
+    .btn-ghost {
+      display: inline-block; padding: 1rem 2.4rem;
+      background: transparent; color: #fff; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.3);
+      font-size: 0.95rem; font-weight: 500; text-decoration: none;
+      transition: background 250ms, border-color 250ms;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); }
+
+    /* ── SERVICIOS STRIP ── */
+    .servicios-strip {
+      background: #050816;
+      padding: 0;
+    }
+    .servicios-inner { max-width: 100%; }
+    .servicios-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(255,255,255,0.35);
+      padding: clamp(3rem,5vw,4rem) clamp(1.5rem,6vw,4rem) 1.5rem;
+      text-align: center;
+    }
+    .servicios-grid {
+      display: grid; grid-template-columns: repeat(5,1fr); gap: 0;
+    }
+    .servicio-card {
+      position: relative; overflow: hidden;
+      min-height: 520px;
+      cursor: pointer; text-decoration: none; display: block;
+    }
+    .servicio-card-bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      background-color: #1a1f3a;
+      transition: transform 600ms cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .servicio-card:hover .servicio-card-bg { transform: scale(1.06); }
+    .servicio-card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(5,8,22,0.92) 0%, rgba(5,8,22,0.30) 50%, rgba(5,8,22,0.10) 100%);
+      transition: background 400ms;
+    }
+    .servicio-card:hover .servicio-card-overlay {
+      background: linear-gradient(to top, rgba(5,8,22,0.97) 0%, rgba(5,8,22,0.55) 55%, rgba(59,91,219,0.15) 100%);
+    }
+    .servicio-card-content {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 2rem 2rem 2.5rem;
+    }
+    .servicio-num {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: rgba(255,255,255,0.35);
+      margin-bottom: 0.6rem;
+      transform: translateY(8px); opacity: 0;
+      transition: transform 350ms, opacity 350ms;
+    }
+    .servicio-card:hover .servicio-num { transform: translateY(0); opacity: 1; }
+    .servicio-card h3 {
+      font-size: clamp(0.95rem,1.5vw,1.3rem); font-weight: 300;
+      color: #fff; margin-bottom: 0.5rem; line-height: 1.2;
+    }
+    .servicio-card h3 strong { font-weight: 800; }
+    .servicio-card p {
+      font-size: 0.8rem; color: rgba(255,255,255,0.6); line-height: 1.55;
+      max-height: 0; overflow: hidden;
+      transition: max-height 400ms ease, opacity 350ms;
+      opacity: 0;
+    }
+    .servicio-card:hover p { max-height: 6rem; opacity: 1; }
+    .servicio-card-arrow {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      margin-top: 0.8rem; font-size: 0.8rem; font-weight: 600;
+      color: #3b5bdb; opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 300ms 100ms, transform 300ms 100ms;
+    }
+    .servicio-card:hover .servicio-card-arrow { opacity: 1; transform: translateX(0); }
+    .servicio-card + .servicio-card { border-left: 1px solid rgba(255,255,255,0.08); }
+
+    /* ── CARACTERÍSTICAS ── */
+    .features-section {
+      background: #f4f4f2;
+      padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);
+    }
+    .features-inner { max-width: 1200px; margin: 0 auto; }
+    .features-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; color: #3b5bdb; margin-bottom: 0.8rem;
+    }
+    .features-h2 {
+      font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 300; color: #0f172a;
+      margin-bottom: 3.5rem; line-height: 1.2;
+    }
+    .features-h2 strong { font-weight: 800; }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 2.5rem;
+    }
+    .feat-item { text-align: center; }
+    .feat-icon {
+      width: 80px; height: 80px;
+      margin: 0 auto 1.2rem;
+    }
+    .feat-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .feat-item h4 {
+      font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;
+    }
+    .feat-item p { font-size: 0.9rem; color: #475569; line-height: 1.65; }
+
+    /* ── SECCIÓN DETALLE ── */
+    .detalle-section {
+      padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);
+    }
+    .detalle-section.dark  { background: #050816; }
+    .detalle-section.mid   { background: #0b1022; }
+    .detalle-inner { max-width: 1100px; margin: 0 auto; }
+    .detalle-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; margin-bottom: 0.8rem;
+    }
+    .eyebrow-dim   { color: rgba(255,255,255,0.35); }
+    .detalle-h2 {
+      font-size: clamp(1.6rem,3vw,2.4rem); font-weight: 300; line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .detalle-h2.light-text { color: #fff; }
+    .detalle-h2 strong { font-weight: 800; }
+    .detalle-body {
+      font-size: 0.97rem; line-height: 1.75; max-width: 720px; margin-bottom: 2.5rem;
+    }
+    .detalle-body.light-text { color: rgba(255,255,255,0.65); }
+    .embed-wrap {
+      border-radius: 16px; overflow: hidden;
+      aspect-ratio: 16/9; background: #0b1022;
+      margin-top: 2rem;
+    }
+    .embed-wrap iframe {
+      width: 100%; height: 100%; border: none;
+    }
+
+    /* ── CTA FINAL ── */
+    .cta-section {
+      background: #3b5bdb;
+      padding: clamp(4rem,8vw,6rem) clamp(1.5rem,6vw,4rem);
+      text-align: center;
+    }
+    .cta-inner { max-width: 700px; margin: 0 auto; }
+    .cta-inner h2 {
+      font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 700; color: #fff;
+      margin-bottom: 1rem; line-height: 1.2;
+    }
+    .cta-inner p {
+      font-size: 1.05rem; color: rgba(255,255,255,0.78); margin-bottom: 2.2rem; line-height: 1.65;
+    }
+    .btn-white {
+      display: inline-block; padding: 1rem 2.8rem;
+      background: #fff; color: #3b5bdb; border-radius: 999px;
+      font-size: 0.95rem; font-weight: 700; text-decoration: none;
+      transition: background 200ms, transform 200ms;
+    }
+    .btn-white:hover { background: #f0f4ff; transform: translateY(-2px); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:1200px) {
+      .servicios-grid { grid-template-columns: repeat(3,1fr); }
+    }
+    @media(max-width:900px) {
+      .features-grid  { grid-template-columns: 1fr; gap: 2rem; }
+      .servicios-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media(max-width:600px) {
+      .servicios-grid { grid-template-columns: 1fr; }
+    }
+    @media(max-width:640px) {
+      .hero-btns { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="top">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow" data-en="Infrastructure · Geospatial Monitoring">Infraestructura · Monitoreo Geoespacial</p>
+      <h1 class="hero-h1" data-en="Integral monitoring of<br><strong>critical infrastructure</strong>">Monitoreo integral de<br><strong>infraestructura crítica</strong></h1>
+      <p class="hero-sub" data-en="Transform the management of your infrastructure projects with geospatial intelligence. From railways to power lines, we provide real-time monitoring and decision-making tools.">Transforma la gestión de tus proyectos de infraestructura con inteligencia geoespacial. De ferrocarriles a líneas de transmisión, proporcionamos monitoreo en tiempo real y herramientas de toma de decisiones.</p>
+      <div class="hero-btns">
+        <a href="#cta" class="btn-primary" data-en="Connect with our experts →">Conecta con nuestros expertos →</a>
+        <a href="#servicios" class="btn-ghost" data-en="View services">Ver servicios</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 5 SERVICIOS ── -->
+  <section class="servicios-strip" id="servicios">
+    <div class="servicios-inner">
+      <p class="servicios-eyebrow" data-en="Five infrastructure solutions · Unified platform">Cinco soluciones de infraestructura · Plataforma unificada</p>
+      <div class="servicios-grid">
+        <a class="servicio-card" href="#trenes">
+          <div class="servicio-card-bg" style="background-color:#1a2f4a"></div>
+          <div class="servicio-card-overlay"></div>
+          <div class="servicio-card-content">
+            <span class="servicio-num">01</span>
+            <h3 data-en="Railway infrastructure<br><strong>monitoring</strong>">Monitoreo de<br><strong>ferrocarriles</strong></h3>
+            <p data-en="Track integrity, right-of-way maintenance, and real-time corridor monitoring for safe operations.">Integridad de vías, mantenimiento de derechos de paso y monitoreo de pasillos en tiempo real.</p>
+            <span class="servicio-card-arrow" data-en="Learn more →">Más información →</span>
+          </div>
+        </a>
+        <a class="servicio-card" href="#carreteras">
+          <div class="servicio-card-bg" style="background-color:#2a3f5a"></div>
+          <div class="servicio-card-overlay"></div>
+          <div class="servicio-card-content">
+            <span class="servicio-num">02</span>
+            <h3 data-en="Road networks<br><strong>intelligence</strong>">Inteligencia de<br><strong>carreteras</strong></h3>
+            <p data-en="Pavement condition, traffic corridor analysis, and maintenance planning for road networks.">Condición del pavimento, análisis de corredores viales y planificación de mantenimiento.</p>
+            <span class="servicio-card-arrow" data-en="Learn more →">Más información →</span>
+          </div>
+        </a>
+        <a class="servicio-card" href="#transmision">
+          <div class="servicio-card-bg" style="background-color:#3a4f6a"></div>
+          <div class="servicio-card-overlay"></div>
+          <div class="servicio-card-content">
+            <span class="servicio-num">03</span>
+            <h3 data-en="Transmission lines<br><strong>management</strong>">Gestión de líneas de<br><strong>transmisión</strong></h3>
+            <p data-en="Corridor monitoring, vegetation management, and right-of-way compliance for power distribution.">Monitoreo de pasillos, gestión de vegetación y cumplimiento de derechos de paso.</p>
+            <span class="servicio-card-arrow" data-en="Learn more →">Más información →</span>
+          </div>
+        </a>
+        <a class="servicio-card" href="#gasoductos">
+          <div class="servicio-card-bg" style="background-color:#4a5f7a"></div>
+          <div class="servicio-card-overlay"></div>
+          <div class="servicio-card-content">
+            <span class="servicio-num">04</span>
+            <h3 data-en="Pipeline safety<br><strong>monitoring</strong>">Monitoreo de<br><strong>gasoductos</strong></h3>
+            <p data-en="Real-time corridor integrity, subsidence detection, and environmental compliance for pipelines.">Integridad de pasillos, detección de hundimientos y cumplimiento ambiental.</p>
+            <span class="servicio-card-arrow" data-en="Learn more →">Más información →</span>
+          </div>
+        </a>
+        <a class="servicio-card" href="#oaci">
+          <div class="servicio-card-bg" style="background-color:#5a6f8a"></div>
+          <div class="servicio-card-overlay"></div>
+          <div class="servicio-card-content">
+            <span class="servicio-num">05</span>
+            <h3 data-en="Airspace & OACI<br><strong>compliance</strong>">Cumplimiento de<br><strong>espacios OACI</strong></h3>
+            <p data-en="Obstacle detection, airspace clearance verification, and aviation safety compliance.">Detección de obstáculos, verificación de espacios aéreos y cumplimiento de seguridad.</p>
+            <span class="servicio-card-arrow" data-en="Learn more →">Más información →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CARACTERÍSTICAS ── -->
+  <section class="features-section">
+    <div class="features-inner">
+      <p class="features-eyebrow" data-en="Why CartoData?">¿Por qué CartoData?</p>
+      <h2 class="features-h2" data-en="What makes infrastructure<br><strong>geospatial intelligence</strong> work">Lo que hace funcionar la<br><strong>inteligencia geoespacial</strong> en infraestructura</h2>
+      <div class="features-grid">
+        <div class="feat-item">
+          <div class="feat-icon">
+            <img src="./images/icons/cartodata_seguimiento_de_obra_con_drones___precision.png" alt="Real-time data">
+          </div>
+          <h4 data-en="Real-time monitoring">Monitoreo en tiempo real</h4>
+          <p data-en="Current data accessible within hours. Make decisions based on the latest information, not outdated reports.">Datos actuales accesibles en horas. Toma decisiones con información actualizada, no reportes obsoletos.</p>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon">
+            <img src="./images/icons/cartodata_seguimiento_de_obra_con_drones_informacion_actualizada.png" alt="Accuracy">
+          </div>
+          <h4 data-en="Centimeter-level accuracy">Precisión a nivel centimétrico</h4>
+          <p data-en="LiDAR, orthophotos, and 3D models capture every detail. Detect deviations before they become problems.">LiDAR, ortofotos y modelos 3D capturan cada detalle. Detecta desviaciones antes de que causen problemas.</p>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon">
+            <img src="./images/icons/cartodata_seguimiento_de_obra_con_drones_portabilidad.png" alt="Integration">
+          </div>
+          <h4 data-en="Unified platform">Plataforma unificada</h4>
+          <p data-en="All your infrastructure data in one place. Collaborate with teams and stakeholders in real time through eCarto.">Todos tus datos de infraestructura en un lugar. Colabora con equipos en tiempo real a través de eCarto.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FERROCARRILES ── -->
+  <section class="detalle-section dark" id="trenes">
+    <div class="detalle-inner">
+      <p class="detalle-eyebrow eyebrow-dim" data-en="Solution 1">Solución 1</p>
+      <h2 class="detalle-h2 light-text" data-en="Railway infrastructure<br><strong>monitoring</strong>">Monitoreo de<br><strong>ferrocarriles</strong></h2>
+      <p class="detalle-body light-text" data-en="Ensure track integrity and operational safety with continuous geospatial monitoring. From corridor clearance to maintenance planning, detect changes before they affect operations.">Asegura la integridad de vías y seguridad operacional con monitoreo geoespacial continuo. Desde despeje de pasillos hasta planificación de mantenimiento, detecta cambios antes de que afecten operaciones.</p>
+      <div class="embed-wrap">
+        <iframe src="https://cartodata.ecarto.mx/map/1055" loading="lazy" allowfullscreen title="Demo de monitoreo de ferrocarriles"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CARRETERAS ── -->
+  <section class="detalle-section mid" id="carreteras">
+    <div class="detalle-inner">
+      <p class="detalle-eyebrow eyebrow-dim" data-en="Solution 2">Solución 2</p>
+      <h2 class="detalle-h2 light-text" data-en="Road network<br><strong>intelligence</strong>">Inteligencia de<br><strong>redes viales</strong></h2>
+      <p class="detalle-body light-text" data-en="Manage entire road networks with real-time condition assessments. Track pavement deterioration, plan maintenance cycles, and optimize resource allocation across your corridor portfolio.">Gestiona redes viales completas con evaluaciones de condición en tiempo real. Monitorea el deterioro del pavimento, planifica ciclos de mantenimiento y optimiza asignación de recursos.</p>
+      <div class="embed-wrap">
+        <iframe src="https://cartodata.ecarto.mx/map/1055" loading="lazy" allowfullscreen title="Demo de inteligencia vial"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── LÍNEAS DE TRANSMISIÓN ── -->
+  <section class="detalle-section dark" id="transmision">
+    <div class="detalle-inner">
+      <p class="detalle-eyebrow eyebrow-dim" data-en="Solution 3">Solución 3</p>
+      <h2 class="detalle-h2 light-text" data-en="Transmission line<br><strong>corridor management</strong>">Gestión de pasillos de<br><strong>líneas de transmisión</strong></h2>
+      <p class="detalle-body light-text" data-en="Maintain clear corridors and ensure regulatory compliance. Automated vegetation monitoring, obstacle detection, and right-of-way documentation for continuous power distribution integrity.">Mantén pasillos limpios y asegura cumplimiento normativo. Monitoreo automatizado de vegetación, detección de obstáculos y documentación de derechos de paso.</p>
+      <div class="embed-wrap">
+        <iframe src="https://cartodata.ecarto.mx/map/1055" loading="lazy" allowfullscreen title="Demo de monitoreo de líneas de transmisión"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GASODUCTOS ── -->
+  <section class="detalle-section mid" id="gasoductos">
+    <div class="detalle-inner">
+      <p class="detalle-eyebrow eyebrow-dim" data-en="Solution 4">Solución 4</p>
+      <h2 class="detalle-h2 light-text" data-en="Pipeline safety<br><strong>& compliance</strong>">Seguridad de gasoductos<br><strong>y cumplimiento</strong></h2>
+      <p class="detalle-body light-text" data-en="Protect pipeline assets with continuous monitoring. Detect ground movement, subsidence, and environmental changes. Maintain documentation for regulatory inspections and ensure operational safety.">Protege activos de gasoductos con monitoreo continuo. Detecta movimiento de tierra, hundimientos y cambios ambientales. Mantén documentación para inspecciones regulatorias.</p>
+      <div class="embed-wrap">
+        <iframe src="https://cartodata.ecarto.mx/map/1055" loading="lazy" allowfullscreen title="Demo de monitoreo de gasoductos"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ESPACIOS AÉREOS OACI ── -->
+  <section class="detalle-section dark" id="oaci">
+    <div class="detalle-inner">
+      <p class="detalle-eyebrow eyebrow-dim" data-en="Solution 5">Solución 5</p>
+      <h2 class="detalle-h2 light-text" data-en="OACI airspace<br><strong>compliance</strong>">Cumplimiento de espacios<br><strong>OACI y aéreos</strong></h2>
+      <p class="detalle-body light-text" data-en="Ensure aviation safety with precise obstacle detection and airspace clearance verification. Document all infrastructure features within controlled airspace and maintain compliance with international aviation standards.">Asegura seguridad aérea con detección precisa de obstáculos y verificación de espacios aéreos. Documenta características de infraestructura y mantén cumplimiento con estándares internacionales.</p>
+      <div class="embed-wrap">
+        <iframe src="https://cartodata.ecarto.mx/map/1055" loading="lazy" allowfullscreen title="Demo de cumplimiento OACI"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta-section" id="cta">
+    <div class="cta-inner">
+      <h2 data-en="Ready to manage your infrastructure intelligently?">¿Listo para gestionar tu infraestructura de forma inteligente?</h2>
+
+      <!-- Embed: eCarto interactive map -->
+      <div class="embed-wrap" style="margin: 2.5rem auto 2rem; max-width: 800px;">
+        <iframe
+          src="https://cartodata.ecarto.mx/map/1055"
+          title="Demo interactivo de inteligencia geoespacial de infraestructura"
+          allow="geolocation"
+          loading="lazy">
+        </iframe>
+      </div>
+
+      <p data-en="Tell us about your infrastructure challenges and we will design a monitoring solution tailored to your needs.">Cuéntanos sobre tus retos de infraestructura y te diseñaremos una solución de monitoreo a la medida.</p>
+      <a href="https://wa.me/523336271552" target="_blank" rel="noopener" class="btn-white" data-en="Connect with our experts →">Conecta con nuestros expertos →</a>
+    </div>
+  </section>
+
+  <script>
+    // Parallax hero
+    (function(){
+      const bg = document.getElementById('heroBg');
+      if(!bg) return;
+      window.addEventListener('scroll', () => {
+        const p = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+        bg.style.transform = `translateY(${p * 30}%)`;
+      }, { passive: true });
+    })();
+  </script>
+
+</body>
+</html>
