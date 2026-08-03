@@ -17,7 +17,7 @@ CartoData/
 │
 │   ── Páginas estáticas (Impacto) ──
 ├── ciudades.html         # Ciudades y Municipios · Cartomorfosis
-├── infraestructura.html  # Infraestructura · Obra 4D (seguimiento con drones)
+├── construccion.html     # Construcción · Obra 4D (seguimiento con drones)
 ├── mineria.html          # Minería · Geointeligencia para la industria extractiva
 ├── instituciones.html    # Instituciones · Modernización catastral (oculta del menú; se rehará)
 │
