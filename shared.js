@@ -34,6 +34,74 @@
     window.gtag('config', GA_ID);
   }
 
+  /* ── Seguimiento de mapas embedidos (CartoData maps) ──
+     Rastrea carga, visibilidad y tiempo de interacción con iframes que tengan data-map-name. ── */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', trackMaps);
+  } else {
+    trackMaps();
+  }
+
+  function trackMaps() {
+    const mapFrames = document.querySelectorAll('[data-map-name]');
+    if (mapFrames.length === 0) return;
+
+    mapFrames.forEach(mapFrame => {
+      const mapData = {
+        map_name: mapFrame.dataset.mapName || 'Visualizador CartoData',
+        map_url: mapFrame.src,
+        page_location: window.location.href
+      };
+
+      // Evento: mapa cargado
+      mapFrame.addEventListener('load', () => {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'map_loaded',
+          ...mapData
+        });
+      });
+
+      let mapViewed = false;
+      let timeEventSent = false;
+      let visibilityTimer = null;
+
+      // Usar IntersectionObserver para detectar visibilidad
+      const observer = new IntersectionObserver((entries) => {
+        const isVisible = entries[0].isIntersecting;
+
+        // Evento: mapa visto (entra en viewport)
+        if (isVisible && !mapViewed) {
+          mapViewed = true;
+          window.dataLayer.push({
+            event: 'map_view',
+            ...mapData
+          });
+        }
+
+        // Evento: mapa visible 30 segundos
+        if (isVisible && !timeEventSent && !visibilityTimer) {
+          visibilityTimer = setTimeout(() => {
+            timeEventSent = true;
+            window.dataLayer.push({
+              event: 'map_time_30s',
+              visible_seconds: 30,
+              ...mapData
+            });
+          }, 30000);
+        }
+
+        // Limpiar timer si el mapa sale del viewport
+        if (!isVisible && visibilityTimer) {
+          clearTimeout(visibilityTimer);
+          visibilityTimer = null;
+        }
+      }, { threshold: 0.5 });
+
+      observer.observe(mapFrame);
+    });
+  }
+
   /* ── Inyectar site.css (design system) si no está ya cargado ── */
   if (!document.querySelector('link[href*="site.css"]')) {
     const link = document.createElement('link');
