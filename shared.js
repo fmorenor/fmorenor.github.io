@@ -1,5 +1,23 @@
 /* shared.js — Nav, Footer y CSS base compartidos para todas las páginas de CartoData */
 (function () {
+  /* ── Google Tag Manager (GTM) ──
+     Contenedor de tracking que gestiona múltiples tags.
+     Se inyecta aquí para cubrir todas las páginas estáticas.
+     El home (index.html) lleva el snippet en su propio <head>.
+     El guard evita doble carga. ── */
+  if (!document.querySelector('script[src*="googletagmanager.com/gtm.js"]')) {
+    window.dataLayer = window.dataLayer || [];
+    const gtmScript = document.createElement('script');
+    gtmScript.async = true;
+    gtmScript.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-MX296BJV';
+    document.head.appendChild(gtmScript);
+
+    // Noscript fallback
+    const noscript = document.createElement('noscript');
+    noscript.innerHTML = '<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MX296BJV" height="0" width="0" style="display:none;visibility:hidden"></iframe>';
+    document.body.insertBefore(noscript, document.body.firstChild);
+  }
+
   /* ── Google Analytics 4 (gtag.js) ──
      Se inyecta aquí para cubrir todas las páginas estáticas de una sola vez.
      El home (index.html) NO carga shared.js: lleva el snippet en su propio <head>.
