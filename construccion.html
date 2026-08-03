@@ -32,10 +32,11 @@
       display: flex; align-items: center; overflow: hidden;
     }
     .hero-bg {
-      position: absolute; inset: -15% 0;
-      background-image: url('./images/demo_infraestructura.jpg');
-      background-size: cover; background-position: center;
-      will-change: transform;
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 177.777%; height: 100%;
+      transform: translate(-50%, -50%);
+      border: none;
     }
     .hero-overlay {
       position: absolute; inset: 0;
@@ -248,7 +249,7 @@
 
   <!-- ── HERO ── -->
   <section class="hero" id="top">
-    <div class="hero-bg" id="heroBg"></div>
+    <iframe class="hero-bg" src="https://www.youtube.com/embed/TUUeUZeO-e0?autoplay=1&mute=1&loop=1&playlist=TUUeUZeO-e0" allow="autoplay" title="Construcción 4D con drones"></iframe>
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <p class="hero-eyebrow" data-en="Construction · 4D Building">Construcción · Obra 4D</p>
