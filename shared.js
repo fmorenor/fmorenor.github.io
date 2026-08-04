@@ -674,10 +674,10 @@
       <div class="cd-footer-col cd-footer-nav-col">
         <div class="cd-footer-nav-wrap">
           <div class="cd-footer-nav-grid">
-            <a href="./#impacto"    class="cd-footer-nav-btn" data-en="Impact">Impacto</a>
-            <a href="./#tecnologia" class="cd-footer-nav-btn" data-en="Technology">Tecnología</a>
-            <a href="./#cultura"    class="cd-footer-nav-btn" data-en="Culture">Cultura</a>
-            <a href="./#noticias"   class="cd-footer-nav-btn" data-en="News">Noticias</a>
+            <a href="./index.html#impacto"    class="cd-footer-nav-btn" data-en="Impact">Impacto</a>
+            <a href="./index.html#tecnologia" class="cd-footer-nav-btn" data-en="Technology">Tecnología</a>
+            <a href="./index.html#cultura"    class="cd-footer-nav-btn" data-en="Culture">Cultura</a>
+            <a href="./index.html#noticias"   class="cd-footer-nav-btn" data-en="News">Noticias</a>
           </div>
           <div class="cd-footer-diamond">
             <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><rect x="4" y="0" width="5.66" height="5.66" transform="rotate(45 4 0)" stroke="currentColor" stroke-width="0.8" fill="none"/></svg>
