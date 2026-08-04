@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parques Urbanos · Levantamiento Cartográfico — CartoData</title>
+  <meta name="description" content="Levantamiento cartográfico e infraestructura de parques urbanos. Soluciones geoespaciales con LiDAR, fotogrametría y análisis ambiental para gestión de espacios verdes." />
+  <link rel="canonical" href="https://www.cartodata.com/parques-urbanos.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.cartodata.com/parques-urbanos.html" />
+  <meta property="og:title" content="Parques Urbanos · CartoData" />
+  <meta property="og:description" content="Levantamiento cartográfico de parques urbanos con geointeligencia y análisis de cobertura vegetal." />
+  <meta property="og:locale" content="es_MX" />
+  <meta property="og:site_name" content="CartoData" />
+  <meta property="og:image" content="https://www.cartodata.com/images/og-parques.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Parques Urbanos — CartoData" />
+  <meta name="twitter:description" content="Levantamiento cartográfico de parques urbanos con geointeligencia y análisis ambiental." />
+  <meta name="twitter:image" content="https://www.cartodata.com/images/og-parques.jpg" />
+  <script src="./shared.js" defer></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; }
+    img { display: block; max-width: 100%; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; width: 100%; min-height: 100vh;
+      display: flex; align-items: center; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      background-image: url('./images/parques-hero.jpg');
+      background-size: cover; background-position: center;
+      will-change: transform;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(5,8,22,0.88) 0%, rgba(5,8,22,0.45) 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 860px;
+      padding: clamp(7rem,14vw,11rem) clamp(1.5rem,6vw,4rem) clamp(5rem,9vw,7rem);
+    }
+    .hero-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 1.2rem;
+    }
+    .hero-h1 {
+      font-size: clamp(2.4rem,5.5vw,4.5rem); font-weight: 200; line-height: 1.1;
+      color: #fff; margin-bottom: 1.5rem;
+    }
+    .hero-h1 strong { font-weight: 800; }
+    .hero-sub {
+      font-size: clamp(1rem,1.8vw,1.2rem); font-weight: 300; line-height: 1.7;
+      color: rgba(255,255,255,0.68); max-width: 600px; margin-bottom: 2.5rem;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-block; padding: 1rem 2.4rem;
+      background: #3b5bdb; color: #fff; border-radius: 999px;
+      font-size: 0.95rem; font-weight: 600; text-decoration: none;
+      transition: background 250ms, transform 200ms;
+    }
+    .btn-primary:hover { background: #2d4bbd; transform: translateY(-2px); }
+    .btn-ghost {
+      display: inline-block; padding: 1rem 2.4rem;
+      background: transparent; color: #fff; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.3);
+      font-size: 0.95rem; font-weight: 500; text-decoration: none;
+      transition: background 250ms, border-color 250ms;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); }
+
+    /* ── INTRO ── */
+    .intro-section {
+      background: #0b1022;
+      padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);
+    }
+    .intro-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+    }
+    .intro-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 0.8rem;
+    }
+    .intro-h2 {
+      font-size: clamp(1.6rem,3vw,2.6rem); font-weight: 300; color: #fff;
+      line-height: 1.2; margin-bottom: 1.5rem;
+    }
+    .intro-h2 strong { font-weight: 800; }
+    .intro-p {
+      font-size: 0.97rem; line-height: 1.8; color: rgba(255,255,255,0.62);
+      margin-bottom: 1rem;
+    }
+    .intro-img-placeholder {
+      background: rgba(255,255,255,0.04);
+      border: 2px dashed rgba(255,255,255,0.12);
+      border-radius: 16px; aspect-ratio: 4/3;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 0.8rem;
+      color: rgba(255,255,255,0.2); font-size: 0.8rem; text-align: center;
+      padding: 2rem;
+    }
+
+    /* ── SERVICIOS/TECNOLOGÍAS ── */
+    .servicio-section {
+      padding: clamp(5rem,9vw,8rem) clamp(1.5rem,6vw,4rem);
+    }
+    .servicio-section:nth-child(even) { background: #0b1022; }
+    .servicio-section:nth-child(odd)  { background: #050816; }
+    .servicio-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+    }
+    .servicio-inner.reverse { direction: rtl; }
+    .servicio-inner.reverse > * { direction: ltr; }
+    .servicio-num {
+      font-size: 5rem; font-weight: 900; line-height: 1;
+      color: rgba(59,91,219,0.12); margin-bottom: -1rem; display: block;
+    }
+    .servicio-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; color: #3b5bdb; margin-bottom: 0.6rem;
+    }
+    .servicio-h3 {
+      font-size: clamp(1.5rem,2.8vw,2.2rem); font-weight: 300; color: #fff;
+      line-height: 1.2; margin-bottom: 1.2rem;
+    }
+    .servicio-h3 strong { font-weight: 800; }
+    .servicio-p {
+      font-size: 0.97rem; line-height: 1.8; color: rgba(255,255,255,0.62);
+      margin-bottom: 1rem;
+    }
+    .servicio-bullets {
+      margin: 1.2rem 0; padding: 0; list-style: none;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    .servicio-bullets li {
+      font-size: 0.88rem; color: rgba(255,255,255,0.65);
+      display: flex; align-items: flex-start; gap: 0.7rem;
+    }
+    .servicio-bullets li::before {
+      content: '→'; color: #3b5bdb; font-weight: 700; flex-shrink: 0; margin-top: 0.05rem;
+    }
+
+    /* ── PLACEHOLDER DE IMAGEN ── */
+    .img-placeholder {
+      background: rgba(255,255,255,0.03);
+      border: 2px dashed rgba(255,255,255,0.10);
+      border-radius: 16px; aspect-ratio: 4/3;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 0.8rem;
+      color: rgba(255,255,255,0.18); font-size: 0.78rem; text-align: center;
+      padding: 2rem;
+    }
+
+    /* ── BENEFICIOS (Grid de 6) ── */
+    .beneficios-section {
+      background: #0b1022;
+      padding: clamp(5rem,9vw,8rem) clamp(1.5rem,6vw,4rem);
+    }
+    .beneficios-inner { max-width: 1200px; margin: 0 auto; }
+    .beneficios-header {
+      text-align: center; margin-bottom: 4rem;
+    }
+    .beneficios-eyebrow {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 0.8rem;
+    }
+    .beneficios-h2 {
+      font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 300; color: #fff;
+      line-height: 1.2; margin-bottom: 1rem;
+    }
+    .beneficios-h2 strong { font-weight: 800; }
+    .beneficios-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem;
+    }
+    .beneficio-card {
+      padding: 2.5rem 2rem;
+      border-radius: 12px;
+      background: rgba(59,91,219,0.08);
+      border: 1px solid rgba(59,91,219,0.15);
+      text-align: center;
+      transition: background 300ms, border-color 300ms;
+    }
+    .beneficio-card:hover {
+      background: rgba(59,91,219,0.15);
+      border-color: rgba(59,91,219,0.3);
+    }
+    .beneficio-icon {
+      font-size: 2.5rem; margin-bottom: 1rem; display: block;
+    }
+    .beneficio-card h4 {
+      font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 0.8rem;
+    }
+    .beneficio-card p {
+      font-size: 0.9rem; color: rgba(255,255,255,0.62); line-height: 1.6;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: #3b5bdb;
+      padding: clamp(4rem,8vw,6rem) clamp(1.5rem,6vw,4rem);
+      text-align: center;
+    }
+    .cta-inner { max-width: 700px; margin: 0 auto; }
+    .cta-inner h2 {
+      font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 700; color: #fff;
+      margin-bottom: 1rem; line-height: 1.2;
+    }
+    .cta-inner p {
+      font-size: 1rem; color: rgba(255,255,255,0.78); margin-bottom: 2.2rem; line-height: 1.65;
+    }
+    .btn-white {
+      display: inline-block; padding: 1rem 2.8rem;
+      background: #fff; color: #3b5bdb; border-radius: 999px;
+      font-size: 0.95rem; font-weight: 700; text-decoration: none;
+      transition: background 200ms, transform 200ms;
+    }
+    .btn-white:hover { background: #f0f4ff; transform: translateY(-2px); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px) {
+      .intro-inner,
+      .servicio-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .servicio-inner.reverse { direction: ltr; }
+      .servicio-num { font-size: 3.5rem; }
+    }
+    @media(max-width:600px) {
+      .hero-btns { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="top">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow" data-en="Parks · Urban Spaces">Parques · Espacios Urbanos</p>
+      <h1 class="hero-h1" data-en="Mapping urban <strong>green spaces</strong>">Cartografía de <strong>espacios verdes</strong> urbanos</h1>
+      <p class="hero-sub" data-en="Comprehensive geospatial solutions for urban park planning, monitoring and management. From vegetation assessment to infrastructure mapping, we provide precise data for decision-making.">Soluciones geoespaciales integrales para la planificación, monitoreo y gestión de parques urbanos. Desde evaluación de cobertura vegetal hasta mapeo de infraestructura, proporcionamos datos precisos para la toma de decisiones.</p>
+      <div class="hero-btns">
+        <a href="#cta" class="btn-primary" data-en="Connect with our experts →">Conecta con nuestros expertos →</a>
+        <a href="#raf" class="btn-ghost" data-en="Explore solutions">Explorar soluciones</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INTRO ── -->
+  <section class="intro-section">
+    <div class="intro-inner">
+      <div>
+        <p class="intro-eyebrow" data-en="CartoData · Parks">CartoData · Parques Urbanos</p>
+        <h2 class="intro-h2" data-en="Intelligent management of <strong>urban green infrastructure</strong>">Gestión inteligente de la <strong>infraestructura verde urbana</strong></h2>
+        <p class="intro-p" data-en="Urban parks are critical assets for cities: they regulate temperature, improve air quality, reduce flooding risk and enhance quality of life. CartoData provides geospatial data and analytics to support park planning, maintenance and monitoring.">Los parques urbanos son activos críticos para las ciudades: regulan temperatura, mejoran calidad del aire, reducen riesgo de inundaciones y aumentan calidad de vida. CartoData proporciona datos y análisis geoespaciales para apoyar planificación, mantenimiento y monitoreo de parques.</p>
+        <p class="intro-p" data-en="Our surveys integrate drone, LiDAR and multispectral technologies to deliver detailed inventories of tree canopy, green coverage, infrastructure condition and accessibility—supporting evidence-based urban planning.">Nuestros levantamientos integran drones, LiDAR y sensores multiespectrales para entregar inventarios detallados de dosel arbóreo, cobertura verde, condición de infraestructura y accesibilidad, apoyando planificación urbana basada en evidencia.</p>
+      </div>
+      <div class="intro-img-placeholder">
+        🌳 Imagen: Cobertura vegetal<br/>de parque urbano
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 1. RAF (VUELO FOTOGRAMÉTRICO) ── -->
+  <section class="servicio-section" id="raf">
+    <div class="servicio-inner">
+      <div>
+        <span class="servicio-num">01</span>
+        <p class="servicio-eyebrow" data-en="Photogrammetry">Fotogrametría</p>
+        <h3 class="servicio-h3" data-en="High-resolution <strong>aerial surveys</strong>">Levantamientos aéreos de <strong>alta resolución</strong></h3>
+        <p class="servicio-p" data-en="Automated drone flights capture centimeter-level detail of park features: pathways, play structures, seating areas, vegetation patterns and access points. Our orthophotos and 3D models become the foundation for inventory and planning.">Vuelos de drones automatizados capturan detalles a nivel centimétrico de características del parque: caminerías, juegos, áreas de descanso, patrones de vegetación y puntos de acceso. Nuestras ortofotos y modelos 3D se convierten en la base para inventarios y planificación.</p>
+        <p class="servicio-p" data-en="Compared against historical flights, these surveys detect physical changes, maintenance needs, and infrastructure degradation with objective accuracy.">Comparadas con vuelos históricos, estos levantamientos detectan cambios físicos, necesidades de mantenimiento y deterioro de infraestructura con precisión objetiva.</p>
+        <ul class="servicio-bullets">
+          <li data-en="Ultra-high-resolution orthophotos (2-5 cm/pixel)">Ortofotos de ultra-alta resolución (2-5 cm/píxel)</li>
+          <li data-en="3D point clouds for terrain and structure modeling">Nubes de puntos 3D para modelado de terreno y estructuras</li>
+          <li data-en="Vegetation pattern mapping">Mapeo de patrones de vegetación</li>
+          <li data-en="Change detection across time">Detección de cambios en el tiempo</li>
+        </ul>
+      </div>
+      <div class="img-placeholder">
+        📷 Ortofoto de parque<br/>con resolución ultra-alta
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 2. LiDAR (CUANTIFICACIÓN DE ARBOLADO) ── -->
+  <section class="servicio-section" id="lidar">
+    <div class="servicio-inner reverse">
+      <div>
+        <span class="servicio-num">02</span>
+        <p class="servicio-eyebrow" data-en="Tree Inventory">Inventario Arbóreo</p>
+        <h3 class="servicio-h3" data-en="Canopy <strong>assessment and management</strong>">Evaluación y gestión <strong>del dosel arbóreo</strong></h3>
+        <p class="servicio-p" data-en="LiDAR sensors quantify tree canopy height, density and coverage across the entire park. This enables precise tree inventories, growth monitoring and canopy health assessment—critical for ecosystem and thermal management.">Los sensores LiDAR cuantifican altura, densidad y cobertura de dosel arbóreo en todo el parque. Esto permite inventarios precisos de árboles, monitoreo de crecimiento y evaluación de salud del dosel —crítico para gestión de ecosistema y térmica.</p>
+        <p class="servicio-p" data-en="Combine LiDAR data with multispectral analysis to assess tree vigor, identify pest or disease pressures, and plan targeted maintenance or replacement.">Combine datos LiDAR con análisis multiesectral para evaluar vigor de árboles, identificar presiones de plagas o enfermedades, y planificar mantenimiento o reemplazo dirigido.</p>
+        <ul class="servicio-bullets">
+          <li data-en="Individual tree detection and height measurement">Detección individual de árboles y medición de altura</li>
+          <li data-en="Canopy coverage quantification">Cuantificación de cobertura de dosel</li>
+          <li data-en="Multispectral vegetation indices (NDVI)">Índices de vegetación multiespectral (NDVI)</li>
+          <li data-en="Tree health and vigor assessment">Evaluación de salud y vigor de árboles</li>
+        </ul>
+      </div>
+      <div class="img-placeholder">
+        🌲 Nube de puntos LiDAR<br/>de cobertura arbórea
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. eCARTO (PLATAFORMA DE GESTIÓN) ── -->
+  <section class="servicio-section" id="ecarto">
+    <div class="servicio-inner">
+      <div>
+        <span class="servicio-num">03</span>
+        <p class="servicio-eyebrow" data-en="Management Platform">Plataforma de Gestión</p>
+        <h3 class="servicio-h3" data-en="Geospatial <strong>intelligence platform</strong>">Plataforma de <strong>inteligencia geoespacial</strong></h3>
+        <p class="servicio-p" data-en="All park data—trees, facilities, pathways, maintenance records—are integrated into eCarto, our multifunctional geographic intelligence platform. Real-time dashboards enable park managers to monitor conditions, plan interventions and communicate with stakeholders.">Todos los datos del parque —árboles, instalaciones, caminerías, registros de mantenimiento— se integran en eCarto, nuestra plataforma multifuncional de inteligencia geográfica. Dashboards en tiempo real permiten a gestores monitorear condiciones, planificar intervenciones y comunicar con stakeholders.</p>
+        <p class="servicio-p" data-en="Use spatial analysis to optimize maintenance routes, identify high-priority areas for tree trimming or replacement, and generate reports for municipal authorities.">Use análisis espacial para optimizar rutas de mantenimiento, identificar áreas de alta prioridad para poda o reemplazo, y generar reportes para autoridades municipales.</p>
+        <ul class="servicio-bullets">
+          <li data-en="Centralized park inventory management">Gestión centralizada de inventarios del parque</li>
+          <li data-en="Work order and maintenance tracking">Seguimiento de órdenes de trabajo y mantenimiento</li>
+          <li data-en="Real-time monitoring dashboards">Dashboards de monitoreo en tiempo real</li>
+          <li data-en="Stakeholder collaboration and reporting">Colaboración y reportes con stakeholders</li>
+        </ul>
+      </div>
+      <div class="img-placeholder">
+        📊 Dashboard de gestión<br/>en eCarto
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BENEFICIOS ── -->
+  <section class="beneficios-section" id="beneficios">
+    <div class="beneficios-inner">
+      <div class="beneficios-header">
+        <p class="beneficios-eyebrow" data-en="Benefits">Beneficios</p>
+        <h2 class="beneficios-h2" data-en="Data-driven urban <strong>park management</strong>">Gestión de parques urbanos <strong>basada en datos</strong></h2>
+      </div>
+      <div class="beneficios-grid">
+        <div class="beneficio-card">
+          <span class="beneficio-icon" data-en="Planning">🗺️</span>
+          <h4 data-en="Planning">Planificación</h4>
+          <p data-en="Precise baseline data supports evidence-based park design and renovation projects.">Datos precisos apoyan diseño y renovación de parques basados en evidencia.</p>
+        </div>
+        <div class="beneficio-card">
+          <span class="beneficio-icon" data-en="Environment">🌿</span>
+          <h4 data-en="Environmental Management">Gestión Ambiental</h4>
+          <p data-en="Monitor ecosystem health, tree vigor and urban thermal effects through multispectral analysis.">Monitorea salud del ecosistema, vigor arbóreo y efectos térmicos urbanos.</p>
+        </div>
+        <div class="beneficio-card">
+          <span class="beneficio-icon" data-en="Safety">🛡️</span>
+          <h4 data-en="Safety">Seguridad</h4>
+          <p data-en="Identify infrastructure hazards, visibility issues and accessibility barriers for visitor safety.">Identifica peligros de infraestructura y barreras de accesibilidad para seguridad de visitantes.</p>
+        </div>
+        <div class="beneficio-card">
+          <span class="beneficio-icon" data-en="Investment">💰</span>
+          <h4 data-en="Resource Allocation">Asignación de Recursos</h4>
+          <p data-en="Prioritize maintenance and improvements based on objective data, maximizing return on investment.">Prioriza mantenimiento e mejoras basándose en datos objetivos.</p>
+        </div>
+        <div class="beneficio-card">
+          <span class="beneficio-icon" data-en="Transparency">📋</span>
+          <h4 data-en="Transparency">Transparencia</h4>
+          <p data-en="Generate objective, verifiable reports to demonstrate stewardship to citizens and municipal authorities.">Genera reportes objetivos para demostrar administración a ciudadanos y autoridades.</p>
+        </div>
+        <div class="beneficio-card">
+          <span class="beneficio-icon" data-en="Monitoring">📈</span>
+          <h4 data-en="Continuous Monitoring">Monitoreo Continuo</h4>
+          <p data-en="Track park condition and ecosystem indicators over time to support adaptive management.">Monitorea condiciones del parque en el tiempo para gestión adaptativa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta-section" id="cta">
+    <div class="cta-inner">
+      <h2 data-en="Ready to transform your park management?">¿Listo para transformar tu gestión de parques?</h2>
+      <p data-en="Discover how geospatial intelligence can optimize your urban green spaces. Talk to our experts today.">Descubre cómo la inteligencia geoespacial puede optimizar tus espacios verdes urbanos. Habla con nuestros expertos hoy.</p>
+      <a href="https://wa.me/523336271552" target="_blank" rel="noopener" class="btn-white" data-en="Connect with our experts →">Conecta con nuestros expertos →</a>
+    </div>
+  </section>
+
+  <script>
+    // Parallax hero
+    (function(){
+      const bg = document.getElementById('heroBg');
+      if(!bg) return;
+      window.addEventListener('scroll', () => {
+        const p = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+        bg.style.transform = `translateY(${p * 30}%)`;
+      }, { passive: true });
+    })();
+  </script>
+
+</body>
+</html>
