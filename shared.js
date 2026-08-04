@@ -446,6 +446,7 @@
         { label: 'Construcción', en: 'Construction', href: './construccion.html'       },
         { label: 'Infraestructura', en: 'Infrastructure', href: './infraestructura.html'    },
         { label: 'Minería',        en: 'Mining',        href: './mineria.html'              },
+        { label: 'Parques Urbanos', en: 'Urban Parks', href: './parques-urbanos.html'  },
         // Oculto temporalmente: la página de Instituciones se rehará. Restaurar cuando esté lista.
         // { label: 'Instituciones',  en: 'Institutions',  href: './instituciones.html'        },
       ]},
