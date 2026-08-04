@@ -33,9 +33,8 @@
     }
     .hero-bg {
       position: absolute; inset: 0; width: 100%; height: 100%;
-      background-image: url('./images/parques-hero.jpg');
-      background-size: cover; background-position: center;
-      will-change: transform;
+      object-fit: cover; object-position: center;
+      border: none;
     }
     .hero-overlay {
       position: absolute; inset: 0;
@@ -241,7 +240,7 @@
 
   <!-- ── HERO ── -->
   <section class="hero" id="top">
-    <div class="hero-bg" id="heroBg"></div>
+    <iframe class="hero-bg" src="https://www.youtube.com/embed/gKy-Z812ySs?start=10&autoplay=1&mute=1&loop=1&playlist=gKy-Z812ySs&rel=0" allow="autoplay" title="Parques Urbanos — CartoData"></iframe>
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <p class="hero-eyebrow" data-en="Parks · Urban Spaces">Parques · Espacios Urbanos</p>
@@ -386,17 +385,6 @@
     </div>
   </section>
 
-  <script>
-    // Parallax hero
-    (function(){
-      const bg = document.getElementById('heroBg');
-      if(!bg) return;
-      window.addEventListener('scroll', () => {
-        const p = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-        bg.style.transform = `translateY(${p * 30}%)`;
-      }, { passive: true });
-    })();
-  </script>
 
 </body>
 </html>
