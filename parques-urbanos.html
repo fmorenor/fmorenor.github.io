@@ -181,19 +181,30 @@
       display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem;
     }
     .beneficio-card {
-      padding: 2.5rem 2rem;
-      border-radius: 12px;
-      background: rgba(59,91,219,0.08);
-      border: 1px solid rgba(59,91,219,0.15);
+      padding: 0; border-radius: 16px; overflow: hidden;
+      background: rgba(59,91,219,0.03);
+      border: 1px solid rgba(59,91,219,0.12);
       text-align: center;
-      transition: background 300ms, border-color 300ms;
+      transition: all 300ms, border-color 300ms;
+      display: flex; flex-direction: column;
     }
     .beneficio-card:hover {
-      background: rgba(59,91,219,0.15);
+      background: rgba(59,91,219,0.12);
       border-color: rgba(59,91,219,0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(59,91,219,0.15);
     }
     .beneficio-icon {
-      font-size: 2.5rem; margin-bottom: 1rem; display: block;
+      height: 200px; width: 100%; overflow: hidden;
+      background: linear-gradient(135deg, rgba(59,91,219,0.1) 0%, rgba(59,91,219,0.05) 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .beneficio-icon img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .beneficio-content {
+      padding: 2rem 1.5rem;
+      flex: 1; display: flex; flex-direction: column; justify-content: space-between;
     }
     .beneficio-card h4 {
       font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 0.8rem;
@@ -343,34 +354,58 @@
       </div>
       <div class="beneficios-grid">
         <div class="beneficio-card">
-          <span class="beneficio-icon" data-en="Planning">🗺️</span>
-          <h4 data-en="Planning">Planificación</h4>
-          <p data-en="Precise baseline data supports evidence-based park design and renovation projects.">Datos precisos apoyan diseño y renovación de parques basados en evidencia.</p>
+          <div class="beneficio-icon">
+            <img src="./images/Parques/planeacion_urbana.png" alt="Planificación urbana">
+          </div>
+          <div class="beneficio-content">
+            <h4 data-en="Planning">Planificación</h4>
+            <p data-en="Precise baseline data supports evidence-based park design and renovation projects.">Datos precisos apoyan diseño y renovación de parques basados en evidencia.</p>
+          </div>
         </div>
         <div class="beneficio-card">
-          <span class="beneficio-icon" data-en="Environment">🌿</span>
-          <h4 data-en="Environmental Management">Gestión Ambiental</h4>
-          <p data-en="Monitor ecosystem health, tree vigor and urban thermal effects through multispectral analysis.">Monitorea salud del ecosistema, vigor arbóreo y efectos térmicos urbanos.</p>
+          <div class="beneficio-icon">
+            <img src="./images/Parques/medio_ambiente.png" alt="Gestión ambiental">
+          </div>
+          <div class="beneficio-content">
+            <h4 data-en="Environmental Management">Gestión Ambiental</h4>
+            <p data-en="Monitor ecosystem health, tree vigor and urban thermal effects through multispectral analysis.">Monitorea salud del ecosistema, vigor arbóreo y efectos térmicos urbanos.</p>
+          </div>
         </div>
         <div class="beneficio-card">
-          <span class="beneficio-icon" data-en="Safety">🛡️</span>
-          <h4 data-en="Safety">Seguridad</h4>
-          <p data-en="Identify infrastructure hazards, visibility issues and accessibility barriers for visitor safety.">Identifica peligros de infraestructura y barreras de accesibilidad para seguridad de visitantes.</p>
+          <div class="beneficio-icon">
+            <img src="./images/Parques/seguridad_publica.png" alt="Seguridad pública">
+          </div>
+          <div class="beneficio-content">
+            <h4 data-en="Safety">Seguridad</h4>
+            <p data-en="Identify infrastructure hazards, visibility issues and accessibility barriers for visitor safety.">Identifica peligros de infraestructura y barreras de accesibilidad para seguridad de visitantes.</p>
+          </div>
         </div>
         <div class="beneficio-card">
-          <span class="beneficio-icon" data-en="Investment">💰</span>
-          <h4 data-en="Resource Allocation">Asignación de Recursos</h4>
-          <p data-en="Prioritize maintenance and improvements based on objective data, maximizing return on investment.">Prioriza mantenimiento e mejoras basándose en datos objetivos.</p>
+          <div class="beneficio-icon">
+            <img src="./images/Parques/smart_cities.png" alt="Ciudades inteligentes">
+          </div>
+          <div class="beneficio-content">
+            <h4 data-en="Resource Allocation">Asignación de Recursos</h4>
+            <p data-en="Prioritize maintenance and improvements based on objective data, maximizing return on investment.">Prioriza mantenimiento e mejoras basándose en datos objetivos.</p>
+          </div>
         </div>
         <div class="beneficio-card">
-          <span class="beneficio-icon" data-en="Transparency">📋</span>
-          <h4 data-en="Transparency">Transparencia</h4>
-          <p data-en="Generate objective, verifiable reports to demonstrate stewardship to citizens and municipal authorities.">Genera reportes objetivos para demostrar administración a ciudadanos y autoridades.</p>
+          <div class="beneficio-icon">
+            <img src="./images/Parques/catastro.png" alt="Catastro transparencia">
+          </div>
+          <div class="beneficio-content">
+            <h4 data-en="Transparency">Transparencia</h4>
+            <p data-en="Generate objective, verifiable reports to demonstrate stewardship to citizens and municipal authorities.">Genera reportes objetivos para demostrar administración a ciudadanos y autoridades.</p>
+          </div>
         </div>
         <div class="beneficio-card">
-          <span class="beneficio-icon" data-en="Monitoring">📈</span>
-          <h4 data-en="Continuous Monitoring">Monitoreo Continuo</h4>
-          <p data-en="Track park condition and ecosystem indicators over time to support adaptive management.">Monitorea condiciones del parque en el tiempo para gestión adaptativa.</p>
+          <div class="beneficio-icon">
+            <img src="./images/Parques/proteccion_civil.png" alt="Protección civil">
+          </div>
+          <div class="beneficio-content">
+            <h4 data-en="Continuous Monitoring">Monitoreo Continuo</h4>
+            <p data-en="Track park condition and ecosystem indicators over time to support adaptive management.">Monitorea condiciones del parque en el tiempo para gestión adaptativa.</p>
+          </div>
         </div>
       </div>
     </div>
