@@ -934,6 +934,11 @@
           lines: ['Circunvalación Ote. 689 · Ciudad Granja', 'Zapopan, Jalisco, México · C.P. 45010'],
           lat: 20.6723, lon: -103.4524
         },
+        {
+          name: 'Oficina San Salvador',
+          lines: ['Avenida Las Camelias #16-G · Colonia San Francisco', 'San Salvador Centro, San Salvador, El Salvador · C.P. 01101'],
+          lat: 13.688531, lon: -89.225557
+        },
       ];
       const cards = CD_LOCATIONS.map(l => `
         <article class="cd-loc-card">
