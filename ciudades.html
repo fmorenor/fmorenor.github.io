@@ -121,12 +121,20 @@
       border-radius: 16px; padding: 1.8rem 1.6rem;
       backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
       transition: border-color 250ms, background 250ms;
+      display: flex; flex-direction: column;
     }
     .proof-card:hover { background: rgba(59,91,219,0.10); border-color: rgba(59,91,219,0.35); }
     .proof-city { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.5rem; }
     .proof-num { font-size: clamp(2rem,4vw,3rem); font-weight: 200; color: #fff; line-height: 1; margin-bottom: 0.4rem; }
     .proof-num span { color: #3b5bdb; font-weight: 700; }
     .proof-label { font-size: 0.85rem; color: rgba(255,255,255,0.55); }
+    /* Escudo del municipio, anclado al fondo de su propia tarjeta */
+    .proof-escudo { margin-top: auto; padding-top: 1.6rem; }
+    .proof-escudo img {
+      height: 72px; width: auto; object-fit: contain; display: block;
+      background: #fff; border-radius: 12px; padding: 7px 11px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.28);
+    }
 
     /* Municipios strip */
     .municipios-strip {
@@ -322,8 +330,9 @@
       border-radius: 12px; display: flex; align-items: center; justify-content: center;
       font-size: 0.8rem; color: rgba(255,255,255,0.3); font-weight: 500;
     }
+    .escudos-otros { margin-bottom: 3rem; }
     .escudos-row {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 3rem;
+      display: grid; grid-template-columns: repeat(2, minmax(0,210px)); gap: 1rem;
     }
     .escudo-card {
       background: #fff; border-radius: 14px; padding: 1.1rem 0.8rem 0.9rem;
@@ -395,29 +404,34 @@
           <p class="proof-city">Tequila, Jalisco</p>
           <p class="proof-num"><span>+232%</span></p>
           <p class="proof-label" data-en="in property tax revenue · 3 years">en recaudación predial · 3 años</p>
+          <div class="proof-escudo"><img src="./images/escudo-tequila.png" alt="Escudo de Tequila, Jalisco" loading="lazy" onerror="this.parentNode.remove()" /></div>
         </div>
         <div class="proof-card">
           <p class="proof-city">Santiago, Nuevo León</p>
           <p class="proof-num"><span>+315%</span></p>
           <p class="proof-label" data-en="in property tax revenue · 4 years">en recaudación predial · 4 años</p>
+          <div class="proof-escudo"><img src="./images/escudo-santiago-nl.png" alt="Escudo de Santiago, Nuevo León" loading="lazy" onerror="this.parentNode.remove()" /></div>
         </div>
         <div class="proof-card">
           <p class="proof-city">Tlajomulco de Zúñiga</p>
           <p class="proof-num" data-en="&lt;span&gt;400M MXN&lt;/span&gt;"><span>400 mdp</span></p>
           <p class="proof-label" data-en="in additional revenue generated · 6 years">generados adicionales · 6 años</p>
+          <div class="proof-escudo"><img src="./images/escudo-tlajomulco.png" alt="Escudo de Tlajomulco de Zúñiga, Jalisco" loading="lazy" onerror="this.parentNode.remove()" /></div>
         </div>
         <div class="proof-card">
           <p class="proof-city">Guadalajara, Jalisco</p>
           <p class="proof-num" data-en="&lt;span&gt;289M MXN&lt;/span&gt;"><span>289 mdp</span></p>
           <p class="proof-label" data-en="in additional revenue · 2 years">en recaudación adicional · 2 años</p>
+          <div class="proof-escudo"><img src="./images/escudo-guadalajara.png" alt="Escudo de Guadalajara, Jalisco" loading="lazy" onerror="this.parentNode.remove()" /></div>
         </div>
       </div>
 
-      <div class="escudos-row">
-        <div class="escudo-card"><img src="./images/escudo-guadalajara.png" alt="Escudo de Guadalajara, Jalisco" loading="lazy" /><span>Guadalajara</span></div>
-        <div class="escudo-card"><img src="./images/escudo-santiago-nl.png" alt="Escudo de Santiago, Nuevo León" loading="lazy" /><span>Santiago, N.L.</span></div>
-        <div class="escudo-card"><img src="./images/escudo-mascota.png" alt="Escudo de Mascota, Jalisco" loading="lazy" /><span>Mascota</span></div>
-        <div class="escudo-card"><img src="./images/escudo-ahualulco.png" alt="Escudo de Ahualulco de Mercado, Jalisco" loading="lazy" /><span>Ahualulco de Mercado</span></div>
+      <div class="escudos-otros">
+        <p class="municipios-label" data-en="Other municipalities with a Cartomorfosis under way">Otros municipios en Cartomorfosis</p>
+        <div class="escudos-row">
+          <div class="escudo-card"><img src="./images/escudo-mascota.png" alt="Escudo de Mascota, Jalisco" loading="lazy" /><span>Mascota</span></div>
+          <div class="escudo-card"><img src="./images/escudo-ahualulco.png" alt="Escudo de Ahualulco de Mercado, Jalisco" loading="lazy" /><span>Ahualulco de Mercado</span></div>
+        </div>
       </div>
 
       <div class="municipios-strip">
