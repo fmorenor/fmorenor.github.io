@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — CartoData</title>
+  <meta name="description" content="Artículos sobre geomática, drones, tecnología de mapeo y análisis de datos para infraestructura en Latinoamérica." />
+  <link rel="canonical" href="https://www.cartodata.com/blog/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.cartodata.com/blog/" />
+  <meta property="og:title" content="Blog — CartoData" />
+  <meta property="og:description" content="Artículos sobre geomática, drones y análisis de datos para infraestructura." />
+  <meta property="og:locale" content="es_MX" />
+  <meta property="og:site_name" content="CartoData" />
+  <meta property="og:image" content="https://www.cartodata.com/images/og-blog.jpg" />
+
+  <script src="../shared.js" defer></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; }
+    img { display: block; max-width: 100%; }
+
+    /* ── HERO DEL BLOG ── */
+    .blog-index-hero {
+      position: relative;
+      width: 100%;
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: clamp(3rem, 8vw, 6rem) clamp(1.5rem, 6vw, 4rem);
+      text-align: center;
+    }
+
+    .blog-index-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(59, 91, 219, 0.1) 0%, rgba(5, 8, 22, 0.8) 100%);
+      z-index: 1;
+    }
+
+    .blog-index-hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+    }
+
+    .blog-index-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 1rem;
+    }
+
+    .blog-index-h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 300;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    .blog-index-h1 strong {
+      font-weight: 700;
+    }
+
+    .blog-index-subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-weight: 300;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* ── CONTENEDOR PRINCIPAL ── */
+    .blog-index-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: clamp(3rem, 8vw, 5rem) clamp(1.5rem, 6vw, 4rem);
+    }
+
+    /* ── FILTROS ── */
+    .blog-filters {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .blog-filter-btn {
+      padding: 0.6rem 1.4rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 250ms;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .blog-filter-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+    }
+
+    .blog-filter-btn.active {
+      background: #3b5bdb;
+      border-color: #3b5bdb;
+      color: #fff;
+    }
+
+    /* ── GRID DE ARTÍCULOS ── */
+    .blog-articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .blog-article-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: all 300ms;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .blog-article-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-6px);
+    }
+
+    .blog-article-image {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .blog-article-content {
+      padding: 1.8rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .blog-article-category {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      background: rgba(59, 91, 219, 0.2);
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #7dd3fc;
+      margin-bottom: 0.8rem;
+      width: fit-content;
+    }
+
+    .blog-article-date {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    .blog-article-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.3;
+      margin-bottom: 0.8rem;
+    }
+
+    .blog-article-excerpt {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      flex: 1;
+    }
+
+    .blog-article-link {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      background: #3b5bdb;
+      color: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 250ms;
+      width: fit-content;
+    }
+
+    .blog-article-link:hover {
+      background: #2d4bbd;
+    }
+
+    /* ── ESTADO VACÍO ── */
+    .blog-empty {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .blog-empty p {
+      font-size: 1.1rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .blog-articles-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .blog-filters {
+        gap: 0.8rem;
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .blog-filter-btn {
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HERO DEL BLOG INDEX -->
+  <section class="blog-index-hero">
+    <div class="blog-index-hero-content">
+      <div class="blog-index-eyebrow">ARTÍCULOS & RECURSOS</div>
+      <h1 class="blog-index-h1">Nuestro <strong>Blog</strong></h1>
+      <p class="blog-index-subtitle">Aprende sobre geomática, drones, tecnología de mapeo y análisis de datos para infraestructura en Latinoamérica.</p>
+    </div>
+  </section>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="blog-index-container">
+    <!-- FILTROS -->
+    <div class="blog-filters">
+      <button class="blog-filter-btn active" data-filter="all">Todos</button>
+      <button class="blog-filter-btn" data-filter="ciudades">Ciudades</button>
+      <button class="blog-filter-btn" data-filter="mineria">Minería</button>
+      <button class="blog-filter-btn" data-filter="gobierno">Gobierno</button>
+      <button class="blog-filter-btn" data-filter="infraestructura">Infraestructura</button>
+      <button class="blog-filter-btn" data-filter="construccion">Construcción</button>
+      <button class="blog-filter-btn" data-filter="lidar">Lidar</button>
+      <button class="blog-filter-btn" data-filter="vision360">Visión 360</button>
+      <button class="blog-filter-btn" data-filter="ecarto">eCarto</button>
+    </div>
+
+    <!-- GRID DE ARTÍCULOS -->
+    <div class="blog-articles-grid">
+
+      <!-- ARTÍCULO 1 -->
+      <a href="./articulo-template.html" class="blog-article-card" data-category="lidar">
+        <img src="https://images.unsplash.com/photo-1500462918059-b1a0136e4b00?w=400&h=220&fit=crop" alt="Artículo" class="blog-article-image" />
+        <div class="blog-article-content">
+          <span class="blog-article-category">Lidar</span>
+          <div class="blog-article-date">14 de agosto de 2026</div>
+          <h3 class="blog-article-title">Título del Artículo de Ejemplo</h3>
+          <p class="blog-article-excerpt">Descripción breve del artículo que va aquí. Explica de qué trata y por qué es relevante para tu audiencia.</p>
+          <span class="blog-article-link">LEER MÁS</span>
+        </div>
+      </a>
+
+      <!-- ARTÍCULO 2 -->
+      <a href="#" class="blog-article-card" data-category="construccion">
+        <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=220&fit=crop" alt="Artículo" class="blog-article-image" />
+        <div class="blog-article-content">
+          <span class="blog-article-category">Construcción</span>
+          <div class="blog-article-date">7 de agosto de 2026</div>
+          <h3 class="blog-article-title">Seguimiento de Obra con Drones 4K</h3>
+          <p class="blog-article-excerpt">Cómo implementar sistemas de monitoreo con drones para mejorar la calidad y transparencia en proyectos de construcción.</p>
+          <span class="blog-article-link">LEER MÁS</span>
+        </div>
+      </a>
+
+      <!-- ARTÍCULO 3 -->
+      <a href="#" class="blog-article-card" data-category="infraestructura">
+        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=220&fit=crop" alt="Artículo" class="blog-article-image" />
+        <div class="blog-article-content">
+          <span class="blog-article-category">Infraestructura</span>
+          <div class="blog-article-date">31 de julio de 2026</div>
+          <h3 class="blog-article-title">Fotogrametría Centimétrica: Precisión en Mapeo</h3>
+          <p class="blog-article-excerpt">Descubre cómo la fotogrametría moderna permite obtener mediciones precisas de grandes áreas en poco tiempo.</p>
+          <span class="blog-article-link">LEER MÁS</span>
+        </div>
+      </a>
+
+      <!-- ARTÍCULO 4 -->
+      <a href="#" class="blog-article-card" data-category="ciudades">
+        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=220&fit=crop" alt="Artículo" class="blog-article-image" />
+        <div class="blog-article-content">
+          <span class="blog-article-category">Ciudades</span>
+          <div class="blog-article-date">24 de julio de 2026</div>
+          <h3 class="blog-article-title">Modelado 3D para Análisis Urbano</h3>
+          <p class="blog-article-excerpt">Cómo usar modelos 3D para analizar patrones de crecimiento y planificación urbana en ciudades latinoamericanas.</p>
+          <span class="blog-article-link">LEER MÁS</span>
+        </div>
+      </a>
+
+      <!-- ARTÍCULO 5 -->
+      <a href="#" class="blog-article-card" data-category="mineria">
+        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=220&fit=crop" alt="Artículo" class="blog-article-image" />
+        <div class="blog-article-content">
+          <span class="blog-article-category">Minería</span>
+          <div class="blog-article-date">17 de julio de 2026</div>
+          <h3 class="blog-article-title">Mapeo Aéreo de Yacimientos Minerales</h3>
+          <p class="blog-article-excerpt">Estrategias para monitorear y mapear yacimientos minerales usando tecnología geoespacial moderna y análisis de datos.</p>
+          <span class="blog-article-link">LEER MÁS</span>
+        </div>
+      </a>
+
+      <!-- ARTÍCULO 6 -->
+      <a href="#" class="blog-article-card" data-category="vision360">
+        <img src="https://images.unsplash.com/photo-1559056169-641ef64dd4d3?w=400&h=220&fit=crop" alt="Artículo" class="blog-article-image" />
+        <div class="blog-article-content">
+          <span class="blog-article-category">Visión 360</span>
+          <div class="blog-article-date">10 de julio de 2026</div>
+          <h3 class="blog-article-title">Captura Panorámica: Visión Completa del Terreno</h3>
+          <p class="blog-article-excerpt">Cómo usar captura panorámica de 360° para documentar y analizar proyectos desde múltiples perspectivas.</p>
+          <span class="blog-article-link">LEER MÁS</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- SCRIPT PARA FILTROS -->
+  <script>
+    document.querySelectorAll('.blog-filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const filter = this.dataset.filter;
+
+        // Actualizar botones activos
+        document.querySelectorAll('.blog-filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        // Filtrar artículos
+        document.querySelectorAll('.blog-article-card').forEach(card => {
+          const category = card.dataset.category;
+          if (filter === 'all' || category === filter) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
