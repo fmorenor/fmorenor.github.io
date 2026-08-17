@@ -7,204 +7,66 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-    body {
-      background: #050816;
-      color: #f8fafc;
-      font-family: 'DM Sans', system-ui, sans-serif;
-      display: flex;
-      min-height: 100vh;
-    }
+    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; display: flex; min-height: 100vh; }
 
-    .builder-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 60px;
-      background: rgba(5, 8, 22, 0.95);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      padding: 0 2rem;
-      z-index: 1000;
-    }
+    .builder-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; background: rgba(5,8,22,0.95); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; padding: 0 2rem; z-index: 1000; }
+    .builder-header h1 { font-size: 1.2rem; font-weight: 600; }
 
-    .builder-header h1 {
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
+    .builder-container { display: flex; width: 100%; margin-top: 60px; }
 
-    .builder-container {
-      display: flex;
-      width: 100%;
-      margin-top: 60px;
-    }
+    .builder-form-panel { width: 40%; padding: 2rem; overflow-y: auto; height: calc(100vh - 60px); border-right: 1px solid rgba(255,255,255,0.1); }
 
-    .builder-form-panel {
-      width: 40%;
-      padding: 2rem;
-      overflow-y: auto;
-      height: calc(100vh - 60px);
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    .builder-form-group { margin-bottom: 1.5rem; }
+    .builder-form-group label { display: block; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem; }
+    .builder-form-group input, .builder-form-group select, .builder-form-group textarea {
+      width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #f8fafc; font-family: inherit; font-size: 0.95rem; transition: all 250ms;
     }
+    .builder-form-group input:focus, .builder-form-group select:focus, .builder-form-group textarea:focus { outline: none; background: rgba(255,255,255,0.08); border-color: #3b5bdb; }
+    .builder-form-group textarea { resize: vertical; min-height: 80px; font-family: inherit; font-size: 0.95rem; }
 
-    .builder-form-group {
-      margin-bottom: 1.5rem;
-    }
+    .builder-help-text { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 0.4rem; }
 
-    .builder-form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 0.5rem;
-    }
+    .builder-content-section { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 1rem; margin-bottom: 1rem; }
+    .builder-content-section h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.8rem; color: rgba(255,255,255,0.8); }
 
-    .builder-form-group input,
-    .builder-form-group select,
-    .builder-form-group textarea {
-      width: 100%;
-      padding: 0.75rem;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 6px;
-      color: #f8fafc;
-      font-family: inherit;
-      font-size: 0.95rem;
-      transition: all 250ms;
-    }
+    .builder-block-controls { display: flex; gap: 0.5rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
+    .builder-block-btn { padding: 0.4rem 0.8rem; background: rgba(59,91,219,0.2); border: 1px solid #3b5bdb; border-radius: 4px; color: #7dd3fc; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 250ms; }
+    .builder-block-btn:hover { background: rgba(59,91,219,0.4); }
 
-    .builder-form-group input:focus,
-    .builder-form-group select:focus,
-    .builder-form-group textarea:focus {
-      outline: none;
-      background: rgba(255, 255, 255, 0.08);
-      border-color: #3b5bdb;
-    }
+    .builder-blocks-list { max-height: 400px; overflow-y: auto; }
 
-    .builder-form-group textarea {
-      resize: vertical;
-      min-height: 120px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.9rem;
-    }
+    .builder-block-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 0.8rem; margin-bottom: 0.6rem; display: flex; justify-content: space-between; align-items: center; }
+    .builder-block-item span { font-size: 0.9rem; }
+    .builder-block-remove { background: rgba(244,63,94,0.2); border: 1px solid #f43f5e; color: #f43f5e; padding: 0.3rem 0.6rem; border-radius: 3px; font-size: 0.75rem; cursor: pointer; transition: all 200ms; }
+    .builder-block-remove:hover { background: rgba(244,63,94,0.4); }
 
-    .builder-help-text {
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.4);
-      margin-top: 0.4rem;
-      font-style: italic;
-    }
+    .builder-preview-panel { width: 60%; padding: 2rem; overflow-y: auto; height: calc(100vh - 60px); background: rgba(255,255,255,0.02); }
 
-    .builder-preview-panel {
-      width: 60%;
-      padding: 2rem;
-      overflow-y: auto;
-      height: calc(100vh - 60px);
-      background: rgba(255, 255, 255, 0.02);
-    }
+    .builder-preview-header { position: sticky; top: 0; background: rgba(5,8,22,0.95); padding: 1rem 0; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; gap: 1rem; }
 
-    .builder-preview-header {
-      position: sticky;
-      top: 0;
-      background: rgba(5, 8, 22, 0.95);
-      padding: 1rem 0;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      gap: 1rem;
-    }
+    .builder-preview-btn { padding: 0.6rem 1.2rem; background: #3b5bdb; border: none; border-radius: 6px; color: #fff; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 250ms; }
+    .builder-preview-btn:hover { background: #2d4bbd; }
 
-    .builder-preview-btn {
-      padding: 0.6rem 1.2rem;
-      background: #3b5bdb;
-      border: none;
-      border-radius: 6px;
-      color: #fff;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 250ms;
-    }
+    .builder-preview-content { max-width: 900px; }
 
-    .builder-preview-btn:hover {
-      background: #2d4bbd;
-    }
+    .builder-hero-preview { width: 100%; height: 300px; border-radius: 8px; object-fit: cover; margin-bottom: 2rem; }
 
-    .builder-preview-content {
-      max-width: 900px;
-      line-height: 1.8;
-      color: rgba(255, 255, 255, 0.9);
-    }
+    .builder-meta { display: flex; gap: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: rgba(255,255,255,0.6); }
+    .builder-category-badge { display: inline-block; padding: 0.35rem 0.9rem; background: rgba(59,91,219,0.2); border-radius: 999px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #7dd3fc; }
 
-    .builder-preview-content h2 {
-      font-size: 1.8rem;
-      font-weight: 600;
-      color: #fff;
-      margin: 2rem 0 1rem 0;
-      line-height: 1.3;
-    }
-
-    .builder-preview-content h3 {
-      font-size: 1.3rem;
-      font-weight: 500;
-      color: #fff;
-      margin: 1.5rem 0 0.8rem 0;
-    }
-
-    .builder-preview-content p {
-      margin-bottom: 1rem;
-    }
-
-    .builder-preview-content ul,
-    .builder-preview-content ol {
-      margin: 1rem 0 1rem 2rem;
-    }
-
-    .builder-preview-content li {
-      margin-bottom: 0.5rem;
-    }
-
-    .builder-preview-content a {
-      color: #7dd3fc;
-      text-decoration: none;
-      border-bottom: 1px solid rgba(125, 211, 252, 0.3);
-    }
-
-    .builder-preview-content a:hover {
-      border-bottom-color: rgba(125, 211, 252, 0.8);
-    }
-
-    .builder-meta {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.6);
-    }
-
-    .builder-category-badge {
-      display: inline-block;
-      padding: 0.35rem 0.9rem;
-      background: rgba(59, 91, 219, 0.2);
-      border-radius: 999px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #7dd3fc;
-    }
+    .builder-preview-content h1 { font-size: 2rem; font-weight: 600; color: #fff; margin: 1rem 0; line-height: 1.3; }
+    .builder-preview-content h2 { font-size: 1.6rem; font-weight: 600; color: #fff; margin: 1.5rem 0 0.8rem; }
+    .builder-preview-content h3 { font-size: 1.3rem; font-weight: 500; color: #fff; margin: 1.2rem 0 0.6rem; }
+    .builder-preview-content p { margin-bottom: 1rem; line-height: 1.8; color: rgba(255,255,255,0.9); }
+    .builder-preview-content ul { margin: 1rem 0 1rem 2rem; }
+    .builder-preview-content li { margin-bottom: 0.5rem; }
+    .builder-preview-content strong { font-weight: 600; color: #fff; }
+    .builder-preview-content a { color: #7dd3fc; text-decoration: none; border-bottom: 1px solid rgba(125,211,252,0.3); }
+    .builder-preview-content a:hover { border-bottom-color: rgba(125,211,252,0.8); }
 
     @media (max-width: 1024px) {
       .builder-container { flex-direction: column; }
-      .builder-form-panel, .builder-preview-panel {
-        width: 100%;
-        height: auto;
-        border: none;
-      }
-      .builder-form-panel { border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+      .builder-form-panel, .builder-preview-panel { width: 100%; height: auto; }
     }
   </style>
 </head>
@@ -215,6 +77,7 @@
   </div>
 
   <div class="builder-container">
+    <!-- FORMULARIO -->
     <div class="builder-form-panel">
       <form id="builderForm">
         <div class="builder-form-group">
@@ -244,65 +107,109 @@
 
         <div class="builder-form-group">
           <label for="description">Descripción corta</label>
-          <textarea id="description" placeholder="Resumen para buscadores (160 caracteres)" required></textarea>
-          <div class="builder-help-text" id="descChar">0 caracteres</div>
+          <textarea id="description" placeholder="Resumen para buscadores" required></textarea>
         </div>
 
         <div class="builder-form-group">
           <label for="imageUrl">URL de imagen hero</label>
           <input type="url" id="imageUrl" placeholder="https://images.unsplash.com/..." />
         </div>
-
-        <div class="builder-form-group">
-          <label for="content">Contenido (Markdown básico)</label>
-          <textarea id="content" placeholder="## Título&#10;Párrafo.&#10;&#10;### Subtítulo&#10;- Punto 1&#10;&#10;[link](url)" required></textarea>
-        </div>
       </form>
+
+      <!-- EDITOR DE CONTENIDO -->
+      <div class="builder-content-section">
+        <h4>📝 Contenido del artículo</h4>
+        <div class="builder-block-controls">
+          <button class="builder-block-btn" onclick="addBlock('h2')">+ H2</button>
+          <button class="builder-block-btn" onclick="addBlock('h3')">+ H3</button>
+          <button class="builder-block-btn" onclick="addBlock('p')">+ Párrafo</button>
+          <button class="builder-block-btn" onclick="addBlock('ul')">+ Lista</button>
+        </div>
+        <div class="builder-blocks-list" id="blocksList"></div>
+      </div>
+
+      <!-- BOTONES DE ACCIÓN -->
+      <div style="display: flex; gap: 1rem;">
+        <button class="builder-preview-btn" id="downloadBtn" style="flex: 1;">⬇️ Descargar</button>
+        <button class="builder-preview-btn" id="copyBtn" style="flex: 1;">📋 Copiar</button>
+      </div>
     </div>
 
+    <!-- PREVIEW -->
     <div class="builder-preview-panel">
       <div class="builder-preview-header">
-        <button class="builder-preview-btn" id="downloadBtn">⬇️ Descargar HTML</button>
-        <button class="builder-preview-btn" id="copyBtn">📋 Copiar al index</button>
+        <span style="font-size: 0.9rem; color: rgba(255,255,255,0.6);">Preview en vivo ↓</span>
       </div>
       <div class="builder-preview-content" id="preview">
-        <p style="color: rgba(255,255,255,0.5);">El preview se actualiza mientras escribes...</p>
+        <p style="color: rgba(255,255,255,0.5);">Los cambios aparecen aquí...</p>
       </div>
     </div>
   </div>
 
   <script>
+    let blocks = [];
     const form = document.getElementById('builderForm');
     const preview = document.getElementById('preview');
+    const blocksList = document.getElementById('blocksList');
     const downloadBtn = document.getElementById('downloadBtn');
     const copyBtn = document.getElementById('copyBtn');
-    const descChar = document.getElementById('descChar');
 
-    // Event listeners
     form.addEventListener('input', updatePreview);
     form.addEventListener('change', updatePreview);
     downloadBtn.addEventListener('click', downloadArticle);
     copyBtn.addEventListener('click', copyToIndex);
 
-    document.getElementById('description').addEventListener('input', function() {
-      descChar.textContent = this.value.length + ' caracteres';
-    });
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
 
-    // Set today's date
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('date').value = today;
+    function addBlock(type) {
+      const id = Date.now();
+      const block = { id, type, content: '', items: [] };
+      blocks.push(block);
+      renderBlocks();
+      updatePreview();
+    }
+
+    function removeBlock(id) {
+      blocks = blocks.filter(b => b.id !== id);
+      renderBlocks();
+      updatePreview();
+    }
+
+    function updateBlockContent(id, content) {
+      const block = blocks.find(b => b.id === id);
+      if (block) block.content = content;
+      updatePreview();
+    }
+
+    function renderBlocks() {
+      blocksList.innerHTML = blocks.map(block => {
+        const label = { h2: 'Título (H2)', h3: 'Subtítulo (H3)', p: 'Párrafo', ul: 'Lista' }[block.type];
+        return `
+          <div class="builder-block-item">
+            <span>${label}</span>
+            <input type="text" placeholder="Escribe aquí..." value="${block.content}"
+              onchange="updateBlockContent(${block.id}, this.value)"
+              style="width: 200px; padding: 0.4rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; color: #f8fafc; font-size: 0.85rem;" />
+            <button class="builder-block-remove" onclick="removeBlock(${block.id})">✕</button>
+          </div>
+        `;
+      }).join('');
+    }
 
     function updatePreview() {
       const title = document.getElementById('title').value;
       const category = document.getElementById('category').value;
       const date = formatDate(document.getElementById('date').value);
       const description = document.getElementById('description').value;
-      const imageUrl = document.getElementById('imageUrl').value || 'https://images.unsplash.com/photo-1500462918059-b1a0136e4b00?w=600&h=400&fit=crop';
-      const content = document.getElementById('content').value;
+      const imageUrl = document.getElementById('imageUrl').value || 'https://images.unsplash.com/photo-1500462918059-b1a0136e4b00?w=900&h=400&fit=crop';
 
       let html = '';
 
-      if (title || date || category) {
+      if (imageUrl) {
+        html += '<img src="' + escapeHtml(imageUrl) + '" alt="Hero" class="builder-hero-preview" />';
+      }
+
+      if (category || date) {
         html += '<div class="builder-meta">';
         if (category) {
           html += '<span class="builder-category-badge">' + getCategoryLabel(category) + '</span>';
@@ -314,61 +221,29 @@
       }
 
       if (title) {
-        html += '<h2>' + escapeHtml(title) + '</h2>';
+        html += '<h1>' + escapeHtml(title) + '</h1>';
       }
 
       if (description) {
         html += '<p><em>' + escapeHtml(description) + '</em></p>';
       }
 
-      if (imageUrl) {
-        html += '<img src="' + escapeHtml(imageUrl) + '" alt="Imagen" style="width: 100%; border-radius: 8px; margin: 2rem 0;" />';
-      }
-
-      if (content) {
-        html += markdownToHtml(content);
-      }
-
-      preview.innerHTML = html || '<p style="color: rgba(255,255,255,0.5);">El preview se actualiza mientras escribes...</p>';
-    }
-
-    function markdownToHtml(md) {
-      let html = '';
-      const lines = md.split('\n');
-      let inList = false;
-
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
-
-        if (!line) {
-          if (inList) {
-            html += '</ul>';
-            inList = false;
+      blocks.forEach(block => {
+        if (block.type === 'h2') {
+          html += '<h2>' + escapeHtml(block.content) + '</h2>';
+        } else if (block.type === 'h3') {
+          html += '<h3>' + escapeHtml(block.content) + '</h3>';
+        } else if (block.type === 'p') {
+          html += '<p>' + linkifyText(escapeHtml(block.content)) + '</p>';
+        } else if (block.type === 'ul') {
+          const items = block.content.split('\n').filter(i => i.trim());
+          if (items.length) {
+            html += '<ul>' + items.map(item => '<li>' + linkifyText(escapeHtml(item)) + '</li>').join('') + '</ul>';
           }
-          continue;
         }
+      });
 
-        if (line.startsWith('### ')) {
-          html += '<h3>' + escapeHtml(line.substring(4)) + '</h3>';
-        } else if (line.startsWith('## ')) {
-          html += '<h2>' + escapeHtml(line.substring(3)) + '</h2>';
-        } else if (line.startsWith('- ')) {
-          if (!inList) {
-            html += '<ul>';
-            inList = true;
-          }
-          html += '<li>' + linkifyText(escapeHtml(line.substring(2))) + '</li>';
-        } else {
-          if (inList) {
-            html += '</ul>';
-            inList = false;
-          }
-          html += '<p>' + linkifyText(escapeHtml(line)) + '</p>';
-        }
-      }
-
-      if (inList) html += '</ul>';
-      return html;
+      preview.innerHTML = html || '<p style="color: rgba(255,255,255,0.5);">Los cambios aparecen aquí...</p>';
     }
 
     function linkifyText(text) {
@@ -389,16 +264,7 @@
     }
 
     function getCategoryLabel(value) {
-      const labels = {
-        'ciudades': 'Ciudades',
-        'mineria': 'Minería',
-        'gobierno': 'Gobierno',
-        'infraestructura': 'Infraestructura',
-        'construccion': 'Construcción',
-        'lidar': 'Lidar',
-        'vision360': 'Visión 360',
-        'ecarto': 'eCarto'
-      };
+      const labels = { ciudades: 'Ciudades', mineria: 'Minería', gobierno: 'Gobierno', infraestructura: 'Infraestructura', construccion: 'Construcción', lidar: 'Lidar', vision360: 'Visión 360', ecarto: 'eCarto' };
       return labels[value] || value;
     }
 
@@ -408,20 +274,15 @@
       const date = document.getElementById('date').value;
       const description = document.getElementById('description').value;
       const imageUrl = document.getElementById('imageUrl').value;
-      const content = document.getElementById('content').value;
 
-      if (!title || !category || !date || !description || !content) {
-        alert('Por favor completa todos los campos requeridos');
+      if (!title || !category || !date || !description || !blocks.length) {
+        alert('Completa: Título, Categoría, Fecha, Descripción y agrega contenido');
         return;
       }
 
-      const filename = title.toLowerCase()
-        .replace(/[áéíóú]/g, function(c) { return {á:'a', é:'e', í:'i', ó:'o', ú:'u'}[c]; })
-        .replace(/\s+/g, '-')
-        .replace(/[^a-z0-9-]/g, '')
-        .substring(0, 50);
+      const filename = title.toLowerCase().replace(/[áéíóú]/g, c => ({á:'a',é:'e',í:'i',ó:'o',ú:'u'}[c])).replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').substring(0, 50);
 
-      const html = generateArticleHtml(title, category, date, description, imageUrl, content);
+      const html = generateArticleHtml(title, category, date, description, imageUrl);
 
       const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
       const url = URL.createObjectURL(blob);
@@ -432,15 +293,57 @@
       URL.revokeObjectURL(url);
     }
 
-    function generateArticleHtml(title, category, date, description, imageUrl, content) {
+    function generateArticleHtml(title, category, date, description, imageUrl) {
       const dateObj = new Date(date);
       const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
       const formattedDate = dateObj.getDate() + ' de ' + months[dateObj.getMonth()] + ' de ' + dateObj.getFullYear();
-      const isoDate = dateObj.toISOString();
 
-      const head = '<!DOCTYPE html>\n<html lang="es">\n<head>\n  <meta charset="UTF-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n  <title>' + escapeHtml(title) + ' · Blog — CartoData</title>\n  <meta name="description" content="' + escapeHtml(description) + '" />\n  <link rel="canonical" href="https://www.cartodata.com/blog/' + escapeHtml(category) + '.html" />\n  <meta property="og:type" content="article" />\n  <meta property="og:title" content="' + escapeHtml(title) + ' · Blog — CartoData" />\n  <meta property="og:description" content="' + escapeHtml(description) + '" />\n  <meta property="og:locale" content="es_MX" />\n  <meta property="og:site_name" content="CartoData" />\n  <meta property="og:image" content="' + escapeHtml(imageUrl) + '" />\n  <meta name="author" content="CartoData" />\n  <meta name="article:published_time" content="' + isoDate + '" />\n  <script src="../shared.js" defer><\/script>\n</head>\n<body>\n  <section class="blog-hero" style="background-image: url(\'' + escapeHtml(imageUrl) + '\');">\n    <img src="' + escapeHtml(imageUrl) + '" alt="Hero" class="blog-hero-bg" />\n    <div class="blog-hero-overlay"><\/div>\n    <div class="blog-hero-content">\n      <div class="blog-eyebrow">\n        <span class="blog-category">' + getCategoryLabel(category) + '<\/span>\n        ' + formattedDate + '\n      <\/div>\n      <h1 class="blog-h1">' + escapeHtml(title) + '<\/h1>\n      <p class="blog-subtitle">' + escapeHtml(description) + '<\/p>\n    <\/div>\n  <\/section>\n  <article class="blog-container">\n    <div class="blog-content">\n      ' + markdownToHtml(content) + '\n    <\/div>\n  <\/article>\n<\/body>\n<\/html>';
+      let content = '';
+      blocks.forEach(block => {
+        if (block.type === 'h2') {
+          content += '<h2>' + escapeHtml(block.content) + '</h2>\n';
+        } else if (block.type === 'h3') {
+          content += '<h3>' + escapeHtml(block.content) + '</h3>\n';
+        } else if (block.type === 'p') {
+          content += '<p>' + linkifyText(escapeHtml(block.content)) + '</p>\n';
+        } else if (block.type === 'ul') {
+          const items = block.content.split('\n').filter(i => i.trim());
+          if (items.length) {
+            content += '<ul>\n' + items.map(item => '<li>' + linkifyText(escapeHtml(item)) + '</li>').join('\n') + '\n</ul>\n';
+          }
+        }
+      });
 
-      return head;
+      return `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${escapeHtml(title)} · Blog — CartoData</title>
+  <meta name="description" content="${escapeHtml(description)}" />
+  <meta name="article:published_time" content="${dateObj.toISOString()}" />
+  <script src="../shared.js" defer><\/script>
+</head>
+<body>
+  <section class="blog-hero" style="background-image: url('${escapeHtml(imageUrl)}');">
+    <img src="${escapeHtml(imageUrl)}" alt="Hero" class="blog-hero-bg" />
+    <div class="blog-hero-overlay"><\/div>
+    <div class="blog-hero-content">
+      <div class="blog-eyebrow">
+        <span class="blog-category">${getCategoryLabel(category)}</span>
+        ${formattedDate}
+      <\/div>
+      <h1 class="blog-h1">${escapeHtml(title)}</h1>
+      <p class="blog-subtitle">${escapeHtml(description)}</p>
+    <\/div>
+  <\/section>
+  <article class="blog-container">
+    <div class="blog-content">
+      ${content}
+    <\/div>
+  <\/article>
+<\/body>
+<\/html>`;
     }
 
     function copyToIndex() {
@@ -451,24 +354,28 @@
       const imageUrl = document.getElementById('imageUrl').value;
 
       if (!title || !category || !date || !description) {
-        alert('Por favor completa: Título, Categoría, Fecha y Descripción');
+        alert('Completa: Título, Categoría, Fecha y Descripción');
         return;
       }
 
-      const filename = title.toLowerCase()
-        .replace(/[áéíóú]/g, function(c) { return {á:'a', é:'e', í:'i', ó:'o', ú:'u'}[c]; })
-        .replace(/\s+/g, '-')
-        .replace(/[^a-z0-9-]/g, '')
-        .substring(0, 50);
-
+      const filename = title.toLowerCase().replace(/[áéíóú]/g, c => ({á:'a',é:'e',í:'i',ó:'o',ú:'u'}[c])).replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').substring(0, 50);
       const dateObj = new Date(date);
       const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
       const formattedDate = dateObj.getDate() + ' de ' + months[dateObj.getMonth()] + ' de ' + dateObj.getFullYear();
 
-      const code = '<!-- ARTÍCULO: ' + title + ' -->\n      <a href="./' + filename + '.html" class="blog-article-card" data-category="' + category + '">\n        <img src="' + escapeHtml(imageUrl) + '" alt="Artículo" class="blog-article-image" />\n        <div class="blog-article-content">\n          <span class="blog-article-category">' + getCategoryLabel(category) + '<\/span>\n          <div class="blog-article-date">' + formattedDate + '<\/div>\n          <h3 class="blog-article-title">' + escapeHtml(title) + '<\/h3>\n          <p class="blog-article-excerpt">' + escapeHtml(description) + '<\/p>\n          <span class="blog-article-link">LEER MÁS<\/span>\n        <\/div>\n      <\/a>';
+      const code = `<a href="./${filename}.html" class="blog-article-card" data-category="${category}">
+  <img src="${escapeHtml(imageUrl)}" alt="Artículo" class="blog-article-image" />
+  <div class="blog-article-content">
+    <span class="blog-article-category">${getCategoryLabel(category)}</span>
+    <div class="blog-article-date">${formattedDate}</div>
+    <h3 class="blog-article-title">${escapeHtml(title)}</h3>
+    <p class="blog-article-excerpt">${escapeHtml(description)}</p>
+    <span class="blog-article-link">LEER MÁS</span>
+  </div>
+</a>`;
 
-      navigator.clipboard.writeText(code).then(function() {
-        alert('✅ Código copiado. Pégalo en blog/index.html');
+      navigator.clipboard.writeText(code).then(() => {
+        alert('✅ Código copiado');
       });
     }
 
