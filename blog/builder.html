@@ -322,25 +322,30 @@
 
       // Metadata
       if (title || date || category) {
-        html += `<div class="builder-meta">
-          ${category ? `<span class="builder-category-badge">${getCategoryLabel(category)}</span>` : ''}
-          ${date ? `<span>${date}</span>` : ''}
-        </div>`;
+        let metaHtml = '<div class="builder-meta">';
+        if (category) {
+          metaHtml += '<span class="builder-category-badge">' + getCategoryLabel(category) + '</span>';
+        }
+        if (date) {
+          metaHtml += '<span>' + date + '</span>';
+        }
+        metaHtml += '</div>';
+        html += metaHtml;
       }
 
       // Título
       if (title) {
-        html += `<h2>${escapeHtml(title)}</h2>`;
+        html += '<h2>' + escapeHtml(title) + '</h2>';
       }
 
       // Descripción
       if (description) {
-        html += `<p><em>${escapeHtml(description)}</em></p>`;
+        html += '<p><em>' + escapeHtml(description) + '</em></p>';
       }
 
       // Imagen
       if (imageUrl) {
-        html += `<img src="${escapeHtml(imageUrl)}" alt="Imagen del artículo" style="width: 100%; border-radius: 8px; margin: 2rem 0;" />`;
+        html += '<img src="' + escapeHtml(imageUrl) + '" alt="Imagen del artículo" style="width: 100%; border-radius: 8px; margin: 2rem 0;" />';
       }
 
       // Contenido (markdown básico)
