@@ -15,7 +15,6 @@
       min-height: 100vh;
     }
 
-    /* ── HEADER ── */
     .builder-header {
       position: fixed;
       top: 0;
@@ -35,14 +34,12 @@
       font-weight: 600;
     }
 
-    /* ── CONTENEDOR PRINCIPAL ── */
     .builder-container {
       display: flex;
       width: 100%;
       margin-top: 60px;
     }
 
-    /* ── PANEL FORMULARIO ── */
     .builder-form-panel {
       width: 40%;
       padding: 2rem;
@@ -101,7 +98,6 @@
       font-style: italic;
     }
 
-    /* ── PANEL PREVIEW ── */
     .builder-preview-panel {
       width: 60%;
       padding: 2rem;
@@ -201,22 +197,14 @@
       color: #7dd3fc;
     }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 1024px) {
-      .builder-container {
-        flex-direction: column;
-      }
-
-      .builder-form-panel,
-      .builder-preview-panel {
+      .builder-container { flex-direction: column; }
+      .builder-form-panel, .builder-preview-panel {
         width: 100%;
         height: auto;
         border: none;
       }
-
-      .builder-form-panel {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
+      .builder-form-panel { border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
     }
   </style>
 </head>
@@ -227,7 +215,6 @@
   </div>
 
   <div class="builder-container">
-    <!-- PANEL FORMULARIO -->
     <div class="builder-form-panel">
       <form id="builderForm">
         <div class="builder-form-group">
@@ -253,34 +240,30 @@
         <div class="builder-form-group">
           <label for="date">Fecha</label>
           <input type="date" id="date" required />
-          <div class="builder-help-text">Formato: YYYY-MM-DD</div>
         </div>
 
         <div class="builder-form-group">
-          <label for="description">Descripción corta (meta description)</label>
-          <textarea id="description" placeholder="Breve resumen para buscadores (160 caracteres)" required></textarea>
+          <label for="description">Descripción corta</label>
+          <textarea id="description" placeholder="Resumen para buscadores (160 caracteres)" required></textarea>
           <div class="builder-help-text" id="descChar">0 caracteres</div>
         </div>
 
         <div class="builder-form-group">
           <label for="imageUrl">URL de imagen hero</label>
           <input type="url" id="imageUrl" placeholder="https://images.unsplash.com/..." />
-          <div class="builder-help-text">URL completa (HTTPS) o déjalo vacío</div>
         </div>
 
         <div class="builder-form-group">
           <label for="content">Contenido (Markdown básico)</label>
-          <textarea id="content" placeholder="## Título de sección&#10;Párrafo de texto.&#10;&#10;### Subsección&#10;- Punto 1&#10;- Punto 2&#10;&#10;[Link](https://...)" required></textarea>
-          <div class="builder-help-text">##, ###, -, [link](url), párrafos separados por línea en blanco</div>
+          <textarea id="content" placeholder="## Título&#10;Párrafo.&#10;&#10;### Subtítulo&#10;- Punto 1&#10;&#10;[link](url)" required></textarea>
         </div>
       </form>
     </div>
 
-    <!-- PANEL PREVIEW -->
     <div class="builder-preview-panel">
       <div class="builder-preview-header">
         <button class="builder-preview-btn" id="downloadBtn">⬇️ Descargar HTML</button>
-        <button class="builder-preview-btn" id="copyMetaBtn">📋 Copiar al index</button>
+        <button class="builder-preview-btn" id="copyBtn">📋 Copiar al index</button>
       </div>
       <div class="builder-preview-content" id="preview">
         <p style="color: rgba(255,255,255,0.5);">El preview se actualiza mientras escribes...</p>
@@ -292,23 +275,22 @@
     const form = document.getElementById('builderForm');
     const preview = document.getElementById('preview');
     const downloadBtn = document.getElementById('downloadBtn');
-    const copyMetaBtn = document.getElementById('copyMetaBtn');
-    const descCharCount = document.getElementById('descChar');
+    const copyBtn = document.getElementById('copyBtn');
+    const descChar = document.getElementById('descChar');
 
-    // Actualizar preview en tiempo real
+    // Event listeners
     form.addEventListener('input', updatePreview);
     form.addEventListener('change', updatePreview);
-
-    // Descargar HTML
     downloadBtn.addEventListener('click', downloadArticle);
+    copyBtn.addEventListener('click', copyToIndex);
 
-    // Copiar al index
-    copyMetaBtn.addEventListener('click', copyToIndex);
-
-    // Contador de caracteres
     document.getElementById('description').addEventListener('input', function() {
-      descCharCount.textContent = this.value.length + ' caracteres';
+      descChar.textContent = this.value.length + ' caracteres';
     });
+
+    // Set today's date
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').value = today;
 
     function updatePreview() {
       const title = document.getElementById('title').value;
@@ -320,35 +302,29 @@
 
       let html = '';
 
-      // Metadata
       if (title || date || category) {
-        let metaHtml = '<div class="builder-meta">';
+        html += '<div class="builder-meta">';
         if (category) {
-          metaHtml += '<span class="builder-category-badge">' + getCategoryLabel(category) + '</span>';
+          html += '<span class="builder-category-badge">' + getCategoryLabel(category) + '</span>';
         }
         if (date) {
-          metaHtml += '<span>' + date + '</span>';
+          html += '<span>' + date + '</span>';
         }
-        metaHtml += '</div>';
-        html += metaHtml;
+        html += '</div>';
       }
 
-      // Título
       if (title) {
         html += '<h2>' + escapeHtml(title) + '</h2>';
       }
 
-      // Descripción
       if (description) {
         html += '<p><em>' + escapeHtml(description) + '</em></p>';
       }
 
-      // Imagen
       if (imageUrl) {
-        html += '<img src="' + escapeHtml(imageUrl) + '" alt="Imagen del artículo" style="width: 100%; border-radius: 8px; margin: 2rem 0;" />';
+        html += '<img src="' + escapeHtml(imageUrl) + '" alt="Imagen" style="width: 100%; border-radius: 8px; margin: 2rem 0;" />';
       }
 
-      // Contenido (markdown básico)
       if (content) {
         html += markdownToHtml(content);
       }
@@ -373,21 +349,21 @@
         }
 
         if (line.startsWith('### ')) {
-          html += `<h3>${escapeHtml(line.substring(4))}</h3>`;
+          html += '<h3>' + escapeHtml(line.substring(4)) + '</h3>';
         } else if (line.startsWith('## ')) {
-          html += `<h2>${escapeHtml(line.substring(3))}</h2>`;
+          html += '<h2>' + escapeHtml(line.substring(3)) + '</h2>';
         } else if (line.startsWith('- ')) {
           if (!inList) {
             html += '<ul>';
             inList = true;
           }
-          html += `<li>${linkifyText(escapeHtml(line.substring(2)))}</li>`;
+          html += '<li>' + linkifyText(escapeHtml(line.substring(2))) + '</li>';
         } else {
           if (inList) {
             html += '</ul>';
             inList = false;
           }
-          html += `<p>${linkifyText(escapeHtml(line))}</p>`;
+          html += '<p>' + linkifyText(escapeHtml(line)) + '</p>';
         }
       }
 
@@ -409,7 +385,7 @@
       if (!dateStr) return '';
       const date = new Date(dateStr);
       const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-      return `${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
+      return date.getDate() + ' de ' + months[date.getMonth()] + ' de ' + date.getFullYear();
     }
 
     function getCategoryLabel(value) {
@@ -439,75 +415,32 @@
         return;
       }
 
-      // Generar nombre de archivo
       const filename = title.toLowerCase()
-        .replace(/[áéíóú]/g, x => ({á:'a', é:'e', í:'i', ó:'o', ú:'u'}[x]))
+        .replace(/[áéíóú]/g, function(c) { return {á:'a', é:'e', í:'i', ó:'o', ú:'u'}[c]; })
         .replace(/\s+/g, '-')
         .replace(/[^a-z0-9-]/g, '')
         .substring(0, 50);
 
-      // Generar HTML del artículo
-      const html = generateArticleHtml(title, category, date, description, imageUrl, content, filename);
+      const html = generateArticleHtml(title, category, date, description, imageUrl, content);
 
-      // Descargar
-      const blob = new Blob([html], { type: 'text/html' });
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${filename}.html`;
+      a.download = filename + '.html';
       a.click();
       URL.revokeObjectURL(url);
     }
 
-    function generateArticleHtml(title, category, date, description, imageUrl, content, filename) {
+    function generateArticleHtml(title, category, date, description, imageUrl, content) {
       const dateObj = new Date(date);
       const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-      const formattedDate = `${dateObj.getDate()} de ${months[dateObj.getMonth()]} de ${dateObj.getFullYear()}`;
+      const formattedDate = dateObj.getDate() + ' de ' + months[dateObj.getMonth()] + ' de ' + dateObj.getFullYear();
       const isoDate = dateObj.toISOString();
 
-      return `<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${escapeHtml(title)} · Blog — CartoData</title>
-  <meta name="description" content="${escapeHtml(description)}" />
-  <link rel="canonical" href="https://www.cartodata.com/blog/${filename}.html" />
-  <meta property="og:type" content="article" />
-  <meta property="og:url" content="https://www.cartodata.com/blog/${filename}.html" />
-  <meta property="og:title" content="${escapeHtml(title)} · Blog — CartoData" />
-  <meta property="og:description" content="${escapeHtml(description)}" />
-  <meta property="og:locale" content="es_MX" />
-  <meta property="og:site_name" content="CartoData" />
-  <meta property="og:image" content="${imageUrl || 'https://www.cartodata.com/images/og-blog.jpg'}" />
-  <meta name="author" content="CartoData" />
-  <meta name="article:published_time" content="${isoDate}" />
-  <script src="../shared.js" defer></script>
-  <link rel="stylesheet" href="../blog/style.css" />
-</head>
-<body>
-  <!-- HERO DEL ARTÍCULO -->
-  <section class="blog-hero" style="background-image: url('${imageUrl}');">
-    <img src="${imageUrl}" alt="Hero del artículo" class="blog-hero-bg" />
-    <div class="blog-hero-overlay"></div>
-    <div class="blog-hero-content">
-      <div class="blog-eyebrow">
-        <span class="blog-category">${getCategoryLabel(category)}</span>
-        ${formattedDate}
-      </div>
-      <h1 class="blog-h1">${escapeHtml(title)}</h1>
-      <p class="blog-subtitle">${escapeHtml(description)}</p>
-    </div>
-  </section>
+      const head = '<!DOCTYPE html>\n<html lang="es">\n<head>\n  <meta charset="UTF-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n  <title>' + escapeHtml(title) + ' · Blog — CartoData</title>\n  <meta name="description" content="' + escapeHtml(description) + '" />\n  <link rel="canonical" href="https://www.cartodata.com/blog/' + escapeHtml(category) + '.html" />\n  <meta property="og:type" content="article" />\n  <meta property="og:title" content="' + escapeHtml(title) + ' · Blog — CartoData" />\n  <meta property="og:description" content="' + escapeHtml(description) + '" />\n  <meta property="og:locale" content="es_MX" />\n  <meta property="og:site_name" content="CartoData" />\n  <meta property="og:image" content="' + escapeHtml(imageUrl) + '" />\n  <meta name="author" content="CartoData" />\n  <meta name="article:published_time" content="' + isoDate + '" />\n  <script src="../shared.js" defer><\/script>\n</head>\n<body>\n  <section class="blog-hero" style="background-image: url(\'' + escapeHtml(imageUrl) + '\');">\n    <img src="' + escapeHtml(imageUrl) + '" alt="Hero" class="blog-hero-bg" />\n    <div class="blog-hero-overlay"><\/div>\n    <div class="blog-hero-content">\n      <div class="blog-eyebrow">\n        <span class="blog-category">' + getCategoryLabel(category) + '<\/span>\n        ' + formattedDate + '\n      <\/div>\n      <h1 class="blog-h1">' + escapeHtml(title) + '<\/h1>\n      <p class="blog-subtitle">' + escapeHtml(description) + '<\/p>\n    <\/div>\n  <\/section>\n  <article class="blog-container">\n    <div class="blog-content">\n      ' + markdownToHtml(content) + '\n    <\/div>\n  <\/article>\n<\/body>\n<\/html>';
 
-  <!-- CONTENIDO PRINCIPAL -->
-  <article class="blog-container">
-    <div class="blog-content">
-      ${markdownToHtml(content)}
-    </div>
-  </article>
-</body>
-</html>`;
+      return head;
     }
 
     function copyToIndex() {
@@ -518,40 +451,27 @@
       const imageUrl = document.getElementById('imageUrl').value;
 
       if (!title || !category || !date || !description) {
-        alert('Por favor completa al menos: Título, Categoría, Fecha y Descripción');
+        alert('Por favor completa: Título, Categoría, Fecha y Descripción');
         return;
       }
 
       const filename = title.toLowerCase()
-        .replace(/[áéíóú]/g, x => ({á:'a', é:'e', í:'i', ó:'o', ú:'u'}[x]))
+        .replace(/[áéíóú]/g, function(c) { return {á:'a', é:'e', í:'i', ó:'o', ú:'u'}[c]; })
         .replace(/\s+/g, '-')
         .replace(/[^a-z0-9-]/g, '')
         .substring(0, 50);
 
       const dateObj = new Date(date);
       const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-      const formattedDate = `${dateObj.getDate()} de ${months[dateObj.getMonth()]} de ${dateObj.getFullYear()}`;
+      const formattedDate = dateObj.getDate() + ' de ' + months[dateObj.getMonth()] + ' de ' + dateObj.getFullYear();
 
-      const cardCode = `<!-- ARTÍCULO: ${title} -->
-      <a href="./${filename}.html" class="blog-article-card" data-category="${category}">
-        <img src="${imageUrl || 'https://images.unsplash.com/...'}" alt="Artículo" class="blog-article-image" />
-        <div class="blog-article-content">
-          <span class="blog-article-category">${getCategoryLabel(category)}</span>
-          <div class="blog-article-date">${formattedDate}</div>
-          <h3 class="blog-article-title">${escapeHtml(title)}</h3>
-          <p class="blog-article-excerpt">${escapeHtml(description)}</p>
-          <span class="blog-article-link">LEER MÁS</span>
-        </div>
-      </a>`;
+      const code = '<!-- ARTÍCULO: ' + title + ' -->\n      <a href="./' + filename + '.html" class="blog-article-card" data-category="' + category + '">\n        <img src="' + escapeHtml(imageUrl) + '" alt="Artículo" class="blog-article-image" />\n        <div class="blog-article-content">\n          <span class="blog-article-category">' + getCategoryLabel(category) + '<\/span>\n          <div class="blog-article-date">' + formattedDate + '<\/div>\n          <h3 class="blog-article-title">' + escapeHtml(title) + '<\/h3>\n          <p class="blog-article-excerpt">' + escapeHtml(description) + '<\/p>\n          <span class="blog-article-link">LEER MÁS<\/span>\n        <\/div>\n      <\/a>';
 
-      navigator.clipboard.writeText(cardCode).then(() => {
-        alert('✅ Código copiado al portapapeles. Pégalo en blog/index.html dentro de .blog-articles-grid');
+      navigator.clipboard.writeText(code).then(function() {
+        alert('✅ Código copiado. Pégalo en blog/index.html');
       });
     }
 
-    // Inicializar con fecha de hoy
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('date').value = today;
     updatePreview();
   </script>
 </body>
