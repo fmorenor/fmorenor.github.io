@@ -179,6 +179,21 @@
       updatePreview();
     }
 
+    function moveBlock(id, direction) {
+      const index = blocks.findIndex(b => b.id === id);
+      if (index === -1) return;
+
+      const newIndex = index + direction;
+      if (newIndex < 0 || newIndex >= blocks.length) return;
+
+      const temp = blocks[index];
+      blocks[index] = blocks[newIndex];
+      blocks[newIndex] = temp;
+
+      renderBlocks();
+      updatePreview();
+    }
+
     function updateBlockContent(id, content) {
       const block = blocks.find(b => b.id === id);
       if (block) block.content = content;
@@ -186,15 +201,19 @@
     }
 
     function renderBlocks() {
-      blocksList.innerHTML = blocks.map(block => {
+      blocksList.innerHTML = blocks.map((block, index) => {
         const label = { h2: 'Título (H2)', h3: 'Subtítulo (H3)', p: 'Párrafo', ul: 'Lista', video: 'Video' }[block.type];
         const placeholder = block.type === 'video' ? 'https://youtube.com/watch?v=...' : 'Escribe aquí...';
+        const canMoveUp = index > 0;
+        const canMoveDown = index < blocks.length - 1;
         return `
           <div class="builder-block-item">
             <span>${label}</span>
             <input type="text" placeholder="${placeholder}" value="${block.content}"
               onchange="updateBlockContent(${block.id}, this.value)"
               style="width: 200px; padding: 0.4rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; color: #f8fafc; font-size: 0.85rem;" />
+            <button class="builder-block-remove" onclick="moveBlock(${block.id}, -1)" style="background: ${canMoveUp ? 'rgba(59,91,219,0.2)' : 'rgba(255,255,255,0.05)'}; border: 1px solid ${canMoveUp ? '#3b5bdb' : 'rgba(255,255,255,0.15)'}; color: ${canMoveUp ? '#7dd3fc' : 'rgba(255,255,255,0.3)'}; cursor: ${canMoveUp ? 'pointer' : 'default'};" ${canMoveUp ? '' : 'disabled'}>↑</button>
+            <button class="builder-block-remove" onclick="moveBlock(${block.id}, 1)" style="background: ${canMoveDown ? 'rgba(59,91,219,0.2)' : 'rgba(255,255,255,0.05)'}; border: 1px solid ${canMoveDown ? '#3b5bdb' : 'rgba(255,255,255,0.15)'}; color: ${canMoveDown ? '#7dd3fc' : 'rgba(255,255,255,0.3)'}; cursor: ${canMoveDown ? 'pointer' : 'default'};" ${canMoveDown ? '' : 'disabled'}>↓</button>
             <button class="builder-block-remove" onclick="removeBlock(${block.id})">✕</button>
           </div>
         `;
