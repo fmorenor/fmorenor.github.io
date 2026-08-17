@@ -64,6 +64,9 @@
     .builder-preview-content a { color: #7dd3fc; text-decoration: none; border-bottom: 1px solid rgba(125,211,252,0.3); }
     .builder-preview-content a:hover { border-bottom-color: rgba(125,211,252,0.8); }
 
+    .builder-video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.5rem 0; border-radius: 8px; }
+    .builder-video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
     @media (max-width: 1024px) {
       .builder-container { flex-direction: column; }
       .builder-form-panel, .builder-preview-panel { width: 100%; height: auto; }
@@ -124,6 +127,7 @@
           <button class="builder-block-btn" onclick="addBlock('h3')">+ H3</button>
           <button class="builder-block-btn" onclick="addBlock('p')">+ Párrafo</button>
           <button class="builder-block-btn" onclick="addBlock('ul')">+ Lista</button>
+          <button class="builder-block-btn" onclick="addBlock('video')">+ Video</button>
         </div>
         <div class="builder-blocks-list" id="blocksList"></div>
       </div>
@@ -183,11 +187,12 @@
 
     function renderBlocks() {
       blocksList.innerHTML = blocks.map(block => {
-        const label = { h2: 'Título (H2)', h3: 'Subtítulo (H3)', p: 'Párrafo', ul: 'Lista' }[block.type];
+        const label = { h2: 'Título (H2)', h3: 'Subtítulo (H3)', p: 'Párrafo', ul: 'Lista', video: 'Video' }[block.type];
+        const placeholder = block.type === 'video' ? 'https://youtube.com/watch?v=...' : 'Escribe aquí...';
         return `
           <div class="builder-block-item">
             <span>${label}</span>
-            <input type="text" placeholder="Escribe aquí..." value="${block.content}"
+            <input type="text" placeholder="${placeholder}" value="${block.content}"
               onchange="updateBlockContent(${block.id}, this.value)"
               style="width: 200px; padding: 0.4rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; color: #f8fafc; font-size: 0.85rem;" />
             <button class="builder-block-remove" onclick="removeBlock(${block.id})">✕</button>
@@ -240,6 +245,11 @@
           if (items.length) {
             html += '<ul>' + items.map(item => '<li>' + linkifyText(escapeHtml(item)) + '</li>').join('') + '</ul>';
           }
+        } else if (block.type === 'video') {
+          const videoId = extractYouTubeId(block.content);
+          if (videoId) {
+            html += '<div class="builder-video-container"><iframe src="https://www.youtube.com/embed/' + videoId + '" allowfullscreen><\/iframe><\/div>';
+          }
         }
       });
 
@@ -248,6 +258,19 @@
 
     function linkifyText(text) {
       return text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+    }
+
+    function extractYouTubeId(url) {
+      if (!url) return null;
+      const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
+        /([a-zA-Z0-9_-]{11})/
+      ];
+      for (let pattern of patterns) {
+        const match = url.match(pattern);
+        if (match && match[1]) return match[1];
+      }
+      return null;
     }
 
     function escapeHtml(text) {
@@ -310,6 +333,11 @@
           const items = block.content.split('\n').filter(i => i.trim());
           if (items.length) {
             content += '<ul>\n' + items.map(item => '<li>' + linkifyText(escapeHtml(item)) + '</li>').join('\n') + '\n</ul>\n';
+          }
+        } else if (block.type === 'video') {
+          const videoId = extractYouTubeId(block.content);
+          if (videoId) {
+            content += '<div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.5rem 0; border-radius: 8px;"><iframe src="https://www.youtube.com/embed/' + videoId + '" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allowfullscreen><\/iframe><\/div>\n';
           }
         }
       });
