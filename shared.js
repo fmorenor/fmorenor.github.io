@@ -746,10 +746,10 @@
     <div class="cd-footer-partners">
       <a href="https://cloud.google.com/find-a-partner/partner/cartodata" class="cd-partner-link" title="Google Cloud SELECT Partner — Click para ver perfil de partner" target="_blank" rel="noopener noreferrer">
         <div class="cd-partner-img-logo">
-          <img src="./images/googlecloud-logo.png" alt="Google Cloud" loading="lazy" />
+          <img src="/images/googlecloud-logo.png" alt="Google Cloud" loading="lazy" />
         </div>
         <div class="cd-partner-img-badge">
-          <img src="./images/googlepartner.png" alt="Google Cloud SELECT Services Partner" loading="lazy" />
+          <img src="/images/googlepartner.png" alt="Google Cloud SELECT Services Partner" loading="lazy" />
         </div>
       </a>
     </div>`;
