@@ -32,6 +32,18 @@
   <meta name="article:modified_time" content="2026-08-14T10:00:00Z" />
 
   <script src="../shared.js" defer></script>
+  <script defer>
+    /* Corregir ruta del logo en páginas de blog (que están en /blog/) */
+    document.addEventListener('DOMContentLoaded', () => {
+      const logo = document.getElementById('cd-nav-logo');
+      if (logo && !logo.src.includes('manus-storage')) {
+        const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+        logo.src = isDark
+          ? '../manus-storage/logo-white-h-proper_641226e9.png'
+          : '../manus-storage/logo-black-h-proper_e8a1da9d.png';
+      }
+    });
+  </script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

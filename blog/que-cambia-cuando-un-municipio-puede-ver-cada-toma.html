@@ -13,6 +13,18 @@ Así, Ahualulco cambió la forma de visualizar, relacionar y gestionar la inform
 " />
   <meta name="article:published_time" content="2026-08-18T00:00:00.000Z" />
   <script src="../shared.js" defer></script>
+  <script defer>
+    /* Corregir ruta del logo en páginas de blog (que están en /blog/) */
+    document.addEventListener('DOMContentLoaded', () => {
+      const logo = document.getElementById('cd-nav-logo');
+      if (logo && !logo.src.includes('manus-storage')) {
+        const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+        logo.src = isDark
+          ? '../manus-storage/logo-white-h-proper_641226e9.png'
+          : '../manus-storage/logo-black-h-proper_e8a1da9d.png';
+      }
+    });
+  </script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
