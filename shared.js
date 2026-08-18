@@ -583,7 +583,7 @@
   nav.className = 'cd-nav';
   nav.innerHTML = `
     <a href="./" class="cd-nav-brand">
-      <img id="cd-nav-logo" src="./images/logo-white-h.png" alt="CartoData" />
+      <img id="cd-nav-logo" src="/images/logo-white-h.png" alt="CartoData" />
     </a>
     <ul class="cd-nav-links">
       ${NAV_LINKS.map(l => `
