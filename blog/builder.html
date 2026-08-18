@@ -119,6 +119,13 @@
         </div>
       </form>
 
+      <!-- IMPORTADOR DE WORD -->
+      <div class="builder-content-section">
+        <h4>📥 Pega contenido de Word</h4>
+        <textarea id="pasteContent" placeholder="Copia y pega aquí todo tu contenido del Word..." style="width: 100%; min-height: 120px; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #f8fafc; font-family: inherit; font-size: 0.85rem; resize: vertical;"></textarea>
+        <button class="builder-preview-btn" onclick="autoFormatContent()" style="width: 100%; margin-top: 0.8rem;">✨ Auto-formatear</button>
+      </div>
+
       <!-- EDITOR DE CONTENIDO -->
       <div class="builder-content-section">
         <h4>📝 Contenido del artículo</h4>
@@ -192,6 +199,72 @@
 
       renderBlocks();
       updatePreview();
+    }
+
+    function autoFormatContent() {
+      const pasteArea = document.getElementById('pasteContent');
+      const content = pasteArea.value.trim();
+
+      if (!content) {
+        alert('Pega contenido primero');
+        return;
+      }
+
+      blocks = [];
+      const paragraphs = content.split(/\n\n+/).map(p => p.trim()).filter(p => p);
+
+      let currentList = [];
+      let isFirstParagraph = true;
+
+      paragraphs.forEach((paragraph, index) => {
+        // Detectar si es una lista
+        if (paragraph.match(/^[\-\*•]/m)) {
+          const items = paragraph.split('\n').map(line => line.trim().replace(/^[\-\*•]\s*/, ''));
+          if (currentList.length > 0) {
+            const id = Date.now() + Math.random();
+            blocks.push({ id, type: 'ul', content: currentList.join('\n') });
+            currentList = [];
+          }
+          currentList = currentList.concat(items);
+        } else {
+          // Guardar lista anterior si existe
+          if (currentList.length > 0) {
+            const id = Date.now() + Math.random();
+            blocks.push({ id, type: 'ul', content: currentList.join('\n') });
+            currentList = [];
+          }
+
+          // Detectar si es YouTube
+          if (paragraph.includes('youtube.com') || paragraph.includes('youtu.be')) {
+            const id = Date.now() + Math.random();
+            blocks.push({ id, type: 'video', content: paragraph });
+          }
+          // Detectar títulos (párrafos cortos al inicio o muy cortos)
+          else if (isFirstParagraph && paragraph.length < 80) {
+            const id = Date.now() + Math.random();
+            blocks.push({ id, type: 'h2', content: paragraph });
+            isFirstParagraph = false;
+          } else if (paragraph.length < 60 && !isFirstParagraph && index < paragraphs.length / 2) {
+            const id = Date.now() + Math.random();
+            blocks.push({ id, type: 'h3', content: paragraph });
+          } else {
+            const id = Date.now() + Math.random();
+            blocks.push({ id, type: 'p', content: paragraph });
+            isFirstParagraph = false;
+          }
+        }
+      });
+
+      // Guardar última lista si existe
+      if (currentList.length > 0) {
+        const id = Date.now() + Math.random();
+        blocks.push({ id, type: 'ul', content: currentList.join('\n') });
+      }
+
+      pasteArea.value = '';
+      renderBlocks();
+      updatePreview();
+      alert('✨ ' + blocks.length + ' bloques creados automáticamente');
     }
 
     function updateBlockContent(id, content) {
