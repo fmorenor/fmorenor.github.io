@@ -424,10 +424,39 @@
     html.light .cd-footer-social a { color: #1E1E1C; }
     .cd-footer-social a:hover { opacity: 0.6; }
     .cd-footer-social svg { width: 16px; height: 16px; display: block; fill: currentColor; }
+    /* Google Cloud Partner Badge */
+    .cd-footer-partners {
+      display: flex; align-items: center; justify-content: center; gap: 0;
+      padding: 2.5rem clamp(1rem,4vw,1.5rem);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: 2rem;
+    }
+    html.light .cd-footer-partners { border-top-color: rgba(0,0,0,0.08); }
+    .cd-partner-link {
+      display: inline-flex; align-items: center; justify-content: center;
+      text-decoration: none; transition: all 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative; width: 100px; height: 100px;
+    }
+    .cd-partner-img-logo {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 1; transition: opacity 320ms ease;
+    }
+    .cd-partner-img-badge {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 320ms ease;
+    }
+    .cd-partner-link:hover .cd-partner-img-logo { opacity: 0; }
+    .cd-partner-link:hover .cd-partner-img-badge { opacity: 1; }
+    .cd-partner-link img {
+      height: 80px; width: auto; display: block; max-width: 100%;
+    }
     @media (max-width: 860px) {
       .cd-footer-main { grid-template-columns: 1fr; gap: 2rem; }
       .cd-footer-copy-col { padding-right: 0; }
       .cd-footer-col { border-left: none; padding: 0; }
+      .cd-footer-partners { padding: 1.5rem clamp(1rem,4vw,1.5rem) 0; }
     }
   `;
   document.head.appendChild(style);
@@ -713,6 +742,16 @@
           <a href="./#terminos" data-en="Terms and conditions">Términos y condiciones</a>
         </div>
       </div>
+    </div>
+    <div class="cd-footer-partners">
+      <a href="https://cloud.google.com/find-a-partner/partner/cartodata" class="cd-partner-link" title="Google Cloud SELECT Partner — Click para ver perfil de partner" target="_blank" rel="noopener noreferrer">
+        <div class="cd-partner-img-logo">
+          <img src="./images/googlecloud-logo.png" alt="Google Cloud" loading="lazy" />
+        </div>
+        <div class="cd-partner-img-badge">
+          <img src="./images/googlepartner.png" alt="Google Cloud SELECT Services Partner" loading="lazy" />
+        </div>
+      </a>
     </div>`;
   document.body.appendChild(footer);
 
