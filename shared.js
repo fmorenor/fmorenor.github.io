@@ -441,26 +441,26 @@
   }
 
   const NAV_LINKS = [
-    { label: 'Impacto',    href: './#impacto',    children: [
-        { label: 'Ciudades',       en: 'Cities',        href: './ciudades.html'             },
-        { label: 'Construcción', en: 'Construction', href: './construccion.html'       },
-        { label: 'Infraestructura', en: 'Infrastructure', href: './infraestructura.html'    },
-        { label: 'Minería',        en: 'Mining',        href: './mineria.html'              },
-        { label: 'Parques Urbanos', en: 'Urban Parks', href: './parques-urbanos.html'  },
+    { label: 'Impacto',    href: '/#impacto',    children: [
+        { label: 'Ciudades',       en: 'Cities',        href: '/ciudades.html'             },
+        { label: 'Construcción', en: 'Construction', href: '/construccion.html'       },
+        { label: 'Infraestructura', en: 'Infrastructure', href: '/infraestructura.html'    },
+        { label: 'Minería',        en: 'Mining',        href: '/mineria.html'              },
+        { label: 'Parques Urbanos', en: 'Urban Parks', href: '/parques-urbanos.html'  },
         // Oculto temporalmente: la página de Instituciones se rehará. Restaurar cuando esté lista.
-        // { label: 'Instituciones',  en: 'Institutions',  href: './instituciones.html'        },
+        // { label: 'Instituciones',  en: 'Institutions',  href: '/instituciones.html'        },
       ]},
-    { label: 'Tecnología', href: './#tecnologia', children: [
-        { label: 'Procesos',    en: 'Processes',   href: './procesos.html'          },
-        { label: 'Datos',       en: 'Data',        href: './cartografica.html'},
-        { label: 'GeoSoftware', en: 'GeoSoftware', href: './geosoftware.html' },
+    { label: 'Tecnología', href: '/#tecnologia', children: [
+        { label: 'Procesos',    en: 'Processes',   href: '/procesos.html'          },
+        { label: 'Datos',       en: 'Data',        href: '/cartografica.html'},
+        { label: 'GeoSoftware', en: 'GeoSoftware', href: '/geosoftware.html' },
       ]},
-    { label: 'Cultura',    href: './#cultura',    children: [
-        { label: 'Historia', en: 'History', href: './historia.html'        },
-        { label: 'Equipo',   en: 'Team',    href: './equipo.html'          },
+    { label: 'Cultura',    href: '/#cultura',    children: [
+        { label: 'Historia', en: 'History', href: '/historia.html'        },
+        { label: 'Equipo',   en: 'Team',    href: '/equipo.html'          },
       ]},
-    { label: 'Noticias',   href: './#noticias'    },
-    { label: 'X-Ray',      href: './xray.html'              },
+    { label: 'Noticias',   href: '/#noticias'    },
+    { label: 'X-Ray',      href: '/xray.html'              },
   ];
 
   /* ── Estado: idioma y tema ── */
