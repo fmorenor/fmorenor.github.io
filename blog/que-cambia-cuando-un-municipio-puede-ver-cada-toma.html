@@ -13,6 +13,293 @@ Así, Ahualulco cambió la forma de visualizar, relacionar y gestionar la inform
 " />
   <meta name="article:published_time" content="2026-08-18T00:00:00.000Z" />
   <script src="../shared.js" defer></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; }
+    img { display: block; max-width: 100%; }
+
+    /* ── HERO PEQUEÑO PARA BLOG ── */
+    .blog-hero {
+      position: relative;
+      width: 100%;
+      min-height: 60vh;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      padding-bottom: 3rem;
+    }
+    .blog-hero-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .blog-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(5,8,22,0) 0%, rgba(5,8,22,0.95) 100%);
+    }
+    .blog-hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 860px;
+      padding: 0 clamp(1.5rem, 6vw, 4rem);
+      width: 100%;
+    }
+    .blog-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 1rem;
+    }
+    .blog-category {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: rgba(59, 91, 219, 0.2);
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #7dd3fc;
+      margin-right: 0.8rem;
+    }
+    .blog-meta {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 1.5rem;
+    }
+    .blog-meta strong {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .blog-h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .blog-h1 strong {
+      font-weight: 700;
+    }
+    .blog-subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-weight: 300;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 600px;
+    }
+
+    /* ── CONTENEDOR PRINCIPAL ── */
+    .blog-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: clamp(3rem, 8vw, 5rem) clamp(1.5rem, 6vw, 4rem);
+    }
+
+    /* ── CONTENIDO DEL ARTÍCULO ── */
+    .blog-content {
+      line-height: 1.8;
+      font-size: 1.05rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .blog-content h2 {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 600;
+      color: #fff;
+      margin: 2.5rem 0 1.5rem 0;
+      line-height: 1.3;
+    }
+
+    .blog-content h3 {
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      font-weight: 500;
+      color: #fff;
+      margin: 2rem 0 1rem 0;
+      line-height: 1.4;
+    }
+
+    .blog-content p {
+      margin-bottom: 1.5rem;
+    }
+
+    .blog-content ul,
+    .blog-content ol {
+      margin: 1.5rem 0 1.5rem 2rem;
+    }
+
+    .blog-content li {
+      margin-bottom: 0.8rem;
+    }
+
+    .blog-content a {
+      color: #7dd3fc;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(125, 211, 252, 0.3);
+      transition: border-color 250ms;
+    }
+
+    .blog-content a:hover {
+      border-bottom-color: rgba(125, 211, 252, 0.8);
+    }
+
+    /* ── IMÁGENES EN ARTÍCULOS ── */
+    .blog-figure {
+      margin: 2.5rem 0;
+      text-align: center;
+    }
+
+    .blog-figure img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 0.8rem;
+    }
+
+    .blog-figure figcaption {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-style: italic;
+    }
+
+    /* ── BLOQUES DESTACADOS ── */
+    .blog-highlight {
+      background: rgba(59, 91, 219, 0.15);
+      border-left: 4px solid #3b5bdb;
+      padding: 1.5rem;
+      border-radius: 4px;
+      margin: 2rem 0;
+    }
+
+    .blog-highlight p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* ── PIE DE ARTÍCULO ── */
+    .blog-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 2rem;
+      margin-top: 3rem;
+    }
+
+    .blog-author {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+
+    .blog-author-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      flex-shrink: 0;
+    }
+
+    .blog-author-info h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .blog-author-info p {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin: 0;
+    }
+
+    /* ── SECCIÓN RELACIONADOS ── */
+    .blog-related {
+      margin-top: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .blog-related h3 {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .blog-related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .blog-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: background 250ms, transform 250ms;
+    }
+
+    .blog-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-4px);
+    }
+
+    .blog-card-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .blog-card-content {
+      padding: 1.5rem;
+    }
+
+    .blog-card-date {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+
+    .blog-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+    }
+
+    .blog-card-excerpt {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.5;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .blog-hero {
+        min-height: 50vh;
+        padding-bottom: 2rem;
+      }
+
+      .blog-content h2 {
+        margin-top: 2rem;
+      }
+
+      .blog-author {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
+  </style>
 </head>
 <body>
   <section class="blog-hero" style="background-image: url('https://res.cloudinary.com/dm2xe9wv8/image/upload/v1787064727/blog1test_jcrlzy.png');">
