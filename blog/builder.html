@@ -35,7 +35,10 @@
 
     .builder-blocks-list { max-height: 400px; overflow-y: auto; }
 
-    .builder-block-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 0.8rem; margin-bottom: 0.6rem; display: flex; justify-content: space-between; align-items: center; }
+    .builder-block-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 0.8rem; margin-bottom: 0.6rem; display: flex; justify-content: space-between; align-items: center; cursor: grab; user-select: none; transition: all 200ms; }
+    .builder-block-item:active { cursor: grabbing; }
+    .builder-block-item.drag-over { background: rgba(59,91,219,0.2); border-color: #3b5bdb; }
+    .builder-block-item.dragging { opacity: 0.5; background: rgba(255,255,255,0.05); }
     .builder-block-item span { font-size: 0.9rem; }
     .builder-block-remove { background: rgba(244,63,94,0.2); border: 1px solid #f43f5e; color: #f43f5e; padding: 0.3rem 0.6rem; border-radius: 3px; font-size: 0.75rem; cursor: pointer; transition: all 200ms; }
     .builder-block-remove:hover { background: rgba(244,63,94,0.4); }
@@ -273,6 +276,8 @@
       updatePreview();
     }
 
+    let draggedBlock = null;
+
     function renderBlocks() {
       blocksList.innerHTML = blocks.map((block, index) => {
         const label = { h2: 'Título (H2)', h3: 'Subtítulo (H3)', p: 'Párrafo', ul: 'Lista', video: 'Video' }[block.type];
@@ -280,17 +285,38 @@
         const canMoveUp = index > 0;
         const canMoveDown = index < blocks.length - 1;
         return `
-          <div class="builder-block-item">
+          <div class="builder-block-item" draggable="true" data-block-id="${block.id}"
+            ondragstart="draggedBlock = ${block.id}; this.classList.add('dragging');"
+            ondragend="this.classList.remove('dragging');"
+            ondragover="event.preventDefault(); this.classList.add('drag-over');"
+            ondragleave="this.classList.remove('drag-over');"
+            ondrop="event.preventDefault(); dropBlock(${block.id}); this.classList.remove('drag-over');">
+            <span>⋮⋮</span>
             <span>${label}</span>
             <input type="text" placeholder="${placeholder}" value="${block.content}"
               onchange="updateBlockContent(${block.id}, this.value)"
               style="width: 200px; padding: 0.4rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; color: #f8fafc; font-size: 0.85rem;" />
-            <button class="builder-block-remove" onclick="moveBlock(${block.id}, -1)" style="background: ${canMoveUp ? 'rgba(59,91,219,0.2)' : 'rgba(255,255,255,0.05)'}; border: 1px solid ${canMoveUp ? '#3b5bdb' : 'rgba(255,255,255,0.15)'}; color: ${canMoveUp ? '#7dd3fc' : 'rgba(255,255,255,0.3)'}; cursor: ${canMoveUp ? 'pointer' : 'default'};" ${canMoveUp ? '' : 'disabled'}>↑</button>
-            <button class="builder-block-remove" onclick="moveBlock(${block.id}, 1)" style="background: ${canMoveDown ? 'rgba(59,91,219,0.2)' : 'rgba(255,255,255,0.05)'}; border: 1px solid ${canMoveDown ? '#3b5bdb' : 'rgba(255,255,255,0.15)'}; color: ${canMoveDown ? '#7dd3fc' : 'rgba(255,255,255,0.3)'}; cursor: ${canMoveDown ? 'pointer' : 'default'};" ${canMoveDown ? '' : 'disabled'}>↓</button>
             <button class="builder-block-remove" onclick="removeBlock(${block.id})">✕</button>
           </div>
         `;
       }).join('');
+    }
+
+    function dropBlock(targetId) {
+      if (draggedBlock === null || draggedBlock === targetId) return;
+
+      const draggedIndex = blocks.findIndex(b => b.id === draggedBlock);
+      const targetIndex = blocks.findIndex(b => b.id === targetId);
+
+      if (draggedIndex === -1 || targetIndex === -1) return;
+
+      const draggedBlockObj = blocks[draggedIndex];
+      blocks.splice(draggedIndex, 1);
+      blocks.splice(targetIndex, 0, draggedBlockObj);
+
+      draggedBlock = null;
+      renderBlocks();
+      updatePreview();
     }
 
     function updatePreview() {
