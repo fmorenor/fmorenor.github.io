@@ -505,8 +505,8 @@
     if (btn) btn.innerHTML = t === 'dark' ? SVG_SUN : SVG_MOON;
     const logo = document.getElementById('cd-nav-logo');
     if (logo) logo.src = t === 'dark'
-      ? './images/logo-white-h.png'
-      : './images/logo-black-h.png';
+      ? '/images/logo-white-h.png'
+      : '/images/logo-black-h.png';
   }
 
   function applyLang(l) {
