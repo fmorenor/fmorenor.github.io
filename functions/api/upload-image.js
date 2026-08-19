@@ -84,6 +84,8 @@ async function handleUpload(context) {
 
 async function uploadToR2(accountId, bucket, key, body, contentType, accessKeyId, secretAccessKey) {
   try {
+    console.log('uploadToR2 start:', { accountId: accountId?.substring(0, 8), bucket, key });
+
     const host = `${accountId}.r2.cloudflarestorage.com`;
     const url = `https://${host}/${bucket}/${key}`;
 
@@ -92,7 +94,9 @@ async function uploadToR2(accountId, bucket, key, body, contentType, accessKeyId
     const dateStamp = amzDate.substring(0, 8);
 
     // Create canonical request
+    console.log('Computing bodyHash...');
     const bodyHash = await sha256Hex(body);
+    console.log('bodyHash computed:', bodyHash?.substring(0, 16));
     const canonicalRequest = [
       'PUT',
       `/${bucket}/${key}`,
