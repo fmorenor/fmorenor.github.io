@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Galería de Imágenes — CartoData Blog</title>
+  <script src="../shared.js" defer></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; }
+
+    .gallery-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .gallery-header {
+      margin-bottom: 3rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .gallery-header h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .gallery-header p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .gallery-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 300ms;
+      cursor: pointer;
+    }
+
+    .gallery-item:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-4px);
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: rgba(255,255,255,0.05);
+      display: block;
+    }
+
+    .gallery-info {
+      padding: 1.2rem;
+    }
+
+    .gallery-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #f8fafc;
+      margin-bottom: 0.8rem;
+      word-break: break-all;
+      max-height: 3em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .gallery-url {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      font-family: 'Courier New', monospace;
+      margin-bottom: 0.8rem;
+      word-break: break-all;
+      max-height: 3em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .gallery-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 0.6rem;
+      background: rgba(59,91,219,0.2);
+      border: 1px solid #3b5bdb;
+      border-radius: 6px;
+      color: #7dd3fc;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 200ms;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background: rgba(59,91,219,0.4);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .error {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.5);
+      border-radius: 8px;
+      padding: 1.5rem;
+      color: #fca5a5;
+      margin-bottom: 2rem;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: rgba(34,197,94,0.9);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      animation: slideIn 300ms ease-out;
+      z-index: 1000;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      .gallery-container { padding: 1rem; }
+      .gallery-header h1 { font-size: 1.8rem; }
+      .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+      .gallery-image { height: 150px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="gallery-container">
+    <div class="gallery-header">
+      <h1>📸 Galería de Imágenes</h1>
+      <p>Uso interno — imágenes subidas a R2</p>
+    </div>
+
+    <div id="gallery" class="gallery-grid">
+      <div class="loading">Cargando imágenes...</div>
+    </div>
+  </div>
+
+  <script>
+    async function loadImages() {
+      try {
+        const response = await fetch('/api/list-images');
+        const data = await response.json();
+
+        if (!data.success) {
+          showError('Error cargando imágenes: ' + data.error);
+          return;
+        }
+
+        const gallery = document.getElementById('gallery');
+        gallery.innerHTML = '';
+
+        if (data.images.length === 0) {
+          gallery.innerHTML = '<div class="loading">Sin imágenes aún</div>';
+          return;
+        }
+
+        data.images.forEach(image => {
+          const item = document.createElement('div');
+          item.className = 'gallery-item';
+          item.innerHTML = `
+            <img src="${image.url}" alt="${image.name}" class="gallery-image" />
+            <div class="gallery-info">
+              <div class="gallery-name" title="${image.name}">${image.name}</div>
+              <div class="gallery-url" title="${image.url}">${image.url}</div>
+              <div class="gallery-actions">
+                <button class="btn" onclick="copyUrl('${image.url}')">📋 Copiar URL</button>
+                <button class="btn" onclick="openImage('${image.url}')">🔗 Abrir</button>
+              </div>
+            </div>
+          `;
+          gallery.appendChild(item);
+        });
+      } catch (error) {
+        showError('Error: ' + error.message);
+      }
+    }
+
+    function copyUrl(url) {
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('✅ URL copiada');
+      });
+    }
+
+    function openImage(url) {
+      window.open(url, '_blank');
+    }
+
+    function showError(message) {
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = `<div class="error">${message}</div>`;
+    }
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2000);
+    }
+
+    loadImages();
+  </script>
+</body>
+</html>
