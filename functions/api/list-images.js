@@ -12,11 +12,7 @@ export async function onRequest(context) {
 
   if (context.request.method === 'GET') {
     try {
-      const publicDomain = context.env.R2_PUBLIC_DOMAIN;
-
-      if (!publicDomain) {
-        return jsonResponse({ error: 'Missing R2_PUBLIC_DOMAIN' }, 500);
-      }
+      const publicDomain = 'https://pub-0b66dd4321604e288d1651690d880dc2.r2.dev';
 
       const knownImages = [
         {
@@ -33,7 +29,7 @@ export async function onRequest(context) {
       const stored = Array.from(galleryStore.values());
       const allImages = [...stored, ...knownImages];
 
-      // Remover duplicados
+      // Remover duplicados (por URL)
       const unique = Array.from(new Map(allImages.map(img => [img.url, img])).values());
 
       return jsonResponse({ success: true, images: unique }, 200);
