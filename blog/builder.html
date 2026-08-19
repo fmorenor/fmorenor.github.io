@@ -552,6 +552,28 @@
 
 
     updatePreview();
+
+    // Interceptar URLs de imagen y agregarlas a la galería automáticamente
+    document.addEventListener('input', (e) => {
+      if (e.target.type === 'text' && e.target.value.includes('r2.dev')) {
+        const url = e.target.value.trim();
+        if (url.match(/\.(jpg|jpeg|png|webp|gif)$/i)) {
+          addToGallery(url);
+        }
+      }
+    });
+
+    function addToGallery(url) {
+      const fileName = url.split('/').pop();
+      const storageKey = 'cartodata_gallery_images';
+      const images = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+      // No agregar duplicados
+      if (!images.find(img => img.url === url)) {
+        images.push({ name: fileName, url });
+        localStorage.setItem(storageKey, JSON.stringify(images));
+      }
+    }
   </script>
 </body>
 </html>
