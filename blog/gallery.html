@@ -168,6 +168,8 @@
   </div>
 
   <script>
+    const STORAGE_KEY = 'cartodata_gallery_images';
+
     async function loadImages() {
       try {
         const response = await fetch('/api/list-images');
@@ -178,32 +180,63 @@
           return;
         }
 
+        // Combinar imágenes de la API con las del localStorage
+        const storedImages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const allImages = [...data.images];
+
+        // Agregar imágenes almacenadas que no estén en la API
+        storedImages.forEach(stored => {
+          if (!allImages.find(img => img.url === stored.url)) {
+            allImages.push(stored);
+          }
+        });
+
+        // Guardar la lista completa en localStorage
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allImages));
+
         const gallery = document.getElementById('gallery');
         gallery.innerHTML = '';
 
-        if (data.images.length === 0) {
+        if (allImages.length === 0) {
           gallery.innerHTML = '<div class="loading">Sin imágenes aún</div>';
           return;
         }
 
-        data.images.forEach(image => {
-          const item = document.createElement('div');
-          item.className = 'gallery-item';
-          item.innerHTML = `
-            <img src="${image.url}" alt="${image.name}" class="gallery-image" />
-            <div class="gallery-info">
-              <div class="gallery-name" title="${image.name}">${image.name}</div>
-              <div class="gallery-url" title="${image.url}">${image.url}</div>
-              <div class="gallery-actions">
-                <button class="btn" onclick="copyUrl('${image.url}')">📋 Copiar URL</button>
-                <button class="btn" onclick="openImage('${image.url}')">🔗 Abrir</button>
-              </div>
-            </div>
-          `;
-          gallery.appendChild(item);
+        allImages.forEach(image => {
+          renderImage(gallery, image);
         });
       } catch (error) {
         showError('Error: ' + error.message);
+      }
+    }
+
+    function renderImage(container, image) {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      item.innerHTML = `
+        <img src="${image.url}" alt="${image.name}" class="gallery-image" />
+        <div class="gallery-info">
+          <div class="gallery-name" title="${image.name}">${image.name}</div>
+          <div class="gallery-url" title="${image.url}">${image.url}</div>
+          <div class="gallery-actions">
+            <button class="btn" onclick="copyUrl('${image.url}')">📋 Copiar URL</button>
+            <button class="btn" onclick="openImage('${image.url}')">🔗 Abrir</button>
+          </div>
+        </div>
+      `;
+      container.appendChild(item);
+    }
+
+    function addImageToGallery(url, name) {
+      const images = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+      // No agregar duplicados
+      if (!images.find(img => img.url === url)) {
+        images.push({ name, url });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(images));
+
+        // Reload gallery
+        loadImages();
       }
     }
 
@@ -231,6 +264,11 @@
     }
 
     loadImages();
+
+    // Escuchar cambios de localStorage (cuando se carga desde otra pestaña)
+    window.addEventListener('storage', () => {
+      loadImages();
+    });
   </script>
 </body>
 </html>
