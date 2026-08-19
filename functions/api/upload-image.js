@@ -1,5 +1,15 @@
 export async function onRequest(context) {
-  // OPTIONS para CORS
+  // GET: Generar presigned URL
+  if (context.request.method === 'GET') {
+    return handleGetPresignedUrl(context);
+  }
+
+  // POST: Recibir confirmación de upload (opcional)
+  if (context.request.method === 'POST') {
+    return handleUploadConfirmation(context);
+  }
+
+  // OPTIONS: CORS
   if (context.request.method === 'OPTIONS') {
     return new Response(null, {
       headers: {
@@ -10,82 +20,146 @@ export async function onRequest(context) {
     });
   }
 
-  if (context.request.method === 'POST') {
-    return handleUpload(context);
-  }
-
-  return new Response(JSON.stringify({ error: 'Método no permitido' }), {
-    status: 405,
-    headers: { 'Content-Type': 'application/json' }
-  });
+  return jsonResponse({ error: 'Método no permitido' }, 405);
 }
 
-async function handleUpload(context) {
+async function handleGetPresignedUrl(context) {
   try {
-    const formData = await context.request.formData();
-    const file = formData.get('file');
+    const url = new URL(context.request.url);
+    const fileName = url.searchParams.get('filename');
+    const fileType = url.searchParams.get('type');
 
-    if (!file) {
-      return jsonResponse({ error: 'No se envió archivo' }, 400);
+    if (!fileName || !fileType) {
+      return jsonResponse({ error: 'Falta filename o type' }, 400);
     }
 
-    // Validar tipo de archivo
-    if (!file.type.startsWith('image/')) {
-      return jsonResponse({ error: 'El archivo debe ser una imagen' }, 400);
-    }
-
-    // Validar tamaño (máx 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      return jsonResponse({ error: 'La imagen es muy grande (máx 5MB)' }, 400);
+    // Validar tipo
+    if (!fileType.startsWith('image/')) {
+      return jsonResponse({ error: 'Debe ser una imagen' }, 400);
     }
 
     // Generar nombre único
+    const ext = fileName.split('.').pop().toLowerCase();
     const timestamp = Date.now();
-    const ext = file.name.split('.').pop().toLowerCase();
     const year = new Date().getFullYear();
     const key = `${context.env.R2_DEFAULT_PREFIX}/${year}/${timestamp}.${ext}`;
 
-    // Obtener buffer del archivo
-    const buffer = await file.arrayBuffer();
-
-    // Hacer request directo a R2 con autenticación básica
-    const s3Url = `https://${context.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${context.env.R2_BUCKET_NAME}/${key}`;
-
-    // Headers de autorización básicos para R2
-    const auth = btoa(`${context.env.R2_ACCESS_KEY_ID}:${context.env.R2_SECRET_ACCESS_KEY}`);
-
-    const uploadResponse = await fetch(s3Url, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Basic ${auth}`,
-        'Content-Type': file.type,
-      },
-      body: buffer,
-    });
-
-    if (!uploadResponse.ok) {
-      const error = await uploadResponse.text();
-      console.error('R2 Error:', uploadResponse.status, error);
-      return jsonResponse({
-        error: `Error al subir a R2: ${uploadResponse.status}`
-      }, 500);
-    }
-
-    // Generar URL pública
-    const publicUrl = `${context.env.R2_PUBLIC_DOMAIN}/${key}`;
+    // Generar presigned URL
+    const presignedUrl = await generatePresignedUrl(
+      context.env.R2_ACCOUNT_ID,
+      context.env.R2_BUCKET_NAME,
+      key,
+      context.env.R2_ACCESS_KEY_ID,
+      context.env.R2_SECRET_ACCESS_KEY,
+      fileType
+    );
 
     return jsonResponse({
       success: true,
-      url: publicUrl,
-      fileName: file.name
+      presignedUrl,
+      publicUrl: `${context.env.R2_PUBLIC_DOMAIN}/${key}`,
+      key,
     }, 200);
 
   } catch (error) {
     console.error('Error:', error);
     return jsonResponse({
-      error: 'Error al subir imagen: ' + error.message
+      error: 'Error al generar presigned URL: ' + error.message
     }, 500);
   }
+}
+
+async function handleUploadConfirmation(context) {
+  // Endpoint opcional para confirmar upload
+  try {
+    const data = await context.request.json();
+    console.log('Upload confirmado:', data.key);
+    return jsonResponse({ success: true }, 200);
+  } catch (error) {
+    return jsonResponse({ error: error.message }, 400);
+  }
+}
+
+async function generatePresignedUrl(
+  accountId,
+  bucket,
+  key,
+  accessKeyId,
+  secretAccessKey,
+  contentType
+) {
+  const now = new Date();
+  const amzDate = now.toISOString().replace(/[:-]/g, '').replace(/\.\d{3}/, '');
+  const dateStamp = amzDate.substring(0, 8);
+  const expiresIn = 3600; // 1 hora
+
+  const algorithm = 'AWS4-HMAC-SHA256';
+  const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
+  const host = `${accountId}.r2.cloudflarestorage.com`;
+
+  // Construir canonical request
+  const canonicalRequest = [
+    'PUT',
+    `/${bucket}/${key}`,
+    `X-Amz-Algorithm=${algorithm}&X-Amz-Credential=${encodeURIComponent(accessKeyId)}%2F${credentialScope}&X-Amz-Date=${amzDate}&X-Amz-Expires=${expiresIn}&X-Amz-SignedHeaders=host%3Bx-amz-content-type`,
+    `host:${host}`,
+    `x-amz-content-type:${contentType}`,
+    '',
+    'host;x-amz-content-type',
+    'UNSIGNED-PAYLOAD'
+  ].join('\n');
+
+  const canonicalRequestHash = await sha256(canonicalRequest);
+
+  // String to sign
+  const stringToSign = [
+    algorithm,
+    amzDate,
+    credentialScope,
+    canonicalRequestHash
+  ].join('\n');
+
+  // Calcular signature
+  const signature = await calculateSignature(
+    secretAccessKey,
+    dateStamp,
+    stringToSign
+  );
+
+  // Construir presigned URL
+  const presignedUrl = `https://${host}/${bucket}/${key}?X-Amz-Algorithm=${algorithm}&X-Amz-Credential=${encodeURIComponent(accessKeyId)}%2F${credentialScope}&X-Amz-Date=${amzDate}&X-Amz-Expires=${expiresIn}&X-Amz-SignedHeaders=host%3Bx-amz-content-type&X-Amz-Signature=${signature}`;
+
+  return presignedUrl;
+}
+
+async function sha256(message) {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function hmacSha256(key, message) {
+  const keyBuffer = new TextEncoder().encode(key);
+  const msgBuffer = new TextEncoder().encode(message);
+  const hmacKey = await crypto.subtle.importKey(
+    'raw',
+    keyBuffer,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const signature = await crypto.subtle.sign('HMAC', hmacKey, msgBuffer);
+  const hashArray = Array.from(new Uint8Array(signature));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function calculateSignature(secretAccessKey, dateStamp, stringToSign) {
+  const kDate = await hmacSha256(`AWS4${secretAccessKey}`, dateStamp);
+  const kRegion = await hmacSha256(kDate, 'auto');
+  const kService = await hmacSha256(kRegion, 's3');
+  const kSigning = await hmacSha256(kService, 'aws4_request');
+  return await hmacSha256(kSigning, stringToSign);
 }
 
 function jsonResponse(data, status = 200) {

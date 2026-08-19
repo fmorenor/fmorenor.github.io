@@ -593,27 +593,41 @@
       for (const file of files) {
         if (!file.type.startsWith('image/')) continue;
 
-        const formData = new FormData();
-        formData.append('file', file);
-
         uploadProgress.classList.add('active');
-        progressBar.style.width = '0%';
+        progressBar.style.width = '10%';
 
         try {
-          const response = await fetch('/api/upload-image', {
-            method: 'POST',
-            body: formData
+          // 1. Solicitar presigned URL al servidor
+          const presignedResponse = await fetch(
+            `/api/upload-image?filename=${encodeURIComponent(file.name)}&type=${encodeURIComponent(file.type)}`
+          );
+          const presignedData = await presignedResponse.json();
+
+          if (!presignedResponse.ok) {
+            alert('Error: ' + presignedData.error);
+            continue;
+          }
+
+          progressBar.style.width = '30%';
+
+          // 2. Subir archivo directamente a R2 usando presigned URL
+          const uploadResponse = await fetch(presignedData.presignedUrl, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': file.type,
+            },
+            body: file,
           });
 
-          const result = await response.json();
+          progressBar.style.width = '90%';
 
-          if (response.ok) {
-            addUploadedImage(result.url, file.name);
+          if (uploadResponse.ok) {
+            addUploadedImage(presignedData.publicUrl, file.name);
           } else {
-            alert('Error: ' + result.error);
+            alert('Error al subir a R2: ' + uploadResponse.status);
           }
         } catch (error) {
-          alert('Error al subir: ' + error.message);
+          alert('Error: ' + error.message);
         }
 
         progressBar.style.width = '100%';
