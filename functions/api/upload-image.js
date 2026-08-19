@@ -18,18 +18,17 @@ export async function onRequest(context) {
 
 async function handleUpload(context) {
   try {
-    const contentType = context.request.headers.get('content-type') || 'image/jpeg';
-    const contentLength = parseInt(context.request.headers.get('content-length') || '0');
+    const url = new URL(context.request.url);
+    const fileName = url.searchParams.get('filename');
+    const contentType = url.searchParams.get('type') || 'image/jpeg';
+
+    if (!fileName || !contentType) {
+      return jsonResponse({ error: 'Missing filename or type' }, 400);
+    }
 
     if (!contentType.startsWith('image/')) {
       return jsonResponse({ error: 'Must be an image' }, 400);
     }
-
-    if (contentLength > 5 * 1024 * 1024) {
-      return jsonResponse({ error: 'File too large (max 5MB)' }, 400);
-    }
-
-    const arrayBuffer = await context.request.arrayBuffer();
 
     // R2 credentials from environment
     const accountId = context.env.R2_ACCOUNT_ID || 'e883fcc90722d2b681a5282fe9581072';
@@ -51,23 +50,19 @@ async function handleUpload(context) {
     const ext = contentType.split('/')[1] || 'jpg';
     const key = `${defaultPrefix}/${year}/${timestamp}.${ext}`;
 
-    // Upload to R2
-    const uploadResult = await uploadToR2(
+    // Generate presigned URL (client will use this to upload)
+    const presignedUrl = await generatePresignedUrl(
       accountId,
       bucket,
       key,
-      arrayBuffer,
-      contentType,
       accessKeyId,
-      secretAccessKey
+      secretAccessKey,
+      contentType
     );
-
-    if (!uploadResult.success) {
-      return jsonResponse({ error: uploadResult.error }, 500);
-    }
 
     return jsonResponse({
       success: true,
+      presignedUrl,
       publicUrl: `${publicDomain}/${key}`,
       key,
     }, 200);
@@ -78,71 +73,40 @@ async function handleUpload(context) {
   }
 }
 
-async function uploadToR2(accountId, bucket, key, body, contentType, accessKeyId, secretAccessKey) {
-  try {
-    const host = `${accountId}.r2.cloudflarestorage.com`;
-    const url = `https://${host}/${bucket}/${key}`;
+async function generatePresignedUrl(accountId, bucket, key, accessKeyId, secretAccessKey, contentType) {
+  const now = new Date();
+  const amzDate = now.toISOString().replace(/[:-]/g, '').replace(/\.\d{3}/, '');
+  const dateStamp = amzDate.substring(0, 8);
+  const expiresIn = 3600;
+  const algorithm = 'AWS4-HMAC-SHA256';
+  const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
+  const host = `${accountId}.r2.cloudflarestorage.com`;
 
-    const now = new Date();
-    const amzDate = now.toISOString().replace(/[:-]/g, '').replace(/\.\d{3}/, '');
-    const dateStamp = amzDate.substring(0, 8);
-    const algorithm = 'AWS4-HMAC-SHA256';
-    const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
+  // Build canonical request for presigned URL
+  const canonicalQuerystring = `X-Amz-Algorithm=${algorithm}&X-Amz-Credential=${encodeURIComponent(accessKeyId)}%2F${credentialScope}&X-Amz-Date=${amzDate}&X-Amz-Expires=${expiresIn}&X-Amz-SignedHeaders=host`;
 
-    // Body hash
-    const bodyHash = await sha256Hex(body);
+  const canonicalRequest = [
+    'PUT',
+    `/${bucket}/${key}`,
+    canonicalQuerystring,
+    'host:' + host,
+    '',
+    'host',
+    'UNSIGNED-PAYLOAD'
+  ].join('\n');
 
-    // Canonical request
-    const canonicalRequest = [
-      'PUT',
-      `/${bucket}/${key}`,
-      '',
-      `content-type:${contentType}`,
-      `host:${host}`,
-      `x-amz-content-sha256:${bodyHash}`,
-      `x-amz-date:${amzDate}`,
-      '',
-      'content-type;host;x-amz-content-sha256;x-amz-date',
-      bodyHash
-    ].join('\n');
+  const canonicalHash = await sha256Hex(canonicalRequest);
+  const stringToSign = [
+    algorithm,
+    amzDate,
+    credentialScope,
+    canonicalHash
+  ].join('\n');
 
-    const canonicalHash = await sha256Hex(canonicalRequest);
+  const signature = await calculateSignature(secretAccessKey, dateStamp, stringToSign);
 
-    // String to sign
-    const stringToSign = [
-      algorithm,
-      amzDate,
-      credentialScope,
-      canonicalHash
-    ].join('\n');
-
-    // Calculate signature
-    const signature = await calculateSignature(secretAccessKey, dateStamp, stringToSign);
-    const authHeader = `${algorithm} Credential=${accessKeyId}/${credentialScope}, SignedHeaders=content-type;host;x-amz-content-sha256;x-amz-date, Signature=${signature}`;
-
-    // Make PUT request to R2
-    const response = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Authorization': authHeader,
-        'Content-Type': contentType,
-        'X-Amz-Content-Sha256': bodyHash,
-        'X-Amz-Date': amzDate,
-      },
-      body: body,
-    });
-
-    if (!response.ok) {
-      const text = await response.text();
-      console.error('R2 error:', response.status, text);
-      return { success: false, error: `R2 error: ${response.status}` };
-    }
-
-    return { success: true };
-  } catch (error) {
-    console.error('uploadToR2 error:', error.message);
-    return { success: false, error: error.message };
-  }
+  const presignedUrl = `https://${host}/${bucket}/${key}?${canonicalQuerystring}&X-Amz-Signature=${signature}`;
+  return presignedUrl;
 }
 
 async function sha256Hex(data) {

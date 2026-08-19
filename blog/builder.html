@@ -600,16 +600,31 @@
         try {
           progressBar.style.width = '30%';
 
-          // Enviar archivo como binary data
-          const arrayBuffer = await file.arrayBuffer();
-
-          const uploadResponse = await fetch('/api/upload-image', {
+          // 1. Obtener presigned URL del servidor (enviando solo metadatos)
+          const presignedResponse = await fetch(`/api/upload-image?filename=${encodeURIComponent(file.name)}&type=${encodeURIComponent(file.type)}`, {
             method: 'POST',
-            headers: {
-              'Content-Type': file.type,
-              'Content-Length': file.size,
-            },
-            body: arrayBuffer,
+          });
+
+          let presignedData;
+          try {
+            presignedData = await presignedResponse.json();
+          } catch (e) {
+            alert('Error de servidor (no JSON): ' + (await presignedResponse.text()).substring(0, 200));
+            continue;
+          }
+
+          if (!presignedResponse.ok) {
+            alert('Error: ' + (presignedData.error || 'Desconocido'));
+            continue;
+          }
+
+          progressBar.style.width = '60%';
+
+          // 2. Subir directamente a R2 usando presigned URL (sin headers extra para evitar CORS)
+          const fileArrayBuffer = await file.arrayBuffer();
+          const uploadResponse = await fetch(presignedData.presignedUrl, {
+            method: 'PUT',
+            body: fileArrayBuffer,
           });
 
           progressBar.style.width = '90%';
