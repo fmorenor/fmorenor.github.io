@@ -26,8 +26,8 @@ export async function onRequest(context) {
 
     const host = `${accountId}.r2.cloudflarestorage.com`;
     const path = `/${bucket}/`;
-    const prefix = encodeURIComponent(`${defaultPrefix}/`);
-    const queryString = `list-type=2&max-keys=1000&prefix=${prefix}`;
+    // Lista desde la raíz del bucket (sin prefix)
+    const queryString = `list-type=2&max-keys=1000`;
 
     const now = new Date();
     const amzDate = now.toISOString().replace(/[:-]/g, '').replace(/\.\d{3}/, '');
