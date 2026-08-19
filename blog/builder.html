@@ -622,9 +622,6 @@
           // 2. Subir archivo directamente a R2 usando presigned URL
           const uploadResponse = await fetch(presignedData.presignedUrl, {
             method: 'PUT',
-            headers: {
-              'Content-Type': file.type,
-            },
             body: file,
           });
 
