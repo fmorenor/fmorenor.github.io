@@ -16,3 +16,7 @@ source-rebuild/
 *.log
 .vscode/
 .idea/
+
+# Environment variables (credenciales sensibles)
+.env
+.env.local

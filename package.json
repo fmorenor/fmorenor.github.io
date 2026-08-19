@@ -1,0 +1,9 @@
+{
+  "name": "cartodata-blog",
+  "version": "1.0.0",
+  "description": "CartoData blog con Pages Functions",
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.0.0"
+  }
+}

@@ -70,6 +70,19 @@
     .builder-video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.5rem 0; border-radius: 8px; }
     .builder-video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
+    .builder-upload-zone { border: 2px dashed rgba(125,211,252,0.5); border-radius: 6px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 250ms; background: rgba(125,211,252,0.05); }
+    .builder-upload-zone:hover { border-color: #7dd3fc; background: rgba(125,211,252,0.1); }
+    .builder-upload-zone.drag-over { border-color: #7dd3fc; background: rgba(125,211,252,0.15); }
+    .builder-upload-zone p { font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-bottom: 0.5rem; }
+    .builder-upload-zone input[type="file"] { display: none; }
+    .builder-uploaded-images { display: grid; grid-template-columns: 1fr; gap: 0.8rem; margin-top: 1rem; max-height: 200px; overflow-y: auto; }
+    .builder-uploaded-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 0.6rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+    .builder-uploaded-item button { background: rgba(59,91,219,0.2); border: 1px solid #7dd3fc; color: #7dd3fc; padding: 0.2rem 0.6rem; border-radius: 3px; cursor: pointer; font-size: 0.7rem; }
+    .builder-uploaded-item button:hover { background: rgba(59,91,219,0.4); }
+    .builder-upload-progress { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 0.8rem; overflow: hidden; display: none; }
+    .builder-upload-progress.active { display: block; }
+    .builder-upload-progress-bar { height: 100%; background: #7dd3fc; width: 0%; transition: width 200ms; }
+
     @media (max-width: 1024px) {
       .builder-container { flex-direction: column; }
       .builder-form-panel, .builder-preview-panel { width: 100%; height: auto; }
@@ -127,6 +140,20 @@
         <h4>📥 Pega contenido de Word</h4>
         <textarea id="pasteContent" placeholder="Copia y pega aquí todo tu contenido del Word..." style="width: 100%; min-height: 120px; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #f8fafc; font-family: inherit; font-size: 0.85rem; resize: vertical;"></textarea>
         <button class="builder-preview-btn" onclick="autoFormatContent()" style="width: 100%; margin-top: 0.8rem;">✨ Auto-formatear</button>
+      </div>
+
+      <!-- UPLOAD DE IMÁGENES -->
+      <div class="builder-content-section">
+        <h4>🖼️ Subir imágenes a R2</h4>
+        <div class="builder-upload-zone" id="uploadZone">
+          <p>📤 Arrastra imágenes aquí o haz clic</p>
+          <p style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">Máx 5MB, JPG/PNG/WebP</p>
+          <input type="file" id="imageInput" accept="image/*" multiple />
+        </div>
+        <div class="builder-upload-progress" id="uploadProgress">
+          <div class="builder-upload-progress-bar" id="progressBar"></div>
+        </div>
+        <div class="builder-uploaded-images" id="uploadedImages"></div>
       </div>
 
       <!-- EDITOR DE CONTENIDO -->
@@ -533,6 +560,80 @@
 
       navigator.clipboard.writeText(code).then(() => {
         alert('✅ Código copiado');
+      });
+    }
+
+    // ── UPLOAD DE IMÁGENES A R2 ──
+    const uploadZone = document.getElementById('uploadZone');
+    const imageInput = document.getElementById('imageInput');
+    const uploadProgress = document.getElementById('uploadProgress');
+    const progressBar = document.getElementById('progressBar');
+    const uploadedImages = document.getElementById('uploadedImages');
+
+    uploadZone.addEventListener('click', () => imageInput.click());
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('drag-over');
+    });
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('drag-over');
+    });
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('drag-over');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) uploadImages(files);
+    });
+
+    imageInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) uploadImages(e.target.files);
+    });
+
+    async function uploadImages(files) {
+      for (const file of files) {
+        if (!file.type.startsWith('image/')) continue;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        uploadProgress.classList.add('active');
+        progressBar.style.width = '0%';
+
+        try {
+          const response = await fetch('/api/upload-image', {
+            method: 'POST',
+            body: formData
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            addUploadedImage(result.url, file.name);
+          } else {
+            alert('Error: ' + result.error);
+          }
+        } catch (error) {
+          alert('Error al subir: ' + error.message);
+        }
+
+        progressBar.style.width = '100%';
+        setTimeout(() => uploadProgress.classList.remove('active'), 500);
+      }
+    }
+
+    function addUploadedImage(url, fileName) {
+      const item = document.createElement('div');
+      item.className = 'builder-uploaded-item';
+      item.innerHTML = `
+        <span>${fileName}</span>
+        <button type="button" onclick="copyImageUrl('${url}')">📋 Copiar</button>
+      `;
+      uploadedImages.appendChild(item);
+    }
+
+    function copyImageUrl(url) {
+      navigator.clipboard.writeText(url).then(() => {
+        alert('✅ URL copiada: ' + url);
       });
     }
 
