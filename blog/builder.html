@@ -137,6 +137,7 @@
           <button class="builder-block-btn" onclick="addBlock('h3')">+ H3</button>
           <button class="builder-block-btn" onclick="addBlock('p')">+ Párrafo</button>
           <button class="builder-block-btn" onclick="addBlock('ul')">+ Lista</button>
+          <button class="builder-block-btn" onclick="addBlock('image')">+ Imagen</button>
           <button class="builder-block-btn" onclick="addBlock('video')">+ Video</button>
         </div>
         <div class="builder-blocks-list" id="blocksList"></div>
@@ -280,8 +281,10 @@
 
     function renderBlocks() {
       blocksList.innerHTML = blocks.map((block, index) => {
-        const label = { h2: 'Título (H2)', h3: 'Subtítulo (H3)', p: 'Párrafo', ul: 'Lista', video: 'Video' }[block.type];
-        const placeholder = block.type === 'video' ? 'https://youtube.com/watch?v=...' : 'Escribe aquí...';
+        const label = { h2: 'Título (H2)', h3: 'Subtítulo (H3)', p: 'Párrafo', ul: 'Lista', image: 'Imagen', video: 'Video' }[block.type];
+        let placeholder = 'Escribe aquí...';
+        if (block.type === 'image') placeholder = 'https://ejemplo.com/imagen.jpg';
+        if (block.type === 'video') placeholder = 'https://youtube.com/watch?v=...';
         const canMoveUp = index > 0;
         const canMoveDown = index < blocks.length - 1;
         return `
@@ -362,6 +365,10 @@
           const items = block.content.split('\n').filter(i => i.trim());
           if (items.length) {
             html += '<ul>' + items.map(item => '<li>' + linkifyText(escapeHtml(item)) + '</li>').join('') + '</ul>';
+          }
+        } else if (block.type === 'image') {
+          if (block.content) {
+            html += '<img src="' + escapeHtml(block.content) + '" alt="Contenido" style="width: 100%; height: auto; margin: 1.5rem 0; border-radius: 8px;" />';
           }
         } else if (block.type === 'video') {
           const videoId = extractYouTubeId(block.content);
@@ -451,6 +458,10 @@
           const items = block.content.split('\n').filter(i => i.trim());
           if (items.length) {
             content += '<ul>\n' + items.map(item => '<li>' + linkifyText(escapeHtml(item)) + '</li>').join('\n') + '\n</ul>\n';
+          }
+        } else if (block.type === 'image') {
+          if (block.content) {
+            content += '<img src="' + escapeHtml(block.content) + '" alt="Contenido" style="width: 100%; height: auto; margin: 1.5rem 0; border-radius: 8px;" />\n';
           }
         } else if (block.type === 'video') {
           const videoId = extractYouTubeId(block.content);
