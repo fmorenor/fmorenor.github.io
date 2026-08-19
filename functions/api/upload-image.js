@@ -1,10 +1,8 @@
 export async function onRequest(context) {
-  // POST: Recibir archivo y subirlo a R2
   if (context.request.method === 'POST') {
     return handleUpload(context);
   }
 
-  // OPTIONS: CORS
   if (context.request.method === 'OPTIONS') {
     return new Response(null, {
       headers: {
@@ -15,7 +13,7 @@ export async function onRequest(context) {
     });
   }
 
-  return jsonResponse({ error: 'Método no permitido' }, 405);
+  return jsonResponse({ error: 'Method not allowed' }, 405);
 }
 
 async function handleUpload(context) {
@@ -33,7 +31,7 @@ async function handleUpload(context) {
 
     const arrayBuffer = await context.request.arrayBuffer();
 
-    // Acceder a variables de entorno
+    // R2 config
     const bucket = context.env.R2_BUCKET_NAME;
     const accountId = context.env.R2_ACCOUNT_ID || 'e883fcc90722d2b681a5282fe9581072';
     const accessKeyId = context.env.R2_ACCESS_KEY_ID;
@@ -41,41 +39,32 @@ async function handleUpload(context) {
     const publicDomain = context.env.R2_PUBLIC_DOMAIN;
     const defaultPrefix = context.env.R2_DEFAULT_PREFIX;
 
-    console.log('Env check:', { bucket: !!bucket, accountId: !!accountId, accessKeyId: !!accessKeyId, secretAccessKey: !!secretAccessKey });
-    console.log('Actual values:', { bucket, accountId: accountId?.substring(0, 8), accessKeyId: accessKeyId?.substring(0, 8), secretAccessKey: secretAccessKey?.substring(0, 8) });
-
     if (!bucket || !accessKeyId || !secretAccessKey) {
       return jsonResponse({
-        error: 'Missing R2 config: bucket=' + !!bucket + ' key=' + !!accessKeyId + ' secret=' + !!secretAccessKey
+        error: 'R2 config missing'
       }, 500);
     }
 
-    // Generar nombre único
+    // Generate key
     const timestamp = Date.now();
     const year = new Date().getFullYear();
     const ext = contentType.split('/')[1] || 'jpg';
     const key = `${defaultPrefix}/${year}/${timestamp}.${ext}`;
 
-    const presignedUrl = await generatePresignedUrl(
+    // Upload to R2 using AWS SigV4
+    const uploadResult = await uploadToR2(
       accountId,
       bucket,
       key,
+      arrayBuffer,
+      contentType,
       accessKeyId,
-      secretAccessKey,
-      contentType
+      secretAccessKey
     );
 
-    // Hacer PUT a R2 desde el servidor
-    const uploadResponse = await fetch(presignedUrl, {
-      method: 'PUT',
-      body: arrayBuffer,
-    });
-
-    if (!uploadResponse.ok) {
-      const errorText = await uploadResponse.text();
-      console.error('R2 upload failed:', uploadResponse.status, errorText);
+    if (!uploadResult.success) {
       return jsonResponse({
-        error: `Upload failed: ${uploadResponse.status}`
+        error: uploadResult.error
       }, 500);
     }
 
@@ -86,64 +75,81 @@ async function handleUpload(context) {
     }, 200);
 
   } catch (error) {
-    console.error('Upload error:', error.message, error.stack);
+    console.error('Upload error:', error.message);
     return jsonResponse({
-      error: 'Error: ' + (error.message || 'Unknown')
+      error: 'Error: ' + error.message
     }, 500);
   }
 }
 
-async function generatePresignedUrl(
-  accountId,
-  bucket,
-  key,
-  accessKeyId,
-  secretAccessKey,
-  contentType
-) {
-  const now = new Date();
-  const amzDate = now.toISOString().replace(/[:-]/g, '').replace(/\.\d{3}/, '');
-  const dateStamp = amzDate.substring(0, 8);
-  const expiresIn = 3600;
+async function uploadToR2(accountId, bucket, key, body, contentType, accessKeyId, secretAccessKey) {
+  try {
+    const host = `${accountId}.r2.cloudflarestorage.com`;
+    const url = `https://${host}/${bucket}/${key}`;
 
-  const algorithm = 'AWS4-HMAC-SHA256';
-  const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
-  const host = `${accountId}.r2.cloudflarestorage.com`;
+    const now = new Date();
+    const amzDate = now.toISOString().replace(/[:-]/g, '').replace(/\.\d{3}/, '');
+    const dateStamp = amzDate.substring(0, 8);
 
-  const canonicalRequest = [
-    'PUT',
-    `/${bucket}/${key}`,
-    `X-Amz-Algorithm=${algorithm}&X-Amz-Credential=${encodeURIComponent(accessKeyId)}%2F${credentialScope}&X-Amz-Date=${amzDate}&X-Amz-Expires=${expiresIn}&X-Amz-SignedHeaders=host%3Bx-amz-content-type`,
-    `host:${host}`,
-    `x-amz-content-type:${contentType}`,
-    '',
-    'host;x-amz-content-type',
-    'UNSIGNED-PAYLOAD'
-  ].join('\n');
+    // Create canonical request
+    const bodyHash = await sha256Hex(body);
+    const canonicalRequest = [
+      'PUT',
+      `/${bucket}/${key}`,
+      '',
+      `content-type:${contentType}`,
+      `host:${host}`,
+      `x-amz-content-sha256:${bodyHash}`,
+      `x-amz-date:${amzDate}`,
+      '',
+      'content-type;host;x-amz-content-sha256;x-amz-date',
+      bodyHash
+    ].join('\n');
 
-  const canonicalRequestHash = await sha256(canonicalRequest);
+    const canonicalHash = await sha256Hex(new TextEncoder().encode(canonicalRequest));
 
-  const stringToSign = [
-    algorithm,
-    amzDate,
-    credentialScope,
-    canonicalRequestHash
-  ].join('\n');
+    const algorithm = 'AWS4-HMAC-SHA256';
+    const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
+    const stringToSign = [
+      algorithm,
+      amzDate,
+      credentialScope,
+      canonicalHash
+    ].join('\n');
 
-  const signature = await calculateSignature(
-    secretAccessKey,
-    dateStamp,
-    stringToSign
-  );
+    const signature = await calculateSignature(secretAccessKey, dateStamp, stringToSign);
 
-  const presignedUrl = `https://${host}/${bucket}/${key}?X-Amz-Algorithm=${algorithm}&X-Amz-Credential=${encodeURIComponent(accessKeyId)}%2F${credentialScope}&X-Amz-Date=${amzDate}&X-Amz-Expires=${expiresIn}&X-Amz-SignedHeaders=host%3Bx-amz-content-type&X-Amz-Signature=${signature}`;
+    const authHeader = `${algorithm} Credential=${accessKeyId}/${credentialScope}, SignedHeaders=content-type;host;x-amz-content-sha256;x-amz-date, Signature=${signature}`;
 
-  return presignedUrl;
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': authHeader,
+        'Content-Type': contentType,
+        'X-Amz-Content-Sha256': bodyHash,
+        'X-Amz-Date': amzDate,
+      },
+      body: body,
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.error('R2 error:', response.status, text);
+      return { success: false, error: `R2 error: ${response.status}` };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('uploadToR2 error:', error.message);
+    return { success: false, error: error.message };
+  }
 }
 
-async function sha256(message) {
-  const msgBuffer = new TextEncoder().encode(message);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+async function sha256Hex(data) {
+  if (typeof data === 'string') {
+    data = new TextEncoder().encode(data);
+  }
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
