@@ -90,10 +90,9 @@ async function uploadToR2(accountId, bucket, key, fileBuffer, contentType, acces
 
     const payloadHash = await sha256Hex(fileBuffer);
 
-    // Headers in alphabetical order
+    // Headers in alphabetical order (only the ones to sign)
     const headers = {
       'host': host,
-      'content-type': contentType,
       'x-amz-content-sha256': payloadHash,
       'x-amz-date': amzDate
     };
@@ -111,10 +110,6 @@ async function uploadToR2(accountId, bucket, key, fileBuffer, contentType, acces
       payloadHash
     ].join('\n');
 
-    console.log('DEBUG - Canonical Request:');
-    console.log(JSON.stringify(canonicalRequest));
-    console.log('DEBUG - Signed Headers:', signedHeadersStr);
-
     const canonicalHash = await sha256Hex(canonicalRequest);
     const stringToSign = [
       algorithm,
@@ -125,7 +120,7 @@ async function uploadToR2(accountId, bucket, key, fileBuffer, contentType, acces
 
     const signature = await calculateSignature(secretAccessKey, dateStamp, stringToSign);
 
-    const authHeader = `${algorithm} Credential=${accessKeyId}/${credentialScope}, SignedHeaders=content-type;host;x-amz-content-sha256;x-amz-date, Signature=${signature}`;
+    const authHeader = `${algorithm} Credential=${accessKeyId}/${credentialScope}, SignedHeaders=${signedHeadersStr}, Signature=${signature}`;
 
     const response = await fetch(`https://${host}${path}`, {
       method: 'PUT',
