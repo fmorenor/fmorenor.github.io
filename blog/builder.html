@@ -143,6 +143,15 @@
         <button class="builder-preview-btn" onclick="autoFormatContent()" style="width: 100%; margin-top: 0.8rem;">✨ Auto-formatear</button>
       </div>
 
+      <!-- GALERÍA RÁPIDA -->
+      <div class="builder-content-section">
+        <h4>🖼️ Prueba Galería</h4>
+        <div style="display: flex; gap: 0.5rem; align-items: flex-end;">
+          <input type="text" id="testImageUrl" placeholder="https://pub-0b66dd4321604e288d1651690d880dc2.r2.dev/imagen.jpg" style="flex: 1; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #f8fafc;" />
+          <button type="button" onclick="testAddImage()" style="padding: 0.75rem 1.2rem; background: rgba(59,91,219,0.2); border: 1px solid #3b5bdb; border-radius: 6px; color: #7dd3fc; font-size: 0.75rem; font-weight: 600; cursor: pointer;">Agregar</button>
+        </div>
+      </div>
+
       <!-- EDITOR DE CONTENIDO -->
       <div class="builder-content-section">
         <h4>📝 Contenido del artículo</h4>
@@ -573,6 +582,25 @@
         images.push({ name: fileName, url });
         localStorage.setItem(storageKey, JSON.stringify(images));
       }
+    }
+
+    function testAddImage() {
+      const input = document.getElementById('testImageUrl');
+      const url = input.value.trim();
+
+      if (!url) {
+        alert('Pega una URL de R2');
+        return;
+      }
+
+      if (!url.includes('r2.dev')) {
+        alert('Debe ser una URL de R2');
+        return;
+      }
+
+      addToGallery(url);
+      input.value = '';
+      alert('✅ Agregada a la galería. Abre /blog/gallery.html para verla');
     }
   </script>
 </body>
