@@ -600,46 +600,34 @@
         try {
           progressBar.style.width = '30%';
 
-          // 1. Obtener presigned URL del servidor (enviando solo metadatos)
-          const presignedResponse = await fetch(`/api/upload-image?filename=${encodeURIComponent(file.name)}&type=${encodeURIComponent(file.type)}`, {
-            method: 'POST',
-          });
-
-          let presignedData;
-          try {
-            presignedData = await presignedResponse.json();
-          } catch (e) {
-            alert('Error de servidor (no JSON): ' + (await presignedResponse.text()).substring(0, 200));
-            continue;
-          }
-
-          if (!presignedResponse.ok) {
-            alert('Error: ' + (presignedData.error || 'Desconocido'));
-            continue;
-          }
-
+          // Enviar archivo a la API (la API lo sube a R2, evita CORS)
+          const fileArrayBuffer = await file.arrayBuffer();
           progressBar.style.width = '60%';
 
-          // 2. Subir directamente a R2 usando presigned URL (sin headers extra para evitar CORS)
-          const fileArrayBuffer = await file.arrayBuffer();
-          console.log('Presigned URL:', presignedData.presignedUrl);
-          console.log('File size:', fileArrayBuffer.byteLength);
-
-          const uploadResponse = await fetch(presignedData.presignedUrl, {
-            method: 'PUT',
-            body: fileArrayBuffer,
+          const uploadResponse = await fetch('/api/upload-image', {
+            method: 'POST',
+            headers: {
+              'Content-Type': file.type || 'image/jpeg',
+              'X-File-Name': file.name
+            },
+            body: fileArrayBuffer
           });
 
           progressBar.style.width = '90%';
 
-          console.log('Upload response status:', uploadResponse.status);
-          const responseText = await uploadResponse.text();
-          console.log('Upload response text:', responseText.substring(0, 500));
+          let uploadData;
+          try {
+            uploadData = await uploadResponse.json();
+          } catch (e) {
+            const errorText = await uploadResponse.text();
+            alert('Error: ' + errorText.substring(0, 200));
+            continue;
+          }
 
           if (uploadResponse.ok) {
-            addUploadedImage(presignedData.publicUrl, file.name);
+            addUploadedImage(uploadData.publicUrl, file.name);
           } else {
-            alert('Error subiendo a R2: ' + uploadResponse.status + ' - ' + responseText.substring(0, 200));
+            alert('Error: ' + (uploadData.error || uploadResponse.status));
           }
         } catch (error) {
           alert('Error: ' + error.message);

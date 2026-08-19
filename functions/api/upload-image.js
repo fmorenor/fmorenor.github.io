@@ -18,13 +18,8 @@ export async function onRequest(context) {
 
 async function handleUpload(context) {
   try {
-    const url = new URL(context.request.url);
-    const fileName = url.searchParams.get('filename');
-    const contentType = url.searchParams.get('type') || 'image/jpeg';
-
-    if (!fileName || !contentType) {
-      return jsonResponse({ error: 'Missing filename or type' }, 400);
-    }
+    const contentType = context.request.headers.get('Content-Type') || 'image/jpeg';
+    const fileName = context.request.headers.get('X-File-Name') || 'image';
 
     if (!contentType.startsWith('image/')) {
       return jsonResponse({ error: 'Must be an image' }, 400);
@@ -50,19 +45,26 @@ async function handleUpload(context) {
     const ext = contentType.split('/')[1] || 'jpg';
     const key = `${defaultPrefix}/${year}/${timestamp}.${ext}`;
 
-    // Generate presigned URL (client will use this to upload)
-    const presignedUrl = await generatePresignedUrl(
+    // Read file body
+    const fileBuffer = await context.request.arrayBuffer();
+
+    // Upload to R2 from server (no CORS issues this way)
+    const uploadResult = await uploadToR2(
       accountId,
       bucket,
       key,
+      fileBuffer,
+      contentType,
       accessKeyId,
-      secretAccessKey,
-      contentType
+      secretAccessKey
     );
+
+    if (!uploadResult.success) {
+      return jsonResponse({ error: uploadResult.error }, 500);
+    }
 
     return jsonResponse({
       success: true,
-      presignedUrl,
       publicUrl: `${publicDomain}/${key}`,
       key,
     }, 200);
@@ -70,6 +72,68 @@ async function handleUpload(context) {
   } catch (error) {
     console.error('Upload error:', error.message);
     return jsonResponse({ error: 'Error: ' + error.message }, 500);
+  }
+}
+
+async function uploadToR2(accountId, bucket, key, fileBuffer, contentType, accessKeyId, secretAccessKey) {
+  try {
+    const host = `${accountId}.r2.cloudflarestorage.com`;
+    const method = 'PUT';
+    const path = `/${bucket}/${key}`;
+
+    // Build AWS SigV4 headers
+    const now = new Date();
+    const amzDate = now.toISOString().replace(/[:-]/g, '').replace(/\.\d{3}/, '');
+    const dateStamp = amzDate.substring(0, 8);
+    const algorithm = 'AWS4-HMAC-SHA256';
+    const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
+
+    const payloadHash = await sha256Hex(fileBuffer);
+
+    const canonicalRequest = [
+      method,
+      path,
+      '',
+      `content-type:${contentType}`,
+      `host:${host}`,
+      `x-amz-content-sha256:${payloadHash}`,
+      `x-amz-date:${amzDate}`,
+      '',
+      'content-type;host;x-amz-content-sha256;x-amz-date',
+      payloadHash
+    ].join('\n');
+
+    const canonicalHash = await sha256Hex(canonicalRequest);
+    const stringToSign = [
+      algorithm,
+      amzDate,
+      credentialScope,
+      canonicalHash
+    ].join('\n');
+
+    const signature = await calculateSignature(secretAccessKey, dateStamp, stringToSign);
+
+    const authHeader = `${algorithm} Credential=${accessKeyId}/${credentialScope}, SignedHeaders=content-type;host;x-amz-content-sha256;x-amz-date, Signature=${signature}`;
+
+    const response = await fetch(`https://${host}${path}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': contentType,
+        'Authorization': authHeader,
+        'X-Amz-Date': amzDate,
+        'X-Amz-Content-Sha256': payloadHash,
+      },
+      body: fileBuffer
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      return { success: false, error: `R2 error ${response.status}: ${text.substring(0, 200)}` };
+    }
+
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
   }
 }
 
