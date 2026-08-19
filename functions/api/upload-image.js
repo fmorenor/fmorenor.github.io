@@ -82,14 +82,24 @@ async function generatePresignedUrl(accountId, bucket, key, accessKeyId, secretA
   const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
   const host = `${accountId}.r2.cloudflarestorage.com`;
 
-  // Build canonical request for presigned URL
-  const canonicalQuerystring = `X-Amz-Algorithm=${algorithm}&X-Amz-Credential=${encodeURIComponent(accessKeyId)}%2F${credentialScope}&X-Amz-Date=${amzDate}&X-Amz-Expires=${expiresIn}&X-Amz-SignedHeaders=host`;
+  // Encode credential properly
+  const encodedCredential = `${accessKeyId}/${credentialScope}`;
+
+  // Build query string with properly ordered parameters
+  const queryParams = new URLSearchParams();
+  queryParams.set('X-Amz-Algorithm', algorithm);
+  queryParams.set('X-Amz-Credential', encodedCredential);
+  queryParams.set('X-Amz-Date', amzDate);
+  queryParams.set('X-Amz-Expires', String(expiresIn));
+  queryParams.set('X-Amz-SignedHeaders', 'host');
+
+  const canonicalQuerystring = queryParams.toString();
 
   const canonicalRequest = [
     'PUT',
     `/${bucket}/${key}`,
     canonicalQuerystring,
-    'host:' + host,
+    `host:${host}`,
     '',
     'host',
     'UNSIGNED-PAYLOAD'
