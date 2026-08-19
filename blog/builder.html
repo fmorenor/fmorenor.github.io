@@ -143,16 +143,13 @@
         <button class="builder-preview-btn" onclick="autoFormatContent()" style="width: 100%; margin-top: 0.8rem;">✨ Auto-formatear</button>
       </div>
 
-      <!-- UPLOAD DE IMÁGENES -->
+      <!-- REFERENCIAS DE IMÁGENES -->
       <div class="builder-content-section">
-        <h4>🖼️ Subir imágenes a R2</h4>
-        <div class="builder-upload-zone" id="uploadZone">
-          <p>📤 Arrastra imágenes aquí o haz clic</p>
-          <p style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">Máx 5MB, JPG/PNG/WebP</p>
-          <input type="file" id="imageInput" accept="image/*" multiple />
-        </div>
-        <div class="builder-upload-progress" id="uploadProgress">
-          <div class="builder-upload-progress-bar" id="progressBar"></div>
+        <h4>🖼️ Imágenes (R2)</h4>
+        <p class="builder-help-text" style="margin-bottom: 0.5rem;">Sube manualmente a R2 y pega la URL aquí</p>
+        <div style="display: flex; gap: 0.5rem; align-items: flex-end;">
+          <input type="text" id="imageUrlInput" placeholder="https://pub-0b66dd4321604e288d1651690d880dc2.r2.dev/imagen.jpg" style="flex: 1;" />
+          <button type="button" id="addImageBtn" class="builder-block-btn" style="padding: 0.75rem 1.2rem;">Agregar</button>
         </div>
         <div class="builder-uploaded-images" id="uploadedImages"></div>
       </div>
@@ -564,86 +561,33 @@
       });
     }
 
-    // ── UPLOAD DE IMÁGENES A R2 ──
-    const uploadZone = document.getElementById('uploadZone');
-    const imageInput = document.getElementById('imageInput');
-    const uploadProgress = document.getElementById('uploadProgress');
-    const progressBar = document.getElementById('progressBar');
+    // ── INPUT DE URL DE IMAGEN ──
+    const imageUrlInput = document.getElementById('imageUrlInput');
+    const addImageBtn = document.getElementById('addImageBtn');
     const uploadedImages = document.getElementById('uploadedImages');
 
-    uploadZone.addEventListener('click', () => imageInput.click());
-    uploadZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadZone.classList.add('drag-over');
-    });
-    uploadZone.addEventListener('dragleave', () => {
-      uploadZone.classList.remove('drag-over');
-    });
-    uploadZone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadZone.classList.remove('drag-over');
-      const files = e.dataTransfer.files;
-      if (files.length > 0) uploadImages(files);
-    });
-
-    imageInput.addEventListener('change', (e) => {
-      if (e.target.files.length > 0) uploadImages(e.target.files);
-    });
-
-    async function uploadImages(files) {
-      for (const file of files) {
-        if (!file.type.startsWith('image/')) continue;
-
-        uploadProgress.classList.add('active');
-        progressBar.style.width = '10%';
-
-        try {
-          progressBar.style.width = '30%';
-
-          // Enviar archivo a la API (la API lo sube a R2, evita CORS)
-          const fileArrayBuffer = await file.arrayBuffer();
-          progressBar.style.width = '60%';
-
-          const uploadResponse = await fetch('/api/upload-image', {
-            method: 'POST',
-            headers: {
-              'Content-Type': file.type || 'image/jpeg',
-              'X-File-Name': file.name
-            },
-            body: fileArrayBuffer
-          });
-
-          progressBar.style.width = '90%';
-
-          let uploadData;
-          try {
-            uploadData = await uploadResponse.json();
-          } catch (e) {
-            const errorText = await uploadResponse.text();
-            alert('Error: ' + errorText.substring(0, 200));
-            continue;
-          }
-
-          if (uploadResponse.ok) {
-            addUploadedImage(uploadData.publicUrl, file.name);
-          } else {
-            alert('Error: ' + (uploadData.error || uploadResponse.status));
-          }
-        } catch (error) {
-          alert('Error: ' + error.message);
-        }
-
-        progressBar.style.width = '100%';
-        setTimeout(() => uploadProgress.classList.remove('active'), 500);
+    addImageBtn.addEventListener('click', () => {
+      const url = imageUrlInput.value.trim();
+      if (!url) {
+        alert('⚠️ Pega la URL de la imagen');
+        return;
       }
-    }
+      addUploadedImage(url);
+      imageUrlInput.value = '';
+    });
 
-    function addUploadedImage(url, fileName) {
+    imageUrlInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addImageBtn.click();
+    });
+
+    function addUploadedImage(url) {
+      const fileName = url.split('/').pop() || 'imagen';
       const item = document.createElement('div');
       item.className = 'builder-uploaded-item';
       item.innerHTML = `
         <span>${fileName}</span>
-        <button type="button" onclick="copyImageUrl('${url}')">📋 Copiar</button>
+        <button type="button" onclick="copyImageUrl('${url}')">📋 Copiar URL</button>
+        <button type="button" onclick="this.parentElement.remove()">🗑️ Quitar</button>
       `;
       uploadedImages.appendChild(item);
     }
