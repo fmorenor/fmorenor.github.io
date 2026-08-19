@@ -1,5 +1,3 @@
-import crypto from 'crypto';
-
 export async function onRequest(context) {
   if (context.request.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Método no permitido' }), {
