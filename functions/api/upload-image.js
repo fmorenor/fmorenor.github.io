@@ -20,8 +20,14 @@ export async function onRequest(context) {
 
 async function handleUpload(context) {
   try {
-    const formData = await context.request.formData();
-    const file = formData.get('file');
+    let file;
+    try {
+      const formData = await context.request.formData();
+      file = formData.get('file');
+    } catch (e) {
+      console.error('FormData parse error:', e.message);
+      return jsonResponse({ error: 'Invalid form data: ' + e.message }, 400);
+    }
 
     if (!file) {
       return jsonResponse({ error: 'No file provided' }, 400);
@@ -43,9 +49,11 @@ async function handleUpload(context) {
     const publicDomain = context.env.R2_PUBLIC_DOMAIN;
     const defaultPrefix = context.env.R2_DEFAULT_PREFIX;
 
+    console.log('Env check:', { bucket: !!bucket, accountId: !!accountId, accessKeyId: !!accessKeyId, secretAccessKey: !!secretAccessKey });
+
     if (!bucket || !accessKeyId || !secretAccessKey) {
       return jsonResponse({
-        error: 'Missing R2 configuration'
+        error: 'Missing R2 config: bucket=' + !!bucket + ' key=' + !!accessKeyId + ' secret=' + !!secretAccessKey
       }, 500);
     }
 
