@@ -20,26 +20,18 @@ export async function onRequest(context) {
 
 async function handleUpload(context) {
   try {
-    let file;
-    try {
-      const formData = await context.request.formData();
-      file = formData.get('file');
-    } catch (e) {
-      console.error('FormData parse error:', e.message);
-      return jsonResponse({ error: 'Invalid form data: ' + e.message }, 400);
-    }
+    const contentType = context.request.headers.get('content-type') || 'image/jpeg';
+    const contentLength = parseInt(context.request.headers.get('content-length') || '0');
 
-    if (!file) {
-      return jsonResponse({ error: 'No file provided' }, 400);
-    }
-
-    if (!file.type.startsWith('image/')) {
+    if (!contentType.startsWith('image/')) {
       return jsonResponse({ error: 'Must be an image' }, 400);
     }
 
-    if (file.size > 5 * 1024 * 1024) {
+    if (contentLength > 5 * 1024 * 1024) {
       return jsonResponse({ error: 'File too large (max 5MB)' }, 400);
     }
+
+    const arrayBuffer = await context.request.arrayBuffer();
 
     // Acceder a variables de entorno
     const bucket = context.env.R2_BUCKET_NAME;
@@ -58,14 +50,10 @@ async function handleUpload(context) {
     }
 
     // Generar nombre único
-    const ext = file.name.split('.').pop().toLowerCase();
     const timestamp = Date.now();
     const year = new Date().getFullYear();
+    const ext = contentType.split('/')[1] || 'jpg';
     const key = `${defaultPrefix}/${year}/${timestamp}.${ext}`;
-
-    // Subir a R2
-    const arrayBuffer = await file.arrayBuffer();
-    const uploadUrl = `https://${accountId}.r2.cloudflarestorage.com/${bucket}/${key}`;
 
     const presignedUrl = await generatePresignedUrl(
       accountId,
@@ -73,7 +61,7 @@ async function handleUpload(context) {
       key,
       accessKeyId,
       secretAccessKey,
-      file.type
+      contentType
     );
 
     // Hacer PUT a R2 desde el servidor

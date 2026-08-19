@@ -600,13 +600,16 @@
         try {
           progressBar.style.width = '30%';
 
-          // Crear FormData y enviar archivo a la API
-          const formData = new FormData();
-          formData.append('file', file);
+          // Enviar archivo como binary data
+          const arrayBuffer = await file.arrayBuffer();
 
           const uploadResponse = await fetch('/api/upload-image', {
             method: 'POST',
-            body: formData,
+            headers: {
+              'Content-Type': file.type,
+              'Content-Length': file.size,
+            },
+            body: arrayBuffer,
           });
 
           progressBar.style.width = '90%';
