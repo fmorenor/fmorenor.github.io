@@ -148,6 +148,8 @@ async function uploadToR2(accountId, bucket, key, body, contentType, accessKeyId
 async function sha256Hex(data) {
   if (typeof data === 'string') {
     data = new TextEncoder().encode(data);
+  } else if (data instanceof ArrayBuffer) {
+    data = new Uint8Array(data);
   }
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
