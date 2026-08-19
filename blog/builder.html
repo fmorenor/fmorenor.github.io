@@ -562,27 +562,35 @@
 
     updatePreview();
 
-    // Interceptar URLs de imagen y agregarlas a la galería automáticamente
-    document.addEventListener('input', (e) => {
+    // Agregar imágenes a la galería vía API
+    async function addToGallery(url) {
+      const fileName = url.split('/').pop();
+
+      try {
+        const response = await fetch('/api/list-images', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, name: fileName })
+        });
+
+        if (response.ok) {
+          return true;
+        }
+      } catch (e) {
+        console.error('Error adding to gallery:', e);
+      }
+      return false;
+    }
+
+    // Interceptar URLs pegadas en inputs
+    document.addEventListener('input', async (e) => {
       if (e.target.type === 'text' && e.target.value.includes('r2.dev')) {
         const url = e.target.value.trim();
         if (url.match(/\.(jpg|jpeg|png|webp|gif)$/i)) {
-          addToGallery(url);
+          await addToGallery(url);
         }
       }
     });
-
-    function addToGallery(url) {
-      const fileName = url.split('/').pop();
-      const storageKey = 'cartodata_gallery_images';
-      const images = JSON.parse(localStorage.getItem(storageKey) || '[]');
-
-      // No agregar duplicados
-      if (!images.find(img => img.url === url)) {
-        images.push({ name: fileName, url });
-        localStorage.setItem(storageKey, JSON.stringify(images));
-      }
-    }
 
     function testAddImage() {
       const input = document.getElementById('testImageUrl');
@@ -598,9 +606,12 @@
         return;
       }
 
-      addToGallery(url);
-      input.value = '';
-      alert('✅ Agregada a la galería. Abre /blog/gallery.html para verla');
+      addToGallery(url).then(success => {
+        if (success) {
+          input.value = '';
+          alert('✅ Agregada a la galería. Abre /blog/gallery.html para verla');
+        }
+      });
     }
   </script>
 </body>

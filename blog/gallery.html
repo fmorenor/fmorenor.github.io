@@ -168,8 +168,6 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'cartodata_gallery_images';
-
     async function loadImages() {
       try {
         const response = await fetch('/api/list-images');
@@ -180,29 +178,15 @@
           return;
         }
 
-        // Combinar imágenes de la API con las del localStorage
-        const storedImages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        const allImages = [...data.images];
-
-        // Agregar imágenes almacenadas que no estén en la API
-        storedImages.forEach(stored => {
-          if (!allImages.find(img => img.url === stored.url)) {
-            allImages.push(stored);
-          }
-        });
-
-        // Guardar la lista completa en localStorage
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(allImages));
-
         const gallery = document.getElementById('gallery');
         gallery.innerHTML = '';
 
-        if (allImages.length === 0) {
+        if (!data.images || data.images.length === 0) {
           gallery.innerHTML = '<div class="loading">Sin imágenes aún</div>';
           return;
         }
 
-        allImages.forEach(image => {
+        data.images.forEach(image => {
           renderImage(gallery, image);
         });
       } catch (error) {
@@ -225,19 +209,6 @@
         </div>
       `;
       container.appendChild(item);
-    }
-
-    function addImageToGallery(url, name) {
-      const images = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-
-      // No agregar duplicados
-      if (!images.find(img => img.url === url)) {
-        images.push({ name, url });
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(images));
-
-        // Reload gallery
-        loadImages();
-      }
     }
 
     function copyUrl(url) {
@@ -265,10 +236,8 @@
 
     loadImages();
 
-    // Escuchar cambios de localStorage (cuando se carga desde otra pestaña)
-    window.addEventListener('storage', () => {
-      loadImages();
-    });
+    // Recargar cada 2 segundos para ver nuevas imágenes agregadas desde el builder
+    setInterval(loadImages, 2000);
   </script>
 </body>
 </html>
