@@ -1,8 +1,0 @@
-name = "cartodata-web"
-type = "javascript"
-account_id = "e883fcc907722d2b681a5282fe9581072"
-workers_dev = false
-
-[[r2_buckets]]
-binding = "R2_BUCKET"
-bucket_name = "cartodata-blog-images"
