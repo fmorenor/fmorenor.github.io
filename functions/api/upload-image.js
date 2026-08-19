@@ -80,6 +80,7 @@ async function uploadToR2(accountId, bucket, key, fileBuffer, contentType, acces
     const host = `${accountId}.r2.cloudflarestorage.com`;
     const method = 'PUT';
     const path = `/${bucket}/${key}`;
+    const payloadHash = 'UNSIGNED-PAYLOAD';
 
     // Build AWS SigV4 headers
     const now = new Date();
@@ -87,8 +88,6 @@ async function uploadToR2(accountId, bucket, key, fileBuffer, contentType, acces
     const dateStamp = amzDate.substring(0, 8);
     const algorithm = 'AWS4-HMAC-SHA256';
     const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
-
-    const payloadHash = await sha256Hex(fileBuffer);
 
     // Headers in alphabetical order (only the ones to sign)
     const headers = {
