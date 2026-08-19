@@ -143,17 +143,6 @@
         <button class="builder-preview-btn" onclick="autoFormatContent()" style="width: 100%; margin-top: 0.8rem;">✨ Auto-formatear</button>
       </div>
 
-      <!-- REFERENCIAS DE IMÁGENES -->
-      <div class="builder-content-section">
-        <h4>🖼️ Imágenes (R2)</h4>
-        <p class="builder-help-text" style="margin-bottom: 0.5rem;">Sube manualmente a R2 y pega la URL aquí</p>
-        <div style="display: flex; gap: 0.5rem; align-items: flex-end;">
-          <input type="text" id="imageUrlInput" placeholder="https://pub-0b66dd4321604e288d1651690d880dc2.r2.dev/imagen.jpg" style="flex: 1;" />
-          <button type="button" id="addImageBtn" class="builder-block-btn" style="padding: 0.75rem 1.2rem;">Agregar</button>
-        </div>
-        <div class="builder-uploaded-images" id="uploadedImages"></div>
-      </div>
-
       <!-- EDITOR DE CONTENIDO -->
       <div class="builder-content-section">
         <h4>📝 Contenido del artículo</h4>
@@ -561,42 +550,6 @@
       });
     }
 
-    // ── INPUT DE URL DE IMAGEN ──
-    const imageUrlInput = document.getElementById('imageUrlInput');
-    const addImageBtn = document.getElementById('addImageBtn');
-    const uploadedImages = document.getElementById('uploadedImages');
-
-    addImageBtn.addEventListener('click', () => {
-      const url = imageUrlInput.value.trim();
-      if (!url) {
-        alert('⚠️ Pega la URL de la imagen');
-        return;
-      }
-      addUploadedImage(url);
-      imageUrlInput.value = '';
-    });
-
-    imageUrlInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') addImageBtn.click();
-    });
-
-    function addUploadedImage(url) {
-      const fileName = url.split('/').pop() || 'imagen';
-      const item = document.createElement('div');
-      item.className = 'builder-uploaded-item';
-      item.innerHTML = `
-        <span>${fileName}</span>
-        <button type="button" onclick="copyImageUrl('${url}')">📋 Copiar URL</button>
-        <button type="button" onclick="this.parentElement.remove()">🗑️ Quitar</button>
-      `;
-      uploadedImages.appendChild(item);
-    }
-
-    function copyImageUrl(url) {
-      navigator.clipboard.writeText(url).then(() => {
-        alert('✅ URL copiada: ' + url);
-      });
-    }
 
     updatePreview();
   </script>
