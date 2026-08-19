@@ -25,10 +25,26 @@ export async function onRequest(context) {
 
 async function handleGetPresignedUrl(context) {
   try {
-    // Verificar variables de entorno
-    if (!context.env.R2_ACCOUNT_ID || !context.env.R2_BUCKET_NAME || !context.env.R2_ACCESS_KEY_ID || !context.env.R2_SECRET_ACCESS_KEY) {
+    // Acceder a variables de entorno
+    const accountId = context.env.R2_ACCOUNT_ID;
+    const bucket = context.env.R2_BUCKET_NAME;
+    const accessKeyId = context.env.R2_ACCESS_KEY_ID;
+    const secretAccessKey = context.env.R2_SECRET_ACCESS_KEY;
+    const publicDomain = context.env.R2_PUBLIC_DOMAIN;
+    const defaultPrefix = context.env.R2_DEFAULT_PREFIX;
+
+    // Log para debugging
+    console.log('Env check:', {
+      hasAccountId: !!accountId,
+      hasBucket: !!bucket,
+      hasAccessKey: !!accessKeyId,
+      hasSecret: !!secretAccessKey,
+    });
+
+    // Verificar variables críticas
+    if (!accountId || !bucket || !accessKeyId || !secretAccessKey) {
       return jsonResponse({
-        error: 'Faltan variables de entorno R2'
+        error: 'Faltan variables: accountId=' + !!accountId + ' bucket=' + !!bucket + ' accessKey=' + !!accessKeyId + ' secret=' + !!secretAccessKey
       }, 500);
     }
 
@@ -49,22 +65,22 @@ async function handleGetPresignedUrl(context) {
     const ext = fileName.split('.').pop().toLowerCase();
     const timestamp = Date.now();
     const year = new Date().getFullYear();
-    const key = `${context.env.R2_DEFAULT_PREFIX}/${year}/${timestamp}.${ext}`;
+    const key = `${defaultPrefix}/${year}/${timestamp}.${ext}`;
 
     // Generar presigned URL
     const presignedUrl = await generatePresignedUrl(
-      context.env.R2_ACCOUNT_ID,
-      context.env.R2_BUCKET_NAME,
+      accountId,
+      bucket,
       key,
-      context.env.R2_ACCESS_KEY_ID,
-      context.env.R2_SECRET_ACCESS_KEY,
+      accessKeyId,
+      secretAccessKey,
       fileType
     );
 
     return jsonResponse({
       success: true,
       presignedUrl,
-      publicUrl: `${context.env.R2_PUBLIC_DOMAIN}/${key}`,
+      publicUrl: `${publicDomain}/${key}`,
       key,
     }, 200);
 
