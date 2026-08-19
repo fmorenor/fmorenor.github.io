@@ -25,6 +25,13 @@ export async function onRequest(context) {
 
 async function handleGetPresignedUrl(context) {
   try {
+    // Verificar variables de entorno
+    if (!context.env.R2_ACCOUNT_ID || !context.env.R2_BUCKET_NAME || !context.env.R2_ACCESS_KEY_ID || !context.env.R2_SECRET_ACCESS_KEY) {
+      return jsonResponse({
+        error: 'Faltan variables de entorno R2'
+      }, 500);
+    }
+
     const url = new URL(context.request.url);
     const fileName = url.searchParams.get('filename');
     const fileType = url.searchParams.get('type');
@@ -62,9 +69,9 @@ async function handleGetPresignedUrl(context) {
     }, 200);
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error en presigned URL:', error.message, error.stack);
     return jsonResponse({
-      error: 'Error al generar presigned URL: ' + error.message
+      error: 'Error: ' + (error.message || 'Desconocido')
     }, 500);
   }
 }

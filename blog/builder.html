@@ -601,10 +601,18 @@
           const presignedResponse = await fetch(
             `/api/upload-image?filename=${encodeURIComponent(file.name)}&type=${encodeURIComponent(file.type)}`
           );
-          const presignedData = await presignedResponse.json();
+
+          let presignedData;
+          try {
+            presignedData = await presignedResponse.json();
+          } catch (e) {
+            const text = await presignedResponse.text();
+            alert('Error de servidor (no JSON): ' + text.substring(0, 200));
+            continue;
+          }
 
           if (!presignedResponse.ok) {
-            alert('Error: ' + presignedData.error);
+            alert('Error: ' + (presignedData.error || 'Desconocido'));
             continue;
           }
 
