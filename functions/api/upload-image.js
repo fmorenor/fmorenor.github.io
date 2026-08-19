@@ -26,20 +26,21 @@ export async function onRequest(context) {
 async function handleGetPresignedUrl(context) {
   try {
     // Acceder a variables de entorno
-    const accountId = context.env.R2_ACCOUNT_ID;
+    let accountId = context.env.R2_ACCOUNT_ID;
     const bucket = context.env.R2_BUCKET_NAME;
     const accessKeyId = context.env.R2_ACCESS_KEY_ID;
     const secretAccessKey = context.env.R2_SECRET_ACCESS_KEY;
     const publicDomain = context.env.R2_PUBLIC_DOMAIN;
     const defaultPrefix = context.env.R2_DEFAULT_PREFIX;
 
-    // Log para debugging
-    console.log('Env check:', {
-      hasAccountId: !!accountId,
-      hasBucket: !!bucket,
-      hasAccessKey: !!accessKeyId,
-      hasSecret: !!secretAccessKey,
-    });
+    // Workaround: si accountId no viene, intentar extraerla de publicDomain
+    if (!accountId && publicDomain) {
+      const match = publicDomain.match(/https:\/\/([a-f0-9]+)\.r2\.cloudflarestorage\.com/);
+      if (match) {
+        accountId = match[1];
+        console.log('AccountId extraído de publicDomain:', accountId);
+      }
+    }
 
     // Verificar variables críticas
     if (!accountId || !bucket || !accessKeyId || !secretAccessKey) {
