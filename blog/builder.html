@@ -622,6 +622,9 @@
 
           // 2. Subir directamente a R2 usando presigned URL (sin headers extra para evitar CORS)
           const fileArrayBuffer = await file.arrayBuffer();
+          console.log('Presigned URL:', presignedData.presignedUrl);
+          console.log('File size:', fileArrayBuffer.byteLength);
+
           const uploadResponse = await fetch(presignedData.presignedUrl, {
             method: 'PUT',
             body: fileArrayBuffer,
@@ -629,18 +632,14 @@
 
           progressBar.style.width = '90%';
 
-          let uploadData;
-          try {
-            uploadData = await uploadResponse.json();
-          } catch (e) {
-            alert('Error de servidor (no JSON)');
-            continue;
-          }
+          console.log('Upload response status:', uploadResponse.status);
+          const responseText = await uploadResponse.text();
+          console.log('Upload response text:', responseText.substring(0, 500));
 
           if (uploadResponse.ok) {
-            addUploadedImage(uploadData.publicUrl, file.name);
+            addUploadedImage(presignedData.publicUrl, file.name);
           } else {
-            alert('Error: ' + (uploadData.error || uploadResponse.status));
+            alert('Error subiendo a R2: ' + uploadResponse.status + ' - ' + responseText.substring(0, 200));
           }
         } catch (error) {
           alert('Error: ' + error.message);
