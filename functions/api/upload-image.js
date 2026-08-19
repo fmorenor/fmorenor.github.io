@@ -42,6 +42,7 @@ async function handleUpload(context) {
     const defaultPrefix = context.env.R2_DEFAULT_PREFIX;
 
     console.log('Env check:', { bucket: !!bucket, accountId: !!accountId, accessKeyId: !!accessKeyId, secretAccessKey: !!secretAccessKey });
+    console.log('Actual values:', { bucket, accountId: accountId?.substring(0, 8), accessKeyId: accessKeyId?.substring(0, 8), secretAccessKey: secretAccessKey?.substring(0, 8) });
 
     if (!bucket || !accessKeyId || !secretAccessKey) {
       return jsonResponse({
