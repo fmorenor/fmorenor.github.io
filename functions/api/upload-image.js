@@ -87,7 +87,7 @@ async function uploadToR2(accountId, bucket, key, fileBuffer, contentType, acces
     const amzDate = now.toISOString().replace(/[:-]/g, '').replace(/\.\d{3}/, '');
     const dateStamp = amzDate.substring(0, 8);
     const algorithm = 'AWS4-HMAC-SHA256';
-    const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
+    const credentialScope = `${dateStamp}/us-east-1/s3/aws4_request`;
 
     // Headers in alphabetical order (only the ones to sign)
     const headers = {
