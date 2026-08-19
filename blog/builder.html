@@ -598,39 +598,31 @@
         progressBar.style.width = '10%';
 
         try {
-          // 1. Solicitar presigned URL al servidor
-          const presignedResponse = await fetch(
-            `/api/upload-image?filename=${encodeURIComponent(file.name)}&type=${encodeURIComponent(file.type)}`
-          );
-
-          let presignedData;
-          try {
-            presignedData = await presignedResponse.json();
-          } catch (e) {
-            const text = await presignedResponse.text();
-            alert('Error de servidor (no JSON): ' + text.substring(0, 200));
-            continue;
-          }
-
-          if (!presignedResponse.ok) {
-            alert('Error: ' + (presignedData.error || 'Desconocido'));
-            continue;
-          }
-
           progressBar.style.width = '30%';
 
-          // 2. Subir archivo directamente a R2 usando presigned URL
-          const uploadResponse = await fetch(presignedData.presignedUrl, {
-            method: 'PUT',
-            body: file,
+          // Crear FormData y enviar archivo a la API
+          const formData = new FormData();
+          formData.append('file', file);
+
+          const uploadResponse = await fetch('/api/upload-image', {
+            method: 'POST',
+            body: formData,
           });
 
           progressBar.style.width = '90%';
 
+          let uploadData;
+          try {
+            uploadData = await uploadResponse.json();
+          } catch (e) {
+            alert('Error de servidor (no JSON)');
+            continue;
+          }
+
           if (uploadResponse.ok) {
-            addUploadedImage(presignedData.publicUrl, file.name);
+            addUploadedImage(uploadData.publicUrl, file.name);
           } else {
-            alert('Error al subir a R2: ' + uploadResponse.status);
+            alert('Error: ' + (uploadData.error || uploadResponse.status));
           }
         } catch (error) {
           alert('Error: ' + error.message);

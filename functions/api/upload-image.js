@@ -1,12 +1,7 @@
 export async function onRequest(context) {
-  // GET: Generar presigned URL
-  if (context.request.method === 'GET') {
-    return handleGetPresignedUrl(context);
-  }
-
-  // POST: Recibir confirmación de upload (opcional)
+  // POST: Recibir archivo y subirlo a R2
   if (context.request.method === 'POST') {
-    return handleUploadConfirmation(context);
+    return handleUpload(context);
   }
 
   // OPTIONS: CORS
@@ -14,7 +9,7 @@ export async function onRequest(context) {
     return new Response(null, {
       headers: {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
       },
     });
@@ -23,76 +18,81 @@ export async function onRequest(context) {
   return jsonResponse({ error: 'Método no permitido' }, 405);
 }
 
-async function handleGetPresignedUrl(context) {
+async function handleUpload(context) {
   try {
+    const formData = await context.request.formData();
+    const file = formData.get('file');
+
+    if (!file) {
+      return jsonResponse({ error: 'No file provided' }, 400);
+    }
+
+    if (!file.type.startsWith('image/')) {
+      return jsonResponse({ error: 'Must be an image' }, 400);
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      return jsonResponse({ error: 'File too large (max 5MB)' }, 400);
+    }
+
     // Acceder a variables de entorno
-    // WORKAROUND: hardcodear accountId temporalmente
-    const accountId = context.env.R2_ACCOUNT_ID || 'e883fcc90722d2b681a5282fe9581072';
     const bucket = context.env.R2_BUCKET_NAME;
+    const accountId = context.env.R2_ACCOUNT_ID || 'e883fcc90722d2b681a5282fe9581072';
     const accessKeyId = context.env.R2_ACCESS_KEY_ID;
     const secretAccessKey = context.env.R2_SECRET_ACCESS_KEY;
     const publicDomain = context.env.R2_PUBLIC_DOMAIN;
     const defaultPrefix = context.env.R2_DEFAULT_PREFIX;
 
-    // Verificar variables críticas
     if (!bucket || !accessKeyId || !secretAccessKey) {
       return jsonResponse({
-        error: 'Faltan variables: bucket=' + !!bucket + ' accessKey=' + !!accessKeyId + ' secret=' + !!secretAccessKey
+        error: 'Missing R2 configuration'
       }, 500);
     }
 
-    const url = new URL(context.request.url);
-    const fileName = url.searchParams.get('filename');
-    const fileType = url.searchParams.get('type');
-
-    if (!fileName || !fileType) {
-      return jsonResponse({ error: 'Falta filename o type' }, 400);
-    }
-
-    // Validar tipo
-    if (!fileType.startsWith('image/')) {
-      return jsonResponse({ error: 'Debe ser una imagen' }, 400);
-    }
-
     // Generar nombre único
-    const ext = fileName.split('.').pop().toLowerCase();
+    const ext = file.name.split('.').pop().toLowerCase();
     const timestamp = Date.now();
     const year = new Date().getFullYear();
     const key = `${defaultPrefix}/${year}/${timestamp}.${ext}`;
 
-    // Generar presigned URL
+    // Subir a R2
+    const arrayBuffer = await file.arrayBuffer();
+    const uploadUrl = `https://${accountId}.r2.cloudflarestorage.com/${bucket}/${key}`;
+
     const presignedUrl = await generatePresignedUrl(
       accountId,
       bucket,
       key,
       accessKeyId,
       secretAccessKey,
-      fileType
+      file.type
     );
+
+    // Hacer PUT a R2 desde el servidor
+    const uploadResponse = await fetch(presignedUrl, {
+      method: 'PUT',
+      body: arrayBuffer,
+    });
+
+    if (!uploadResponse.ok) {
+      const errorText = await uploadResponse.text();
+      console.error('R2 upload failed:', uploadResponse.status, errorText);
+      return jsonResponse({
+        error: `Upload failed: ${uploadResponse.status}`
+      }, 500);
+    }
 
     return jsonResponse({
       success: true,
-      presignedUrl,
       publicUrl: `${publicDomain}/${key}`,
       key,
     }, 200);
 
   } catch (error) {
-    console.error('Error en presigned URL:', error.message, error.stack);
+    console.error('Upload error:', error.message, error.stack);
     return jsonResponse({
-      error: 'Error: ' + (error.message || 'Desconocido')
+      error: 'Error: ' + (error.message || 'Unknown')
     }, 500);
-  }
-}
-
-async function handleUploadConfirmation(context) {
-  // Endpoint opcional para confirmar upload
-  try {
-    const data = await context.request.json();
-    console.log('Upload confirmado:', data.key);
-    return jsonResponse({ success: true }, 200);
-  } catch (error) {
-    return jsonResponse({ error: error.message }, 400);
   }
 }
 
@@ -107,13 +107,12 @@ async function generatePresignedUrl(
   const now = new Date();
   const amzDate = now.toISOString().replace(/[:-]/g, '').replace(/\.\d{3}/, '');
   const dateStamp = amzDate.substring(0, 8);
-  const expiresIn = 3600; // 1 hora
+  const expiresIn = 3600;
 
   const algorithm = 'AWS4-HMAC-SHA256';
   const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
   const host = `${accountId}.r2.cloudflarestorage.com`;
 
-  // Construir canonical request
   const canonicalRequest = [
     'PUT',
     `/${bucket}/${key}`,
@@ -127,7 +126,6 @@ async function generatePresignedUrl(
 
   const canonicalRequestHash = await sha256(canonicalRequest);
 
-  // String to sign
   const stringToSign = [
     algorithm,
     amzDate,
@@ -135,14 +133,12 @@ async function generatePresignedUrl(
     canonicalRequestHash
   ].join('\n');
 
-  // Calcular signature
   const signature = await calculateSignature(
     secretAccessKey,
     dateStamp,
     stringToSign
   );
 
-  // Construir presigned URL
   const presignedUrl = `https://${host}/${bucket}/${key}?X-Amz-Algorithm=${algorithm}&X-Amz-Credential=${encodeURIComponent(accessKeyId)}%2F${credentialScope}&X-Amz-Date=${amzDate}&X-Amz-Expires=${expiresIn}&X-Amz-SignedHeaders=host%3Bx-amz-content-type&X-Amz-Signature=${signature}`;
 
   return presignedUrl;
