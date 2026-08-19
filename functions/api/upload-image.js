@@ -26,26 +26,18 @@ export async function onRequest(context) {
 async function handleGetPresignedUrl(context) {
   try {
     // Acceder a variables de entorno
-    let accountId = context.env.R2_ACCOUNT_ID;
+    // WORKAROUND: hardcodear accountId temporalmente
+    const accountId = context.env.R2_ACCOUNT_ID || 'e883fcc90722d2b681a5282fe9581072';
     const bucket = context.env.R2_BUCKET_NAME;
     const accessKeyId = context.env.R2_ACCESS_KEY_ID;
     const secretAccessKey = context.env.R2_SECRET_ACCESS_KEY;
     const publicDomain = context.env.R2_PUBLIC_DOMAIN;
     const defaultPrefix = context.env.R2_DEFAULT_PREFIX;
 
-    // Workaround: si accountId no viene, intentar extraerla de publicDomain
-    if (!accountId && publicDomain) {
-      const match = publicDomain.match(/https:\/\/([a-f0-9]+)\.r2\.cloudflarestorage\.com/);
-      if (match) {
-        accountId = match[1];
-        console.log('AccountId extraído de publicDomain:', accountId);
-      }
-    }
-
     // Verificar variables críticas
-    if (!accountId || !bucket || !accessKeyId || !secretAccessKey) {
+    if (!bucket || !accessKeyId || !secretAccessKey) {
       return jsonResponse({
-        error: 'Faltan variables: accountId=' + !!accountId + ' bucket=' + !!bucket + ' accessKey=' + !!accessKeyId + ' secret=' + !!secretAccessKey
+        error: 'Faltan variables: bucket=' + !!bucket + ' accessKey=' + !!accessKeyId + ' secret=' + !!secretAccessKey
       }, 500);
     }
 
