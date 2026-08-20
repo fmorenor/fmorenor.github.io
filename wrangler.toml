@@ -1,11 +1,6 @@
 name = "cartodata-web"
 type = "service"
-main = "worker.js"
 
-[[durable_objects.bindings]]
-name = "GALLERY"
-class_name = "GalleryStore"
-
-[[migrations]]
-tag = "v1"
-new_classes = ["GalleryStore"]
+[[kv_namespaces]]
+binding = "GALLERY_KV"
+id = "gallery_kv_namespace"

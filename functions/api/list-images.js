@@ -9,27 +9,50 @@ export async function onRequest(context) {
   }
 
   try {
-    // Obtener el Durable Object binding
-    const galleryDO = context.env.GALLERY;
-    if (!galleryDO) {
-      return jsonResponse({ error: 'Gallery service unavailable' }, 503);
+    const publicDomain = 'https://pub-0b66dd4321604e288d1651690d880dc2.r2.dev';
+    const kvNamespace = context.env.GALLERY_KV;
+
+    if (!kvNamespace) {
+      return jsonResponse({ error: 'Gallery storage unavailable' }, 503);
     }
 
-    // Crear un ID único para la galería (siempre el mismo)
-    const id = context.env.GALLERY.idFromName('default');
-    const gallery = galleryDO.get(id);
+    const knownImages = [
+      { name: 'guillermoHernandezCD.jpg', url: `${publicDomain}/guillermoHernandezCD.jpg` },
+      { name: 'sandraTovarCD.jpg', url: `${publicDomain}/sandraTovarCD.jpg` },
+      { name: 'rodolfoGonzalezCD.jpg', url: `${publicDomain}/rodolfoGonzalezCD.jpg` },
+      { name: 'martinpenaCD.jpg', url: `${publicDomain}/martinpenaCD.jpg` }
+    ];
 
-    // Proxear la solicitud al DO
-    const response = await gallery.fetch(new Request(context.request.url, {
-      method: context.request.method,
-      body: context.request.method === 'POST' ? await context.request.text() : undefined,
-      headers: { 'Content-Type': 'application/json' }
-    }));
+    if (context.request.method === 'GET') {
+      // Obtener imágenes del KV
+      const stored = await kvNamespace.get('gallery_images', 'json') || [];
+      const allImages = [...stored, ...knownImages];
+      const unique = Array.from(new Map(allImages.map(img => [img.url, img])).values());
 
-    // Asegurar CORS en la respuesta
-    const newResponse = new Response(response.body, response);
-    newResponse.headers.set('Access-Control-Allow-Origin', '*');
-    return newResponse;
+      return jsonResponse({ success: true, images: unique }, 200);
+    }
+
+    if (context.request.method === 'POST') {
+      const data = await context.request.json();
+      const { url, name } = data;
+
+      if (!url || !name) {
+        return jsonResponse({ error: 'Missing url or name' }, 400);
+      }
+
+      // Obtener imágenes actuales
+      const stored = await kvNamespace.get('gallery_images', 'json') || [];
+
+      // Evitar duplicados
+      if (!stored.some(img => img.url === url)) {
+        stored.push({ name, url });
+        await kvNamespace.put('gallery_images', JSON.stringify(stored));
+      }
+
+      return jsonResponse({ success: true, message: 'Image added to gallery' }, 200);
+    }
+
+    return jsonResponse({ error: 'Method not allowed' }, 405);
   } catch (error) {
     console.error('Gallery API error:', error.message);
     return jsonResponse({ error: error.message }, 500);
