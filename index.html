@@ -72,6 +72,26 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
+    <script>
+      /* Polyfill seguro para localStorage — evita SecurityError si no está disponible */
+      (function() {
+        let _storage = {};
+        const safe = {
+          getItem: (k) => _storage[k] ?? null,
+          setItem: (k, v) => { _storage[k] = String(v); },
+          removeItem: (k) => { delete _storage[k]; },
+          clear: () => { _storage = {}; },
+          key: (i) => Object.keys(_storage)[i] ?? null,
+          get length() { return Object.keys(_storage).length; }
+        };
+        try {
+          window.localStorage.getItem('__test__');
+        } catch (e) {
+          Object.defineProperty(window, 'localStorage', { value: safe, writable: false });
+        }
+      })();
+
+    </script>
     <script type="module" crossorigin src="./assets/index-DnxW7q2B.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-CPcc1KG7.css">
     <style>#xray { display: none !important; }</style>
@@ -320,7 +340,8 @@
           const r = 10;
           const bx = x, by = Math.max(y, baseline - maxBar);
           const bh = Math.max(1, h);
-          const barPath = `M ${bx+r} ${by} h ${BAR_W-2*r} a ${r} ${r} 0 0 1 ${r} ${r} v ${bh-r} h -${BAR_W} v -${bh-r} a ${r} ${r} 0 0 1 ${r} -${r} Z`;
+          const bhMinusR = bh - r;
+          const barPath = `M ${bx+r} ${by} h ${BAR_W-2*r} a ${r} ${r} 0 0 1 ${r} ${r} v ${bhMinusR} h -${BAR_W} v ${-bhMinusR} a ${r} ${r} 0 0 1 ${r} -${r} Z`;
           svg.appendChild(mk('path', { d: barPath, fill: bar.color,
             opacity: bar.color === BLUE ? '0.9' : '0.55' }));
 
@@ -2436,6 +2457,27 @@
     const obs = new MutationObserver(initTracking);
     obs.observe(document.body, { childList: true, subtree: true });
   })();
+
+  /* Interceptor para corregir SVG paths malformados (doble guión como en "v --9") */
+  window.__svgFixerActive = true;
+  const originalSetAttribute = Element.prototype.setAttribute;
+  const originalSetAttributeNS = Element.prototype.setAttributeNS;
+
+  Element.prototype.setAttribute = function(name, value) {
+    if (name === 'd' && typeof value === 'string' && value.includes('--')) {
+      const fixed = value.replace(/([vh])\s*--/g, '$1 -');
+      return originalSetAttribute.call(this, name, fixed);
+    }
+    return originalSetAttribute.call(this, name, value);
+  };
+
+  Element.prototype.setAttributeNS = function(ns, name, value) {
+    if (name === 'd' && typeof value === 'string' && value.includes('--')) {
+      const fixed = value.replace(/([vh])\s*--/g, '$1 -');
+      return originalSetAttributeNS.call(this, ns, name, fixed);
+    }
+    return originalSetAttributeNS.call(this, ns, name, value);
+  };
   </script>
   </body>
 </html>
