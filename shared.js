@@ -1,4 +1,23 @@
 /* shared.js — Nav, Footer y CSS base compartidos para todas las páginas de CartoData */
+
+/* Polyfill seguro para localStorage — evita SecurityError si no está disponible */
+(function() {
+  try {
+    window.localStorage.getItem('__test__');
+  } catch (e) {
+    let _storage = {};
+    const safe = {
+      getItem: (k) => _storage[k] ?? null,
+      setItem: (k, v) => { _storage[k] = String(v); },
+      removeItem: (k) => { delete _storage[k]; },
+      clear: () => { _storage = {}; },
+      key: (i) => Object.keys(_storage)[i] ?? null,
+      get length() { return Object.keys(_storage).length; }
+    };
+    Object.defineProperty(window, 'localStorage', { value: safe, writable: false });
+  }
+})();
+
 (function () {
   /* ── Google Tag Manager (GTM) ──
      Contenedor de tracking que gestiona múltiples tags.
