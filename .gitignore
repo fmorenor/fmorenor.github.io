@@ -3,6 +3,7 @@
 
 # Directorios que NO son el sitio desplegado
 source-rebuild/
+node_modules/
 
 # NO ignorar manus-storage/: el bundle de React (assets/index-*.js) referencia
 # 12 archivos de ahí (videos e imágenes del hero del home). Sacarlo del repo
