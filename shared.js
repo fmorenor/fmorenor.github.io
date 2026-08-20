@@ -512,8 +512,13 @@
   ];
 
   /* ── Estado: idioma y tema ── */
-  let lang  = localStorage.getItem('cartodata-lang') || 'es';
-  let theme = localStorage.getItem('theme') || 'dark';
+  let lang  = 'es', theme = 'dark';
+  try {
+    lang  = localStorage.getItem('cartodata-lang') || 'es';
+    theme = localStorage.getItem('theme') || 'dark';
+  } catch (e) {
+    // localStorage no disponible, usar valores por defecto
+  }
 
   function applyTheme(t) {
     theme = t;
