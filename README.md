@@ -134,6 +134,178 @@ Tokens principales (dark = default; `.light` en `<html>` conmuta a claro):
 
 ---
 
+## Blog — Historias de Cartomorfosis
+
+Sección de contenido editorial con artículos sobre transformación digital en ciudades y municipios. Todos los artículos son **páginas estáticas HTML** que comparten nav/footer/estilos vía `shared.js`.
+
+### Estructura
+
+```
+blog/
+├── index.html                                    # Índice del blog (grid filtrable)
+├── historias-de-cartomorfosis-e02t01-*.html    # Artículos (HTML estático)
+├── historias-de-cartomorfosis-e03t01-*.html
+├── historias-de-cartomorfosis-e04t01-*.html
+├── historias-de-cartomorfosis-e05t01-*.html
+├── historias-de-cartomorfosis-e06t01-*.html
+├── builder.html                                 # Herramienta interna: builder de artículos
+├── gallery.html                                 # Galería de imágenes (noindex, uso interno)
+└── ...
+```
+
+### Crear un artículo nuevo
+
+**Template base:**
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Historias de cartomorfosis [EXTY01] – NOMBRE · Blog — CartoData</title>
+  <meta name="description" content="Resumen breve del artículo (160 caracteres aprox)" />
+  <meta name="article:published_time" content="YYYY-MM-DDTHH:MM:SS.000Z" />
+  <meta name="author" content="CartoData" />
+  <link rel="canonical" href="https://www.cartodata.com/blog/historias-de-cartomorfosis-exty01--nombre-url.html" />
+  <meta property="og:title" content="Historias de cartomorfosis [EXTY01] – NOMBRE" />
+  <meta property="og:description" content="Resumen breve del artículo" />
+  <meta property="og:image" content="https://pub-0b66dd4321604e288d1651690d880dc2.r2.dev/FOTO.jpg" />
+  <meta property="og:url" content="https://www.cartodata.com/blog/historias-de-cartomorfosis-exty01--nombre-url.html" />
+  <meta property="og:type" content="article" />
+  
+  <script src="../shared.js" defer></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+      const logo = document.getElementById('cd-nav-logo');
+      if (logo && !logo.src.includes('manus-storage')) {
+        const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+        logo.src = isDark
+          ? '../manus-storage/logo-white-h-proper_641226e9.png'
+          : '../manus-storage/logo-black-h-proper_e8a1da9d.png';
+      }
+    });
+  </script>
+
+  <style>
+    /* Copiar estilos completos de un artículo existente (E04T01, E05T01, E06T01) */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; }
+    /* ... [copiar desde .blog-hero hasta media queries] ... */
+  </style>
+</head>
+<body>
+  <!-- Hero section con imagen de fondo -->
+  <section class="blog-hero" style="background-image: url('https://pub-0b66dd4321604e288d1651690d880dc2.r2.dev/FOTO.jpg');">
+    <img src="https://pub-0b66dd4321604e288d1651690d880dc2.r2.dev/FOTO.jpg" alt="Hero" class="blog-hero-bg" />
+    <div class="blog-hero-overlay"></div>
+    <div class="blog-hero-content">
+      <div class="blog-eyebrow">
+        <span class="blog-category">Podcast</span>
+        DD de MESES de YYYY
+      </div>
+      <h1 class="blog-h1">Historias de cartomorfosis [EXTY01] – NOMBRE COMPLETO PERSONA</h1>
+      <p class="blog-subtitle">Resumen/descripción del artículo</p>
+    </div>
+  </section>
+
+  <!-- Contenido del artículo -->
+  <article class="blog-container">
+    <div class="blog-content">
+      <!-- Video YouTube (opcional) -->
+      <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.5rem 0; border-radius: 8px;">
+        <iframe src="https://www.youtube.com/embed/VIDEO_ID" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
+      </div>
+
+      <h2>Entrevista</h2>
+      <p>Contenido transcripción...</p>
+    </div>
+  </article>
+</body>
+</html>
+```
+
+**Pasos:**
+
+1. Crear archivo: `blog/historias-de-cartomorfosis-exty01--nombre-url.html`
+2. Copiar template arriba (con CSS completo de artículo existente)
+3. **Reemplazar:**
+   - `EXTY01` → número del episodio (E07T01, E08T01…)
+   - `NOMBRE` → nombre de la persona entrevistada
+   - `FOTO.jpg` → nombre de la imagen en R2
+   - Fecha, descripción, contenido
+4. **Agregar tarjeta al índice** (`blog/index.html`) en orden cronológico (más reciente primero):
+
+```html
+<!-- ARTÍCULO: CARTOMORFOSIS EXTY01 NOMBRE -->
+<a href="/blog/historias-de-cartomorfosis-exty01--nombre-url.html" class="blog-article-card" data-category="podcast">
+  <img src="https://pub-0b66dd4321604e288d1651690d880dc2.r2.dev/FOTO.jpg" alt="Artículo" class="blog-article-image" />
+  <div class="blog-article-content">
+    <span class="blog-article-category">Podcast</span>
+    <div class="blog-article-date">DD de MESES de YYYY</div>
+    <h3 class="blog-article-title">Historias de cartomorfosis [EXTY01] – NOMBRE COMPLETO</h3>
+    <p class="blog-article-excerpt">Descripción/resumen del artículo (máx 2 líneas)</p>
+    <span class="blog-article-link">LEER MÁS</span>
+  </div>
+</a>
+```
+
+5. **Actualizar SEO:**
+   - Agregar URL a `sitemap.xml` (ver sección **SEO** abajo)
+
+### Galería de imágenes
+
+**Ubicación:** `blog/gallery.html` (noindex, uso interno)
+
+**Flujo:**
+1. Subir imagen manualmente a R2 (Cloudflare) con URL: `https://pub-0b66dd4321604e288d1651690d880dc2.r2.dev/nombre.jpg`
+2. Ir a `blog/builder.html` → pegar URL completa en input de prueba
+3. La galería se actualiza automáticamente (recarga cada 2 segundos)
+4. Copiar URL desde galería para pegarla en el artículo
+
+**API interna** (`functions/api/list-images.js`):
+- `GET /api/list-images` — devuelve lista de imágenes (conocidas + agregadas)
+- `POST /api/list-images` — agrega nueva imagen al store en memoria
+
+**Imágenes conocidas** (hardcodeadas, persistentes):
+```javascript
+const knownImages = [
+  { name: 'guillermoHernandezCD.jpg', url: `${publicDomain}/guillermoHernandezCD.jpg` },
+  { name: 'sandraTovarCD.jpg', url: `${publicDomain}/sandraTovarCD.jpg` },
+  { name: 'rodolfoGonzalezCD.jpg', url: `${publicDomain}/rodolfoGonzalezCD.jpg` },
+  { name: 'martinpenaCD.jpg', url: `${publicDomain}/martinpenaCD.jpg` },
+];
+```
+
+### SEO — Sitemap y meta tags
+
+**Meta tags obligatorios en cada artículo:**
+
+```html
+<meta name="description" content="Resumen (150-160 caracteres)" />
+<meta name="author" content="CartoData" />
+<link rel="canonical" href="https://www.cartodata.com/blog/url-completa.html" />
+<meta property="og:title" content="Título del artículo" />
+<meta property="og:description" content="Resumen" />
+<meta property="og:image" content="URL_FOTO" />
+<meta property="og:url" content="https://www.cartodata.com/blog/url-completa.html" />
+<meta property="og:type" content="article" />
+```
+
+**Sitemap:** Agregar entrada en `sitemap.xml`
+
+```xml
+<url>
+  <loc>https://www.cartodata.com/blog/historias-de-cartomorfosis-exty01--nombre-url.html</loc>
+  <lastmod>YYYY-MM-DD</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+</url>
+```
+
+---
+
 ## Desarrollo local
 
 ```bash
