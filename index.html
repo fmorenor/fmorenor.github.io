@@ -2490,6 +2490,27 @@
     }
     return originalSetAttributeNS.call(this, ns, name, value);
   };
+
+  /* Cambiar "Noticias" por "Blog" en el nav y footer del home (React bundle) */
+  (function hookBlogNav() {
+    const changeNoticiasToBlogs = () => {
+      document.querySelectorAll('a').forEach(link => {
+        if (link.textContent.trim() === 'Noticias' && (link.getAttribute('href')?.includes('noticias') || link.getAttribute('href')?.includes('#noticias'))) {
+          link.textContent = 'Blog';
+          link.setAttribute('href', '/blog');
+        }
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', changeNoticiasToBlogs);
+    } else {
+      changeNoticiasToBlogs();
+    }
+
+    const obs = new MutationObserver(changeNoticiasToBlogs);
+    obs.observe(document.body, { childList: true, subtree: true });
+  })();
   </script>
   </body>
 </html>
