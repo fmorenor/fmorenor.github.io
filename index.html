@@ -5,24 +5,36 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
 
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MX296BJV');</script>
+    <!-- Solo se carga en producción para evitar datos de desarrollo en GA4 -->
+    <script>
+      if (/^(www\.)?cartodata\.com$/.test(window.location.hostname)) {
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MX296BJV');
+      }
+    </script>
     <!-- End Google Tag Manager -->
 
     <!-- Google tag (gtag.js) — GA4.
          El home no carga shared.js, por eso lleva el snippet aquí.
-         Las páginas estáticas lo reciben inyectado desde shared.js. -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-50RR7V0FYB"></script>
+         Las páginas estáticas lo reciben inyectado desde shared.js.
+         Solo se carga en producción para evitar datos de desarrollo en GA4. -->
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-50RR7V0FYB');
+      if (/^(www\.)?cartodata\.com$/.test(window.location.hostname)) {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-50RR7V0FYB';
+        document.head.appendChild(script);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-50RR7V0FYB');
+      }
     </script>
 
     <title>CartoData — Contexto geográfico para tus decisiones</title>

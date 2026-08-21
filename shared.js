@@ -23,8 +23,10 @@
      Contenedor de tracking que gestiona múltiples tags.
      Se inyecta aquí para cubrir todas las páginas estáticas.
      El home (index.html) lleva el snippet en su propio <head>.
-     El guard evita doble carga. ── */
-  if (!document.querySelector('script[src*="googletagmanager.com/gtm.js"]')) {
+     El guard evita doble carga.
+     Solo se carga en dominios de producción para evitar datos de desarrollo. ── */
+  const isProduction = /^(www\.)?cartodata\.com$/.test(window.location.hostname);
+  if (isProduction && !document.querySelector('script[src*="googletagmanager.com/gtm.js"]')) {
     window.dataLayer = window.dataLayer || [];
     const gtmScript = document.createElement('script');
     gtmScript.async = true;
@@ -40,9 +42,10 @@
   /* ── Google Analytics 4 (gtag.js) ──
      Se inyecta aquí para cubrir todas las páginas estáticas de una sola vez.
      El home (index.html) NO carga shared.js: lleva el snippet en su propio <head>.
-     El guard evita doble carga (y por tanto doble page_view). ── */
+     El guard evita doble carga (y por tanto doble page_view).
+     Solo se carga en dominios de producción para evitar datos de desarrollo. ── */
   const GA_ID = 'G-50RR7V0FYB';
-  if (!document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) {
+  if (isProduction && !document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) {
     const ga = document.createElement('script');
     ga.async = true;
     ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
@@ -119,6 +122,15 @@
 
       observer.observe(mapFrame);
     });
+  }
+
+  /* ── Favicon — se sirve automáticamente en Cloudflare, pero lo referenciamos explícitamente ── */
+  if (!document.querySelector('link[rel="icon"]')) {
+    const favicon = document.createElement('link');
+    favicon.rel = 'icon';
+    favicon.type = 'image/x-icon';
+    favicon.href = '../favicon.ico';
+    document.head.prepend(favicon);
   }
 
   /* ── Inyectar site.css (design system) si no está ya cargado ── */

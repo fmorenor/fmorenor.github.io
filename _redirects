@@ -1,9 +1,14 @@
 # Redirecciones 301 permanentes - URLs antiguas del sitio anterior
 # Cloudflare Pages lee este archivo automáticamente
 
+# Redirecciones de rutas limpias
+/home                  /                   301
+
 # Redirecciones a páginas equivalentes nuevas
 /cartografía           /cartografica.html  301
 /cartografia           /cartografica.html  301
+/cartoparque           /parques-urbanos.html 301
+/ecarto                /geosoftware.html   301
 /lidar                 /ciudades.html      301
 /vision_360            /ciudades.html      301
 /visor_nuevo_leon      /ciudades.html      301
@@ -12,7 +17,6 @@
 # Redirecciones a home (páginas que no tienen equivalente directo)
 /contacto              /                   301
 /nosotros              /                   301
-/ecarto                /                   301
 /en                    /                   301
 /perro                 /                   301
 /audio                 /                   301
@@ -22,6 +26,14 @@
 /copia-de-lidar        /                   301
 /rebuild-home          /                   301
 /rebuilt-home          /                   301
+
+# Redirecciones de artículos del blog sin /blog/ → versión correcta
+/que-cambia-cuando-un-municipio-puede-ver-cada-toma           /blog/que-cambia-cuando-un-municipio-puede-ver-cada-toma.html           301
+/que-cambia-cuando-un-municipio-puede-ver-cada-toma.html      /blog/que-cambia-cuando-un-municipio-puede-ver-cada-toma.html           301
+/por-que-hacer-dos-filas-para-resolver-un-solo-tram           /blog/por-que-hacer-dos-filas-para-resolver-un-solo-tram.html           301
+/por-que-hacer-dos-filas-para-resolver-un-solo-tram.html      /blog/por-que-hacer-dos-filas-para-resolver-un-solo-tram.html           301
+/por-que-se-disparo-21-la-recaudacion-predial-en-el           /blog/por-que-se-disparo-21-la-recaudacion-predial-en-el.html           301
+/por-que-se-disparo-21-la-recaudacion-predial-en-el.html      /blog/por-que-se-disparo-21-la-recaudacion-predial-en-el.html           301
 
 # Wildcard para cualquier otra ruta no encontrada (opcional - mantén esto al final)
 # /*                   /404.html           200
