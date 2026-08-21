@@ -129,7 +129,7 @@
     const favicon = document.createElement('link');
     favicon.rel = 'icon';
     favicon.type = 'image/x-icon';
-    favicon.href = '../favicon.ico';
+    favicon.href = '/favicon.ico';
     document.head.prepend(favicon);
   }
 

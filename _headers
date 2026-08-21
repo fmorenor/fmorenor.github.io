@@ -67,3 +67,7 @@
 # .webp, arreglar la referencia en el código fuente y borrar esta regla.
 /manus-storage/process-steps-bg-light_1e333a90.png
   Content-Type: image/webp
+
+/favicon.ico
+  Cache-Control: public, max-age=604800
+  Content-Type: image/x-icon
