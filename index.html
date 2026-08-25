@@ -2528,10 +2528,11 @@
           cursor: pointer;
           padding: inherit;
           background: none;
-          border: none;
           font: inherit;
           color: inherit;
           transition: opacity 0.2s ease;
+          /* Preservar estilos de border del link original */
+          display: inline-block;
         }
         .nav-dropdown-btn:hover {
           opacity: 0.7;
@@ -2622,13 +2623,14 @@
 
           // Crear el botón (copia del link original, manteniendo estilos)
           const btn = document.createElement('button');
-          btn.className = 'nav-dropdown-btn';
+          // Copiar todas las clases del link original PRIMERO
+          if (link.className) {
+            btn.className = link.className;
+          }
+          // Agregar clase de dropdown al final
+          btn.className += ' nav-dropdown-btn';
           btn.textContent = text;
           btn.setAttribute('data-en', link.getAttribute('data-en') || text);
-          // Copiar clases del link original (para mantener estilos)
-          if (link.className) {
-            btn.className += ' ' + link.className;
-          }
 
           // Crear el menú
           const menu = document.createElement('div');
