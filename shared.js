@@ -654,7 +654,7 @@
   const nav = document.createElement('nav');
   nav.className = 'cd-nav';
   nav.innerHTML = `
-    <a href="./" class="cd-nav-brand">
+    <a href="/" class="cd-nav-brand">
       <img id="cd-nav-logo" src="/images/logo-white-h.png" alt="CartoData" />
     </a>
     <ul class="cd-nav-links">
@@ -778,29 +778,29 @@
             <div class="cd-footer-nav-dropdown">
               <button class="cd-footer-nav-btn" data-en="Impact">Impacto</button>
               <div class="cd-footer-dropdown-menu">
-                <a href="./ciudades.html" data-en="Cities">Ciudades</a>
-                <a href="./construccion.html" data-en="Construction">Construcción</a>
-                <a href="./infraestructura.html" data-en="Infrastructure">Infraestructura</a>
-                <a href="./mineria.html" data-en="Mining">Minería</a>
-                <a href="./parques-urbanos.html" data-en="Urban Parks">Parques Urbanos</a>
+                <a href="/ciudades.html" data-en="Cities">Ciudades</a>
+                <a href="/construccion.html" data-en="Construction">Construcción</a>
+                <a href="/infraestructura.html" data-en="Infrastructure">Infraestructura</a>
+                <a href="/mineria.html" data-en="Mining">Minería</a>
+                <a href="/parques-urbanos.html" data-en="Urban Parks">Parques Urbanos</a>
               </div>
             </div>
             <div class="cd-footer-nav-dropdown">
               <button class="cd-footer-nav-btn" data-en="Technology">Tecnología</button>
               <div class="cd-footer-dropdown-menu">
-                <a href="./procesos.html" data-en="Processes">Procesos</a>
-                <a href="./cartografica.html" data-en="Data">Datos</a>
-                <a href="./geosoftware.html" data-en="GeoSoftware">GeoSoftware</a>
+                <a href="/procesos.html" data-en="Processes">Procesos</a>
+                <a href="/cartografica.html" data-en="Data">Datos</a>
+                <a href="/geosoftware.html" data-en="GeoSoftware">GeoSoftware</a>
               </div>
             </div>
             <div class="cd-footer-nav-dropdown">
               <button class="cd-footer-nav-btn" data-en="Culture">Cultura</button>
               <div class="cd-footer-dropdown-menu">
-                <a href="./historia.html" data-en="History">Historia</a>
-                <a href="./equipo.html" data-en="Team">Equipo</a>
+                <a href="/historia.html" data-en="History">Historia</a>
+                <a href="/equipo.html" data-en="Team">Equipo</a>
               </div>
             </div>
-            <a href="./blog"   class="cd-footer-nav-btn" data-en="Blog">Blog</a>
+            <a href="/blog"   class="cd-footer-nav-btn" data-en="Blog">Blog</a>
           </div>
           <div class="cd-footer-diamond">
             <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><rect x="4" y="0" width="5.66" height="5.66" transform="rotate(45 4 0)" stroke="currentColor" stroke-width="0.8" fill="none"/></svg>
