@@ -433,6 +433,39 @@
     .cd-footer-nav-btn:nth-child(3) { margin-top: -1px; }
     .cd-footer-nav-btn:nth-child(4) { margin-left: -1px; margin-top: -1px; }
     .cd-footer-nav-btn:hover { color: #fafafa; }
+    /* Dropdowns en footer */
+    .cd-footer-nav-dropdown {
+      position: relative; display: flex; flex-direction: column;
+    }
+    .cd-footer-nav-dropdown > .cd-footer-nav-btn {
+      cursor: pointer; border: 1px solid #3a3a3a; padding: 0.75rem 1rem;
+      background: none; font-family: inherit;
+    }
+    .cd-footer-dropdown-menu {
+      display: none; position: absolute; bottom: calc(100% + 5px); left: 50%;
+      transform: translateX(-50%); min-width: 160px;
+      background: rgba(20,20,20,0.85); backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
+      padding: 8px 0; z-index: 1000; flex-direction: column;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    .cd-footer-nav-dropdown:hover .cd-footer-dropdown-menu {
+      display: flex;
+    }
+    .cd-footer-dropdown-menu a {
+      display: block; padding: 0.6rem 1rem; color: rgba(248,250,252,0.7);
+      text-decoration: none; font-size: 12px; font-weight: 300;
+      letter-spacing: 0.05em; text-transform: uppercase; transition: color 150ms;
+      white-space: nowrap;
+    }
+    .cd-footer-dropdown-menu a:hover {
+      color: #fafafa; background: rgba(255,255,255,0.05);
+    }
+    html.light .cd-footer-dropdown-menu {
+      background: rgba(250,250,250,0.9); border-color: rgba(0,0,0,0.1);
+    }
+    html.light .cd-footer-dropdown-menu a { color: rgba(15,23,42,0.7); }
+    html.light .cd-footer-dropdown-menu a:hover { color: #0f172a; }
     .cd-footer-diamond {
       position: absolute; top: 50%; left: 50%;
       transform: translate(-50%,-50%); line-height: 0;
@@ -739,9 +772,31 @@
       <div class="cd-footer-col cd-footer-nav-col">
         <div class="cd-footer-nav-wrap">
           <div class="cd-footer-nav-grid">
-            <a href="./index.html#impacto"    class="cd-footer-nav-btn" data-en="Impact">Impacto</a>
-            <a href="./index.html#tecnologia" class="cd-footer-nav-btn" data-en="Technology">Tecnología</a>
-            <a href="./index.html#cultura"    class="cd-footer-nav-btn" data-en="Culture">Cultura</a>
+            <div class="cd-footer-nav-dropdown">
+              <button class="cd-footer-nav-btn" data-en="Impact">Impacto</button>
+              <div class="cd-footer-dropdown-menu">
+                <a href="./ciudades.html" data-en="Cities">Ciudades</a>
+                <a href="./construccion.html" data-en="Construction">Construcción</a>
+                <a href="./infraestructura.html" data-en="Infrastructure">Infraestructura</a>
+                <a href="./mineria.html" data-en="Mining">Minería</a>
+                <a href="./parques-urbanos.html" data-en="Urban Parks">Parques Urbanos</a>
+              </div>
+            </div>
+            <div class="cd-footer-nav-dropdown">
+              <button class="cd-footer-nav-btn" data-en="Technology">Tecnología</button>
+              <div class="cd-footer-dropdown-menu">
+                <a href="./procesos.html" data-en="Processes">Procesos</a>
+                <a href="./cartografica.html" data-en="Data">Datos</a>
+                <a href="./geosoftware.html" data-en="GeoSoftware">GeoSoftware</a>
+              </div>
+            </div>
+            <div class="cd-footer-nav-dropdown">
+              <button class="cd-footer-nav-btn" data-en="Culture">Cultura</button>
+              <div class="cd-footer-dropdown-menu">
+                <a href="./historia.html" data-en="History">Historia</a>
+                <a href="./equipo.html" data-en="Team">Equipo</a>
+              </div>
+            </div>
             <a href="./blog"   class="cd-footer-nav-btn" data-en="Blog">Blog</a>
           </div>
           <div class="cd-footer-diamond">
