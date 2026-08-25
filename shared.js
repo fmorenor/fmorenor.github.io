@@ -448,8 +448,11 @@
       border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
       padding: 8px 0; z-index: 1000; flex-direction: column;
       box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      /* Zona de "seguridad" para permitir mover el mouse del botón al menú */
+      margin-top: -5px; padding-top: 13px;
     }
-    .cd-footer-nav-dropdown:hover .cd-footer-dropdown-menu {
+    .cd-footer-nav-dropdown:hover .cd-footer-dropdown-menu,
+    .cd-footer-dropdown-menu:hover {
       display: flex;
     }
     .cd-footer-dropdown-menu a {
