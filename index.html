@@ -2511,6 +2511,155 @@
     const obs = new MutationObserver(changeNoticiasToBlogs);
     obs.observe(document.body, { childList: true, subtree: true });
   })();
+
+  /* Dropdowns en el nav del home (Impacto, Tecnología, Cultura) */
+  (function hookNavDropdowns() {
+    // Inyectar estilos para los dropdowns
+    const styleId = 'nav-dropdown-styles';
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = `
+        .nav-dropdown-wrapper {
+          position: relative;
+          display: inline-block;
+        }
+        .nav-dropdown-btn {
+          cursor: pointer;
+          padding: inherit;
+          background: none;
+          border: none;
+          font: inherit;
+          color: inherit;
+          transition: opacity 0.2s ease;
+        }
+        .nav-dropdown-btn:hover {
+          opacity: 0.7;
+        }
+        .nav-dropdown-menu {
+          position: absolute;
+          top: calc(100% + 8px);
+          left: 0;
+          background: var(--bg-nav-dropdown, white);
+          border: 1px solid var(--border-nav-dropdown, #e5e5e5);
+          border-radius: 8px;
+          padding: 8px 0;
+          min-width: 200px;
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(-8px);
+          transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+          z-index: 1000;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .nav-dropdown-wrapper:hover .nav-dropdown-menu {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+        .nav-dropdown-item {
+          display: block;
+          padding: 10px 16px;
+          color: var(--text-nav-dropdown, #333);
+          text-decoration: none;
+          font-size: 14px;
+          transition: background-color 0.2s ease;
+        }
+        .nav-dropdown-item:hover {
+          background-color: var(--hover-nav-dropdown, #f5f5f5);
+        }
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+          .nav-dropdown-menu {
+            --bg-nav-dropdown: #1a1a1a;
+            --border-nav-dropdown: #333;
+            --text-nav-dropdown: #f0f0f0;
+            --hover-nav-dropdown: #2a2a2a;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // Definir los dropdowns a crear
+    const dropdownsConfig = {
+      'Impacto': [
+        { label: 'Ciudades', href: '/ciudades.html', 'data-en': 'Cities' },
+        { label: 'Construcción', href: '/procesos.html', 'data-en': 'Construction' },
+        { label: 'Infraestructura', href: '/infraestructura.html', 'data-en': 'Infrastructure' },
+        { label: 'Minería', href: '/mineria.html', 'data-en': 'Mining' },
+        { label: 'Parques Urbanos', href: '/parques-urbanos.html', 'data-en': 'Urban Parks' }
+      ],
+      'Tecnología': [
+        { label: 'Procesos', href: '/procesos.html', 'data-en': 'Processes' },
+        { label: 'Datos', href: '/cartografica.html', 'data-en': 'Cartography' },
+        { label: 'GeoSoftware', href: '/geosoftware.html', 'data-en': 'GeoSoftware' }
+      ],
+      'Cultura': [
+        { label: 'Historia', href: '/historia.html', 'data-en': 'History' },
+        { label: 'Equipo', href: '/equipo.html', 'data-en': 'Team' }
+      ]
+    };
+
+    const processNavItems = () => {
+      // Buscar todos los links del nav
+      const navLinks = document.querySelectorAll('nav a, [role="navigation"] a');
+
+      navLinks.forEach(link => {
+        const text = link.textContent.trim();
+
+        // Si el link es uno de nuestros dropdowns y aún no lo procesamos
+        if (dropdownsConfig[text] && !link.classList.contains('nav-dropdown-processed')) {
+          link.classList.add('nav-dropdown-processed');
+
+          const config = dropdownsConfig[text];
+          const parent = link.parentElement;
+
+          // Crear el wrapper del dropdown
+          const wrapper = document.createElement('div');
+          wrapper.className = 'nav-dropdown-wrapper';
+
+          // Crear el botón (copia del link original)
+          const btn = document.createElement('button');
+          btn.className = 'nav-dropdown-btn';
+          btn.textContent = text;
+          btn.setAttribute('data-en', link.getAttribute('data-en') || text);
+
+          // Crear el menú
+          const menu = document.createElement('div');
+          menu.className = 'nav-dropdown-menu';
+
+          // Agregar items al menú
+          config.forEach(item => {
+            const itemLink = document.createElement('a');
+            itemLink.href = item.href;
+            itemLink.className = 'nav-dropdown-item';
+            itemLink.textContent = item.label;
+            itemLink.setAttribute('data-en', item['data-en']);
+            menu.appendChild(itemLink);
+          });
+
+          // Armar el wrapper
+          wrapper.appendChild(btn);
+          wrapper.appendChild(menu);
+
+          // Reemplazar el link original con el wrapper
+          parent.replaceChild(wrapper, link);
+        }
+      });
+    };
+
+    // Procesar al cargar
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', processNavItems);
+    } else {
+      processNavItems();
+    }
+
+    // Re-procesar cuando React renderiza cambios
+    const obs = new MutationObserver(processNavItems);
+    obs.observe(document.body, { childList: true, subtree: true });
+  })();
   </script>
   </body>
 </html>
