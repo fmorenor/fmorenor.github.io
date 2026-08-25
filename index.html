@@ -2624,9 +2624,13 @@
 
           // Crear el botón (copia del link original, manteniendo estilos)
           const btn = document.createElement('button');
-          // Copiar todas las clases del link original PRIMERO
+          // Copiar clases del link original, pero excluir las que afecten display
           if (link.className) {
-            btn.className = link.className;
+            const classesToCopy = link.className
+              .split(' ')
+              .filter(c => !['block', 'flex', 'inline', 'grid'].some(d => c.includes(d)))
+              .join(' ');
+            btn.className = classesToCopy;
           }
           // Agregar clase de dropdown al final
           btn.className += ' nav-dropdown-btn';
