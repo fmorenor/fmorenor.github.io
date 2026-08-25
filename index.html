@@ -2602,28 +2602,33 @@
     };
 
     const processNavItems = () => {
-      // Buscar todos los links del nav
-      const navLinks = document.querySelectorAll('nav a, [role="navigation"] a');
+      // Buscar todos los links en el documento (no limitarse a nav specific)
+      const allLinks = document.querySelectorAll('a');
 
-      navLinks.forEach(link => {
+      allLinks.forEach(link => {
         const text = link.textContent.trim();
 
         // Si el link es uno de nuestros dropdowns y aún no lo procesamos
-        if (dropdownsConfig[text] && !link.classList.contains('nav-dropdown-processed')) {
-          link.classList.add('nav-dropdown-processed');
+        if (dropdownsConfig[text] && !link.dataset.navDropdownProcessed) {
+          link.dataset.navDropdownProcessed = 'true';
 
           const config = dropdownsConfig[text];
           const parent = link.parentElement;
+          if (!parent) return;
 
           // Crear el wrapper del dropdown
           const wrapper = document.createElement('div');
           wrapper.className = 'nav-dropdown-wrapper';
 
-          // Crear el botón (copia del link original)
+          // Crear el botón (copia del link original, manteniendo estilos)
           const btn = document.createElement('button');
           btn.className = 'nav-dropdown-btn';
           btn.textContent = text;
           btn.setAttribute('data-en', link.getAttribute('data-en') || text);
+          // Copiar clases del link original (para mantener estilos)
+          if (link.className) {
+            btn.className += ' ' + link.className;
+          }
 
           // Crear el menú
           const menu = document.createElement('div');
@@ -2653,7 +2658,7 @@
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', processNavItems);
     } else {
-      processNavItems();
+      setTimeout(processNavItems, 100);
     }
 
     // Re-procesar cuando React renderiza cambios
