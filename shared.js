@@ -760,6 +760,19 @@
     }
   });
 
+  /* ── GA4 — Navigation clicks ── */
+  nav.querySelectorAll('a[href]').forEach(link => {
+    link.addEventListener('click', () => {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'navigation_click',
+        link_text: link.textContent.trim(),
+        link_href: link.getAttribute('href'),
+        nav_location: link.closest('.cd-mobile-menu') ? 'mobile' : 'desktop'
+      });
+    });
+  });
+
   /* ── Inyectar Footer (al final del DOM) ── */
   function injectFooter() {
   const footer = document.createElement('footer');
@@ -949,7 +962,14 @@
 
       function hookPrivacyLinks() {
         document.querySelectorAll('a[href="#aviso-privacidad"],a[href*="privaci"]:not([data-cd-realpage])').forEach(l => {
-          if (!l.dataset.cdPrivHooked) { l.dataset.cdPrivHooked='1'; l.addEventListener('click', openPrivacy); }
+          if (!l.dataset.cdPrivHooked) {
+            l.dataset.cdPrivHooked='1';
+            l.addEventListener('click', (e) => {
+              window.dataLayer = window.dataLayer || [];
+              window.dataLayer.push({ event: 'modal_opened', modal_type: 'privacy' });
+              openPrivacy(e);
+            });
+          }
         });
       }
       hookPrivacyLinks();
@@ -1039,7 +1059,14 @@
 
       function hookTermsLinks() {
         document.querySelectorAll('a[href*="terminos"],a[href*="términos"],a[href*="terms"]').forEach(l => {
-          if (!l.dataset.cdTermsHooked) { l.dataset.cdTermsHooked='1'; l.addEventListener('click', openTerms); }
+          if (!l.dataset.cdTermsHooked) {
+            l.dataset.cdTermsHooked='1';
+            l.addEventListener('click', (e) => {
+              window.dataLayer = window.dataLayer || [];
+              window.dataLayer.push({ event: 'modal_opened', modal_type: 'terms' });
+              openTerms(e);
+            });
+          }
         });
       }
       hookTermsLinks();
@@ -1149,7 +1176,14 @@
 
       function hookLocLinks() {
         document.querySelectorAll('a[href*="#ubicaciones"]').forEach(l => {
-          if (!l.dataset.cdLocHooked) { l.dataset.cdLocHooked='1'; l.addEventListener('click', openLoc); }
+          if (!l.dataset.cdLocHooked) {
+            l.dataset.cdLocHooked='1';
+            l.addEventListener('click', (e) => {
+              window.dataLayer = window.dataLayer || [];
+              window.dataLayer.push({ event: 'modal_opened', modal_type: 'locations' });
+              openLoc(e);
+            });
+          }
         });
       }
       hookLocLinks();
@@ -1158,6 +1192,27 @@
       setTimeout(() => { hookLocLinks(); locObs.disconnect(); }, 5000);
     }
   }
+
+  /* ── GA4 — Scroll depth tracking ── */
+  (function() {
+    let depths = { 50: false, 75: false, 100: false };
+    window.addEventListener('scroll', () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollHeight === 0) return;
+      const scrollPct = Math.round((window.scrollY / scrollHeight) * 100);
+      [50, 75, 100].forEach(depth => {
+        if (scrollPct >= depth && !depths[depth]) {
+          depths[depth] = true;
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'scroll_depth',
+            depth_percent: depth,
+            page_location: window.location.pathname
+          });
+        }
+      });
+    }, { passive: true });
+  })();
 
   /* El footer y los modales se inyectan después del nav, así que hay que volver a
      aplicar la traducción cuando ya existen en el DOM (si no, quedan en español). */

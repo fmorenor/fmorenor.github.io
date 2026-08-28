@@ -343,12 +343,27 @@
         // archivos y sube los que hayan quedado pendientes.
         if (data && data.lead_uuid && !leadUuid) {
           leadUuid = data.lead_uuid;
+          /* GA4 */
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'lead_submitted',
+            message_count: history.length,
+            has_files: pendingFiles.length > 0 || attachedNames.length > 0
+          });
           flushPending();
         }
 
         // El registro del lead NO cierra la conversación: seguimos disponibles.
         // Solo cerramos cuando el asistente se despide y finaliza explícitamente.
         if (data && data.conversation_ended) {
+          /* GA4 */
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'chat_ended',
+            message_count: history.length,
+            lead_submitted: !!leadUuid,
+            files_attached: attachedNames.length
+          });
           uploadTranscript().finally(() => setTimeout(closeConversation, 600));
           return;
         }
@@ -365,6 +380,13 @@
       if (!value) return;
       addMessage(value, 'user');
       history.push({ role: 'user', content: value });
+      /* GA4 */
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'chat_message_sent',
+        message_count: history.length,
+        has_attachment: attachedNames.length > 0
+      });
       sendToAssistant();
     }
 
@@ -423,14 +445,26 @@
 
     // El usuario elige uno o varios archivos.
     async function handleFiles(files) {
+      const validFiles = [];
       for (const file of files) {
         if (!validFile(file)) continue;
+        validFiles.push(file);
         if (leadUuid) {
           await uploadOne(file);
         } else {
           pendingFiles.push(file);
           addNote('📎 ' + file.name + ' — se adjuntará en cuanto registremos tus datos.');
         }
+      }
+      /* GA4 */
+      if (validFiles.length > 0) {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'file_uploaded',
+          file_count: validFiles.length,
+          file_types: validFiles.map(f => f.name.split('.').pop().toLowerCase()),
+          lead_exists: !!leadUuid
+        });
       }
       // Si ya subimos algún archivo directo, avisa al asistente para que reaccione.
       if (leadUuid && attachedNames.length) {
@@ -479,6 +513,12 @@
     // vacío para que el primer mensaje enviado a la API sea del usuario.
     addMessage(GREETING, 'bot');
     setInputEnabled(true);
+    /* GA4 */
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'chat_opened',
+      language: XRAY_LANG
+    });
   })();
   </script>
 </body>
