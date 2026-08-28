@@ -25,7 +25,7 @@
      El home (index.html) lleva el snippet en su propio <head>.
      El guard evita doble carga.
      Solo se carga en dominios de producción para evitar datos de desarrollo. ── */
-  const isProduction = /^(www\.)?cartodata\.com$/.test(window.location.hostname);
+  const isProduction = true; // TODO: revertir a /^(www\.)?cartodata\.com$/ después de testing
   if (isProduction && !document.querySelector('script[src*="googletagmanager.com/gtm.js"]')) {
     window.dataLayer = window.dataLayer || [];
     const gtmScript = document.createElement('script');
