@@ -1,11 +1,51 @@
 /* shared.js — Nav, Footer y CSS base compartidos para todas las páginas de CartoData */
+
+/* Polyfill seguro para localStorage — evita SecurityError si no está disponible */
+(function() {
+  try {
+    window.localStorage.getItem('__test__');
+  } catch (e) {
+    let _storage = {};
+    const safe = {
+      getItem: (k) => _storage[k] ?? null,
+      setItem: (k, v) => { _storage[k] = String(v); },
+      removeItem: (k) => { delete _storage[k]; },
+      clear: () => { _storage = {}; },
+      key: (i) => Object.keys(_storage)[i] ?? null,
+      get length() { return Object.keys(_storage).length; }
+    };
+    Object.defineProperty(window, 'localStorage', { value: safe, writable: false });
+  }
+})();
+
 (function () {
+  /* ── Google Tag Manager (GTM) ──
+     Contenedor de tracking que gestiona múltiples tags.
+     Se inyecta aquí para cubrir todas las páginas estáticas.
+     El home (index.html) lleva el snippet en su propio <head>.
+     El guard evita doble carga.
+     Solo se carga en dominios de producción para evitar datos de desarrollo. ── */
+  const isProduction = /^(www\.)?cartodata\.com$/.test(window.location.hostname);
+  if (isProduction && !document.querySelector('script[src*="googletagmanager.com/gtm.js"]')) {
+    window.dataLayer = window.dataLayer || [];
+    const gtmScript = document.createElement('script');
+    gtmScript.async = true;
+    gtmScript.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-MX296BJV';
+    document.head.appendChild(gtmScript);
+
+    // Noscript fallback
+    const noscript = document.createElement('noscript');
+    noscript.innerHTML = '<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MX296BJV" height="0" width="0" style="display:none;visibility:hidden"></iframe>';
+    document.body.insertBefore(noscript, document.body.firstChild);
+  }
+
   /* ── Google Analytics 4 (gtag.js) ──
      Se inyecta aquí para cubrir todas las páginas estáticas de una sola vez.
      El home (index.html) NO carga shared.js: lleva el snippet en su propio <head>.
-     El guard evita doble carga (y por tanto doble page_view). ── */
+     El guard evita doble carga (y por tanto doble page_view).
+     Solo se carga en dominios de producción para evitar datos de desarrollo. ── */
   const GA_ID = 'G-50RR7V0FYB';
-  if (!document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) {
+  if (isProduction && !document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) {
     const ga = document.createElement('script');
     ga.async = true;
     ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
@@ -14,6 +54,83 @@
     window.gtag = function () { window.dataLayer.push(arguments); };
     window.gtag('js', new Date());
     window.gtag('config', GA_ID);
+  }
+
+  /* ── Seguimiento de mapas embedidos (CartoData maps) ──
+     Rastrea carga, visibilidad y tiempo de interacción con iframes que tengan data-map-name. ── */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', trackMaps);
+  } else {
+    trackMaps();
+  }
+
+  function trackMaps() {
+    const mapFrames = document.querySelectorAll('[data-map-name]');
+    if (mapFrames.length === 0) return;
+
+    mapFrames.forEach(mapFrame => {
+      const mapData = {
+        map_name: mapFrame.dataset.mapName || 'Visualizador CartoData',
+        map_url: mapFrame.src,
+        page_location: window.location.href
+      };
+
+      // Evento: mapa cargado
+      mapFrame.addEventListener('load', () => {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'map_loaded',
+          ...mapData
+        });
+      });
+
+      let mapViewed = false;
+      let timeEventSent = false;
+      let visibilityTimer = null;
+
+      // Usar IntersectionObserver para detectar visibilidad
+      const observer = new IntersectionObserver((entries) => {
+        const isVisible = entries[0].isIntersecting;
+
+        // Evento: mapa visto (entra en viewport)
+        if (isVisible && !mapViewed) {
+          mapViewed = true;
+          window.dataLayer.push({
+            event: 'map_view',
+            ...mapData
+          });
+        }
+
+        // Evento: mapa visible 30 segundos
+        if (isVisible && !timeEventSent && !visibilityTimer) {
+          visibilityTimer = setTimeout(() => {
+            timeEventSent = true;
+            window.dataLayer.push({
+              event: 'map_time_30s',
+              visible_seconds: 30,
+              ...mapData
+            });
+          }, 30000);
+        }
+
+        // Limpiar timer si el mapa sale del viewport
+        if (!isVisible && visibilityTimer) {
+          clearTimeout(visibilityTimer);
+          visibilityTimer = null;
+        }
+      }, { threshold: 0.5 });
+
+      observer.observe(mapFrame);
+    });
+  }
+
+  /* ── Favicon — se sirve automáticamente en Cloudflare, pero lo referenciamos explícitamente ── */
+  if (!document.querySelector('link[rel="icon"]')) {
+    const favicon = document.createElement('link');
+    favicon.rel = 'icon';
+    favicon.type = 'image/x-icon';
+    favicon.href = '/favicon.ico';
+    document.head.prepend(favicon);
   }
 
   /* ── Inyectar site.css (design system) si no está ya cargado ── */
@@ -316,6 +433,42 @@
     .cd-footer-nav-btn:nth-child(3) { margin-top: -1px; }
     .cd-footer-nav-btn:nth-child(4) { margin-left: -1px; margin-top: -1px; }
     .cd-footer-nav-btn:hover { color: #fafafa; }
+    /* Dropdowns en footer */
+    .cd-footer-nav-dropdown {
+      position: relative; display: flex; flex-direction: column;
+    }
+    .cd-footer-nav-dropdown > .cd-footer-nav-btn {
+      cursor: pointer; border: 1px solid #3a3a3a; padding: 0.75rem 1rem;
+      background: none; font-family: inherit;
+    }
+    .cd-footer-dropdown-menu {
+      display: none; position: absolute; bottom: calc(100% + 5px); left: 50%;
+      transform: translateX(-50%); min-width: 160px;
+      background: rgba(20,20,20,0.85); backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
+      padding: 8px 0; z-index: 1000; flex-direction: column;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      /* Zona de "seguridad" para permitir mover el mouse del botón al menú */
+      margin-top: -5px; padding-top: 13px;
+    }
+    .cd-footer-nav-dropdown:hover .cd-footer-dropdown-menu,
+    .cd-footer-dropdown-menu:hover {
+      display: flex;
+    }
+    .cd-footer-dropdown-menu a {
+      display: block; padding: 0.6rem 1rem; color: rgba(248,250,252,0.7);
+      text-decoration: none; font-size: 12px; font-weight: 300;
+      letter-spacing: 0.05em; text-transform: uppercase; transition: color 150ms;
+      white-space: nowrap;
+    }
+    .cd-footer-dropdown-menu a:hover {
+      color: #fafafa; background: rgba(255,255,255,0.05);
+    }
+    html.light .cd-footer-dropdown-menu {
+      background: rgba(250,250,250,0.9); border-color: rgba(0,0,0,0.1);
+    }
+    html.light .cd-footer-dropdown-menu a { color: rgba(15,23,42,0.7); }
+    html.light .cd-footer-dropdown-menu a:hover { color: #0f172a; }
     .cd-footer-diamond {
       position: absolute; top: 50%; left: 50%;
       transform: translate(-50%,-50%); line-height: 0;
@@ -338,10 +491,39 @@
     html.light .cd-footer-social a { color: #1E1E1C; }
     .cd-footer-social a:hover { opacity: 0.6; }
     .cd-footer-social svg { width: 16px; height: 16px; display: block; fill: currentColor; }
+    /* Google Cloud Partner Badge */
+    .cd-footer-partners {
+      display: flex; align-items: center; justify-content: center; gap: 0;
+      padding: 2.5rem clamp(1rem,4vw,1.5rem);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: 2rem;
+    }
+    html.light .cd-footer-partners { border-top-color: rgba(0,0,0,0.08); }
+    .cd-partner-link {
+      display: inline-flex; align-items: center; justify-content: center;
+      text-decoration: none; transition: all 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative; width: 100px; height: 100px;
+    }
+    .cd-partner-img-logo {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 1; transition: opacity 320ms ease;
+    }
+    .cd-partner-img-badge {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 320ms ease;
+    }
+    .cd-partner-link:hover .cd-partner-img-logo { opacity: 0; }
+    .cd-partner-link:hover .cd-partner-img-badge { opacity: 1; }
+    .cd-partner-link img {
+      height: 80px; width: auto; display: block; max-width: 100%;
+    }
     @media (max-width: 860px) {
       .cd-footer-main { grid-template-columns: 1fr; gap: 2rem; }
       .cd-footer-copy-col { padding-right: 0; }
       .cd-footer-col { border-left: none; padding: 0; }
+      .cd-footer-partners { padding: 1.5rem clamp(1rem,4vw,1.5rem) 0; }
     }
   `;
   document.head.appendChild(style);
@@ -355,29 +537,36 @@
   }
 
   const NAV_LINKS = [
-    { label: 'Impacto',    href: './#impacto',    children: [
-        { label: 'Ciudades',       en: 'Cities',        href: './ciudades.html'             },
-        { label: 'Infraestructura',en: 'Infrastructure',href: './infraestructura.html'       },
-        { label: 'Minería',        en: 'Mining',        href: './mineria.html'              },
+    { label: 'Impacto',    href: '/#impacto',    children: [
+        { label: 'Ciudades',       en: 'Cities',        href: '/ciudades.html'             },
+        { label: 'Construcción', en: 'Construction', href: '/construccion.html'       },
+        { label: 'Infraestructura', en: 'Infrastructure', href: '/infraestructura.html'    },
+        { label: 'Minería',        en: 'Mining',        href: '/mineria.html'              },
+        { label: 'Parques Urbanos', en: 'Urban Parks', href: '/parques-urbanos.html'  },
         // Oculto temporalmente: la página de Instituciones se rehará. Restaurar cuando esté lista.
-        // { label: 'Instituciones',  en: 'Institutions',  href: './instituciones.html'        },
+        // { label: 'Instituciones',  en: 'Institutions',  href: '/instituciones.html'        },
       ]},
-    { label: 'Tecnología', href: './#tecnologia', children: [
-        { label: 'Procesos',    en: 'Processes',   href: './procesos.html'          },
-        { label: 'Datos',       en: 'Data',        href: './cartografica.html'},
-        { label: 'GeoSoftware', en: 'GeoSoftware', href: './geosoftware.html' },
+    { label: 'Tecnología', href: '/#tecnologia', children: [
+        { label: 'Procesos',    en: 'Processes',   href: '/procesos.html'          },
+        { label: 'Datos',       en: 'Data',        href: '/cartografica.html'},
+        { label: 'GeoSoftware', en: 'GeoSoftware', href: '/geosoftware.html' },
       ]},
-    { label: 'Cultura',    href: './#cultura',    children: [
-        { label: 'Historia', en: 'History', href: './historia.html'        },
-        { label: 'Equipo',   en: 'Team',    href: './equipo.html'          },
+    { label: 'Cultura',    href: '/#cultura',    children: [
+        { label: 'Historia', en: 'History', href: '/historia.html'        },
+        { label: 'Equipo',   en: 'Team',    href: '/equipo.html'          },
       ]},
-    { label: 'Noticias',   href: './#noticias'    },
-    { label: 'X-Ray',      href: './xray.html'              },
+    { label: 'Blog',   href: '/blog'    },
+    { label: 'X-Ray',      href: '/xray.html'              },
   ];
 
   /* ── Estado: idioma y tema ── */
-  let lang  = localStorage.getItem('cartodata-lang') || 'es';
-  let theme = localStorage.getItem('theme') || 'dark';
+  let lang  = 'es', theme = 'dark';
+  try {
+    lang  = localStorage.getItem('cartodata-lang') || 'es';
+    theme = localStorage.getItem('theme') || 'dark';
+  } catch (e) {
+    // localStorage no disponible, usar valores por defecto
+  }
 
   function applyTheme(t) {
     theme = t;
@@ -388,8 +577,8 @@
     if (btn) btn.innerHTML = t === 'dark' ? SVG_SUN : SVG_MOON;
     const logo = document.getElementById('cd-nav-logo');
     if (logo) logo.src = t === 'dark'
-      ? './images/logo-white-h.png'
-      : './images/logo-black-h.png';
+      ? '/images/logo-white-h.png'
+      : '/images/logo-black-h.png';
   }
 
   function applyLang(l) {
@@ -456,7 +645,7 @@
     });
   }
 
-  const NAV_LABELS_EN = { 'Impacto':'Impact','Tecnología':'Technology','Cultura':'Culture','Noticias':'News' };
+  const NAV_LABELS_EN = { 'Impacto':'Impact','Tecnología':'Technology','Cultura':'Culture','Blog':'Blog' };
 
   const SVG_SUN  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`;
   const SVG_MOON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
@@ -465,8 +654,8 @@
   const nav = document.createElement('nav');
   nav.className = 'cd-nav';
   nav.innerHTML = `
-    <a href="./" class="cd-nav-brand">
-      <img id="cd-nav-logo" src="./images/logo-white-h.png" alt="CartoData" />
+    <a href="/" class="cd-nav-brand">
+      <img id="cd-nav-logo" src="/images/logo-white-h.png" alt="CartoData" />
     </a>
     <ul class="cd-nav-links">
       ${NAV_LINKS.map(l => `
@@ -571,6 +760,19 @@
     }
   });
 
+  /* ── GA4 — Navigation clicks ── */
+  nav.querySelectorAll('a[href]').forEach(link => {
+    link.addEventListener('click', () => {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'navigation_click',
+        link_text: link.textContent.trim(),
+        link_href: link.getAttribute('href'),
+        nav_location: link.closest('.cd-mobile-menu') ? 'mobile' : 'desktop'
+      });
+    });
+  });
+
   /* ── Inyectar Footer (al final del DOM) ── */
   function injectFooter() {
   const footer = document.createElement('footer');
@@ -586,10 +788,32 @@
       <div class="cd-footer-col cd-footer-nav-col">
         <div class="cd-footer-nav-wrap">
           <div class="cd-footer-nav-grid">
-            <a href="./#impacto"    class="cd-footer-nav-btn" data-en="Impact">Impacto</a>
-            <a href="./#tecnologia" class="cd-footer-nav-btn" data-en="Technology">Tecnología</a>
-            <a href="./#cultura"    class="cd-footer-nav-btn" data-en="Culture">Cultura</a>
-            <a href="./#noticias"   class="cd-footer-nav-btn" data-en="News">Noticias</a>
+            <div class="cd-footer-nav-dropdown">
+              <button class="cd-footer-nav-btn" data-en="Impact">Impacto</button>
+              <div class="cd-footer-dropdown-menu">
+                <a href="/ciudades.html" data-en="Cities">Ciudades</a>
+                <a href="/construccion.html" data-en="Construction">Construcción</a>
+                <a href="/infraestructura.html" data-en="Infrastructure">Infraestructura</a>
+                <a href="/mineria.html" data-en="Mining">Minería</a>
+                <a href="/parques-urbanos.html" data-en="Urban Parks">Parques Urbanos</a>
+              </div>
+            </div>
+            <div class="cd-footer-nav-dropdown">
+              <button class="cd-footer-nav-btn" data-en="Technology">Tecnología</button>
+              <div class="cd-footer-dropdown-menu">
+                <a href="/procesos.html" data-en="Processes">Procesos</a>
+                <a href="/cartografica.html" data-en="Data">Datos</a>
+                <a href="/geosoftware.html" data-en="GeoSoftware">GeoSoftware</a>
+              </div>
+            </div>
+            <div class="cd-footer-nav-dropdown">
+              <button class="cd-footer-nav-btn" data-en="Culture">Cultura</button>
+              <div class="cd-footer-dropdown-menu">
+                <a href="/historia.html" data-en="History">Historia</a>
+                <a href="/equipo.html" data-en="Team">Equipo</a>
+              </div>
+            </div>
+            <a href="/blog"   class="cd-footer-nav-btn" data-en="Blog">Blog</a>
           </div>
           <div class="cd-footer-diamond">
             <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><rect x="4" y="0" width="5.66" height="5.66" transform="rotate(45 4 0)" stroke="currentColor" stroke-width="0.8" fill="none"/></svg>
@@ -738,7 +962,14 @@
 
       function hookPrivacyLinks() {
         document.querySelectorAll('a[href="#aviso-privacidad"],a[href*="privaci"]:not([data-cd-realpage])').forEach(l => {
-          if (!l.dataset.cdPrivHooked) { l.dataset.cdPrivHooked='1'; l.addEventListener('click', openPrivacy); }
+          if (!l.dataset.cdPrivHooked) {
+            l.dataset.cdPrivHooked='1';
+            l.addEventListener('click', (e) => {
+              window.dataLayer = window.dataLayer || [];
+              window.dataLayer.push({ event: 'modal_opened', modal_type: 'privacy' });
+              openPrivacy(e);
+            });
+          }
         });
       }
       hookPrivacyLinks();
@@ -828,7 +1059,14 @@
 
       function hookTermsLinks() {
         document.querySelectorAll('a[href*="terminos"],a[href*="términos"],a[href*="terms"]').forEach(l => {
-          if (!l.dataset.cdTermsHooked) { l.dataset.cdTermsHooked='1'; l.addEventListener('click', openTerms); }
+          if (!l.dataset.cdTermsHooked) {
+            l.dataset.cdTermsHooked='1';
+            l.addEventListener('click', (e) => {
+              window.dataLayer = window.dataLayer || [];
+              window.dataLayer.push({ event: 'modal_opened', modal_type: 'terms' });
+              openTerms(e);
+            });
+          }
         });
       }
       hookTermsLinks();
@@ -845,6 +1083,11 @@
           name: 'Oficina Guadalajara',
           lines: ['Circunvalación Ote. 689 · Ciudad Granja', 'Zapopan, Jalisco, México · C.P. 45010'],
           lat: 20.6723, lon: -103.4524
+        },
+        {
+          name: 'Oficina San Salvador',
+          lines: ['Avenida Las Camelias #16-G · Colonia San Francisco', 'San Salvador Centro, San Salvador, El Salvador · C.P. 01101'],
+          lat: 13.688531, lon: -89.225557
         },
       ];
       const cards = CD_LOCATIONS.map(l => `
@@ -933,7 +1176,14 @@
 
       function hookLocLinks() {
         document.querySelectorAll('a[href*="#ubicaciones"]').forEach(l => {
-          if (!l.dataset.cdLocHooked) { l.dataset.cdLocHooked='1'; l.addEventListener('click', openLoc); }
+          if (!l.dataset.cdLocHooked) {
+            l.dataset.cdLocHooked='1';
+            l.addEventListener('click', (e) => {
+              window.dataLayer = window.dataLayer || [];
+              window.dataLayer.push({ event: 'modal_opened', modal_type: 'locations' });
+              openLoc(e);
+            });
+          }
         });
       }
       hookLocLinks();
@@ -943,29 +1193,30 @@
     }
   }
 
-  /* Hook: Cambiar "Noticias" → "Blog" en inglés (en nav, footer, y cualquier lugar) */
-  function hookBlogNav() {
-    const isEn = document.documentElement.lang === 'en';
-    document.querySelectorAll('*').forEach(el => {
-      if (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) {
-        const text = el.textContent.trim();
-        if (text === 'Noticias') {
-          el.setAttribute('data-es', 'Noticias');
-          el.setAttribute('data-en', 'Blog');
-          if (isEn) el.textContent = 'Blog';
-        } else if (text === 'News') {
-          el.setAttribute('data-es', 'Noticias');
-          el.setAttribute('data-en', 'Blog');
-          if (isEn) el.textContent = 'Blog';
+  /* ── GA4 — Scroll depth tracking ── */
+  (function() {
+    let depths = { 50: false, 75: false, 100: false };
+    window.addEventListener('scroll', () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollHeight === 0) return;
+      const scrollPct = Math.round((window.scrollY / scrollHeight) * 100);
+      [50, 75, 100].forEach(depth => {
+        if (scrollPct >= depth && !depths[depth]) {
+          depths[depth] = true;
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'scroll_depth',
+            depth_percent: depth,
+            page_location: window.location.pathname
+          });
         }
-      }
-    });
-  }
-  setInterval(hookBlogNav, 500);
+      });
+    }, { passive: true });
+  })();
 
   /* El footer y los modales se inyectan después del nav, así que hay que volver a
      aplicar la traducción cuando ya existen en el DOM (si no, quedan en español). */
-  function injectLate() { injectFooter(); initModals(); applyI18n(); hookBlogNav(); }
+  function injectLate() { injectFooter(); initModals(); applyI18n(); }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', injectLate);

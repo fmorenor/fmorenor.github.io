@@ -1,0 +1,6 @@
+name = "cartodata-web"
+type = "service"
+
+[[kv_namespaces]]
+binding = "GALLERY_KV"
+id = "gallery_kv_namespace"

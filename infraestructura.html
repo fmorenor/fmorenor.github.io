@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Infraestructura · Obra 4D — Seguimiento con Drones — CartoData</title>
-  <meta name="description" content="Seguimiento cualitativo y cuantitativo de obra con drones. Video 4K, fotogrametría centimétrica y modelado 3D para constructoras e inversores." />
+  <title>Infraestructura · Monitoreo Geoespacial — CartoData</title>
+  <meta name="description" content="Monitoreo de infraestructura crítica: trenes, carreteras, líneas de transmisión, gasoductos y espacios aéreos. Soluciones geoespaciales para gestión integral de proyectos." />
   <link rel="canonical" href="https://www.cartodata.com/infraestructura.html" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.cartodata.com/infraestructura.html" />
-  <meta property="og:title" content="Infraestructura · Obra 4D — CartoData" />
-  <meta property="og:description" content="Seguimiento de obra con drones: video 4K, fotogrametría centimétrica y modelado 3D." />
+  <meta property="og:title" content="Infraestructura · Monitoreo Geoespacial — CartoData" />
+  <meta property="og:description" content="Monitoreo integral de infraestructura con información geoespacial: trenes, carreteras, líneas de transmisión y gasoductos." />
   <meta property="og:locale" content="es_MX" />
   <meta property="og:site_name" content="CartoData" />
   <meta property="og:image" content="https://www.cartodata.com/images/og-infraestructura.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Infraestructura · Obra 4D — CartoData" />
-  <meta name="twitter:description" content="Seguimiento de obra con drones: video 4K, fotogrametría centimétrica y modelado 3D." />
+  <meta name="twitter:title" content="Infraestructura · Monitoreo Geoespacial — CartoData" />
+  <meta name="twitter:description" content="Monitoreo de infraestructura crítica con soluciones geoespaciales." />
   <meta name="twitter:image" content="https://www.cartodata.com/images/og-infraestructura.jpg" />
   <script src="./shared.js" defer></script>
   <style>
@@ -89,7 +89,7 @@
       text-align: center;
     }
     .servicios-grid {
-      display: grid; grid-template-columns: repeat(3,1fr); gap: 0;
+      display: grid; grid-template-columns: repeat(6,1fr); gap: 0;
     }
     .servicio-card {
       position: relative; overflow: hidden;
@@ -99,6 +99,7 @@
     .servicio-card-bg {
       position: absolute; inset: 0;
       background-size: cover; background-position: center;
+      background-color: #1a1f3a;
       transition: transform 600ms cubic-bezier(0.25,0.46,0.45,0.94);
     }
     .servicio-card:hover .servicio-card-bg { transform: scale(1.06); }
@@ -124,12 +125,12 @@
     }
     .servicio-card:hover .servicio-num { transform: translateY(0); opacity: 1; }
     .servicio-card h3 {
-      font-size: clamp(1.1rem,1.8vw,1.5rem); font-weight: 300;
+      font-size: clamp(0.95rem,1.5vw,1.3rem); font-weight: 300;
       color: #fff; margin-bottom: 0.5rem; line-height: 1.2;
     }
     .servicio-card h3 strong { font-weight: 800; }
     .servicio-card p {
-      font-size: 0.85rem; color: rgba(255,255,255,0.6); line-height: 1.55;
+      font-size: 0.8rem; color: rgba(255,255,255,0.6); line-height: 1.55;
       max-height: 0; overflow: hidden;
       transition: max-height 400ms ease, opacity 350ms;
       opacity: 0;
@@ -143,7 +144,6 @@
       transition: opacity 300ms 100ms, transform 300ms 100ms;
     }
     .servicio-card:hover .servicio-card-arrow { opacity: 1; transform: translateX(0); }
-    /* divisor vertical entre cards */
     .servicio-card + .servicio-card { border-left: 1px solid rgba(255,255,255,0.08); }
 
     /* ── CARACTERÍSTICAS ── */
@@ -175,32 +175,28 @@
     }
     .feat-item p { font-size: 0.9rem; color: #475569; line-height: 1.65; }
 
-    /* ── SECCIÓN DETALLE (alternada oscuro/claro) ── */
+    /* ── SECCIÓN DETALLE ── */
     .detalle-section {
       padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);
     }
     .detalle-section.dark  { background: #050816; }
     .detalle-section.mid   { background: #0b1022; }
-    .detalle-section.light { background: #fff; }
     .detalle-inner { max-width: 1100px; margin: 0 auto; }
     .detalle-eyebrow {
       font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em;
       text-transform: uppercase; margin-bottom: 0.8rem;
     }
-    .eyebrow-blue  { color: #3b5bdb; }
     .eyebrow-dim   { color: rgba(255,255,255,0.35); }
     .detalle-h2 {
       font-size: clamp(1.6rem,3vw,2.4rem); font-weight: 300; line-height: 1.2;
       margin-bottom: 1rem;
     }
     .detalle-h2.light-text { color: #fff; }
-    .detalle-h2.dark-text  { color: #0f172a; }
     .detalle-h2 strong { font-weight: 800; }
     .detalle-body {
       font-size: 0.97rem; line-height: 1.75; max-width: 720px; margin-bottom: 2.5rem;
     }
     .detalle-body.light-text { color: rgba(255,255,255,0.65); }
-    .detalle-body.dark-text  { color: #334155; }
     .embed-wrap {
       border-radius: 16px; overflow: hidden;
       aspect-ratio: 16/9; background: #0b1022;
@@ -208,6 +204,9 @@
     }
     .embed-wrap iframe {
       width: 100%; height: 100%; border: none;
+    }
+    .embed-wrap img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
     }
 
     /* ── CTA FINAL ── */
@@ -233,8 +232,12 @@
     .btn-white:hover { background: #f0f4ff; transform: translateY(-2px); }
 
     /* ── RESPONSIVE ── */
+    @media(max-width:1400px) {
+      .servicios-grid { grid-template-columns: repeat(3,1fr); }
+    }
     @media(max-width:900px) {
       .features-grid  { grid-template-columns: 1fr; gap: 2rem; }
+      .servicios-grid { grid-template-columns: repeat(2,1fr); }
     }
     @media(max-width:600px) {
       .servicios-grid { grid-template-columns: 1fr; }
@@ -251,9 +254,9 @@
     <div class="hero-bg" id="heroBg"></div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <p class="hero-eyebrow" data-en="Infrastructure · 4D Construction">Infraestructura · Obra 4D</p>
-      <h1 class="hero-h1" data-en="Construction monitoring<br><strong>with 4D drones</strong>">Seguimiento de obra<br><strong>con drones 4D</strong></h1>
-      <p class="hero-sub" data-en="Visiting sites every week can be difficult when you are responsible for several projects in different locations. CartoData gives you the time machine you need: a weekly record of your construction, comparable date by date.">Visitar obras semanalmente puede ser complicado cuando estás a cargo de varios proyectos en diferentes localidades. CartoData te da la máquina del tiempo que necesitas: registro cualitativo y cuantitativo con precisión centimétrica.</p>
+      <p class="hero-eyebrow" data-en="Infrastructure · Geospatial Monitoring">Infraestructura · Monitoreo Geoespacial</p>
+      <h1 class="hero-h1" data-en="Integral monitoring of<br><strong>critical infrastructure</strong>">Monitoreo integral de<br><strong>infraestructura crítica</strong></h1>
+      <p class="hero-sub" data-en="Transform the management of your infrastructure projects with geospatial intelligence. From railways to power lines, we provide scheduled monitoring according to your project advances and decision-making tools.">Transforma la gestión de tus proyectos de infraestructura con inteligencia geoespacial. De ferrocarriles a líneas de transmisión, proporcionamos monitoreos programados según avances y herramientas de toma de decisiones.</p>
       <div class="hero-btns">
         <a href="#cta" class="btn-primary" data-en="Connect with our experts →">Conecta con nuestros expertos →</a>
         <a href="#servicios" class="btn-ghost" data-en="View services">Ver servicios</a>
@@ -261,39 +264,69 @@
     </div>
   </section>
 
-  <!-- ── 3 SERVICIOS ── -->
+  <!-- ── 5 SERVICIOS ── -->
   <section class="servicios-strip" id="servicios">
     <div class="servicios-inner">
-      <p class="servicios-eyebrow" data-en="Three services · One monitoring platform">Tres servicios · Una plataforma de seguimiento</p>
+      <p class="servicios-eyebrow" data-en="Six infrastructure solutions · Unified platform">Seis soluciones de infraestructura · Plataforma unificada</p>
       <div class="servicios-grid">
-        <a class="servicio-card" href="#video">
-          <div class="servicio-card-bg" style="background-image:url('./images/Seguimiento%20de%20obra.jpg')"></div>
+        <a class="servicio-card" href="#trenes">
+          <div class="servicio-card-bg" style="background-image: url('./images/Lineasdetren.png'); background-color:#1a2f4a;"></div>
           <div class="servicio-card-overlay"></div>
           <div class="servicio-card-content">
             <span class="servicio-num">01</span>
-            <h3 data-en="Construction monitoring<br><strong>on video</strong>">Seguimiento de obra<br><strong>en video</strong></h3>
-            <p data-en="A flight plan repeated week after week. 4K videos comparable by date for progress and subcontractor control.">Plan de vuelo repetido semana a semana. Videos 4K comparables por fecha para control de avance y subcontratistas.</p>
-            <span class="servicio-card-arrow" data-en="View demo →">Ver demo →</span>
+            <h3 data-en="Railway infrastructure<br><strong>monitoring</strong>">Monitoreo de<br><strong>líneas ferreas</strong></h3>
+            <p data-en="Track integrity, right-of-way maintenance, and scheduled corridor monitoring according to project advances.">Integridad de vías, mantenimiento de derechos de paso y monitoreos de pasillos programados según avances.</p>
+            <span class="servicio-card-arrow" data-en="Learn more →">Más información →</span>
           </div>
         </a>
-        <a class="servicio-card" href="#fotogrametrico">
-          <div class="servicio-card-bg" style="background-image:url('./images/seguimiento-de-obra-fotogrametrico_bw.jpg')"></div>
+        <a class="servicio-card" href="#carreteras">
+          <div class="servicio-card-bg" style="background-image: url('./images/Carreteras.png'); background-color:#2a3f5a;"></div>
           <div class="servicio-card-overlay"></div>
           <div class="servicio-card-content">
             <span class="servicio-num">02</span>
-            <h3 data-en="<strong>Photogrammetric</strong><br>construction monitoring">Seguimiento de Obra<br><strong>fotogramétrico</strong></h3>
-            <p data-en="4 cm/px orthophoto updated weekly. Plan overlays in eCarto to verify real progress.">Ortofoto de 4 cm/px con actualización semanal. Superposición de planos en eCarto para verificación de avance real.</p>
-            <span class="servicio-card-arrow" data-en="View demo →">Ver demo →</span>
+            <h3 data-en="Road networks<br><strong>intelligence</strong>">Inteligencia de<br><strong>carreteras</strong></h3>
+            <p data-en="Pavement condition, traffic corridor analysis, and maintenance planning for road networks.">Condición del pavimento, análisis de corredores viales y planificación de mantenimiento.</p>
+            <span class="servicio-card-arrow" data-en="Learn more →">Más información →</span>
           </div>
         </a>
-        <a class="servicio-card" href="#modelado3d">
-          <div class="servicio-card-bg" style="background-image:url('./images/modelado-3d_bw.jpg')"></div>
+        <a class="servicio-card" href="#transmision">
+          <div class="servicio-card-bg" style="background-image: url('./images/pasillos.png'); background-color:#3a4f6a;"></div>
           <div class="servicio-card-overlay"></div>
           <div class="servicio-card-content">
             <span class="servicio-num">03</span>
-            <h3 data-en="<strong>3D Modeling</strong>"><strong>Modelado 3D</strong></h3>
-            <p data-en="A 3D model of the site before the project and an <em>as-built</em> model at the end of construction.">Modelo 3D del entorno previo al proyecto y modelo <em>as built</em> al final de la construcción.</p>
-            <span class="servicio-card-arrow" data-en="View demo →">Ver demo →</span>
+            <h3 data-en="Transmission lines<br><strong>management</strong>">Gestión de líneas de<br><strong>transmisión</strong></h3>
+            <p data-en="Corridor monitoring, vegetation management, and right-of-way compliance for power distribution.">Monitoreo de pasillos, gestión de vegetación y cumplimiento de derechos de paso.</p>
+            <span class="servicio-card-arrow" data-en="Learn more →">Más información →</span>
+          </div>
+        </a>
+        <a class="servicio-card" href="#gasoductos">
+          <div class="servicio-card-bg" style="background-image: url('./images/gasoducto.jpg'); background-color:#4a5f7a;"></div>
+          <div class="servicio-card-overlay"></div>
+          <div class="servicio-card-content">
+            <span class="servicio-num">04</span>
+            <h3 data-en="Pipeline safety<br><strong>monitoring</strong>">Monitoreo de<br><strong>gasoductos</strong></h3>
+            <p data-en="Scheduled corridor monitoring, subsidence detection, and environmental compliance for pipelines.">Monitoreos programados de pasillos, detección de hundimientos y cumplimiento ambiental.</p>
+            <span class="servicio-card-arrow" data-en="Learn more →">Más información →</span>
+          </div>
+        </a>
+        <a class="servicio-card" href="#oaci">
+          <div class="servicio-card-bg" style="background-image: url('./images/OACI.webp'); background-color:#5a6f8a;"></div>
+          <div class="servicio-card-overlay"></div>
+          <div class="servicio-card-content">
+            <span class="servicio-num">05</span>
+            <h3 data-en="Airspace & OACI<br><strong>compliance</strong>">Cumplimiento de<br><strong>espacios OACI</strong></h3>
+            <p data-en="Obstacle detection, airspace clearance verification, and aviation safety compliance.">Detección de obstáculos, verificación de espacios aéreos y cumplimiento de seguridad.</p>
+            <span class="servicio-card-arrow" data-en="Learn more →">Más información →</span>
+          </div>
+        </a>
+        <a class="servicio-card" href="#obra">
+          <div class="servicio-card-bg" style="background-image: url('./images/Seguimiento de obra.jpg'); background-color:#6a7f9a;"></div>
+          <div class="servicio-card-overlay"></div>
+          <div class="servicio-card-content">
+            <span class="servicio-num">06</span>
+            <h3 data-en="Work progress<br><strong>tracking</strong>">Seguimiento de<br><strong>obra</strong></h3>
+            <p data-en="Real-time progress documentation with aerial imagery, comparative analysis, and photogrammetric evidence.">Documentación de avances en tiempo real con imágenes aéreas, análisis comparativo y prueba fotogramétrica.</p>
+            <span class="servicio-card-arrow" data-en="Learn more →">Más información →</span>
           </div>
         </a>
       </div>
@@ -304,65 +337,101 @@
   <section class="features-section">
     <div class="features-inner">
       <p class="features-eyebrow" data-en="Why CartoData?">¿Por qué CartoData?</p>
-      <h2 class="features-h2" data-en="What sets <strong>4D Construction</strong> apart">Lo que distingue a <strong>Obra 4D</strong></h2>
+      <h2 class="features-h2" data-en="What makes infrastructure<br><strong>geospatial intelligence</strong> work">Lo que hace funcionar la<br><strong>inteligencia geoespacial</strong> en infraestructura</h2>
       <div class="features-grid">
         <div class="feat-item">
           <div class="feat-icon">
-            <img src="./images/icons/cartodata_seguimiento_de_obra_con_drones___precision.png" alt="Alta Precisión">
+            <img src="./images/icons/cartodata_seguimiento_de_obra_con_drones___precision.png" alt="Real-time data">
           </div>
-          <h4 data-en="High Precision">Alta Precisión</h4>
-          <p data-en="Photogrammetry with centimetric precision in vertical, oblique and HD video. Every flight is identical to the last, for reliable comparisons.">Fotogrametría con precisión centimétrica en vertical, oblicuo y video HD. Cada vuelo es idéntico al anterior para comparativas fiables.</p>
+          <h4 data-en="Scheduled monitoring">Monitoreos programados</h4>
+          <p data-en="Data available according to your project schedule. Make decisions based on the latest information, not outdated reports.">Datos disponibles según cronograma de tu proyecto. Toma decisiones con información actualizada, no reportes obsoletos.</p>
         </div>
         <div class="feat-item">
           <div class="feat-icon">
-            <img src="./images/icons/cartodata_seguimiento_de_obra_con_drones_informacion_actualizada.png" alt="Información actualizada">
+            <img src="./images/icons/cartodata_seguimiento_de_obra_con_drones_informacion_actualizada.png" alt="Accuracy">
           </div>
-          <h4 data-en="Up-to-date information">Información actualizada</h4>
-          <p data-en="The information can be consulted online within hours of the flight. No waiting, no manual transfers.">La información puede ser consultada en línea pocas horas después del vuelo. Sin esperas ni transferencias manuales.</p>
+          <h4 data-en="Centimeter-level accuracy">Precisión a nivel centimétrico</h4>
+          <p data-en="LiDAR, orthophotos, and 3D models capture every detail. Detect deviations before they become problems.">LiDAR, ortofotos y modelos 3D capturan cada detalle. Detecta desviaciones antes de que causen problemas.</p>
         </div>
         <div class="feat-item">
           <div class="feat-icon">
-            <img src="./images/icons/cartodata_seguimiento_de_obra_con_drones_portabilidad.png" alt="Portabilidad">
+            <img src="./images/icons/cartodata_seguimiento_de_obra_con_drones_portabilidad.png" alt="Integration">
           </div>
-          <h4 data-en="Full portability">Portabilidad total</h4>
-          <p data-en="All information is available from any computer or mobile device through eCarto. Wherever you are, whenever you need it.">Toda la información está disponible desde cualquier computadora o dispositivo móvil a través de eCarto. Donde estés, cuando lo necesites.</p>
+          <h4 data-en="Unified platform">Plataforma unificada</h4>
+          <p data-en="All your infrastructure data in one place. Collaborate with teams and stakeholders in real time through eCarto.">Todos tus datos de infraestructura en un lugar. Colabora con equipos en tiempo real a través de eCarto.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── SEGUIMIENTO EN VIDEO ── -->
-  <section class="detalle-section dark" id="video">
+  <!-- ── FERROCARRILES ── -->
+  <section class="detalle-section dark" id="trenes">
     <div class="detalle-inner">
-      <p class="detalle-eyebrow eyebrow-dim" data-en="Service 1">Servicio 1</p>
-      <h2 class="detalle-h2 light-text" data-en="Construction monitoring on <strong>video</strong>">Seguimiento de obra en <strong>video</strong></h2>
-      <p class="detalle-body light-text" data-en="We design a flight plan executed identically week after week, with particular emphasis on points of interest. Monitoring videos are recorded in 4K and delivered ready to compare against previous weeks, so you can verify progress and supervise subcontractors without travelling to the site.">Diseñamos un plan de vuelo que se ejecuta semana a semana de forma idéntica, poniendo especial énfasis en puntos de interés. Los videos de seguimiento se graban en 4K y se publican en una plataforma que permite comparar dos fechas en paralelo — ideal para socializar avances con clientes e inversores.</p>
+      <p class="detalle-eyebrow eyebrow-dim" data-en="Solution 1">Solución 1</p>
+      <h2 class="detalle-h2 light-text" data-en="Railway infrastructure<br><strong>monitoring</strong>">Monitoreo de<br><strong>líneas ferreas</strong></h2>
+      <p class="detalle-body light-text" data-en="Ensure track integrity and operational safety with continuous geospatial monitoring. From corridor clearance to maintenance planning, detect changes before they affect operations.">Asegura la integridad de vías y seguridad operacional con monitoreo geoespacial continuo. Desde despeje de pasillos hasta planificación de mantenimiento, detecta cambios antes de que afecten operaciones.</p>
       <div class="embed-wrap">
-        <iframe src="https://demo.cartodata.com/apps/comparadron/1720.html" loading="lazy" allowfullscreen title="Comparador de seguimiento de obra en video"></iframe>
+        <iframe data-map-name="Monitoreo de líneas ferreas" src="https://cartodata.ecarto.mx/map/807" loading="lazy" allowfullscreen title="Demo de monitoreo de líneas ferreas"></iframe>
       </div>
     </div>
   </section>
 
-  <!-- ── SEGUIMIENTO FOTOGRAMÉTRICO ── -->
-  <section class="detalle-section mid" id="fotogrametrico">
+  <!-- ── CARRETERAS ── -->
+  <section class="detalle-section mid" id="carreteras">
     <div class="detalle-inner">
-      <p class="detalle-eyebrow eyebrow-dim" data-en="Service 2">Servicio 2</p>
-      <h2 class="detalle-h2 light-text" data-en="<strong>4D photogrammetric</strong> construction monitoring">Seguimiento de obra <strong>4D fotogramétrico</strong></h2>
-      <p class="detalle-body light-text" data-en="Powered by eCarto in the cloud, construction plans are overlaid onto a 4 cm/px orthophoto updated weekly. This service makes it possible to share real progress with every party involved and to detect deviations from the design early.">Habilitado por eCarto en la nube, se sobreponen los planos de la obra a una ortofoto de 4 cm/px de resolución con actualización semanal. Este servicio permite socializar los avances con clientes e inversionistas y contar con una máquina del tiempo para el control de subcontratistas y la toma de decisiones.</p>
+      <p class="detalle-eyebrow eyebrow-dim" data-en="Solution 2">Solución 2</p>
+      <h2 class="detalle-h2 light-text" data-en="Road network<br><strong>intelligence</strong>">Inteligencia de<br><strong>redes viales</strong></h2>
+      <p class="detalle-body light-text" data-en="Manage entire road networks with real-time condition assessments. Track pavement deterioration, plan maintenance cycles, and optimize resource allocation across your corridor portfolio.">Gestiona redes viales completas con evaluaciones de condición en tiempo real. Monitorea el deterioro del pavimento, planifica ciclos de mantenimiento y optimiza asignación de recursos.</p>
       <div class="embed-wrap">
-        <iframe src="https://player.vimeo.com/video/250319923?autoplay=0&loop=1&rel=0" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Seguimiento fotogramétrico de obra"></iframe>
+        <iframe data-map-name="Inteligencia de carreteras" src="https://cartodata.ecarto.mx/map/1489" loading="lazy" allowfullscreen title="Demo de inteligencia vial"></iframe>
       </div>
     </div>
   </section>
 
-  <!-- ── MODELADO 3D ── -->
-  <section class="detalle-section dark" id="modelado3d">
+  <!-- ── LÍNEAS DE TRANSMISIÓN ── -->
+  <section class="detalle-section dark" id="transmision">
     <div class="detalle-inner">
-      <p class="detalle-eyebrow eyebrow-dim" data-en="Service 3">Servicio 3</p>
-      <h2 class="detalle-h2 light-text" data-en="<strong>3D Modeling</strong>"><strong>Modelado 3D</strong></h2>
-      <p class="detalle-body light-text" data-en="Before your project begins, CartoData generates a 3D model of the surroundings. It is extremely useful for architects to understand shadows cast by neighboring buildings, identify constraints and plan the work. At the end of construction we deliver the as-built model.">Antes de comenzar su proyecto, CartoData genera un modelo 3D del entorno. Es de suma utilidad para que los arquitectos comprendan las sombras de edificios vecinos, identifiquen las mejores vistas y evalúen la vegetación que incrementará la plusvalía del proyecto.<br><br>Una vez terminada la obra, generamos un modelo <em>as built</em> para documentar el estado final de la construcción.</p>
+      <p class="detalle-eyebrow eyebrow-dim" data-en="Solution 3">Solución 3</p>
+      <h2 class="detalle-h2 light-text" data-en="Transmission line<br><strong>corridor management</strong>">Gestión de pasillos de<br><strong>líneas de transmisión</strong></h2>
+      <p class="detalle-body light-text" data-en="Maintain clear corridors and ensure regulatory compliance. Automated vegetation monitoring, obstacle detection, and right-of-way documentation for continuous power distribution integrity.">Mantén pasillos limpios y asegura cumplimiento normativo. Monitoreo automatizado de vegetación, detección de obstáculos y documentación de derechos de paso.</p>
+      <div class="embed-wrap embed-wide">
+        <iframe data-map-name="Gestión de líneas de transmisión" src="https://cartodata.ecarto.mx/map/1241" loading="lazy" allowfullscreen title="Demo de gestión de líneas de transmisión"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GASODUCTOS ── -->
+  <section class="detalle-section mid" id="gasoductos">
+    <div class="detalle-inner">
+      <p class="detalle-eyebrow eyebrow-dim" data-en="Solution 4">Solución 4</p>
+      <h2 class="detalle-h2 light-text" data-en="Pipeline safety<br><strong>& compliance</strong>">Seguridad de gasoductos<br><strong>y cumplimiento</strong></h2>
+      <p class="detalle-body light-text" data-en="Protect pipeline assets with continuous monitoring. Detect ground movement, subsidence, and environmental changes. Maintain documentation for regulatory inspections and ensure operational safety.">Protege activos de gasoductos con monitoreo continuo. Detecta movimiento de tierra, hundimientos y cambios ambientales. Mantén documentación para inspecciones regulatorias.</p>
       <div class="embed-wrap">
-        <iframe src="https://player.vimeo.com/video/250320293?autoplay=0&loop=1&rel=0" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Modelado 3D de construcción"></iframe>
+        <img src="./images/gasoducto.jpg" alt="Seguridad de gasoductos">
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ESPACIOS AÉREOS OACI ── -->
+  <section class="detalle-section dark" id="oaci">
+    <div class="detalle-inner">
+      <p class="detalle-eyebrow eyebrow-dim" data-en="Solution 5">Solución 5</p>
+      <h2 class="detalle-h2 light-text" data-en="OACI airspace<br><strong>compliance</strong>">Cumplimiento de espacios<br><strong>OACI y aéreos</strong></h2>
+      <p class="detalle-body light-text" data-en="Ensure aviation safety with precise obstacle detection and airspace clearance verification. Document all infrastructure features within controlled airspace and maintain compliance with international aviation standards.">Asegura seguridad aérea con detección precisa de obstáculos y verificación de espacios aéreos. Documenta características de infraestructura y mantén cumplimiento con estándares internacionales.</p>
+      <div class="embed-wrap">
+        <iframe data-map-name="Cumplimiento de espacios OACI" src="https://cartodata.ecarto.mx/map/1055" loading="lazy" allowfullscreen title="Demo de cumplimiento OACI"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEGUIMIENTO DE OBRA ── -->
+  <section class="detalle-section mid" id="obra">
+    <div class="detalle-inner">
+      <p class="detalle-eyebrow eyebrow-dim" data-en="Solution 6">Solución 6</p>
+      <h2 class="detalle-h2 light-text" data-en="Work progress<br><strong>tracking</strong>">Seguimiento de<br><strong>obra</strong></h2>
+      <p class="detalle-body light-text" data-en="Document your infrastructure projects with precision using periodic aerial monitoring. Capture photogrammetric imagery, updated orthophotos, and 3D models to visualize progress, detect deviations, and keep stakeholders informed at every construction stage.">Documenta tus proyectos de infraestructura con precisión usando monitoreos aéreos periódicos. Captura fotogramétrica, ortofotos actualizadas y modelos 3D para visualizar avances, detectar desviaciones y mantener informados a los stakeholders en cada fase.</p>
+      <div class="embed-wrap">
+        <iframe data-map-name="Seguimiento de obra" src="https://cartodata.ecarto.mx/map/229" loading="lazy" allowfullscreen title="Demo de seguimiento de obra"></iframe>
       </div>
     </div>
   </section>
@@ -370,8 +439,9 @@
   <!-- ── CTA ── -->
   <section class="cta-section" id="cta">
     <div class="cta-inner">
-      <h2 data-en="Ready to have a time machine on your construction site?">¿Listo para tener la máquina del tiempo en tu obra?</h2>
-      <p data-en="Tell us about your project and we will design a monitoring plan tailored to it.">Cuéntanos sobre tu proyecto y te diseñamos un plan de seguimiento a la medida.</p>
+      <h2 data-en="Ready to manage your infrastructure intelligently?">¿Listo para gestionar tu infraestructura de forma inteligente?</h2>
+
+      <p data-en="Tell us about your infrastructure challenges and we will design a monitoring solution tailored to your needs.">Cuéntanos sobre tus retos de infraestructura y te diseñaremos una solución de monitoreo a la medida.</p>
       <a href="https://wa.me/523336271552" target="_blank" rel="noopener" class="btn-white" data-en="Connect with our experts →">Conecta con nuestros expertos →</a>
     </div>
   </section>

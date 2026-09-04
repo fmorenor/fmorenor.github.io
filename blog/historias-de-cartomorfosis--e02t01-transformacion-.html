@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Historias de cartomorfosis – [E02T01] Transformación digital con Juan Carlos González · Blog — CartoData</title>
+  <meta name="description" content="Buenísima nuestra platica acerca de transformación digital, documentos y flujos nacidos digitalmente con el CEO y CO-Fundador de Expendiente Azul, Juan Carlos González." />
+  <meta name="article:published_time" content="2021-02-23T00:00:00.000Z" />
+  <script src="../shared.js" defer></script>
+  <script defer>
+    /* Corregir ruta del logo en páginas de blog (que están en /blog/) */
+    document.addEventListener('DOMContentLoaded', () => {
+      const logo = document.getElementById('cd-nav-logo');
+      if (logo && !logo.src.includes('manus-storage')) {
+        const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+        logo.src = isDark
+          ? '../manus-storage/logo-white-h-proper_641226e9.png'
+          : '../manus-storage/logo-black-h-proper_e8a1da9d.png';
+      }
+    });
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; }
+    img { display: block; max-width: 100%; }
+
+    /* ── HERO PEQUEÑO PARA BLOG ── */
+    .blog-hero {
+      position: relative;
+      width: 100%;
+      min-height: 60vh;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      padding-bottom: 3rem;
+    }
+    .blog-hero-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .blog-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(59, 91, 219, 0.3) 0%, rgba(5, 8, 22, 0.8) 100%);
+    }
+    .blog-hero-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    .blog-eyebrow {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 1rem;
+    }
+    .blog-category {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: rgba(59, 91, 219, 0.3);
+      border-radius: 999px;
+      margin-right: 1rem;
+    }
+    .blog-h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 0.8rem;
+    }
+    .blog-subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-weight: 300;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* ── CONTENIDO DEL ARTÍCULO ── */
+    .blog-container {
+      background: #050816;
+      padding: 4rem 2rem;
+    }
+    .blog-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .blog-content p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 1.5rem;
+    }
+    .blog-content h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #fff;
+      margin: 2.5rem 0 1rem;
+      line-height: 1.3;
+    }
+    .blog-content h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #fff;
+      margin: 2rem 0 1rem;
+      line-height: 1.3;
+    }
+    .blog-content ul, .blog-content ol {
+      margin: 1.5rem 0 1.5rem 2rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+    .blog-content li {
+      margin-bottom: 0.8rem;
+      line-height: 1.8;
+    }
+    .blog-content strong {
+      font-weight: 600;
+      color: #fff;
+    }
+    .blog-content a {
+      color: #7dd3fc;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(125, 211, 252, 0.3);
+    }
+    .blog-content a:hover {
+      border-bottom-color: rgba(125, 211, 252, 0.8);
+    }
+    .blog-content img {
+      width: 100%;
+      height: auto;
+      margin: 2rem 0;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .blog-hero { min-height: 45vh; padding-bottom: 2rem; }
+      .blog-hero-content { padding: 0 1rem; }
+      .blog-h1 { margin-bottom: 0.5rem; }
+      .blog-container { padding: 2rem 1rem; }
+      .blog-content p { margin-bottom: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <section class="blog-hero" style="background-image: url('https://res.cloudinary.com/dm2xe9wv8/image/upload/v1787155703/JuanCarlosCD_z02pwv.jpg');">
+    <img src="https://res.cloudinary.com/dm2xe9wv8/image/upload/v1787155703/JuanCarlosCD_z02pwv.jpg" alt="Hero" class="blog-hero-bg" />
+    <div class="blog-hero-overlay"></div>
+    <div class="blog-hero-content">
+      <div class="blog-eyebrow">
+        <span class="blog-category">Ciudades</span>
+        22 de febrero de 2021
+      </div>
+      <h1 class="blog-h1">Historias de cartomorfosis – [E02T01] Transformación digital con Juan Carlos González</h1>
+      <p class="blog-subtitle">Buenísima nuestra platica acerca de transformación digital, documentos y flujos nacidos digitalmente con el CEO y CO-Fundador de Expendiente Azul, Juan Carlos González.</p>
+    </div>
+  </section>
+  <article class="blog-container">
+    <div class="blog-content">
+      <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.5rem 0; border-radius: 8px;"><iframe src="https://www.youtube.com/embed/v9eDa7PPj38" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allowfullscreen></iframe></div>
+<h2>Entrevista</h2>
+<p>Félix Audirac: Transformando a todo el mundo este concepto de la transformación digital.</p>
+<p>Félix Audirac: Creo que es un elemento que no debemos de perder de vista porque realmente cambian paradigmas desde lo más sencillo. Cómo te comunicas con tus papás, cómo te comunicas con tus hijos, con tus amigos; lo que acabas de decir ahorita, ¿no? Vamos a una fiesta ¿virtual o presencial, no? Hace dos años, hace dieciocho meses. “Oye vamos a hacer una fiesta virtual.” ¿Qué te digo?</p>
+<h3>Juan Carlos González: Totalmente.</h3>
+<h3>Juan Carlos González: Ni siquiera cabía…</h3>
+<p>Félix Audirac: ¿Y eso como? [risas] Entonces, nuestra dinámica de vida cambia con esas epifanías que mencionas y creo que sería extremadamente loable que nos compartas a todos de donde viene esa inspiración que te llevó a todos estos emprendimientos en serie: en tecnología, con dinero ajeno.</p>
+<p>Juan Carlos González: Vamos a, si me lo permites, voy a hacer una remembranza muy rápida, no pretendo, no, quiero que hablemos de nosotros como ecosistema empresarial, de producción y qué personas están atrás de ellos, más que mi historia pero vamos a meterle cuerpo a la historia. Yo estaba en un restaurante en Tlaquepaque cuando tenía 9 u 8 años, más o menos. Y me acuerdo perfectamente que mi papá me preguntó: “¿qué vas a querer de regalo de Navidad?” No me preguntes por qué, seguramente había una razón, no la recuerdo para serte sincero. “Quiero una computadora” ¿Por qué? No lo sé, ¿por qué no puedo ser un niño normal? No lo sé.</p>
+<h3>Félix Audirac: ¿Qué edad tenías?</h3>
+<p>Juan Carlos González: Ocho años, nueve años, más o menos. “Quiero una computadora.” Y efectivamente mi papá me compró una Atari. Que era el concepto de computadora pero con teclado. Una Atari E65. Para que la googleen y vean lo que era eso. Entonces tenía un teclado y podías ponerle el cartucho de juegos, de videojuego, atrás y podías jugar con el joystick negro del Atari con el botón rojo. Tu estás muy joven igual y no lo viste.</p>
+<p>Félix Audirac: Estaba a punto de hacer un comentario jurásico de tu parte.</p>
+<p>Juan Carlos González: [Risas] Entonces quitabas el cartucho y era una pantalla azul donde podías escribir líneas de código en Basic. Y de ver esa pantalla azul agarré una vez yo el manual y empecè a copiar las líneas de programación. No sabía yo ni qué estaba escribiendo, esa es la realidad. Y empezaba a modificar cosas por acá, cosas por allá, a ver qué pasaba cuando yo ejecutaba los programitas. Cosas muy sencillas de dibujar figuras geométricas, hacer una suerte como de “plática” con la computadora, hasta bajar codec, no era nada sofisticado pero me apasionó ese mundo. Después me cayó un juego el cual dañé, ya en DOS y fue tal mi frustración, avancé ahorita unos tres años en la historia ya tenía una computadora una 8086XT con 640kb en RAM, no voy a profundizar en eso tampoco porque aburriríamos a mucha gente, para mí es muy emocionante porque con eso se hacía maravillas en ese entonces. Dañé un juego, me frustré y yo dije “¡Quiero estudiar computación ya no puedo estar con base en manualitos y a prueba y error, prueba y error! Quiero y me metí a estudiar una carrera técnica en administración de sistemas de cómputo. Otra vez, ¿por qué no puedo ser un niño normal, no?</p>
+<h3>Félix Audirac: A los doce años.</h3>
+<p>Juan Carlos González: Estaba en secundaria, ¿qué edad tenemos en secundaria?</p>
+<h3>Félix Audirac: Doce años.</h3>
+<p>Juan Carlos González: Doce años. No me dejaban entrar a la escuela de computación porque no había acabado la secundaria. Pero pues era porque la estaba cursando en esos momentos. Ahí hubo una negociación, pude entrar. Eh y después hice la carrera de programación. Y si algo te puedo decir es que el tiempo no corría cuando yo estaba con TurboPascal o con Dbase 3+ enfrente de mí y yo echando líneas de código, ¿de qué? De las cosas que se me ocurrían en la cabeza. Después vino la conexión a internet donde nada más el ITESO, la Ibero, el TEC, la UdG tenían acceso a o brindaban acceso a internet a través del módem el “titi” y puedo darte toda la secuencia de sonidos pero no lo voy a hacer tampoco y este, había muy pocas líneas telefónicas y si se descolgaba alguien en la, en tu casa, en la línea telefónica de “¿Ya estás usando el teléfono otra vez?” se cortaba la comunicación y era otra hora para encontrar otro slot en donde meterse y ahí empecé a programar en C y bueno, de ahí realmente viene la historia. Posteriormente, entramos a la carrera de ingeniería en sistemas, no sé si has escuchado de esa carrera.</p>
+<p>Félix Audirac: Sí, sí, me parece que me suena algo conocido.</p>
+<p>Juan Carlos González:  Más o menos conocido. Yo ya iba con un camino perfectamente definido hacia estas disciplinas, eh, terminamos la carrera más o menos exitosamente o lo que eso signifique.</p>
+<h3>Félix Audirac: Se acabó.</h3>
+<p>Juan Carlos González: Exacto, se acabó. Y la verdad es que ya me picaba, Felix, ya me picaba la sangre por abrir mi primer negocio y dejar de jugar al chambitas porque casualmente hace aproximadamente 6 meses descubrí mi contabilidad del 2000, 2001 donde vendía computadoras. Era muy buen negocio vender computadoras en ese entonces, armadas. Estoy seguro que tú te acuerdas.</p>
+<p>Félix Audirac: Yo me acuerdo de los extraordinarios márgenes que había en aquél entonces.</p>
+<p>Juan Carlos González: Era muy bueno y para un chavito de 20 años, 19 años, bueno Rockefeller a tu lado era un baboso, caray, pobretón, caray. Era muy fácil hacer dinero.</p>
+<p>Félix Audirac: Hay opiniones que no compartimos pero, pero sí.</p>
+<h3>Juan Carlos González: Bueno. Entonces el caso es que…</h3>
+<p>Félix Audirac: Perdón, señor Rockefeller si no está sintonizando desde el más allá.</p>
+<p>Juan Carlos González: No, neh. No es cierto, yo creo que sí, él ganaba un poco más. Pero bueno, entonces hacía muy buen dinero y para esa edad era muy padre tener esa capacidad terminando la carrera. Abrimos la primera empresa de desarrollo de software, yo ya sabía que iba hacia ese camino. Fueron diez años de tropiezos, esa empresa prácticamente la colapsamos cuatro veces. La gran ventaja es que como yo tenía el oficio de programación, cada vez que colapsábamos contratábamos gente, colapsábamos. Cada vez que colapsábamos, como yo tenía el oficio, yo me arremangaba las mangas y era yo quien echaba las líneas de código. De manager a dirección a desarrollador. De manager a dirección a desarrollador. Y la pudimos sacar adelante gracias a ese tema. Inclusive tenemos un video de una conferencia que impartimos mi socio Roberto y yo en aquel entonces. Ahorita que veas el video te vas a reír bastante porque ni siquiera el saco me quedaba bien. Y esos fueron nuestros, vamos a llamarle pininos ahora sí en serio el arranque de esta carrera como emprendedor serial. Dicho esto fue como una maestría así lo considero yo, en negocios, que duró diez años. Una maestría larga, me hubiera gustado ser más brillante para acortarla un poquito. Fue una carrera cansada, una carrera muy demandante de tiempo, de, digo las tres T’s que son “tesón”, “tesoro” y “tiempo”. “Tesón” porque te entregas emocionalmente al proyecto, “tesoro” porque te pide muchísimo dinero y “tiempo” ni se diga. Llegó un momento en que me cansó el tema del desarrollo de software a la medida. Cada proyecto era una aventura, cada cliente era una historia, era muy demandante. Aunque logramos un nivel de certificación nivel 4 de CMBI que es una certificación internacional, que es un modelo de calidad que te certifica. Una historia que podemos profundizar en lo que quieras porque adoptar un modelo de calidad para una empresa de software es muy demandante y más de esas magnitudes.</p>
+<p>Félix Audirac: Bueno, déjame hacerte el paréntesis que en Cartodata sabemos por lo que pasaste porque tenemos una certificación CMBI nivel 3 en nuestra fábrica de software. Entonces estamos muy, muy familiarizados de lo que implica eso. Sin embargo, no estábamos los, bueno sí había un equipo que se hacía cargo de eso pero en tu caso es diferente. Tú lo estabas viviendo en carne propia cada una de las entrevistas, cada una de la documentación de los procesos e inclusive, para tú tener la certificación CBMI nivel 3 necesitas, o bueno cualquier certificación, una cosa es la teoría y otra es la práctica. Entonces para hacerte acreedor a eso tú tienes que presentar un proyecto real ejecutado con la metodología.</p>
+<p>Juan Carlos González: Así es. Y este, muy estresante, muy costoso. Y ¿te digo cómo medí yo el éxito de ese proyecto? Un indicador que no te imaginas lo simple que es. Número de llamadas telefónicas a mi celular. Así lo medí. Antes del nivel 2 eran cinco llamadas antes de comer, otras cinco llamadas después de comer y adivina cuántas de ellas tenían buenas noticias. Ninguna.</p>
+<p>Félix Audirac: Yo estaba pensando, “¿la última porque te están invitando unas chelas?”</p>
+<p>Juan Carlos González: No. Ni esa. Ni esa. Eso fue antes del nivel 2. Logramos nivel 2 y el celular se calló. Y para mí, eso, dije “ah, este es el camino” Y por ahí nos fuimos a nivel 3 y de ahí nos seguimos a nivel 4. Bueno. Aún así me cansé. Era un proyecto que la única forma de escalar era a través de contratar gente. Gente, gente, gente. Era una fábrica de software. Gente, gente, gente, gente. Y dije, “¿sabes qué? No” y este testereón me lo dio mi primer hijo. Porque inclusive cuando estaba dos, tres meses de nacer Emilio, pues no tenía dinero suficiente en la cartera para pagar el parto hippie que Gaby y yo nos habíamos propuesto que el agua, que la dula, que el doctor hippie y este, la pachamamencia y todo el asunto pues resulta que es carísimo. Entre más orgánico sea el asunto más caro es la situación. Entonces dije algo no está bien. Gaby me lo hizo ver, “oye pues llevas ya siete años trabajando en esto, ¿no está raro? Que estés entregando tanto tiempo, tanto esfuerzo y estemos pasando por una situación así” Me hizo cuestionarme muchas creencias y acabé en un tema de modelo de negocios. Al final del día, nuestro modelo de negocios exigía ese ritmo. Era muy joven, muy inmaduro como emprendedor, todavía lo sigo siendo pero ahora tengo más camino y decidimos vender la empresa. Esto fue 2013. Y cuando me encuentro el primer día felizmente desempleado porque logramos venderla y no sobra decir que fue en un mes, fue muy rápido ese proceso simplemente encontramos otra fábrica de software, el mismo modelo de negocio donde se requiere gente y gente y gente y tú tienes gente, con facturación, con proyectos andando era fácil empaquetarlo de alguna forma pasar proyectos, gente y facturación andando a otra empresa. Entonces la vendimos más o menos rápido, mis socios hicieron un excelente trabajo, excelente trabajo y tengo que confesar que yo me alejé un poquito de ese proyecto de compra-venta porque sí tenía un enganche emocional y como lo verbalizo es de la siguiente forma. Es como si diera un hijo propio en adopción. Así lo sentí en ese momento. Para eso me daba mi madurez como emprendedor en ese momento. Después aprendí que el mejor negocio de una empresa no es vender el producto es vender la empresa. Eso lo aprendí después, eso lo entendí muy bien. Y dije “¿qué hago? Ya estoy desempleado. Ya sé, güey, llevo diez años vendiendo que innovación, que desarrollo tecnológico, abstracto sobre abstracto sobre abstracto. Vamos a vender algo más fácil.” Y tengo la suerte de conocer a Alberto desde el 2006 porque nosotros sistematizamos toda su financiera y casualmente habían arrancado dos años antes o un año antes su modelo de franquicias. Y Alberto me dice “güey, te vendo una franquicia” Y yo: “si he vendido tecnología diez años que no venda dinero” ¿No? ¿Y la pregunta qué tal? ¿quieres dinero tú? ¿quisieras dinero?</p>
+<h3>Félix Audirac: Sí, échame el dinero.</h3>
+<p>Juan Carlos González: ¿Quieres dinero, Marce? ¿Sabes? Todo mundo quiere dinero. Voy a vender dinero. Pero productivo. Yo no voy a endeudar a la gente. Yo voy a hacer que las empresas en México se enseñen a hacer dinero con dinero ajeno. Es el que no se acaba nunca. Y ahí viene la faceta del financiamiento productivo. Cambio de 180º pero yo diría un cambio de 180º en otra inclinación, en otra industria, en otra arena. Yo decía en mi cabeza: “Pues logré automatizar, sistematizar, transformar digitalmente una financiera, sé cómo opera una financiera.</p>
+<p>Félix Audirac: Ah pero lo que acabas de decir es transformar digitalmente una financiera.</p>
+<h3>Juan Carlos González: Es correcto.</h3>
+<h3>Félix Audirac: ¿En qué año estamos hablando de esto?</h3>
+<h3>Juan Carlos González: Empezamos el proyecto en el 2006.</h3>
+<p>Félix Audirac: ¿Existía el concepto de transformación digital?</p>
+<p>Juan Carlos González: No, no se llamaba así en ese momento. Era simplemente “sistematizar”. Que mucha gente tiene la confusión y aquí va una cápsula de valor, mucha gente tiene la confusión que sistematizar es palearle dinero y software a un problema, ¿cierto? Hay que meter sistemas. “¡Yo ya tengo mi CMR!” Mucha gente así se expresa. “Y mis ventas no mejoraron” o “ya tengo mi RP. Y ahora ya tengo automatizado mi desmadre” Eso era el pan nuestro de cada día cuando nos dedicábamos a hacer software. Después entendí que en realidad, la sistematización es una mesa de cuatro patas. Primero, políticas, definir desde la dirección cuáles son las reglas del juego que mi gente debe seguir y ponerlas por escrito, el simple hecho de ponerlas por escrito ¡ay tantos consultores en eso, tanta gente dice eso! ¡Ya sabemos cuáles son las reglas aquí! Te estoy hablando de un pensamiento muy micro pero tiene un fundamento en el cual ahorita vamos a profundizar. Políticas. Procesos. A ver, los siete pasos para hacer esto. Los cinco pasos para hacer esto otro tema. Los ocho pasos para lograr este objetivo. Todo lo que hace nuestra empresa desde la perspectiva comercial, operativa y de gestión. En esas cuatro dimensiones todos los objetivos que perseguimos cuáles son los ocho pasos que la persona responsable de cada tema tiene que hacer. Es una chambota. Insisto, ahorita te voy a decir por qué es importante tenerlo por escrito. Políticas, procesos, herramientas, aquí viene el software. Ahora sí, si ya tienes gente que sabe las reglas del juego, ya tienes gente que sabe los pasos que tiene que seguir para cumplir los objetivos dale las mejores herramientas que tu dinero pueda comprar. Y no necesariamente software, eh. Herramientas. Si yo estoy trabajando con carpinteros, van a tener las mejores sierras, van a tener el mejor equipo y procesos de afilamiento que tengan para esas sierras, las mejores instalaciones físicas que mi dinero pueda comprar.</p>
+<p>Félix Audirac: Eso, eso creo que tiene muchísimo valor que lo entienda la gente. Normalmente tú dices “oye yo quiero un software porque creo que el software va a resolverme un problema y mi organización se tiene que adaptar a un software.</p>
+<h3>Juan Carlos González:  Imagínate cómo suena eso.</h3>
+<h3>Félix Audirac: ¡Pero es la realidad!</h3>
+<h3>Juan Carlos González: Es la realidad, sí.</h3>
+<p>Félix Audirac: Es lo que está sucediendo. “Oye transformación digital” Espérate. Funciona al revés. Ahora, ahí afuera, grandes proveedores como ustedes, que sí traen el software pero viene de la mano un tema consultivo que normalmente la gente obvia. Dice, “oye es que eso, sí” pero hasta que lo pones en esta transparencia de pasos requeridos para hacer la transformación digital, que es como le estamos llamando ahora al concepto, entonces te cae el veinte de que tú tienes que estar listo para hacerlo.</p>
+<h3>Juan Carlos González: Totalmente, y tu equipo también.</h3>
+<p>Félix Audirac: Y eso no es nada más ni el CRM ni el RP. Ni el sistema de trámites ni el registro de expedientes. Tu página de internet. Digo, me voy a ir a un concepto muy trivial. Pero tú tienes una página de internet y normalmente es un copy-paste de un Word. Pero creo que es muy importante el hilar el pensamiento que va a tener tu audiencia, digo en el caso de nuestros clientes, los ciudadanos cuando entran a una página de gobierno: “Oye, quiero hacer un trámite” ¿Cuál es la narrativa?</p>
+<h3>Juan Carlos González: Narrativa. Me gusta esa palabra.</h3>
+<p>Félix Audirac: Que tú tienes que seguir y de tal manera haces una transferencia de conocimiento hacia la persona. Hacia el cliente, el que va a pedir el crédito, el que quiere el dinero ajeno, etcétera. Entonces, por favor Juan Carlos, termina con la cuarta pata.</p>
+<p>Juan Carlos González: La cuarta pata y voy a ejemplificarte cómo aplico todo esto en una narrativa. Porque la palabra esta que dijiste “narrativa” es profundísima y clave en el proceso de transformación digital, principalmente en los procesos comerciales pero también los operativos y también los de gestión. Pero en los comerciales en bien claro y de ahí nos ejemplificamos a los otros. La cuarta parte es gente. Hay errores crasos donde pones gente, voy un poquito para atrás. Cuando empezamos en la fábrica de software a meter modelo de calidad nuestra filosofía era uno: procesos sobre personas. Esa era nuestra filosofía en donde excelentes procesos en manos de personas promedio, ¿sabes? Funcionó. Sí, pero así suficiente.</p>
+<h3>Félix Audirac: Como que forzado.</h3>
+<p>Juan Carlos González: Sí. El talento humano, la excelente capacitación y la disposición y el liderazgo adecuado son vitales porque puedes tener los mejores, la mejor librería de proceso en la historia, las políticas más claras definidas, que, ¿para qué es una política? Y ¿por qué está por escrito? Para evitar que al dueño de la empresa, el director, le estén preguntando todas y cada una de las cosas, para ver, cómo hasta doblar y hasta donde no doblar. Vamos al ejemplo del changarro es “¿Jefe, podemos darle descuento a Don Lupe?” ¿Sí me doy a entender? Si esa pregunta existe, ahora dramatízala a nivel que quieras, que en todos los niveles existe, eh. Es porque no hay una política clara o bien hay una política clara que no se respeta que es lo mismo que no esté clara, que no exista. Entonces si defines las reglas del juego en manos de gente súper bien entrenada, capacitada, en un liderazgo congruente, con las mejores herramientas que tu dinero pueda comprar, con procesos perfectamente definidos claros, en el lenguaje y la narrativa que cada persona lo entiende y vive por su rol, por su proceso, por su realidad del día a día, genuinamente creamos empresas que no dependen del dueño para existir y que pueden escalar, crecer más allá de la visión del dueño.</p>
+<h3>Félix Audirac: ¡Espectacular!</h3>
+<p>Juan Carlos González: ¿Estamos bien? Eso era la sistematización y creo yo que es la base que existe desde hace muchas décadas para un proceso de transformación digital. Vamos a hablar de narrativa. Yo llego al mundo del financiamiento que de hecho tenemos un pequeño videíto de las peripecias que hacíamos en ese momento de cómo explicaba, de cómo trataba yo de romper el molde de quien está vendiendo normalmente financiamiento. Y ¿te digo cuál es el proceso normal, hoy por hoy? En la gran mayoría de las financieras cómo funciona un vendedor. Es “¡Ah ya vi CartoData que está creciendo! Ok, ¿quién es el dueño? ¿Felix? ¡Felix! ¿Sabes qué tengo créditos y arrendamientos para ti? La pregunta inmediata es “¿qué tasa?” ¿No? Puede ser. O “no necesito dinero”</p>
+<h3>Félix Audirac: De hecho yo iba un paso atrás, ¿para qué?</h3>
+<p>Juan Carlos González: ¿Para qué? Esta clase de… Vamos a pensar: “Sí, a ver, necesito este, diez coches y necesito un arrendamiento para diez coches, ¿sale?” Tu primera intención como cliente es “pásame la cotización” Pero al vender parece que le pican las cotizaciones y saca la cotización del arrendamiento, ¿estamos de acuerdo? ¿Qué es lo primero que tú haces como cliente? Llamas a otros tres vendedores de arrendamientos o a la agencia, “pásame tu cotización de arrendamiento” y empiezas tú a comparar lo que crees tú que esperas con peras con manzanas a comparar mensualidad con mensualidad y pago inicial contra pago inicial. Es la narrativa que normalmente implementan los vendedores. Y descubres que el vendedor que originalmente te habló es 10% más caro que la agencia. ¿Qué haces inmediatamente?</p>
+<h3>Félix Audirac: Le hablas a la agencia.</h3>
+<p>Juan Carlos González: ¡Zaz! Pero es así ¡a la basura! ¡Trángale! Todo el trabajo de haberte encontrado, de haberte perfilado.</p>
+<h3>Félix Audirac: Claro, de moverte el tapete.</h3>
+<p>Juan Carlos González: Bla, bla, bla. A la basura por un 10%. Para que muchos años después te dieras cuenta que el valor residual, el pago al final del contrato de arrendamiento era 40% más caro que la del primer vendedor. Pero tú no tienes la chamba, no tienes por qué tener la habilidad de comparar dos propuestas de arrendamiento por que no es tu arena. ¿Por qué me atrevo a profundizar tanto en este business que hay? Yo empecé como el niño nuevo en la cuadra, ¿no? Del mundo del financiamiento productivo pues yo empecé a jugar de acuerdo al status quo. ¿Cómo va el dicho este de “dónde llegases y vieses”?</p>
+<h3>Félix Audirac: Haz lo que vieres.</h3>
+<p>Juan Carlos González: Exactamente. Entonces, yo empecé a tratar de copiar y de repente no me cabían en la cabeza ciertas cosas pero era a razón de mi propio descontexto. Yo nunca había vendido financiamiento productivo. No sobra decir que la primer colocación fueron ocho meses, te dije, ¿recuerdas que te dije? “Vendo tecnología que no venda dinero. Esto me la va a hiper pelar, así sale. A ver, unos contactos ahorita coloco unos milloncitos y empieza el cash flow, contrato mi asistente y de ahí ya nos vamos.” Ocho meses. Ya no encontraba, metafóricamente, hoyitos en el cinturón, “¿ahora qué sigue, caray?” Y hay una anécdota padrísima de mi primer cierre en la sala de juntas donde se iba a firmar el contrato se puso a llorar el cliente. Físicamente hablando. “Es que yo nunca había visto que iba a pagar esta cantidad de intereses” El primer requisito que él aprobó, se le olvidó que lo aprobó. Que ahorita vamos a la historia. Esta fue la semillita de “Expediente azul”. Se le olvidó, nunca vió la tasa de mortización, nunca sumó la columna de intereses y dijo: “esto no es lo que yo pedí, yo ya contaba con este dinero” y se fue. Y no me contestó el teléfono. Y esta era mi primera colocación después de ocho meses de estar hambreándome. “¡No puede ser esto!” Y ya estaba ahí mi comisión, ya estaba todo ahí. Al día siguiente firmó. Esa es otra historia. El caso es que no me cuadraba, ¿por qué cotizamos tan rápido? Cuando cotizamos es cuando dejo de recibir llamadas del cliente o que me conteste, ya no me contestan los WhatsApp y demás, entonces mi lógica es “voy a prolongar hasta el último momento posible la cotización.” Hablando de narrativa, ¿sabes? Y después me daba cuenta que invertía, mira, te estoy sintetizando cinco años de experiencia, no creas que esto fue así de ¡ah yo creo que por ahí! No, son cinco años de experiencia. Entonces invertía una cantidad de recursos absurda ¿cuatro meses integrando un expediente? ¿Para que me lograran entregar todos los documentos necesarios? Para que al final, el buró de crédito del cliente estaba para llorar, ¡no le prestaba ni su mamá! Y decía: “Cuatro meses después me entero de esto. No puede ser esto, qué cantidad de dinero, de recursos, de proyecto, olvídalo” ¿y quién acababa enojado? El cliente: “¡Llevo cuatro meses dándote papeles para que me digas que “no”!” Oye, pero tú me contestaste aquí que tu buró de crédito estaba bien. “Pues para mí está bien”</p>
+<p>Félix Audirac: [Risas] Pues mi mamá sí me presta.</p>
+<p>Juan Carlos González: No, ni su mamá le prestaba.</p>
+<p>Félix Audirac: No, decía que “sí”.</p>
+<p>Juan Carlos González: No, él quería, él creía…</p>
+<p>Félix Audirac: No, él creía que su mamá sí le prestaba.</p>
+<p>Juan Carlos González: Exactamente. Nada más falso. Entonces, para terminar la narrativa es, ¿en qué acabó esta narrativa? Es voy a levantar demanda del cliente que ya sé que puedo atender, antes estaba centrado en los casos imposibles, medio posibles y los posibles en sí. Le tiraba a lo que se moviera. ¿Sí me doy a entender? Nada más haz este segmento en esta situación. Y los primeros diez minutos de la conversación que tenemos es para saber si yo te puedo ayudar a ti porque es una falta de respeto para ti cliente que yo te haga perder ocho meses, seis meses, tres meses, un mes,¡un mes o un día! En un proyecto que no tiene, que no pasa ni la prueba de la risa. Entonces, voy a buscar descalificarte lo más rápido posible. Voy a entender, voy a postergar, no te voy a cotizar hasta que yo esté seguro que cada número que viene en mi cotización tú lo entiendes, lo esperas y te sirve. Hasta ese momento te cotizo, no antes. “¡Pero necesito una cotización!” Dije “ah perfecto” y automaticé el proceso de rangos. A ver está bien, quieres ver números, sí quiero ver números porque eso es así como de “quiero ver números, ya cotízame” Okey, su arrendamiento va de tal pago inicial a tal pago inicial, de tal mensualidad a tal mensualidad, de tal plazo a tal plazo, ahí están tus números. “No pero yo ya necesito la mensualidad” Ah vamos a platicar. Mientras no le entregues la cotización a tu cliente final, lo vas a tener comiendo de tu mano. Por que él quiere esos números para poderte comparar.</p>
+<p>Félix Audirac: Eso que acabas de decir es algo muy sensato. A nosotros también nos pasa en nuestra industria y por ejemplo, cuando trabajamos con un municipio le decimos “oye te vamos a mejorar tu recaudación” “¿Cuánto?” No pues, para eso es el trabajo, yo te voy a decir cuánto. Y es, lo que acabas de decir es completamente cierto. Las ciudades en México tienen un crecimiento orgánico del 6% al 8%. Y ese número es el rango. Entonces del 6% al 8% de los metros cuadrados construidos que tú tengas en una ciudad es lo que puede incrementar tu valor fiscal y de ahí, tu recaudación, y si no has actualizado en diez años, pues multiplícalo por diez.</p>
+<p>Juan Carlos González: 8%, 8%, 8% es compuesto a lo largo de los años, sí claro.</p>
+<p>Félix Audirac: Entonces, eh, a mí se me hace muy interesante y atractivo el que hagamos estas comparaciones en diferentes industrias porque la realidad es única, ¿no? Obviamente dependiendo de quién la perciba, se acaba la realidad en cuanto cruza la retina. Pero la realidad es que todos estos, los hechos que se van suscitando son los mismos en diferentes industrias y es muy enriquecedor el poderlos cruzar unos con otros. A mí se me hacen, tus anécdotas, súper enriquecedoras pero creo que hay algunos de nuestros amigos allá del otro lado de la pantalla que ya tienen hambre. Entonces, me gustaría que entremos realmente a que nos platiques qué es “Expediente Azul”. La semana pasada tuvimos la, el gusto de tener la compañía de Marco Vera que es nuestro C.F.O que explicó todo el trasfondo legal y fiscal que está detrás del famoso 69B. No creo que sea el origen del “Expediente Azul” Entonces me gustaría mucho que explicaras y que ahora sí qué es el “Expediente Azul” de estas historias que nos acabas de narrar que fue el cómo…</p>
+<p>Juan Carlos González: Cómo se desprende.</p>
+<p>Félix Audirac: Entonces, yo te voy a interrumpir un par de veces para poder subrayar lo relevante y por qué me apasiona tanto tu producto.</p>
+<p>Juan Carlos González: Gracias. Mira en esta misma narrativa al momento de que teníamos un proyecto ya con luz verde en la financiera, arrancaba el proceso de integración de expedientes y un día me percato que tenía cinco personas, todo el día persiguiendo firmas, requisitos, documentos y no nada más eso, peleándose con mis prospectos que tanto trabajo nos había generado conseguir porque “No, señor Pérez, no me ha enviado usted su comprobante de domicilio.” Así era el nivel de discusiones, a ver…</p>
+<p>Félix Audirac: ¿Cinco personas?</p>
+<p>Juan Carlos González: ¡Cinco personas! Ocho horas persiguiendo documentos, firmas y requisitos.</p>
+<p>Félix Audirac: Ahora, estamos hablando de un proceso que es el core de tu nuevo negocio.</p>
+<p>Juan Carlos González: Totalmente. Es el core del negocio.</p>
+<p>Félix Audirac: O armas expedientes…</p>
+<p>Juan Carlos González: … o no hay negocio. Punto, se acabó la historia.</p>
+<p>Félix Audirac: Ahora para cualquier otro que armar el expediente es “un accesorio” porque te lo pide la autoridad, pues olvídate.</p>
+<p>Juan Carlos González: Pero ve, mira qué interesante lo que me estás diciendo: “es un accesorio, olvídate.” Y gracias a ese “olvídate” porque sí es cierto ¿a qué emprendedor le apasiona integrar expedientes? De sus proveedores, de sus clientes, de sus colaboradores.</p>
+<p>Félix Audirac: Que hoy en día, es ley. Lo tienes que hacer.</p>
+<p>Juan Carlos González: Ah, ahí va. Pero no, vamos a la parte emotiva, todavía. Vamos a ver en la primer demanda donde no tengas el expediente de tu colaborador cuánto te cuesta. O vamos a ver el primer requisito de la autoridad no puedas demostrar la materialidad de ese proveedor, a ver cuánto te cuesta. En multas, actualizaciones, re-cálculos de ejercicios anteriores. ¿Si me doy a entender? O vamos a ver cuánto te cuesta no hacer el expediente de cada uno de tus clientes completo, su historial, listas negras, buró de crédito y que le des crédito. ¿Cuántas empresas tienen que dar crédito para que su modelo comercial funcione? Comercializadoras, ustedes probablemente y muchas otras. Pero, dado que su razón de existir no es financiamiento pues es “pues yo conozco a Félix, suéltale, hombre. Que nos pague a 30, 60, 90 días” y funciona bien, cuando pueden. Y funciona bien, hasta que deja de funcionar bien. Y ves a comercializadoras con una cartera vencida, ¡brutal! Que sus ciclos de cobranza son tan largos que tienen que empezarse a apalancar de revolventes y demás. Y empieza ahora sí, se va la cartera vencida a muchas cosas y muchas las tienen que descargar ya, ya cartera perdida, se acabó el asunto porque no corrieron un proceso diligente ni siquiera de preguntarle a qué teléfono van a llamar para cobrar. No tienen ni la más mínima idea porque yo entiendo, su razón de existir no es dar financiamiento, es entregar otra cosa de valor. Y ese accesorio que “ouch” se vuelve algo muy relevante tarde o temprano. Regresando a la historia yo veo a cinco personas pidiendo papeles, bronqueándose con los clientes. “No me había enviado esto, yo pensé que ya había acabado. Supuse que esto no era necesario. Nunca me dijiste que se tenía que firmar, yo no sabía que el comprobante de domicilio debería tener menos de tres meses.” Una cantidad de discusiones de tan bajo nivel que descubrí que el ejercicio de integrar un expediente es un ejercicio de comunicación constante porque a todos nos da flojera hacerlo, ¿no?. Y dije, le hablé a Roberto, mi socio de la fábrica de software, le dije: “panzón ya sé que vamos a automatizar. La integración del expediente, ya necesito quitarme este dolor de encima.” ¿Qué y eso para qué? Todas las financieras del mundo integran expedientes, si no hay expedientes no hay negocio. Vamos a automatizarlo. “Pues vamos.” Confió en mí ciegamente. A los cuatro meses teníamos la primera orden de compra de BBVA Bancomer por medio millón de pesos para correr el primer piloto. ¡A los cuatro meses! Otra vez Rockefeller, híjole, discúlpame.</p>
+<p>Félix Audirac: Era un dolor, es un dolor de cabeza.</p>
+<p>Juan Carlos González: Es tan abrumador el dolor de cabeza que lo consideramos que es el ahora si “la nueva normalidad”, es la vieja normalidad, es el status quo de una industria que no ha tenido porque innovar en muchos años.</p>
+<p>Félix Audirac: Ahora un expediente, por ejemplo yo acabo de renovar el pasaporte de mi hija ayer; eran cinco documentos: fotos, formas, el pasaporte anterior, certificado de ciudadanía y otro papelito más, el pago, era el pago. Ahora cuando tú pides un padrón de proveedores, bueno en nuestro caso son 14 documentos. Cuando una financiera me imagino que son más de 14.</p>
+<p>Juan Carlos González: 35</p>
+<p>Félix Audirac: 35 documentos.</p>
+<p>Juan Carlos González: 35 en promedio unas más otras menos.</p>
+<p>Félix Audirac: Ahora cómo juntas digo de esos 35 documentos, de esos 14 documentos, de esos 5 documentos, hay un concepto que a mí me llama mucho la atención y te lo escuché nombrar a ti la primera vez, “digitally born”, “nacido digitalmente”. Buró de crédito, el INE.</p>
+<p>Juan Carlos González: Estados de cuenta</p>
+<p>Félix Audirac: Tu…</p>
+<p>Juan Carlos González: CURP</p>
+<p>Félix Audirac: Tu onda del SAT, tu 69B. Explícanos y explícanos a todos qué es un documento nacido digitalmente y cómo funciona.</p>
+<p>Juan Carlos González: Mira voy a empezar por decir que no es. La comisión nacional bancaria de valores tiene un proceso para las financieras que se llama cotejos originales. Chécate el albur de una industria que no ha querido, no había querido actualizarse hasta que llegó el sitio u-covid “¿Ah no se actualizan? Los actualizo”. Donde el ejecutivo de cara al cliente tiene que tener el papel en original de un estado de cuenta para aceptar que su copia sea fidedigna, así en un proceso.</p>
+<p>Félix Audirac: Sí es fidedigna, sí es.</p>
+<p>Juan Carlos González: De que este “original” era una impresión de un pdf del estado de cuenta del banco que ya no llega a físico.</p>
+<p>Félix Audirac: Lo que pasa que uno era el color y el otro en blanco y negro.</p>
+<p>Juan Carlos González: Así, es lo dices de broma pero así es. Y lo sella y lo firma con un sello que dice “cotejo de originales”. Ese proceso hoy por hoy sigue siendo exigible y hay una manera de firmarlo digitalmente pero mi lógica me decía en ese entonces cuando estaba haciendo “Expediente azul” y ¿por qué le pido eso es el proceso? Mejor me conecto al banco y bajo el estado de cuenta directo y que más cotejo de original necesito si el que emite el documento ¡me lo está enviando directamente a mí! No pasa por las manos de mi cliente. Más original creo yo imposible. Mismo caso con el CURP, mismo caso con el buró de crédito.</p>
+<p>Félix Audirac: Cualquier factura.</p>
+<p>Juan Carlos González: Cualquier captura</p>
+<p>Félix Audirac: El xml vive en el SAT además del cliente.</p>
+<p>Juan Carlos González: Y ahí es donde ya dibujamos la visión de “Expediente Azul”. No hay mejor manera de integrar un expediente que no necesitar integrar un expediente. ¿Estamos de acuerdo? ¿Por qué? ¿Qué va a pasar cuando lo logremos? Falta todavía para esto. El tema del open banking es un tema que se viene masticando fuerte desde el 2017 donde en teoría los bancos en año pasado tenían que abrir su API para poder hacer diferentes arenas de consulta, que hoy por hoy la consulta que más se ha popularizado es “¿dónde están mis sucursales y en qué horario abren y cierran?.</p>
+<p>Félix Audirac: Pero bueno a las que no podemos ir porque están cerradas por el COVID.</p>
+<p>Juan Carlos González: Exactamente, porque te mueres.</p>
+<p>Félix Audirac: [Risas]</p>
+<p>Juan Carlos González: Entonces, este dices, bueno es un paso pero por lo menos la autoridad ya está exigiendo a los bancos, que esa información no es propiedad del banco es propiedad del cuentahabiente y si el cuentahabiente te autoriza que se consulte tú tienes que exponer las apis. Las apis para la gente que no está, que no conoce ese término es como la tubería expuesta de un software para que otro software se conecte a esa tubería y puedan intercambiar datos, ¿estamos de acuerdo? Entonces tienes que exponer las apis para que bajo la autorización de tu cuentahabiente, otra instancia, otra entidad, otro software otro pueda extraer los datos que tú tienes almacenados.Entonces los estados en cuenta en teoría con open banking ya los lograríamos sacar. ¿Cuántos años crees que va a tardar el registro público en exponer sus apis? No suspiremos suficiente porque nos vamos a acabar el oxígeno pero tiene que pasar en algún momento. Sale buró de crédito va muy avanzado en ese sentido, comprobante de domicilio,hay que ser cierto scraping, ciertas cosas pero ya más o menos, poco a poco vamos a lograr nuestra visión de que no se necesita y integrar un expediente. El sueño de “Expediente azul” que hoy todavía no lo logramos es: “Tu dame tu FIEL y ese va a ser el último el último requisito que te voy a pedir.” Yo voy a ir con este CFE o con el agua, con el predial,registro público, tata tata tata. Aquí está el expediente lo voy a calificar de manera automática al nivel de riesgo que significa. Ojo: darte crédito es el caso de uso más básico, o el riesgo que significa contratarte, o el riesgo que significa comprarte. Porque tenemos expedientes a nivel de colaboradores, proveedores licitaciones o clientes, ¿no? Imagínate que ese perfilado automático lo hagamos directamente de los orígenes digitales, nativamente digitales de la información. Cuánta, cuánto valor genera un proceso de integrar expediente manual. ¡Cero! Ni para el que lo emite, ni para el que lo recibe pero es una materia prima necesaria para medir riesgos tanto para presente o riesgos que puedan venir en un futuro.</p>
+<p>Félix Audirac: Muy bien pues creo que sobre de esto me voy dar con tu permiso la libertad de anunciarles a todos los que nos están contactando, especialmente a los municipios y directores de catastro, que en CartoData hemos desarrollado precisamente esa api de la que habla Juan Carlos para que sus expedientes catastrales, para términos de créditos, puedan ser validados contra el catastro. En otras palabras ustedes podrían presentar un certificado de propiedad expedido por el municipio firmado digitalmente para completar expedientes. Entonces lo comentaste hasta ahorita de una forma rápida,eh era la sorpresa que tenía para ti el día de hoy. Y me entusiasmaría mucho que este mismo, este hilo conductor lo vamos a ir platicando en las próximas semanas con algunos alcaldes, con algunos tesoreros y directores de sistemas. Pero es con lo que estamos hablando del concepto conductor de este programa CartoData.tv que es la “cartomorfosis”, que es a través de la cartografía cómo podemos transformar organizaciones y a mí me encanta el hecho de que esté Juan Carlosconmigo porque yo lo considero como uno de los agentes dirruptivos más grandes que he conocido en diferentes industrias. Como lo hiciste en el caso de la industria financiera, para mí el hecho de poder compartir este nuestro tercer episodio contigo es un completo honor y una emoción tremenda el que podamos cerrar con este con este comentario y con esta oferta para transformar, sí los catastros, pero sobre todo no nos olvidemos ¿a quién vamos a transformar realmente? ¡Pues la experiencia del que está completando el expediente!</p>
+<p>Juan Carlos González: Correcto.</p>
+<p>Félix Audirac: Cuando tú generas un elemento transforma todo, transformativo, una evolución en términos de tecnología, ya no es opcional hoy en día, ya es lo que nos va a cambiar por completo la forma en la que vamos a hacer los siguientes trabajos y las siguientes implementaciones y por eso me refiero a simplificaciones de la vida de todos los que vivimos. Nuestra misión como organización, como CartoData, es el dejar una mejor sociedad en la que vivimos. Así de sencillo. Si es con mapas, con mapas, si es con sistemas, con sistemas y si es con varas, con varas.Pero este, estas sinergias que nosotros estamos empezando a develar en la interacción y la sinergia que realizamos con nuestros proveedores y socios comerciales es realmente a lo que queremos llegar. Juan Carlos se nos está acabando el tiempo.</p>
+<p>Juan Carlos González: Creí que llevábamos 10 minutos.</p>
+<p>Félix Audirac: 10 minutos para que se cumpla la hora así de bien nos lo estamos pasando. Me gustaría que pudieras hacer una recomendación y mientras tanto yo voy a checar aquí si tenemos alguna pregunta en vivo y si tenemos alguna pregunta después asíncrona te las haremos llegar a través de las diferentes redes sociales. Las pueden poner aquí abajo en el comentario si no son las 2 con 17 donde ustedes están en este momento y están viendo esto diferido. Haremos lo mejor posible para contestar sus preguntas, ponernos en contacto. Si quieren contactarte, Juan, ¿cómo? Como “Juan” Ya soné como…</p>
+<p>Juan Carlos González: Don Juan, Don Juan para ti.</p>
+<p>Félix Audirac: Don Juan Carlos.</p>
+<p>Juan Carlos González: Mi correo electrónico contacto@expedienteazul.com. Somos muy diligentes para atender ese medio de comunicación o bien en nuestras redes sociales “Expediente Azul LatAm”, en Facebook y LinkedIn también estamos muy muy activos y muy presentes en esos medios de comunicación. Y hablando del consejo para cerrar este asunto, si el COVID o tu deseo de escalar y crecer tu operación crees que requiere y puedes beneficiarte de las tecnologías de información: no es un tema al cual le puedas palear dinero indiscriminadamente, no es un tema al cual le tienes que meter software sin pensar a qué narrativa está sirviendo. Simplemente entiende y siente muy bien el proceso, el camino que tiene que seguir tu cliente para: uno comprarte, dos para que le entregues y tres para que sea considerado un cliente de éxito el famoso concepto de customer success. Si tú entiendes bien estas narrativas que no deben ser complicadas, inclusive si son complicadas creo que algo ya no está jalando bien y en función de estas narrativas, me encantó esa palabra que introdujiste en esta conversación; en función de esas narrativas ahora sí ya haces un sistema, las reglas del juego de mesa de cuatro patas: las reglas, los procesos, las herramientas, las mejores herramientas que el dinero pueda comprar y gente súper bien capacitada en cómo sacarle provecho a las herramientas, como seguir las reglas y cómo aprovechar tus procesos. He visto que muchos clientes dicen: “No, ¿sabes qué? Ese software está carísimo, mejor que lo hagan en Excel” hablando de un mundo, o en tu caso: “es mejor que lo hagan en CorelDraw”.</p>
+<p>Félix Audirac: Para los millenials que nos están sintonizando, CorelDraw era lo equivalente de Photoshop.</p>
+<p>Juan Carlos González: Entonces es una falta de respeto a la creatividad, al intelecto y al tiempo de colaboradores talentosos y bien intencionados, aventarlos al ruedo con las manos desnudas pensando que es muy caro pagar una licencia. Te garantizo que ese entusiasmo y ese talento es mucho más complicado de encontrar dales esas herramientas y que florezcan y que salgan adelante en un contexto muy bien pensado en una cultura de transformación digital que viene desde la cabeza. Porque difícilmente una iniciativa de transformación digital viene de abajo hacia arriba, al menos en “Expediente azul” es bien complicado que un ejecutivo, que sí ha sucedido pero es muy poco el porcentaje, un ejecutivo diga: “Descubrí “Expediente Azul” vamos jefe vea esto”. Casi no sucede, si no viene del jefe y del mero mero no camina, hemos visto mucha resistencia en ese contexto.</p>
+<p>Félix Audirac: Juan Carlos muchísimas gracias por acompañarnos. Tenemos por ahí a Marcelo que te manda saludos. Y pues estamos en estrecha comunicación. Todos los comentarios que nos lleguen los compartimos nuevamente contigo y nos vemos el próximo miércoles nuevamente aquí en CartoData.tv para compartirles un poco más de esta transformación digital y de los peldaños que hemos seguido nosotros y que queremos compartir con todos ustedes. Juan Carlos, muchas gracias y buen provecho a todos en casa.</p>
+<p>Juan Carlos González: Provecho</p>
+
+    </div>
+  </article>
+</body>
+</html>

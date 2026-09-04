@@ -18,6 +18,25 @@
   <meta name="twitter:description" content="Análisis cartográfico, catastral, de riesgos, geomarketing y más." />
   <meta name="twitter:image" content="https://www.cartodata.com/images/og-procesos.jpg" />
   <script src="./shared.js" defer></script>
+  <script>
+    /* Fallback: si shared.js no se carga en 3s, inyectar nav mínimo */
+    (function() {
+      let sharedLoaded = false;
+      const checkShared = () => {
+        if (document.querySelector('[data-cd-nav]')) {
+          sharedLoaded = true;
+        }
+      };
+      window.addEventListener('load', checkShared);
+      setTimeout(() => {
+        checkShared();
+        if (!sharedLoaded && !window.__sharedWarned) {
+          window.__sharedWarned = true;
+          console.warn('⚠️ shared.js no se cargó. Verificar que el archivo exista en Cloudflare Pages.');
+        }
+      }, 3000);
+    })();
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }

@@ -121,12 +121,20 @@
       border-radius: 16px; padding: 1.8rem 1.6rem;
       backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
       transition: border-color 250ms, background 250ms;
+      display: flex; flex-direction: column;
     }
     .proof-card:hover { background: rgba(59,91,219,0.10); border-color: rgba(59,91,219,0.35); }
     .proof-city { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.5rem; }
     .proof-num { font-size: clamp(2rem,4vw,3rem); font-weight: 200; color: #fff; line-height: 1; margin-bottom: 0.4rem; }
     .proof-num span { color: #3b5bdb; font-weight: 700; }
     .proof-label { font-size: 0.85rem; color: rgba(255,255,255,0.55); }
+    /* Escudo del municipio, anclado al fondo de su propia tarjeta */
+    .proof-escudo { margin-top: auto; padding-top: 1.6rem; }
+    .proof-escudo img {
+      height: 72px; width: auto; object-fit: contain; display: block;
+      background: #fff; border-radius: 12px; padding: 7px 11px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.28);
+    }
 
     /* Municipios strip */
     .municipios-strip {
@@ -322,17 +330,16 @@
       border-radius: 12px; display: flex; align-items: center; justify-content: center;
       font-size: 0.8rem; color: rgba(255,255,255,0.3); font-weight: 500;
     }
-    .escudos-row {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 3rem;
+
+    /* Casos de estudio */
+    .caso-embed-wrap {
+      border-radius: 16px; overflow: hidden;
+      aspect-ratio: 16/9; background: #0b1022;
+      margin-top: 2rem;
     }
-    .escudo-card {
-      background: #fff; border-radius: 14px; padding: 1.1rem 0.8rem 0.9rem;
-      display: flex; flex-direction: column; align-items: center; gap: 0.65rem;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    .caso-embed-wrap iframe {
+      width: 100%; height: 100%; border: none;
     }
-    .escudo-card img { height: 74px; width: auto; object-fit: contain; display: block; }
-    .escudo-card span { font-size: 0.72rem; font-weight: 600; color: #1e293b; text-align: center; }
-    @media(max-width:640px) { .escudos-row { grid-template-columns: repeat(2, 1fr); } }
 
     /* Responsive hero */
     @media(max-width:640px) {
@@ -385,29 +392,26 @@
           <p class="proof-city">Tequila, Jalisco</p>
           <p class="proof-num"><span>+232%</span></p>
           <p class="proof-label" data-en="in property tax revenue · 3 years">en recaudación predial · 3 años</p>
+          <div class="proof-escudo"><img src="./images/escudo-tequila.png" alt="Escudo de Tequila, Jalisco" loading="lazy" onerror="this.parentNode.remove()" /></div>
         </div>
         <div class="proof-card">
           <p class="proof-city">Santiago, Nuevo León</p>
           <p class="proof-num"><span>+315%</span></p>
           <p class="proof-label" data-en="in property tax revenue · 4 years">en recaudación predial · 4 años</p>
+          <div class="proof-escudo"><img src="./images/escudo-santiago-nl.png" alt="Escudo de Santiago, Nuevo León" loading="lazy" onerror="this.parentNode.remove()" /></div>
         </div>
         <div class="proof-card">
           <p class="proof-city">Tlajomulco de Zúñiga</p>
           <p class="proof-num" data-en="&lt;span&gt;400M MXN&lt;/span&gt;"><span>400 mdp</span></p>
           <p class="proof-label" data-en="in additional revenue generated · 6 years">generados adicionales · 6 años</p>
+          <div class="proof-escudo"><img src="./images/escudo-tlajomulco.png" alt="Escudo de Tlajomulco de Zúñiga, Jalisco" loading="lazy" onerror="this.parentNode.remove()" /></div>
         </div>
         <div class="proof-card">
           <p class="proof-city">Guadalajara, Jalisco</p>
           <p class="proof-num" data-en="&lt;span&gt;289M MXN&lt;/span&gt;"><span>289 mdp</span></p>
           <p class="proof-label" data-en="in additional revenue · 2 years">en recaudación adicional · 2 años</p>
+          <div class="proof-escudo"><img src="./images/escudo-guadalajara.png" alt="Escudo de Guadalajara, Jalisco" loading="lazy" onerror="this.parentNode.remove()" /></div>
         </div>
-      </div>
-
-      <div class="escudos-row">
-        <div class="escudo-card"><img src="./images/escudo-guadalajara.png" alt="Escudo de Guadalajara, Jalisco" loading="lazy" /><span>Guadalajara</span></div>
-        <div class="escudo-card"><img src="./images/escudo-santiago-nl.png" alt="Escudo de Santiago, Nuevo León" loading="lazy" /><span>Santiago, N.L.</span></div>
-        <div class="escudo-card"><img src="./images/escudo-mascota.png" alt="Escudo de Mascota, Jalisco" loading="lazy" /><span>Mascota</span></div>
-        <div class="escudo-card"><img src="./images/escudo-ahualulco.png" alt="Escudo de Ahualulco de Mercado, Jalisco" loading="lazy" /><span>Ahualulco de Mercado</span></div>
       </div>
 
       <div class="municipios-strip">
@@ -567,6 +571,18 @@
       <h2 class="cta-h2" data-en="Getting started is <strong>fast and easy</strong>">Iniciar es <strong>rápido y fácil</strong></h2>
       <p class="cta-body" data-en="We can begin immediately with our online diagnostic. As a result, we will calculate your revenue growth potential based on your municipality's geospatial maturity index — and you will have a personalized presentation ready for the Mayor and the city council.">Podemos empezar de inmediato con nuestro diagnóstico en línea. Como resultado calcularemos el potencial de incremento en la recaudación de acuerdo al índice de madurez geoespacial de tu municipio — y tendrás una presentación personalizada lista para presentar al Alcalde y cabildo.</p>
       <a href="./xray.html" class="btn-primary" style="font-size:1rem;margin-top:1rem;" data-en="Request a diagnostic →">Solicitar diagnóstico →</a>
+    </div>
+  </section>
+
+  <!-- ── CASOS DE ESTUDIO ── -->
+  <section style="background:#050816; padding:clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);">
+    <div style="max-width:1100px;margin:0 auto;">
+      <p class="section-eyebrow" style="color:rgba(255,255,255,0.35);" data-en="Research &amp; case studies">Investigación y casos de estudio</p>
+      <h3 style="font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;color:#fff;margin-bottom:1rem;line-height:1.2;" data-en="Urban canopy coverage<br><strong>and green spaces</strong> in Guadalajara">Cobertura del dosel urbano<br><strong>y espacios verdes</strong> en Guadalajara</h3>
+      <p style="font-size:0.97rem;line-height:1.75;color:rgba(255,255,255,0.65);max-width:720px;margin-bottom:2.5rem;" data-en="Analysis of vegetation coverage and green infrastructure distribution using high-resolution geospatial data. This research supports urban planning decisions and environmental management strategies for the city.">Análisis de cobertura vegetal y distribución de infraestructura verde usando datos geoespaciales de alta resolución. Esta investigación apoya decisiones de planificación urbana y estrategias de gestión ambiental para la ciudad.</p>
+      <div class="caso-embed-wrap">
+        <iframe data-map-name="Cobertura del dosel urbano · Guadalajara" src="https://cartodata.ecarto.mx/map/1483" loading="lazy" allowfullscreen title="Cobertura del dosel urbano · Guadalajara"></iframe>
+      </div>
     </div>
   </section>
 

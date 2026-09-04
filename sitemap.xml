@@ -80,6 +80,26 @@
     <priority>0.6</priority>
   </url>
 
+  <!-- Blog: Historias de cartomorfosis -->
+  <url>
+    <loc>https://www.cartodata.com/blog/historias-de-cartomorfosis-e04t01--sandra-tovar-te.html</loc>
+    <lastmod>2021-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cartodata.com/blog/historias-de-cartomorfosis-e05t01--rodolfo-gonzale.html</loc>
+    <lastmod>2021-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cartodata.com/blog/historias-de-cartomorfosis-e06t01--martin-guzman-p.html</loc>
+    <lastmod>2021-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- Legales: canónica sin extensión -->
   <url>
     <loc>https://www.cartodata.com/privacidad</loc>

@@ -5,16 +5,36 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    <!-- Google Tag Manager -->
+    <!-- Solo se carga en producción para evitar datos de desarrollo en GA4 -->
+    <script>
+      if (/^(www\.)?cartodata\.com$/.test(window.location.hostname)) {
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MX296BJV');
+      }
+    </script>
+    <!-- End Google Tag Manager -->
 
     <!-- Google tag (gtag.js) — GA4.
          El home no carga shared.js, por eso lleva el snippet aquí.
-         Las páginas estáticas lo reciben inyectado desde shared.js. -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-50RR7V0FYB"></script>
+         Las páginas estáticas lo reciben inyectado desde shared.js.
+         Solo se carga en producción para evitar datos de desarrollo en GA4. -->
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-50RR7V0FYB');
+      if (/^(www\.)?cartodata\.com$/.test(window.location.hostname)) {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-50RR7V0FYB';
+        document.head.appendChild(script);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-50RR7V0FYB');
+      }
     </script>
 
     <title>CartoData — Contexto geográfico para tus decisiones</title>
@@ -64,6 +84,26 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
+    <script>
+      /* Polyfill seguro para localStorage — evita SecurityError si no está disponible */
+      (function() {
+        let _storage = {};
+        const safe = {
+          getItem: (k) => _storage[k] ?? null,
+          setItem: (k, v) => { _storage[k] = String(v); },
+          removeItem: (k) => { delete _storage[k]; },
+          clear: () => { _storage = {}; },
+          key: (i) => Object.keys(_storage)[i] ?? null,
+          get length() { return Object.keys(_storage).length; }
+        };
+        try {
+          window.localStorage.getItem('__test__');
+        } catch (e) {
+          Object.defineProperty(window, 'localStorage', { value: safe, writable: false });
+        }
+      })();
+
+    </script>
     <script type="module" crossorigin src="./assets/index-DnxW7q2B.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-CPcc1KG7.css">
     <style>#xray { display: none !important; }</style>
@@ -75,6 +115,10 @@
     <style id="cd-step-fix"></style>
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MX296BJV"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
   <script>
   /* ── Reemplaza la sección "cost" con charts modernos ── */
@@ -308,7 +352,8 @@
           const r = 10;
           const bx = x, by = Math.max(y, baseline - maxBar);
           const bh = Math.max(1, h);
-          const barPath = `M ${bx+r} ${by} h ${BAR_W-2*r} a ${r} ${r} 0 0 1 ${r} ${r} v ${bh-r} h -${BAR_W} v -${bh-r} a ${r} ${r} 0 0 1 ${r} -${r} Z`;
+          const bhMinusR = bh - r;
+          const barPath = `M ${bx+r} ${by} h ${BAR_W-2*r} a ${r} ${r} 0 0 1 ${r} ${r} v ${bhMinusR} h -${BAR_W} v ${-bhMinusR} a ${r} ${r} 0 0 1 ${r} -${r} Z`;
           svg.appendChild(mk('path', { d: barPath, fill: bar.color,
             opacity: bar.color === BLUE ? '0.9' : '0.55' }));
 
@@ -1348,8 +1393,10 @@
       { url: './geosoftware.html',     hash: 'geosoftware',  text: null },
       { url: './equipo.html',          hash: 'equipo',       text: null },
       { url: './ciudades.html',        hash: null,           text: ['Ciudades', 'Cities'] },
+      { url: './parques-urbanos.html', hash: null,           text: ['Parques Urbanos', 'Urban Parks'] },
       { url: './mineria.html',         hash: null,           text: ['Minería', 'Mining'] },
-      { url: './infraestructura.html', hash: null,           text: ['Construcción', 'Construction'] },
+      { url: './construccion.html',    hash: null,           text: ['Construcción', 'Construction'] },
+      { url: './infraestructura.html', hash: null,           text: ['Infraestructura', 'Infrastructure'] },
       { url: './procesos.html',        hash: 'procesos',     text: ['Procesos', 'Processes'] },
     ];
     const redirect = url => e => { e.preventDefault(); e.stopPropagation(); window.location.assign(url); };
@@ -2269,6 +2316,429 @@
     setTimeout(inject, 500);
     setTimeout(inject, 2000);
     setTimeout(inject, 4000);
+  })();
+
+  /* Cambia "Infraestructura" → "Construcción" en el menú superior */
+  (function renameInfrastructureMenu() {
+    function updateLabel() {
+      // Buscar h3 con "Infraestructura" y cambiar a "Construcción"
+      document.querySelectorAll('h3').forEach(h3 => {
+        if (h3.textContent.trim() === 'Infraestructura') {
+          h3.textContent = 'Construcción';
+          h3.dataset.cdRenamed = '1';
+        }
+      });
+      // También cambiar en elementos con data-test o que contengan solo "Infraestructura"
+      document.querySelectorAll('button, a, div, span').forEach(el => {
+        if (el.dataset.cdRenamed || el.querySelector('h3')) return;
+        const text = el.textContent.trim();
+        if (text === 'Infraestructura') {
+          el.textContent = 'Construcción';
+          el.dataset.cdRenamed = '1';
+        }
+      });
+    }
+    updateLabel();
+    const obs = new MutationObserver(updateLabel);
+    obs.observe(document.body, { childList: true, subtree: true });
+    [100, 500, 1500, 3000].forEach(ms => setTimeout(updateLabel, ms));
+  })();
+
+  /* Inyecta "Infraestructura" en el menú después de "Construcción" */
+  (function injectInfraestructuraMenuItem() {
+    function inject() {
+      // Solo busca en el menú de navegación, no en los servicios (evita duplicar cuadros)
+      const navMenus = document.querySelectorAll('[role="navigation"], nav, .navbar, .menu, [class*="menu"], [class*="nav"]');
+      let construccionEl = null;
+
+      for (const nav of navMenus) {
+        const items = nav.querySelectorAll('a, button, li, div');
+        for (const el of items) {
+          const h3 = el.querySelector('h3');
+          const text = el.textContent.trim();
+          if ((h3 && h3.textContent.trim() === 'Construcción') || (text === 'Construcción' && el.textContent.length < 100)) {
+            construccionEl = el;
+            break;
+          }
+        }
+        if (construccionEl) break;
+      }
+
+      if (construccionEl && !construccionEl.dataset.cdInfraInjected) {
+        const infraEl = construccionEl.cloneNode(true);
+        // Limpia atributos de tracking para evitar conflictos
+        infraEl.removeAttribute('data-cdInfraInjected');
+        infraEl.removeAttribute('data-cdNavHooked');
+
+        const h3 = infraEl.querySelector('h3');
+        if (h3) {
+          h3.textContent = 'Infraestructura';
+        } else {
+          infraEl.textContent = 'Infraestructura';
+        }
+        infraEl.dataset.cdInfraInjected = '1';
+        infraEl.dataset.cdNavHooked = '1';
+        infraEl.addEventListener('click', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.assign('./infraestructura.html');
+        }, true);
+        construccionEl.parentNode.insertBefore(infraEl, construccionEl.nextSibling);
+        construccionEl.dataset.cdInfraInjected = '1';
+      }
+    }
+    inject();
+    const obs = new MutationObserver(inject);
+    obs.observe(document.body, { childList: true, subtree: true });
+    [100, 500, 1500, 3000].forEach(ms => setTimeout(inject, ms));
+  })();
+
+  /* ── Seguimiento de mapas embedidos (CartoData maps) ──
+     Rastrea carga, visibilidad y tiempo de interacción con iframes que tengan data-map-name. ── */
+  (function trackMaps() {
+    function initTracking() {
+      const mapFrames = document.querySelectorAll('[data-map-name]');
+      if (mapFrames.length === 0) return;
+
+      mapFrames.forEach(mapFrame => {
+        if (mapFrame.dataset.cdMapTracked) return; // Skip if already tracked
+        mapFrame.dataset.cdMapTracked = '1';
+
+        const mapData = {
+          map_name: mapFrame.dataset.mapName || 'Visualizador CartoData',
+          map_url: mapFrame.src,
+          page_location: window.location.href
+        };
+
+        // Evento: mapa cargado
+        mapFrame.addEventListener('load', () => {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'map_loaded',
+            ...mapData
+          });
+        });
+
+        let mapViewed = false;
+        let timeEventSent = false;
+        let visibilityTimer = null;
+
+        // Usar IntersectionObserver para detectar visibilidad
+        const observer = new IntersectionObserver((entries) => {
+          const isVisible = entries[0].isIntersecting;
+
+          // Evento: mapa visto (entra en viewport)
+          if (isVisible && !mapViewed) {
+            mapViewed = true;
+            window.dataLayer.push({
+              event: 'map_view',
+              ...mapData
+            });
+          }
+
+          // Evento: mapa visible 30 segundos
+          if (isVisible && !timeEventSent && !visibilityTimer) {
+            visibilityTimer = setTimeout(() => {
+              timeEventSent = true;
+              window.dataLayer.push({
+                event: 'map_time_30s',
+                visible_seconds: 30,
+                ...mapData
+              });
+            }, 30000);
+          }
+
+          // Limpiar timer si el mapa sale del viewport
+          if (!isVisible && visibilityTimer) {
+            clearTimeout(visibilityTimer);
+            visibilityTimer = null;
+          }
+        }, { threshold: 0.5 });
+
+        observer.observe(mapFrame);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTracking);
+    } else {
+      initTracking();
+    }
+
+    // Re-check para iframes que se agreguen dinámicamente
+    const obs = new MutationObserver(initTracking);
+    obs.observe(document.body, { childList: true, subtree: true });
+  })();
+
+  /* Interceptor para corregir SVG paths malformados (doble guión como en "v --9") */
+  window.__svgFixerActive = true;
+  const originalSetAttribute = Element.prototype.setAttribute;
+  const originalSetAttributeNS = Element.prototype.setAttributeNS;
+
+  Element.prototype.setAttribute = function(name, value) {
+    if (name === 'd' && typeof value === 'string' && value.includes('--')) {
+      const fixed = value.replace(/([vh])\s*--/g, '$1 -');
+      return originalSetAttribute.call(this, name, fixed);
+    }
+    return originalSetAttribute.call(this, name, value);
+  };
+
+  Element.prototype.setAttributeNS = function(ns, name, value) {
+    if (name === 'd' && typeof value === 'string' && value.includes('--')) {
+      const fixed = value.replace(/([vh])\s*--/g, '$1 -');
+      return originalSetAttributeNS.call(this, ns, name, fixed);
+    }
+    return originalSetAttributeNS.call(this, ns, name, value);
+  };
+
+  /* Cambiar "Noticias" por "Blog" en el nav y footer del home (React bundle) */
+  (function hookBlogNav() {
+    const changeNoticiasToBlogs = () => {
+      document.querySelectorAll('a, [role="button"], span, div').forEach(el => {
+        const text = el.textContent?.trim();
+        const href = el.getAttribute('href');
+        // Cambiar links que apunten a blog
+        if ((text === 'Noticias' || text === 'News') && href === '/blog') {
+          el.textContent = 'Blog';
+        }
+        // También cambiar si tiene href con noticias
+        if ((text === 'Noticias' || text === 'News') && (href?.includes('noticias') || href?.includes('#noticias'))) {
+          el.textContent = 'Blog';
+          el.setAttribute('href', '/blog');
+        }
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', changeNoticiasToBlogs);
+    } else {
+      changeNoticiasToBlogs();
+    }
+
+    // Ejecutar continuamente cada 500ms para asegurar que se cambia
+    setInterval(changeNoticiasToBlogs, 500);
+
+    const obs = new MutationObserver(changeNoticiasToBlogs);
+    obs.observe(document.body, { childList: true, subtree: true });
+  })();
+
+  /* Dropdowns en el nav del home (Impacto, Tecnología, Cultura) */
+  (function hookNavDropdowns() {
+    // Inyectar estilos para los dropdowns
+    const styleId = 'nav-dropdown-styles';
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = `
+        .nav-dropdown-wrapper {
+          position: relative;
+          display: contents;
+        }
+        .nav-dropdown-btn {
+          cursor: pointer;
+          padding: 12px 16px;
+          background: none;
+          font: inherit;
+          color: inherit;
+          transition: opacity 0.2s ease;
+          display: inline-block;
+          border: 1px solid #3a3a3a;
+          text-align: center;
+          font-size: 12px;
+          font-weight: 500;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+        }
+        .nav-dropdown-btn:hover {
+          opacity: 0.7;
+        }
+        .nav-dropdown-menu {
+          position: absolute;
+          top: calc(100% + 8px);
+          left: 0;
+          background: var(--bg-nav-dropdown, white);
+          border: 1px solid var(--border-nav-dropdown, #e5e5e5);
+          border-radius: 8px;
+          padding: 8px 0;
+          min-width: 200px;
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(-8px);
+          transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+          z-index: 1000;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .nav-dropdown-wrapper:hover .nav-dropdown-menu {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+        .nav-dropdown-item {
+          display: block;
+          padding: 10px 16px;
+          color: var(--text-nav-dropdown, #333);
+          text-decoration: none;
+          font-size: 14px;
+          transition: background-color 0.2s ease;
+        }
+        .nav-dropdown-item:hover {
+          background-color: var(--hover-nav-dropdown, #f5f5f5);
+        }
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+          .nav-dropdown-menu {
+            --bg-nav-dropdown: #1a1a1a;
+            --border-nav-dropdown: #333;
+            --text-nav-dropdown: #f0f0f0;
+            --hover-nav-dropdown: #2a2a2a;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // Definir los dropdowns a crear (ambos idiomas)
+    const dropdownsConfig = {
+      'Impacto': [
+        { label: 'Ciudades', href: '/ciudades.html', 'data-en': 'Cities' },
+        { label: 'Construcción', href: '/procesos.html', 'data-en': 'Construction' },
+        { label: 'Infraestructura', href: '/infraestructura.html', 'data-en': 'Infrastructure' },
+        { label: 'Minería', href: '/mineria.html', 'data-en': 'Mining' },
+        { label: 'Parques Urbanos', href: '/parques-urbanos.html', 'data-en': 'Urban Parks' }
+      ],
+      'Impact': [
+        { label: 'Ciudades', href: '/ciudades.html', 'data-en': 'Cities' },
+        { label: 'Construcción', href: '/procesos.html', 'data-en': 'Construction' },
+        { label: 'Infraestructura', href: '/infraestructura.html', 'data-en': 'Infrastructure' },
+        { label: 'Minería', href: '/mineria.html', 'data-en': 'Mining' },
+        { label: 'Parques Urbanos', href: '/parques-urbanos.html', 'data-en': 'Urban Parks' }
+      ],
+      'Tecnología': [
+        { label: 'Procesos', href: '/procesos.html', 'data-en': 'Processes' },
+        { label: 'Datos', href: '/cartografica.html', 'data-en': 'Cartography' },
+        { label: 'GeoSoftware', href: '/geosoftware.html', 'data-en': 'GeoSoftware' }
+      ],
+      'Technology': [
+        { label: 'Procesos', href: '/procesos.html', 'data-en': 'Processes' },
+        { label: 'Datos', href: '/cartografica.html', 'data-en': 'Cartography' },
+        { label: 'GeoSoftware', href: '/geosoftware.html', 'data-en': 'GeoSoftware' }
+      ],
+      'Cultura': [
+        { label: 'Historia', href: '/historia.html', 'data-en': 'History' },
+        { label: 'Equipo', href: '/equipo.html', 'data-en': 'Team' }
+      ],
+      'Culture': [
+        { label: 'Historia', href: '/historia.html', 'data-en': 'History' },
+        { label: 'Equipo', href: '/equipo.html', 'data-en': 'Team' }
+      ]
+    };
+
+    const processNavItems = () => {
+      // Estrategia 1: Agregar botones faltantes (Construction, Urban Parks) al menú de Impact
+      const addMissingImpactItems = () => {
+        const grids = document.querySelectorAll('[class*="grid"]');
+        grids.forEach(grid => {
+          if (grid.textContent.includes('Cities') && grid.textContent.includes('Infrastructure')) {
+            const buttons = grid.querySelectorAll('button');
+            // Si solo tiene 4 botones, agregar los faltantes
+            if (buttons.length === 4 && !grid.textContent.includes('Urban Parks')) {
+              const firstBtn = buttons[0];
+              if (firstBtn) {
+                const btnClass = firstBtn.className;
+                const btnHTML = firstBtn.innerHTML;
+
+                // Crear botón de Construction
+                const constructionBtn = document.createElement('button');
+                constructionBtn.className = btnClass;
+                constructionBtn.innerHTML = btnHTML;
+                const constructionH3 = constructionBtn.querySelector('h3');
+                if (constructionH3) {
+                  constructionH3.textContent = 'Construction';
+                  constructionH3.setAttribute('data-en', 'Construction');
+                }
+                const constructionLink = constructionBtn.querySelector('a');
+                if (constructionLink) constructionLink.href = '/construccion.html';
+                grid.appendChild(constructionBtn);
+
+                // Crear botón de Urban Parks
+                const urbanParksBtn = document.createElement('button');
+                urbanParksBtn.className = btnClass;
+                urbanParksBtn.innerHTML = btnHTML;
+                const urbanParksH3 = urbanParksBtn.querySelector('h3');
+                if (urbanParksH3) {
+                  urbanParksH3.textContent = 'Urban Parks';
+                  urbanParksH3.setAttribute('data-en', 'Urban Parks');
+                }
+                const urbanParksLink = urbanParksBtn.querySelector('a');
+                if (urbanParksLink) urbanParksLink.href = '/parques-urbanos.html';
+                grid.appendChild(urbanParksBtn);
+              }
+            }
+          }
+        });
+      };
+      addMissingImpactItems();
+
+      // Estrategia 2: Crear dropdowns si no existen (fallback)
+      const allLinks = document.querySelectorAll('a');
+      allLinks.forEach(link => {
+        const text = link.textContent.trim();
+
+        // Si el link es uno de nuestros dropdowns y aún no lo procesamos
+        if (dropdownsConfig[text] && !link.dataset.navDropdownProcessed) {
+          link.dataset.navDropdownProcessed = 'true';
+
+          const config = dropdownsConfig[text];
+          const parent = link.parentElement;
+          if (!parent) return;
+
+          // Crear el wrapper del dropdown
+          const wrapper = document.createElement('div');
+          wrapper.className = 'nav-dropdown-wrapper';
+
+          // Crear el botón
+          const btn = document.createElement('button');
+          btn.className = 'nav-dropdown-btn';
+          btn.textContent = text;
+          btn.setAttribute('data-en', link.getAttribute('data-en') || text);
+
+          // Crear el menú
+          const menu = document.createElement('div');
+          menu.className = 'nav-dropdown-menu';
+
+          // Agregar items al menú
+          config.forEach(item => {
+            const itemLink = document.createElement('a');
+            itemLink.href = item.href;
+            itemLink.className = 'nav-dropdown-item';
+            itemLink.textContent = item.label;
+            itemLink.setAttribute('data-en', item['data-en']);
+            menu.appendChild(itemLink);
+          });
+
+          // Armar el wrapper
+          wrapper.appendChild(btn);
+          wrapper.appendChild(menu);
+
+          // Reemplazar el link original con el wrapper
+          parent.replaceChild(wrapper, link);
+        }
+      });
+    };
+
+    // Procesar al cargar
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', processNavItems);
+    } else {
+      setTimeout(processNavItems, 100);
+    }
+
+    // Ejecutar continuamente cada 300ms para asegurar que se procese
+    setInterval(processNavItems, 300);
+
+    // Re-procesar cuando React renderiza cambios
+    const obs = new MutationObserver(processNavItems);
+    obs.observe(document.body, { childList: true, subtree: true });
   })();
   </script>
   </body>
