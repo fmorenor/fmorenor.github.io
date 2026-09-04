@@ -1553,5 +1553,272 @@
     })();
   </script>
 
+  <!-- Resultados NIX (3 casos) -->
+  <section id="resultados" style="background: #050816; color: #f8fafc;">
+    <style>
+      #resultados { width: 100vw; position: relative; left: 50%; transform: translateX(-50%); overflow: hidden; }
+      .res-header { max-width: 1400px; margin: 0 auto; padding: 3.5rem clamp(1.5rem,4vw,3rem) 0; }
+      .res-eyebrow { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.9rem; }
+      .res-heading { font-size: clamp(1.6rem,3vw,2.4rem); font-weight: 300; color: rgba(255,255,255,0.92); line-height: 1.15; margin: 0; }
+      .res-wrap { display: grid; grid-template-columns: 1fr 460px; min-height: 560px; max-width: 1400px; margin: 0 auto; padding: 2.5rem clamp(1.5rem,4vw,3rem) 3.5rem; gap: 2rem; }
+      .res-media-col { position: relative; overflow: hidden; border-radius: 20px; background: #0b1226; min-height: 320px; }
+      .res-media-col iframe { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border: 0; transition: opacity 550ms ease; }
+      .res-cards-col { display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+      .res-card { border-radius: 14px; padding: 1.3rem 1.5rem; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.03); cursor: pointer; transition: background 280ms, border-color 280ms; position: relative; overflow: hidden; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+      .res-card.active { background: rgba(59,91,219,0.18); border-color: rgba(59,91,219,0.6); border-left: 3px solid #3b5bdb; box-shadow: 0 0 0 1px rgba(59,91,219,0.25), inset 0 0 24px rgba(59,91,219,0.08); }
+      .res-card:hover:not(.active) { background: rgba(255,255,255,0.055); border-color: rgba(255,255,255,0.11); }
+      .res-tab { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.38); margin-bottom: 0.35rem; display: block; }
+      .res-card.active .res-tab { color: #7b9cff; }
+      .res-title { font-size: 1rem; font-weight: 500; color: rgba(255,255,255,0.88); line-height: 1.3; }
+      .res-card.active .res-title { color: #ffffff; font-weight: 600; }
+      .res-body { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 480ms cubic-bezier(0.22,1,0.36,1), opacity 380ms; }
+      .res-card.active .res-body { max-height: 220px; opacity: 1; }
+      .res-copy { font-size: 0.8rem; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,0.5); margin: 0.65rem 0 0.75rem; }
+      .res-result { display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.78rem; font-weight: 400; color: rgba(255,255,255,0.78); line-height: 1.5; }
+      .res-result-dot { width: 6px; height: 6px; border-radius: 50%; background: #3b5bdb; flex-shrink: 0; margin-top: 5px; }
+      @media (max-width: 860px) { .res-wrap { grid-template-columns: 1fr; } .res-media-col { min-height: 240px; } }
+    </style>
+    <div class="res-header">
+      <p class="res-eyebrow" data-en="Success cases">Casos de éxito</p>
+      <h2 class="res-heading" data-en="Results that speak for themselves.">Resultados que hablan por sí solos.</h2>
+    </div>
+    <div class="res-wrap">
+      <div class="res-media-col" id="res-media-col"></div>
+      <div class="res-cards-col" id="res-cards-col"></div>
+    </div>
+    <script>
+    (function initResultados() {
+      const CASES = [
+        {
+          tab: 'Ente Normativo', tabEn: 'Regulatory Body',
+          title: 'El Salvador NIX', titleEn: 'El Salvador NIX',
+          copy: 'NIX es una plataforma de inteligencia geoespacial desarrollada por la Oficina de Planificación del Área Metropolitana de San Salvador (OPAMSS) diseñada para el desarrollo urbano. Se complementa con El Salvador Maps, el portal del Centro Nacional de Registros (CNR) para cartografía, imágenes oblicuas y vistas panorámicas.',
+          copyEn: 'NIX is a geospatial intelligence platform developed by the San Salvador Metropolitan Planning Office (OPAMSS) for urban development. It complements El Salvador Maps, the National Registry Center (CNR) portal for cartography, oblique imagery, and panoramic views.',
+          result: 'Hoy El Salvador cuenta con infraestructura geoespacial de clase mundial al servicio del desarrollo urbano y la planificación territorial.',
+          resultEn: 'Today El Salvador has world-class geospatial infrastructure serving urban development and territorial planning.',
+          media: 'XwLL0j4woHc'
+        },
+        {
+          tab: 'Construcción', tabEn: 'Construction',
+          title: 'Tren Maya', titleEn: 'Tren Maya',
+          copy: 'Trazar una vía férrea a través de selva densa sin visibilidad del terreno ni certeza sobre lo que hay debajo.',
+          copyEn: 'Laying railroad tracks through dense jungle without visibility of terrain or certainty about what lies beneath.',
+          result: 'El proyecto avanzó con certeza técnica, información precisa y sin sorpresas en campo.',
+          resultEn: 'The project advanced with technical certainty, precise information, and no field surprises.',
+          media: 'ltVx39NTzrE'
+        },
+        {
+          tab: 'Ciudad', tabEn: 'City',
+          title: 'Tequila, Jalisco', titleEn: 'Tequila, Jalisco',
+          copy: 'El municipio de Tequila recaudaba menos de lo que le correspondía porque su catastro no reflejaba la realidad.',
+          copyEn: 'Tequila municipality was collecting less than it should because its cadastral records did not reflect reality.',
+          result: 'La recaudación predial creció 232%. Sin subir un solo impuesto.',
+          resultEn: 'Property tax revenue grew 232%. Without raising a single tax.',
+          media: 'WQ3NXpvWvhs'
+        }
+      ];
+
+      let current = 0;
+
+      function ytSrc(id) { return `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`; }
+      function stopYT(idx) {
+        const f = document.getElementById(`res-media-${idx}`);
+        if (f) f.src = ytSrc(CASES[idx].media) + '&_=' + Date.now();
+      }
+
+      function goTo(idx) {
+        stopYT(current);
+        const prevFrame = document.getElementById(`res-media-${current}`);
+        if (prevFrame) { prevFrame.style.opacity = '0'; prevFrame.style.pointerEvents = 'none'; }
+        const idxFrame = document.getElementById(`res-media-${idx}`);
+        if (idxFrame) { idxFrame.style.opacity = '1'; idxFrame.style.pointerEvents = 'auto'; }
+        document.getElementById(`res-card-${current}`)?.classList.remove('active');
+        document.getElementById(`res-card-${idx}`)?.classList.add('active');
+        current = idx;
+      }
+
+      function buildMedia() {
+        const col = document.getElementById('res-media-col');
+        CASES.forEach((c, i) => {
+          const frame = document.createElement('iframe');
+          frame.id = `res-media-${i}`;
+          frame.src = ytSrc(c.media);
+          frame.allow = 'encrypted-media; picture-in-picture; fullscreen';
+          frame.allowFullscreen = true;
+          frame.style.opacity = i === 0 ? '1' : '0';
+          frame.style.pointerEvents = i === 0 ? 'auto' : 'none';
+          frame.style.zIndex = i === 0 ? '1' : '0';
+          col.appendChild(frame);
+        });
+      }
+
+      function buildCards() {
+        const col = document.getElementById('res-cards-col');
+        const isEn = document.documentElement.lang === 'en';
+        CASES.forEach((c, i) => {
+          const card = document.createElement('div');
+          card.className = 'res-card' + (i === 0 ? ' active' : '');
+          card.id = `res-card-${i}`;
+          card.innerHTML = `
+            <span class="res-tab" data-es="${c.tab}" data-en="${c.tabEn}">${isEn ? c.tabEn : c.tab}</span>
+            <div class="res-title" data-es="${c.title}" data-en="${c.titleEn}">${isEn ? c.titleEn : c.title}</div>
+            <div class="res-body">
+              <p class="res-copy" data-es="${c.copy}" data-en="${c.copyEn}">${isEn ? c.copyEn : c.copy}</p>
+              <div class="res-result">
+                <span class="res-result-dot"></span>
+                <span data-es="${c.result}" data-en="${c.resultEn}">${isEn ? c.resultEn : c.result}</span>
+              </div>
+            </div>`;
+          card.addEventListener('click', () => goTo(i));
+          col.appendChild(card);
+        });
+      }
+
+      setTimeout(() => { buildMedia(); buildCards(); }, 100);
+    })();
+    </script>
+  </section>
+
+  <!-- Divisor: "La información que no tienes también tiene un costo" -->
+  <section id="info-cost" style="background: #f4f4f2; color: #0f172a; padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);">
+    <style>
+      #info-cost { width: 100vw; position: relative; left: 50%; transform: translateX(-50%); overflow: hidden; }
+      .info-cost-inner { max-width: 1200px; margin: 0 auto; }
+      .info-cost-eyebrow { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #3b5bdb; margin-bottom: 0.8rem; }
+      .info-cost-h2 { font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 300; margin-bottom: 2rem; line-height: 1.2; }
+      .info-cost-h2 strong { font-weight: 800; }
+      .info-cost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+      .info-cost-case { }
+      .info-cost-case h3 { font-size: 1.2rem; font-weight: 500; margin-bottom: 0.8rem; }
+      .info-cost-case p { font-size: 0.95rem; font-weight: 300; line-height: 1.7; color: rgba(15,23,42,0.75); margin: 0; }
+      .info-cost-chart { width: 100%; max-width: 380px; height: 240px; background: linear-gradient(135deg, rgba(59,91,219,0.08) 0%, rgba(59,91,219,0.02) 100%); border-radius: 16px; display: flex; align-items: flex-end; justify-content: center; gap: 1rem; padding: 1.5rem; }
+      .info-cost-bar { flex: 1; height: 100%; border-radius: 8px 8px 0 0; background: linear-gradient(to top, #3b5bdb, #4b6be3); display: flex; align-items: flex-start; justify-content: center; padding-top: 0.5rem; font-size: 0.75rem; font-weight: 600; color: #fff; }
+      .info-cost-bar.b { height: 75%; }
+      @media (max-width: 768px) { .info-cost-grid { grid-template-columns: 1fr; } .info-cost-chart { margin: 0 auto; } }
+    </style>
+    <div class="info-cost-inner">
+      <p class="info-cost-eyebrow" data-en="The hidden cost">El costo oculto</p>
+      <h2 class="info-cost-h2" data-en="The information you don't have <strong>also has a cost.</strong>">La información que no tienes <strong>también tiene un costo.</strong></h2>
+      <div class="info-cost-grid">
+        <div>
+          <div class="info-cost-case">
+            <h3 data-en="Without decision support">Sin apoyo en la toma de decisiones</h3>
+            <p data-en="A municipality making decisions based on incomplete data accumulates inefficiencies, delays projects, and misses revenue opportunities.">Un municipio que toma decisiones con datos incompletos acumula ineficiencias, retrasa proyectos y pierde oportunidades de recaudación.</p>
+          </div>
+          <div class="info-cost-case" style="margin-top: 1.5rem;">
+            <h3 data-en="With CartoData">Con CartoData</h3>
+            <p data-en="Complete, validated information enables confident decisions, accelerates project execution, and increases municipal revenue.">Información completa y validada permite decisiones seguras, acelera la ejecución de proyectos y aumenta la recaudación municipal.</p>
+          </div>
+        </div>
+        <div class="info-cost-chart">
+          <div class="info-cost-bar" style="height: 45%;" data-en="Cost">Costo</div>
+          <div class="info-cost-bar b" data-en="Savings">Ahorro</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Equipo (Cultura) -->
+  <section id="equipo" style="background: #050816; color: #f8fafc; padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);" data-section="cultura">
+    <style>
+      #equipo { width: 100vw; position: relative; left: 50%; transform: translateX(-50%); overflow: hidden; }
+      .equipo-inner { max-width: 1200px; margin: 0 auto; }
+      .equipo-eyebrow { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.8rem; }
+      .equipo-h2 { font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 300; margin-bottom: 2rem; color: #fff; line-height: 1.2; }
+      .equipo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+      .equipo-card { aspect-ratio: 1; border-radius: 16px; overflow: hidden; position: relative; cursor: pointer; }
+      .equipo-card img { width: 100%; height: 100%; object-fit: cover; }
+      .equipo-card-label { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(5,8,22,0.95), transparent); padding: 1.5rem 1rem 1rem; font-size: 0.95rem; font-weight: 500; color: #fff; }
+    </style>
+    <div class="equipo-inner">
+      <p class="equipo-eyebrow" data-en="Culture">Cultura</p>
+      <h2 class="equipo-h2" data-en="Our Team">Nuestro Equipo</h2>
+      <div class="equipo-grid">
+        <div class="equipo-card">
+          <img src="./images/EquipoCartData.JPG" alt="Equipo Guadalajara" loading="lazy">
+          <div class="equipo-card-label" data-en="Guadalajara Team">Equipo Guadalajara</div>
+        </div>
+        <div class="equipo-card">
+          <img src="./images/equipo-nl.avif" alt="Equipo Nuevo León" loading="lazy">
+          <div class="equipo-card-label" data-en="Nuevo León Team">Equipo Nuevo León</div>
+        </div>
+        <div class="equipo-card">
+          <img src="./images/equipo-sv.avif" alt="Equipo El Salvador" loading="lazy">
+          <div class="equipo-card-label" data-en="El Salvador Team">Equipo El Salvador</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Noticias -->
+  <section id="noticias" style="background: #f4f4f2; color: #0f172a; padding: clamp(4rem,8vw,7rem) clamp(1.5rem,6vw,4rem);">
+    <style>
+      #noticias { width: 100vw; position: relative; left: 50%; transform: translateX(-50%); overflow: hidden; }
+      .noticias-inner { max-width: 1200px; margin: 0 auto; }
+      .noticias-eyebrow { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #3b5bdb; margin-bottom: 0.8rem; }
+      .noticias-h2 { font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 300; margin-bottom: 2.5rem; line-height: 1.2; }
+      .noticias-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+      .noticia-card { border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 2px 12px rgba(59,91,219,0.08); transition: transform 280ms, box-shadow 280ms; }
+      .noticia-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(59,91,219,0.15); }
+      .noticia-img { width: 100%; height: 200px; object-fit: cover; display: block; }
+      .noticia-body { padding: 1.5rem; }
+      .noticia-date { font-size: 0.75rem; color: #888; margin-bottom: 0.6rem; }
+      .noticia-title { font-size: 1.1rem; font-weight: 600; margin: 0 0 0.8rem; line-height: 1.4; }
+      .noticia-excerpt { font-size: 0.9rem; color: rgba(15,23,42,0.7); margin: 0 0 1rem; line-height: 1.6; }
+      .noticia-link { display: inline-block; font-size: 0.9rem; font-weight: 600; color: #3b5bdb; text-decoration: none; transition: color 200ms; }
+      .noticia-link:hover { color: #2d4bbd; }
+    </style>
+    <div class="noticias-inner">
+      <p class="noticias-eyebrow" data-en="News">Blog</p>
+      <h2 class="noticias-h2" data-en="Latest news">Últimas noticias</h2>
+      <div class="noticias-grid">
+        <article class="noticia-card">
+          <img src="./images/noticia-1.jpg" alt="Noticia 1" class="noticia-img" loading="lazy">
+          <div class="noticia-body">
+            <p class="noticia-date">15 de agosto, 2024</p>
+            <h3 class="noticia-title">Cartografía de precisión: El futuro de la planificación urbana</h3>
+            <p class="noticia-excerpt">Descubre cómo la cartografía de precisión está revolucionando la forma en que las ciudades planifican su desarrollo.</p>
+            <a href="/blog" class="noticia-link" data-en="Read more →">Leer más →</a>
+          </div>
+        </article>
+        <article class="noticia-card">
+          <img src="./images/noticia-2.jpg" alt="Noticia 2" class="noticia-img" loading="lazy">
+          <div class="noticia-body">
+            <p class="noticia-date">8 de agosto, 2024</p>
+            <h3 class="noticia-title">Tecnología LiDAR: Aplicaciones en infraestructura crítica</h3>
+            <p class="noticia-excerpt">Explora cómo la tecnología LiDAR está siendo utilizada para monitorear y mantener la infraestructura más importante.</p>
+            <a href="/blog" class="noticia-link" data-en="Read more →">Leer más →</a>
+          </div>
+        </article>
+        <article class="noticia-card">
+          <img src="./images/noticia-3.jpg" alt="Noticia 3" class="noticia-img" loading="lazy">
+          <div class="noticia-body">
+            <p class="noticia-date">1 de agosto, 2024</p>
+            <h3 class="noticia-title">Transformación digital en la gestión ambiental</h3>
+            <p class="noticia-excerpt">Conoce cómo las soluciones geoespaciales están transformando la manera en que se gestiona el medio ambiente.</p>
+            <a href="/blog" class="noticia-link" data-en="Read more →">Leer más →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section style="background: linear-gradient(135deg, #050816 0%, rgba(5,8,22,0.8) 100%); color: #f8fafc; padding: clamp(5rem,10vw,8rem) clamp(1.5rem,6vw,4rem); text-align: center;">
+    <style>
+      .cta-final-inner { max-width: 700px; margin: 0 auto; }
+      .cta-final-eyebrow { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 1rem; }
+      .cta-final-h2 { font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 300; margin: 0 0 1.5rem; line-height: 1.3; }
+      .cta-final-h2 strong { font-weight: 800; }
+      .cta-final-btn { display: inline-block; padding: 1rem 2.4rem; background: #3b5bdb; color: #fff; border-radius: 999px; font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: background 250ms, transform 200ms; margin-top: 1rem; }
+      .cta-final-btn:hover { background: #2d4bbd; transform: translateY(-2px); }
+    </style>
+    <div class="cta-final-inner">
+      <p class="cta-final-eyebrow" data-en="Ready to start?">¿Listo para empezar?</p>
+      <h2 class="cta-final-h2" data-en="Do you know exactly where opportunities are located in your territory?<strong>Get strategic insight with CartoData.</strong>">¿Sabes exactamente dónde están las oportunidades en tu territorio?<strong>Obtén insight estratégico con CartoData.</strong></h2>
+      <a href="https://api.whatsapp.com/send?phone=523318520000&text=Hola%20CartoData!%20Quiero%20conocer%20más%20sobre%20sus%20soluciones%20geoespaciales." class="cta-final-btn" data-en="Talk to an expert">Habla con un experto</a>
+    </div>
+  </section>
+
 </body>
 </html>
