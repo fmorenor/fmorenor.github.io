@@ -2597,9 +2597,16 @@
       document.head.appendChild(style);
     }
 
-    // Definir los dropdowns a crear
+    // Definir los dropdowns a crear (ambos idiomas)
     const dropdownsConfig = {
       'Impacto': [
+        { label: 'Ciudades', href: '/ciudades.html', 'data-en': 'Cities' },
+        { label: 'Construcción', href: '/procesos.html', 'data-en': 'Construction' },
+        { label: 'Infraestructura', href: '/infraestructura.html', 'data-en': 'Infrastructure' },
+        { label: 'Minería', href: '/mineria.html', 'data-en': 'Mining' },
+        { label: 'Parques Urbanos', href: '/parques-urbanos.html', 'data-en': 'Urban Parks' }
+      ],
+      'Impact': [
         { label: 'Ciudades', href: '/ciudades.html', 'data-en': 'Cities' },
         { label: 'Construcción', href: '/procesos.html', 'data-en': 'Construction' },
         { label: 'Infraestructura', href: '/infraestructura.html', 'data-en': 'Infrastructure' },
@@ -2611,7 +2618,16 @@
         { label: 'Datos', href: '/cartografica.html', 'data-en': 'Cartography' },
         { label: 'GeoSoftware', href: '/geosoftware.html', 'data-en': 'GeoSoftware' }
       ],
+      'Technology': [
+        { label: 'Procesos', href: '/procesos.html', 'data-en': 'Processes' },
+        { label: 'Datos', href: '/cartografica.html', 'data-en': 'Cartography' },
+        { label: 'GeoSoftware', href: '/geosoftware.html', 'data-en': 'GeoSoftware' }
+      ],
       'Cultura': [
+        { label: 'Historia', href: '/historia.html', 'data-en': 'History' },
+        { label: 'Equipo', href: '/equipo.html', 'data-en': 'Team' }
+      ],
+      'Culture': [
         { label: 'Historia', href: '/historia.html', 'data-en': 'History' },
         { label: 'Equipo', href: '/equipo.html', 'data-en': 'Team' }
       ]
@@ -2672,6 +2688,9 @@
     } else {
       setTimeout(processNavItems, 100);
     }
+
+    // Ejecutar continuamente cada 300ms para asegurar que se procese
+    setInterval(processNavItems, 300);
 
     // Re-procesar cuando React renderiza cambios
     const obs = new MutationObserver(processNavItems);
