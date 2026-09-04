@@ -89,7 +89,7 @@
       text-align: center;
     }
     .servicios-grid {
-      display: grid; grid-template-columns: repeat(5,1fr); gap: 0;
+      display: grid; grid-template-columns: repeat(6,1fr); gap: 0;
     }
     .servicio-card {
       position: relative; overflow: hidden;
@@ -232,7 +232,7 @@
     .btn-white:hover { background: #f0f4ff; transform: translateY(-2px); }
 
     /* ── RESPONSIVE ── */
-    @media(max-width:1200px) {
+    @media(max-width:1400px) {
       .servicios-grid { grid-template-columns: repeat(3,1fr); }
     }
     @media(max-width:900px) {
@@ -267,7 +267,7 @@
   <!-- ── 5 SERVICIOS ── -->
   <section class="servicios-strip" id="servicios">
     <div class="servicios-inner">
-      <p class="servicios-eyebrow" data-en="Five infrastructure solutions · Unified platform">Cinco soluciones de infraestructura · Plataforma unificada</p>
+      <p class="servicios-eyebrow" data-en="Six infrastructure solutions · Unified platform">Seis soluciones de infraestructura · Plataforma unificada</p>
       <div class="servicios-grid">
         <a class="servicio-card" href="#trenes">
           <div class="servicio-card-bg" style="background-image: url('./images/Lineasdetren.png'); background-color:#1a2f4a;"></div>
@@ -316,6 +316,16 @@
             <span class="servicio-num">05</span>
             <h3 data-en="Airspace & OACI<br><strong>compliance</strong>">Cumplimiento de<br><strong>espacios OACI</strong></h3>
             <p data-en="Obstacle detection, airspace clearance verification, and aviation safety compliance.">Detección de obstáculos, verificación de espacios aéreos y cumplimiento de seguridad.</p>
+            <span class="servicio-card-arrow" data-en="Learn more →">Más información →</span>
+          </div>
+        </a>
+        <a class="servicio-card" href="#obra">
+          <div class="servicio-card-bg" style="background-image: url('./images/Seguimiento de obra.jpg'); background-color:#6a7f9a;"></div>
+          <div class="servicio-card-overlay"></div>
+          <div class="servicio-card-content">
+            <span class="servicio-num">06</span>
+            <h3 data-en="Work progress<br><strong>tracking</strong>">Seguimiento de<br><strong>obra</strong></h3>
+            <p data-en="Real-time progress documentation with aerial imagery, comparative analysis, and photogrammetric evidence.">Documentación de avances en tiempo real con imágenes aéreas, análisis comparativo y prueba fotogramétrica.</p>
             <span class="servicio-card-arrow" data-en="Learn more →">Más información →</span>
           </div>
         </a>
@@ -410,6 +420,18 @@
       <p class="detalle-body light-text" data-en="Ensure aviation safety with precise obstacle detection and airspace clearance verification. Document all infrastructure features within controlled airspace and maintain compliance with international aviation standards.">Asegura seguridad aérea con detección precisa de obstáculos y verificación de espacios aéreos. Documenta características de infraestructura y mantén cumplimiento con estándares internacionales.</p>
       <div class="embed-wrap">
         <iframe data-map-name="Cumplimiento de espacios OACI" src="https://cartodata.ecarto.mx/map/1055" loading="lazy" allowfullscreen title="Demo de cumplimiento OACI"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEGUIMIENTO DE OBRA ── -->
+  <section class="detalle-section mid" id="obra">
+    <div class="detalle-inner">
+      <p class="detalle-eyebrow eyebrow-dim" data-en="Solution 6">Solución 6</p>
+      <h2 class="detalle-h2 light-text" data-en="Work progress<br><strong>tracking</strong>">Seguimiento de<br><strong>obra</strong></h2>
+      <p class="detalle-body light-text" data-en="Document your infrastructure projects with precision using periodic aerial monitoring. Capture photogrammetric imagery, updated orthophotos, and 3D models to visualize progress, detect deviations, and keep stakeholders informed at every construction stage.">Documenta tus proyectos de infraestructura con precisión usando monitoreos aéreos periódicos. Captura fotogramétrica, ortofotos actualizadas y modelos 3D para visualizar avances, detectar desviaciones y mantener informados a los stakeholders en cada fase.</p>
+      <div class="embed-wrap">
+        <iframe data-map-name="Seguimiento de obra" src="https://cartodata.ecarto.mx/map/229" loading="lazy" allowfullscreen title="Demo de seguimiento de obra"></iframe>
       </div>
     </div>
   </section>
