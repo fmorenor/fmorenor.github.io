@@ -943,9 +943,29 @@
     }
   }
 
+  /* Hook: Cambiar "Noticias" → "Blog" en inglés (en nav, footer, y cualquier lugar) */
+  function hookBlogNav() {
+    const isEn = document.documentElement.lang === 'en';
+    document.querySelectorAll('*').forEach(el => {
+      if (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) {
+        const text = el.textContent.trim();
+        if (text === 'Noticias') {
+          el.setAttribute('data-es', 'Noticias');
+          el.setAttribute('data-en', 'Blog');
+          if (isEn) el.textContent = 'Blog';
+        } else if (text === 'News') {
+          el.setAttribute('data-es', 'Noticias');
+          el.setAttribute('data-en', 'Blog');
+          if (isEn) el.textContent = 'Blog';
+        }
+      }
+    });
+  }
+  setInterval(hookBlogNav, 500);
+
   /* El footer y los modales se inyectan después del nav, así que hay que volver a
      aplicar la traducción cuando ya existen en el DOM (si no, quedan en español). */
-  function injectLate() { injectFooter(); initModals(); applyI18n(); }
+  function injectLate() { injectFooter(); initModals(); applyI18n(); hookBlogNav(); }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', injectLate);
