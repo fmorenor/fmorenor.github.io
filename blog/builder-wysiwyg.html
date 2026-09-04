@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artículo Builder WYSIWYG — CartoData Blog</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; display: flex; min-height: 100vh; }
+
+    .builder-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; background: rgba(5,8,22,0.95); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; padding: 0 2rem; z-index: 1000; }
+    .builder-header h1 { font-size: 1.2rem; font-weight: 600; }
+
+    .builder-container { display: flex; width: 100%; margin-top: 60px; }
+
+    .builder-form-panel { width: 40%; padding: 2rem; overflow-y: auto; height: calc(100vh - 60px); border-right: 1px solid rgba(255,255,255,0.1); }
+
+    .builder-form-group { margin-bottom: 1.5rem; }
+    .builder-form-group label { display: block; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem; }
+    .builder-form-group input, .builder-form-group select, .builder-form-group textarea {
+      width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #f8fafc; font-family: inherit; font-size: 0.95rem; transition: all 250ms;
+    }
+    .builder-form-group input:focus, .builder-form-group select:focus, .builder-form-group textarea:focus { outline: none; background: rgba(255,255,255,0.08); border-color: #3b5bdb; }
+
+    .builder-content-section { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 1rem; margin-bottom: 1rem; }
+    .builder-content-section h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.8rem; color: rgba(255,255,255,0.8); }
+
+    .wysiwyg-toolbar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.8rem; padding: 0.8rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; }
+    .wysiwyg-btn { padding: 0.4rem 0.8rem; background: rgba(59,91,219,0.2); border: 1px solid #3b5bdb; border-radius: 4px; color: #7dd3fc; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 250ms; }
+    .wysiwyg-btn:hover { background: rgba(59,91,219,0.4); }
+    .wysiwyg-btn.active { background: #3b5bdb; border-color: #3b5bdb; }
+
+    .wysiwyg-editor { width: 100%; min-height: 300px; padding: 1rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f8fafc; font-size: 1rem; line-height: 1.6; word-wrap: break-word; outline: none; }
+    .wysiwyg-editor:focus { background: rgba(255,255,255,0.05); border-color: rgba(125,211,252,0.5); }
+    .wysiwyg-editor h1, .wysiwyg-editor h2, .wysiwyg-editor h3 { font-weight: 600; margin: 1rem 0 0.5rem; color: #fff; }
+    .wysiwyg-editor h1 { font-size: 1.8rem; }
+    .wysiwyg-editor h2 { font-size: 1.5rem; }
+    .wysiwyg-editor h3 { font-size: 1.2rem; }
+    .wysiwyg-editor p { margin-bottom: 0.8rem; }
+    .wysiwyg-editor blockquote { border-left: 4px solid #7dd3fc; padding-left: 1rem; margin: 1rem 0; color: rgba(255,255,255,0.8); font-style: italic; }
+    .wysiwyg-editor pre { background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 4px; overflow-x: auto; margin: 1rem 0; font-family: 'Courier New', monospace; }
+    .wysiwyg-editor code { font-family: 'Courier New', monospace; font-size: 0.9em; color: #7dd3fc; }
+    .wysiwyg-editor ul, .wysiwyg-editor ol { margin: 1rem 0 1rem 2rem; }
+    .wysiwyg-editor strong { font-weight: 600; }
+    .wysiwyg-editor em { font-style: italic; }
+    .wysiwyg-editor a { color: #7dd3fc; text-decoration: underline; }
+    .wysiwyg-editor img { max-width: 100%; height: auto; margin: 1rem 0; border-radius: 6px; }
+
+    .builder-preview-panel { width: 60%; padding: 2rem; overflow-y: auto; height: calc(100vh - 60px); background: rgba(255,255,255,0.02); }
+
+    .builder-preview-header { position: sticky; top: 0; background: rgba(5,8,22,0.95); padding: 1rem 0; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; gap: 1rem; }
+
+    .builder-preview-btn { padding: 0.6rem 1.2rem; background: #3b5bdb; border: none; border-radius: 6px; color: #fff; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 250ms; }
+    .builder-preview-btn:hover { background: #2d4bbd; }
+
+    .builder-preview-content { max-width: 900px; }
+
+    .builder-hero-preview { width: 100%; height: 300px; border-radius: 8px; object-fit: cover; margin-bottom: 2rem; }
+
+    .builder-meta { display: flex; gap: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: rgba(255,255,255,0.6); }
+    .builder-category-badge { display: inline-block; padding: 0.35rem 0.9rem; background: rgba(59,91,219,0.2); border-radius: 999px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #7dd3fc; }
+
+    .builder-preview-content h1 { font-size: 2rem; font-weight: 600; color: #fff; margin: 1rem 0; line-height: 1.3; }
+    .builder-preview-content h2 { font-size: 1.6rem; font-weight: 600; color: #fff; margin: 1.5rem 0 0.8rem; }
+    .builder-preview-content h3 { font-size: 1.3rem; font-weight: 500; color: #fff; margin: 1.2rem 0 0.6rem; }
+    .builder-preview-content p { margin-bottom: 1rem; line-height: 1.8; color: rgba(255,255,255,0.9); }
+    .builder-preview-content ul, .builder-preview-content ol { margin: 1rem 0 1rem 2rem; }
+    .builder-preview-content li { margin-bottom: 0.5rem; }
+    .builder-preview-content strong { font-weight: 600; color: #fff; }
+    .builder-preview-content a { color: #7dd3fc; text-decoration: none; border-bottom: 1px solid rgba(125,211,252,0.3); }
+    .builder-preview-content a:hover { border-bottom-color: rgba(125,211,252,0.8); }
+    .builder-preview-content blockquote { border-left: 4px solid #7dd3fc; padding-left: 1rem; margin: 1.5rem 0; color: rgba(255,255,255,0.8); font-style: italic; }
+    .builder-preview-content pre { background: rgba(0,0,0,0.3); border: 1px solid rgba(125,211,252,0.2); border-radius: 6px; padding: 1rem; overflow-x: auto; margin: 1.5rem 0; }
+    .builder-preview-content code { font-family: 'Courier New', monospace; font-size: 0.9em; color: #7dd3fc; }
+    .builder-preview-content img { max-width: 100%; height: auto; border-radius: 8px; margin: 1.5rem 0; }
+
+    @media (max-width: 1024px) {
+      .builder-container { flex-direction: column; }
+      .builder-form-panel, .builder-preview-panel { width: 100%; height: auto; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="builder-header">
+    <h1>📝 Artículo Builder WYSIWYG — CartoData Blog</h1>
+  </div>
+
+  <div class="builder-container">
+    <!-- PANEL IZQUIERDO: METADATOS + EDITOR -->
+    <div class="builder-form-panel">
+      <!-- METADATOS -->
+      <form id="builderForm">
+        <div class="builder-form-group">
+          <label for="title">Título del artículo</label>
+          <input type="text" id="title" placeholder="Ej: Mapeo Aéreo de Yacimientos" required />
+        </div>
+
+        <div class="builder-form-group">
+          <label for="category">Categoría</label>
+          <select id="category" required>
+            <option value="">Selecciona una categoría</option>
+            <option value="ciudades">Ciudades</option>
+            <option value="mineria">Minería</option>
+            <option value="gobierno">Gobierno</option>
+            <option value="infraestructura">Infraestructura</option>
+            <option value="construccion">Construcción</option>
+            <option value="lidar">Lidar</option>
+            <option value="vision360">Visión 360</option>
+            <option value="ecarto">eCarto</option>
+            <option value="podcast">Podcast</option>
+          </select>
+        </div>
+
+        <div class="builder-form-group">
+          <label for="date">Fecha</label>
+          <input type="date" id="date" required />
+        </div>
+
+        <div class="builder-form-group">
+          <label for="description">Descripción corta</label>
+          <textarea id="description" placeholder="Resumen para buscadores" required></textarea>
+        </div>
+
+        <div class="builder-form-group">
+          <label for="imageUrl">URL de imagen hero</label>
+          <input type="url" id="imageUrl" placeholder="https://images.unsplash.com/..." />
+        </div>
+      </form>
+
+      <!-- EDITOR WYSIWYG -->
+      <div class="builder-content-section">
+        <h4>✍️ Escribe tu contenido</h4>
+        <div class="wysiwyg-toolbar">
+          <button class="wysiwyg-btn" type="button" title="Bold (Ctrl+B)" onclick="formatText('bold')"><strong>B</strong></button>
+          <button class="wysiwyg-btn" type="button" title="Italic (Ctrl+I)" onclick="formatText('italic')"><em>I</em></button>
+          <button class="wysiwyg-btn" type="button" title="Underline (Ctrl+U)" onclick="formatText('underline')"><u>U</u></button>
+          <button class="wysiwyg-btn" type="button" title="Link (Ctrl+K)" onclick="insertLink()">🔗</button>
+
+          <div style="width: 100%; height: 1px; background: rgba(255,255,255,0.1); margin: 0.5rem -0.8rem;"></div>
+
+          <button class="wysiwyg-btn" type="button" title="Heading 2" onclick="formatBlock('h2')">H2</button>
+          <button class="wysiwyg-btn" type="button" title="Heading 3" onclick="formatBlock('h3')">H3</button>
+          <button class="wysiwyg-btn" type="button" title="Paragraph" onclick="formatBlock('p')">P</button>
+          <button class="wysiwyg-btn" type="button" title="Blockquote" onclick="formatBlock('blockquote')">❝</button>
+          <button class="wysiwyg-btn" type="button" title="Code Block" onclick="insertCode()">{'}</button>
+
+          <div style="width: 100%; height: 1px; background: rgba(255,255,255,0.1); margin: 0.5rem -0.8rem;"></div>
+
+          <button class="wysiwyg-btn" type="button" title="Bullet List" onclick="formatText('insertUnorderedList')">•</button>
+          <button class="wysiwyg-btn" type="button" title="Numbered List" onclick="formatText('insertOrderedList')">1.</button>
+          <button class="wysiwyg-btn" type="button" title="Undo (Ctrl+Z)" onclick="formatText('undo')">↶</button>
+          <button class="wysiwyg-btn" type="button" title="Redo (Ctrl+Shift+Z)" onclick="formatText('redo')">↷</button>
+          <button class="wysiwyg-btn" type="button" title="Clear Format" onclick="formatText('removeFormat')">✖</button>
+        </div>
+
+        <div class="wysiwyg-editor" id="mainEditor" contenteditable="true" placeholder="Escribe aquí... Soporta Bold (Ctrl+B), Italic (Ctrl+I), y más."></div>
+      </div>
+
+      <!-- BOTONES DE ACCIÓN -->
+      <div style="display: flex; gap: 1rem;">
+        <button class="builder-preview-btn" id="downloadBtn" style="flex: 1;">⬇️ Descargar HTML</button>
+        <button class="builder-preview-btn" id="copyBtn" style="flex: 1;">📋 Copiar Tarjeta</button>
+      </div>
+
+      <!-- BORRADORES -->
+      <div class="builder-content-section" style="margin-top: 2rem;">
+        <h4>💾 Borradores</h4>
+        <div style="display: flex; gap: 0.5rem; flex-direction: column;">
+          <button class="builder-preview-btn" id="saveDraftBtn" style="width: 100%;">💾 Guardar Borrador</button>
+          <button class="builder-preview-btn" id="loadDraftBtn" style="width: 100%; background: rgba(125,211,252,0.2); border: 1px solid #7dd3fc; color: #7dd3fc;">📥 Cargar Borrador</button>
+          <button class="builder-preview-btn" id="clearDraftBtn" style="width: 100%; background: rgba(244,63,94,0.2); border: 1px solid #f43f5e; color: #f43f5e;">🗑️ Borrar Borrador</button>
+        </div>
+        <p id="draftStatus" style="font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 0.8rem;">Sin guardar</p>
+      </div>
+    </div>
+
+    <!-- PANEL DERECHO: PREVIEW -->
+    <div class="builder-preview-panel">
+      <div class="builder-preview-header">
+        <span style="font-size: 0.9rem; color: rgba(255,255,255,0.6);">Preview en vivo ↓</span>
+      </div>
+      <div class="builder-preview-content" id="preview">
+        <p style="color: rgba(255,255,255,0.5);">Los cambios aparecen aquí...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const editor = document.getElementById('mainEditor');
+    const preview = document.getElementById('preview');
+    const form = document.getElementById('builderForm');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const saveDraftBtn = document.getElementById('saveDraftBtn');
+    const loadDraftBtn = document.getElementById('loadDraftBtn');
+    const clearDraftBtn = document.getElementById('clearDraftBtn');
+    const draftStatusEl = document.getElementById('draftStatus');
+
+    const DRAFT_KEY = 'cartoblog_wysiwyg_draft_v1';
+    let autoSaveTimer = null;
+
+    // Event listeners
+    form.addEventListener('input', updatePreview);
+    form.addEventListener('change', updatePreview);
+    editor.addEventListener('input', () => { updatePreview(); scheduleAutoSave(); });
+    editor.addEventListener('paste', handlePaste);
+    editor.addEventListener('drop', handleDrop);
+    editor.addEventListener('dragover', (e) => e.preventDefault());
+
+    downloadBtn.addEventListener('click', downloadArticle);
+    copyBtn.addEventListener('click', copyToIndex);
+    saveDraftBtn.addEventListener('click', saveDraft);
+    loadDraftBtn.addEventListener('click', loadDraft);
+    clearDraftBtn.addEventListener('click', clearDraft);
+
+    // Atajos de teclado
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === 'b' || e.key === 'B') { e.preventDefault(); formatText('bold'); }
+        if (e.key === 'i' || e.key === 'I') { e.preventDefault(); formatText('italic'); }
+        if (e.key === 'u' || e.key === 'U') { e.preventDefault(); formatText('underline'); }
+        if (e.key === 'k' || e.key === 'K') { e.preventDefault(); insertLink(); }
+      }
+    });
+
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+    // Funciones de formato
+    function formatText(command) {
+      document.execCommand(command, false, null);
+      editor.focus();
+    }
+
+    function formatBlock(tag) {
+      if (tag === 'p') document.execCommand('formatBlock', false, '<p>');
+      else document.execCommand('formatBlock', false, `<${tag}>`);
+      editor.focus();
+    }
+
+    function insertLink() {
+      const url = prompt('Ingresa la URL:');
+      if (url) document.execCommand('createLink', false, url);
+      editor.focus();
+    }
+
+    function insertCode() {
+      const code = prompt('Pega tu código:');
+      if (code) {
+        const codeBlock = `<pre><code>${escapeHtml(code)}</code></pre>`;
+        document.execCommand('insertHTML', false, codeBlock);
+      }
+      editor.focus();
+    }
+
+    function handlePaste(e) {
+      e.preventDefault();
+      let text = e.clipboardData.getData('text/html') || e.clipboardData.getData('text/plain');
+      text = sanitizeHtml(text);
+      document.execCommand('insertHTML', false, text);
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      if (e.dataTransfer.files.length) {
+        for (let file of e.dataTransfer.files) {
+          if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              document.execCommand('insertImage', false, ev.target.result);
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      }
+    }
+
+    function sanitizeHtml(html) {
+      const allowedTags = ['p', 'strong', 'em', 'u', 'a', 'code', 'pre', 'br', 'h1', 'h2', 'h3', 'blockquote', 'ul', 'ol', 'li'];
+      const div = document.createElement('div');
+      div.innerHTML = html;
+
+      const walk = (node) => {
+        for (let i = node.childNodes.length - 1; i >= 0; i--) {
+          const child = node.childNodes[i];
+          if (child.nodeType === 1) {
+            const tag = child.nodeName.toLowerCase();
+            if (!allowedTags.includes(tag)) {
+              while (child.firstChild) node.insertBefore(child.firstChild, child);
+              node.removeChild(child);
+            } else {
+              if (tag === 'a' && !child.href) child.removeAttribute('href');
+              walk(child);
+            }
+          }
+        }
+      };
+      walk(div);
+      return div.innerHTML;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function updatePreview() {
+      const title = document.getElementById('title').value;
+      const category = document.getElementById('category').value;
+      const date = formatDate(document.getElementById('date').value);
+      const description = document.getElementById('description').value;
+      const imageUrl = document.getElementById('imageUrl').value || 'https://images.unsplash.com/photo-1500462918059-b1a0136e4b00?w=900&h=400&fit=crop';
+      const content = editor.innerHTML;
+
+      let html = '';
+      if (imageUrl) html += `<img src="${escapeHtml(imageUrl)}" alt="Hero" class="builder-hero-preview" />`;
+      if (category || date) {
+        html += '<div class="builder-meta">';
+        if (category) html += `<span class="builder-category-badge">${getCategoryLabel(category)}</span>`;
+        if (date) html += `<span>${date}</span>`;
+        html += '</div>';
+      }
+      if (title) html += `<h1>${escapeHtml(title)}</h1>`;
+      if (description) html += `<p><em>${escapeHtml(description)}</em></p>`;
+      html += content;
+
+      preview.innerHTML = html || '<p style="color: rgba(255,255,255,0.5);">Los cambios aparecen aquí...</p>';
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const date = new Date(dateStr);
+      const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+      return date.getDate() + ' de ' + months[date.getMonth()] + ' de ' + date.getFullYear();
+    }
+
+    function getCategoryLabel(value) {
+      const labels = { ciudades: 'Ciudades', mineria: 'Minería', gobierno: 'Gobierno', infraestructura: 'Infraestructura', construccion: 'Construcción', lidar: 'Lidar', vision360: 'Visión 360', ecarto: 'eCarto', podcast: 'Podcast' };
+      return labels[value] || value;
+    }
+
+    function downloadArticle() {
+      const title = document.getElementById('title').value;
+      const category = document.getElementById('category').value;
+      const date = document.getElementById('date').value;
+      const description = document.getElementById('description').value;
+      const imageUrl = document.getElementById('imageUrl').value;
+      const content = editor.innerHTML;
+
+      if (!title || !category || !date || !description || !content) {
+        alert('Completa todos los campos y agrega contenido');
+        return;
+      }
+
+      const filename = title.toLowerCase().replace(/[áéíóú]/g, c => ({á:'a',é:'e',í:'i',ó:'o',ú:'u'}[c])).replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').substring(0, 50);
+      const dateObj = new Date(date);
+      const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+      const formattedDate = dateObj.getDate() + ' de ' + months[dateObj.getMonth()] + ' de ' + dateObj.getFullYear();
+
+      const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${escapeHtml(title)} · Blog — CartoData</title>
+  <meta name="description" content="${escapeHtml(description)}" />
+  <script src="../shared.js" defer><\/script>
+</head>
+<body>
+  <section class="blog-hero" style="background-image: url('${escapeHtml(imageUrl)}');">
+    <img src="${escapeHtml(imageUrl)}" alt="Hero" class="blog-hero-bg" />
+    <div class="blog-hero-overlay"><\/div>
+    <div class="blog-hero-content">
+      <div class="blog-eyebrow">
+        <span class="blog-category">${getCategoryLabel(category)}</span>
+        ${formattedDate}
+      <\/div>
+      <h1 class="blog-h1">${escapeHtml(title)}</h1>
+      <p class="blog-subtitle">${escapeHtml(description)}</p>
+    <\/div>
+  <\/section>
+  <article class="blog-container">
+    <div class="blog-content">
+      ${content}
+    <\/div>
+  <\/article>
+<\/body>
+</html>`;
+
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename + '.html';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function copyToIndex() {
+      const title = document.getElementById('title').value;
+      const category = document.getElementById('category').value;
+      const date = document.getElementById('date').value;
+      const description = document.getElementById('description').value;
+      const imageUrl = document.getElementById('imageUrl').value;
+
+      if (!title || !category || !date || !description) {
+        alert('Completa: Título, Categoría, Fecha y Descripción');
+        return;
+      }
+
+      const filename = title.toLowerCase().replace(/[áéíóú]/g, c => ({á:'a',é:'e',í:'i',ó:'o',ú:'u'}[c])).replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').substring(0, 50);
+      const dateObj = new Date(date);
+      const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+      const formattedDate = dateObj.getDate() + ' de ' + months[dateObj.getMonth()] + ' de ' + dateObj.getFullYear();
+
+      const code = `<a href="./${filename}.html" class="blog-article-card" data-category="${category}">
+  <img src="${escapeHtml(imageUrl)}" alt="Artículo" class="blog-article-image" />
+  <div class="blog-article-content">
+    <span class="blog-article-category">${getCategoryLabel(category)}</span>
+    <div class="blog-article-date">${formattedDate}</div>
+    <h3 class="blog-article-title">${escapeHtml(title)}</h3>
+    <p class="blog-article-excerpt">${escapeHtml(description)}</p>
+    <span class="blog-article-link">LEER MÁS</span>
+  </div>
+</a>`;
+
+      navigator.clipboard.writeText(code).then(() => {
+        alert('✅ Código copiado');
+      });
+    }
+
+    // Borradores
+    function scheduleAutoSave() {
+      if (autoSaveTimer) clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        saveDraftToStorage();
+      }, 3000);
+    }
+
+    function saveDraft() {
+      saveDraftToStorage();
+      showDraftStatus('✅ Borrador guardado');
+    }
+
+    function saveDraftToStorage() {
+      const draft = {
+        title: document.getElementById('title').value,
+        category: document.getElementById('category').value,
+        date: document.getElementById('date').value,
+        description: document.getElementById('description').value,
+        imageUrl: document.getElementById('imageUrl').value,
+        content: editor.innerHTML,
+        lastSaved: new Date().toISOString()
+      };
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+        updateDraftTimestamp();
+      } catch (e) {
+        console.error('Error saving draft:', e);
+      }
+    }
+
+    function loadDraft() {
+      try {
+        const draft = localStorage.getItem(DRAFT_KEY);
+        if (!draft) {
+          alert('No hay borrador guardado');
+          return;
+        }
+        const data = JSON.parse(draft);
+        document.getElementById('title').value = data.title || '';
+        document.getElementById('category').value = data.category || '';
+        document.getElementById('date').value = data.date || new Date().toISOString().split('T')[0];
+        document.getElementById('description').value = data.description || '';
+        document.getElementById('imageUrl').value = data.imageUrl || '';
+        editor.innerHTML = data.content || '';
+        updatePreview();
+        showDraftStatus('✅ Borrador cargado');
+      } catch (e) {
+        console.error('Error loading draft:', e);
+        alert('Error al cargar borrador');
+      }
+    }
+
+    function clearDraft() {
+      if (confirm('¿Eliminar el borrador guardado?')) {
+        try {
+          localStorage.removeItem(DRAFT_KEY);
+          showDraftStatus('Borrador eliminado');
+        } catch (e) {
+          console.error('Error clearing draft:', e);
+        }
+      }
+    }
+
+    function showDraftStatus(message) {
+      draftStatusEl.textContent = message;
+      if (autoSaveTimer) clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        updateDraftTimestamp();
+      }, 2000);
+    }
+
+    function updateDraftTimestamp() {
+      try {
+        const draft = localStorage.getItem(DRAFT_KEY);
+        if (draft) {
+          const data = JSON.parse(draft);
+          const lastSaved = new Date(data.lastSaved);
+          const now = new Date();
+          const diffMinutes = Math.floor((now - lastSaved) / 60000);
+          if (diffMinutes < 1) {
+            draftStatusEl.textContent = 'Borrador guardado hace unos segundos';
+          } else if (diffMinutes < 60) {
+            draftStatusEl.textContent = `Borrador guardado hace ${diffMinutes} minuto${diffMinutes > 1 ? 's' : ''}`;
+          } else {
+            const diffHours = Math.floor(diffMinutes / 60);
+            draftStatusEl.textContent = `Borrador guardado hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
+          }
+        } else {
+          draftStatusEl.textContent = 'Sin guardar';
+        }
+      } catch (e) {
+        draftStatusEl.textContent = 'Error al leer borrador';
+      }
+    }
+
+    setInterval(updateDraftTimestamp, 60000);
+    updatePreview();
+    updateDraftTimestamp();
+  </script>
+</body>
+</html>
