@@ -183,6 +183,17 @@
         <button class="builder-preview-btn" id="downloadBtn" style="flex: 1;">⬇️ Descargar HTML</button>
         <button class="builder-preview-btn" id="copyBtn" style="flex: 1;">📋 Copiar Tarjeta</button>
       </div>
+
+      <!-- BORRADORES -->
+      <div class="builder-content-section" style="margin-top: 2rem;">
+        <h4>💾 Borradores</h4>
+        <div style="display: flex; gap: 0.5rem; flex-direction: column;">
+          <button class="builder-preview-btn" id="saveDraftBtn" style="width: 100%;">💾 Guardar Borrador</button>
+          <button class="builder-preview-btn" id="loadDraftBtn" style="width: 100%; background: rgba(125,211,252,0.2); border: 1px solid #7dd3fc; color: #7dd3fc;">📥 Cargar Borrador</button>
+          <button class="builder-preview-btn" id="clearDraftBtn" style="width: 100%; background: rgba(244,63,94,0.2); border: 1px solid #f43f5e; color: #f43f5e;">🗑️ Borrar Borrador</button>
+        </div>
+        <p id="draftStatus" style="font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 0.8rem;">Sin guardar</p>
+      </div>
     </div>
 
     <!-- PREVIEW -->
@@ -204,12 +215,123 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const copyBtn = document.getElementById('copyBtn');
 
+    const DRAFT_KEY = 'cartoblog_draft_v1';
+    let autoSaveTimer = null;
+    const draftStatusEl = document.getElementById('draftStatus');
+    const saveDraftBtn = document.getElementById('saveDraftBtn');
+    const loadDraftBtn = document.getElementById('loadDraftBtn');
+    const clearDraftBtn = document.getElementById('clearDraftBtn');
+
     form.addEventListener('input', updatePreview);
     form.addEventListener('change', updatePreview);
+    form.addEventListener('input', () => scheduleAutoSave());
     downloadBtn.addEventListener('click', downloadArticle);
     copyBtn.addEventListener('click', copyToIndex);
+    saveDraftBtn.addEventListener('click', saveDraft);
+    loadDraftBtn.addEventListener('click', loadDraft);
+    clearDraftBtn.addEventListener('click', clearDraft);
 
     document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+    function scheduleAutoSave() {
+      if (autoSaveTimer) clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        saveDraftToStorage();
+      }, 3000);
+    }
+
+    function saveDraft() {
+      saveDraftToStorage();
+      showDraftStatus('✅ Borrador guardado');
+    }
+
+    function saveDraftToStorage() {
+      const draft = {
+        title: document.getElementById('title').value,
+        category: document.getElementById('category').value,
+        date: document.getElementById('date').value,
+        description: document.getElementById('description').value,
+        imageUrl: document.getElementById('imageUrl').value,
+        blocks: blocks,
+        lastSaved: new Date().toISOString()
+      };
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+        updateDraftTimestamp();
+      } catch (e) {
+        console.error('Error saving draft:', e);
+      }
+    }
+
+    function loadDraft() {
+      try {
+        const draft = localStorage.getItem(DRAFT_KEY);
+        if (!draft) {
+          alert('No hay borrador guardado');
+          return;
+        }
+        const data = JSON.parse(draft);
+        document.getElementById('title').value = data.title || '';
+        document.getElementById('category').value = data.category || '';
+        document.getElementById('date').value = data.date || new Date().toISOString().split('T')[0];
+        document.getElementById('description').value = data.description || '';
+        document.getElementById('imageUrl').value = data.imageUrl || '';
+        blocks = data.blocks || [];
+        renderBlocks();
+        updatePreview();
+        showDraftStatus('✅ Borrador cargado');
+      } catch (e) {
+        console.error('Error loading draft:', e);
+        alert('Error al cargar borrador');
+      }
+    }
+
+    function clearDraft() {
+      if (confirm('¿Eliminar el borrador guardado?')) {
+        try {
+          localStorage.removeItem(DRAFT_KEY);
+          showDraftStatus('Borrador eliminado');
+        } catch (e) {
+          console.error('Error clearing draft:', e);
+        }
+      }
+    }
+
+    function showDraftStatus(message) {
+      draftStatusEl.textContent = message;
+      if (autoSaveTimer) clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        updateDraftTimestamp();
+      }, 2000);
+    }
+
+    function updateDraftTimestamp() {
+      try {
+        const draft = localStorage.getItem(DRAFT_KEY);
+        if (draft) {
+          const data = JSON.parse(draft);
+          const lastSaved = new Date(data.lastSaved);
+          const now = new Date();
+          const diffMinutes = Math.floor((now - lastSaved) / 60000);
+          if (diffMinutes < 1) {
+            draftStatusEl.textContent = 'Borrador guardado hace unos segundos';
+          } else if (diffMinutes < 60) {
+            draftStatusEl.textContent = `Borrador guardado hace ${diffMinutes} minuto${diffMinutes > 1 ? 's' : ''}`;
+          } else {
+            const diffHours = Math.floor(diffMinutes / 60);
+            draftStatusEl.textContent = `Borrador guardado hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
+          }
+        } else {
+          draftStatusEl.textContent = 'Sin guardar';
+        }
+      } catch (e) {
+        draftStatusEl.textContent = 'Error al leer borrador';
+      }
+    }
+
+    // Actualizar timestamp cada minuto
+    setInterval(updateDraftTimestamp, 60000);
+    updateDraftTimestamp();
 
     function addBlock(type) {
       const id = Date.now();
