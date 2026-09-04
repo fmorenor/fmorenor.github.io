@@ -35,11 +35,23 @@
 
     .builder-blocks-list { max-height: 400px; overflow-y: auto; }
 
-    .builder-block-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 0.8rem; margin-bottom: 0.6rem; display: flex; justify-content: space-between; align-items: center; cursor: grab; user-select: none; transition: all 200ms; }
+    .builder-block-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 0.8rem; margin-bottom: 0.6rem; display: flex; flex-direction: column; gap: 0.6rem; cursor: grab; user-select: none; transition: all 200ms; }
     .builder-block-item:active { cursor: grabbing; }
     .builder-block-item.drag-over { background: rgba(59,91,219,0.2); border-color: #3b5bdb; }
     .builder-block-item.dragging { opacity: 0.5; background: rgba(255,255,255,0.05); }
     .builder-block-item span { font-size: 0.9rem; }
+
+    .builder-block-header { display: flex; justify-content: space-between; align-items: center; }
+    .builder-block-header span { font-size: 0.9rem; }
+
+    .builder-block-toolbar { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+    .builder-format-btn { padding: 0.2rem 0.4rem; background: rgba(125,211,252,0.1); border: 1px solid rgba(125,211,252,0.3); border-radius: 3px; color: #7dd3fc; font-size: 0.65rem; font-weight: 600; cursor: pointer; transition: all 150ms; font-family: monospace; }
+    .builder-format-btn:hover { background: rgba(125,211,252,0.2); border-color: #7dd3fc; }
+    .builder-format-btn.active { background: rgba(125,211,252,0.4); border-color: #7dd3fc; }
+
+    .builder-block-content { display: flex; flex-direction: column; gap: 0.4rem; }
+    .builder-block-input { width: 100%; padding: 0.4rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; color: #f8fafc; font-size: 0.85rem; }
+
     .builder-block-remove { background: rgba(244,63,94,0.2); border: 1px solid #f43f5e; color: #f43f5e; padding: 0.3rem 0.6rem; border-radius: 3px; font-size: 0.75rem; cursor: pointer; transition: all 200ms; }
     .builder-block-remove:hover { background: rgba(244,63,94,0.4); }
 
@@ -300,6 +312,66 @@
       updatePreview();
     }
 
+    function applyFormat(blockId, format) {
+      const block = blocks.find(b => b.id === blockId);
+      if (!block) return;
+
+      const input = document.querySelector(`[data-block-id="${blockId}"] .builder-block-input`);
+      if (!input) return;
+
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      const text = input.value;
+
+      if (start === end) {
+        alert('Selecciona texto para aplicar formato');
+        return;
+      }
+
+      const selectedText = text.substring(start, end);
+      let formattedText = selectedText;
+
+      if (format === 'bold') {
+        formattedText = `<strong>${selectedText}</strong>`;
+      } else if (format === 'italic') {
+        formattedText = `<em>${selectedText}</em>`;
+      } else if (format === 'underline') {
+        formattedText = `<u>${selectedText}</u>`;
+      }
+
+      const newContent = text.substring(0, start) + formattedText + text.substring(end);
+      block.content = newContent;
+      input.value = newContent;
+      updatePreview();
+    }
+
+    function showLinkDialog(blockId) {
+      const url = prompt('Ingresa la URL del enlace:');
+      if (!url) return;
+
+      const block = blocks.find(b => b.id === blockId);
+      if (!block) return;
+
+      const input = document.querySelector(`[data-block-id="${blockId}"] .builder-block-input`);
+      if (!input) return;
+
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      const text = input.value;
+
+      if (start === end) {
+        alert('Selecciona texto para crear un enlace');
+        return;
+      }
+
+      const selectedText = text.substring(start, end);
+      const linkHtml = `<a href="${url}">${selectedText}</a>`;
+      const newContent = text.substring(0, start) + linkHtml + text.substring(end);
+      block.content = newContent;
+      input.value = newContent;
+      updatePreview();
+    }
+
     let draggedBlock = null;
 
     function renderBlocks() {
@@ -308,8 +380,17 @@
         let placeholder = 'Escribe aquí...';
         if (block.type === 'image') placeholder = 'https://ejemplo.com/imagen.jpg';
         if (block.type === 'video') placeholder = 'https://youtube.com/watch?v=...';
-        const canMoveUp = index > 0;
-        const canMoveDown = index < blocks.length - 1;
+
+        const isTextBlock = ['h2', 'h3', 'p'].includes(block.type);
+        const toolbarHtml = isTextBlock ? `
+          <div class="builder-block-toolbar">
+            <button type="button" class="builder-format-btn" title="Bold (Ctrl+B)" onclick="applyFormat(${block.id}, 'bold')"><strong>B</strong></button>
+            <button type="button" class="builder-format-btn" title="Italic (Ctrl+I)" onclick="applyFormat(${block.id}, 'italic')"><em>I</em></button>
+            <button type="button" class="builder-format-btn" title="Underline (Ctrl+U)" onclick="applyFormat(${block.id}, 'underline')"><u>U</u></button>
+            <button type="button" class="builder-format-btn" title="Link" onclick="showLinkDialog(${block.id})">🔗</button>
+          </div>
+        ` : '';
+
         return `
           <div class="builder-block-item" draggable="true" data-block-id="${block.id}"
             ondragstart="draggedBlock = ${block.id}; this.classList.add('dragging');"
@@ -317,12 +398,16 @@
             ondragover="event.preventDefault(); this.classList.add('drag-over');"
             ondragleave="this.classList.remove('drag-over');"
             ondrop="event.preventDefault(); dropBlock(${block.id}); this.classList.remove('drag-over');">
-            <span>⋮⋮</span>
-            <span>${label}</span>
-            <input type="text" placeholder="${placeholder}" value="${block.content}"
-              onchange="updateBlockContent(${block.id}, this.value)"
-              style="width: 200px; padding: 0.4rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; color: #f8fafc; font-size: 0.85rem;" />
-            <button class="builder-block-remove" onclick="removeBlock(${block.id})">✕</button>
+            <div class="builder-block-header">
+              <span>⋮⋮ ${label}</span>
+              <button class="builder-block-remove" type="button" onclick="removeBlock(${block.id})">✕</button>
+            </div>
+            ${toolbarHtml}
+            <div class="builder-block-content">
+              <input type="text" class="builder-block-input" placeholder="${placeholder}" value="${block.content}"
+                onchange="updateBlockContent(${block.id}, this.value)"
+                oninput="updateBlockContent(${block.id}, this.value)" />
+            </div>
           </div>
         `;
       }).join('');
@@ -379,15 +464,15 @@
 
       blocks.forEach(block => {
         if (block.type === 'h2') {
-          html += '<h2>' + escapeHtml(block.content) + '</h2>';
+          html += '<h2>' + sanitizeHtml(block.content) + '</h2>';
         } else if (block.type === 'h3') {
-          html += '<h3>' + escapeHtml(block.content) + '</h3>';
+          html += '<h3>' + sanitizeHtml(block.content) + '</h3>';
         } else if (block.type === 'p') {
-          html += '<p>' + linkifyText(escapeHtml(block.content)) + '</p>';
+          html += '<p>' + sanitizeHtml(block.content) + '</p>';
         } else if (block.type === 'ul') {
           const items = block.content.split('\n').filter(i => i.trim());
           if (items.length) {
-            html += '<ul>' + items.map(item => '<li>' + linkifyText(escapeHtml(item)) + '</li>').join('') + '</ul>';
+            html += '<ul>' + items.map(item => '<li>' + sanitizeHtml(item) + '</li>').join('') + '</ul>';
           }
         } else if (block.type === 'image') {
           if (block.content) {
@@ -424,6 +509,47 @@
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function sanitizeHtml(html) {
+      const allowedTags = ['strong', 'em', 'u', 'a', 'code', 'br'];
+      const allowedAttrs = { 'a': ['href'] };
+
+      const div = document.createElement('div');
+      div.innerHTML = html;
+
+      const walk = (node) => {
+        for (let i = node.childNodes.length - 1; i >= 0; i--) {
+          const child = node.childNodes[i];
+          if (child.nodeType === 3) continue;
+          if (child.nodeType === 1) {
+            const tag = child.nodeName.toLowerCase();
+            if (!allowedTags.includes(tag)) {
+              while (child.firstChild) {
+                node.insertBefore(child.firstChild, child);
+              }
+              node.removeChild(child);
+            } else {
+              if (allowedAttrs[tag]) {
+                const attrs = Array.from(child.attributes);
+                attrs.forEach(attr => {
+                  if (!allowedAttrs[tag].includes(attr.name)) {
+                    child.removeAttribute(attr.name);
+                  }
+                });
+              } else {
+                while (child.attributes.length > 0) {
+                  child.removeAttribute(child.attributes[0].name);
+                }
+              }
+              walk(child);
+            }
+          }
+        }
+      };
+
+      walk(div);
       return div.innerHTML;
     }
 
@@ -472,15 +598,15 @@
       let content = '';
       blocks.forEach(block => {
         if (block.type === 'h2') {
-          content += '<h2>' + escapeHtml(block.content) + '</h2>\n';
+          content += '<h2>' + sanitizeHtml(block.content) + '</h2>\n';
         } else if (block.type === 'h3') {
-          content += '<h3>' + escapeHtml(block.content) + '</h3>\n';
+          content += '<h3>' + sanitizeHtml(block.content) + '</h3>\n';
         } else if (block.type === 'p') {
-          content += '<p>' + linkifyText(escapeHtml(block.content)) + '</p>\n';
+          content += '<p>' + sanitizeHtml(block.content) + '</p>\n';
         } else if (block.type === 'ul') {
           const items = block.content.split('\n').filter(i => i.trim());
           if (items.length) {
-            content += '<ul>\n' + items.map(item => '<li>' + linkifyText(escapeHtml(item)) + '</li>').join('\n') + '\n</ul>\n';
+            content += '<ul>\n' + items.map(item => '<li>' + sanitizeHtml(item) + '</li>').join('\n') + '\n</ul>\n';
           }
         } else if (block.type === 'image') {
           if (block.content) {
