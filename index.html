@@ -2634,9 +2634,33 @@
     };
 
     const processNavItems = () => {
-      // Buscar todos los links en el documento (no limitarse a nav specific)
-      const allLinks = document.querySelectorAll('a');
+      // Estrategia 1: Modificar menus/dropdowns existentes de React
+      const dropdownMenus = document.querySelectorAll('[role="menu"], [class*="dropdown"], [class*="Dropdown"]');
+      dropdownMenus.forEach(menu => {
+        const menuText = menu.textContent;
+        // Buscar si es el menú de Impact/Impacto
+        if (menuText.includes('Cities') || menuText.includes('Ciudades')) {
+          // Verificar si ya tiene "Urban Parks"
+          if (!menuText.includes('Urban Parks') && !menuText.includes('Parques Urbanos')) {
+            // Intentar agregar Urban Parks si no está
+            const existingLinks = menu.querySelectorAll('a');
+            if (existingLinks.length === 3) {
+              // Crear link para Urban Parks
+              const lastLink = existingLinks[existingLinks.length - 1];
+              if (lastLink) {
+                const newLink = lastLink.cloneNode(true);
+                newLink.textContent = 'Urban Parks';
+                newLink.setAttribute('data-en', 'Urban Parks');
+                newLink.href = '/parques-urbanos.html';
+                lastLink.parentElement.appendChild(newLink);
+              }
+            }
+          }
+        }
+      });
 
+      // Estrategia 2: Crear dropdowns si no existen (fallback)
+      const allLinks = document.querySelectorAll('a');
       allLinks.forEach(link => {
         const text = link.textContent.trim();
 
@@ -2652,7 +2676,7 @@
           const wrapper = document.createElement('div');
           wrapper.className = 'nav-dropdown-wrapper';
 
-          // Crear el botón con estilos propios (no heredar clases del link)
+          // Crear el botón
           const btn = document.createElement('button');
           btn.className = 'nav-dropdown-btn';
           btn.textContent = text;
