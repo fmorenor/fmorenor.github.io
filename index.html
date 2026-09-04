@@ -2494,10 +2494,17 @@
   /* Cambiar "Noticias" por "Blog" en el nav y footer del home (React bundle) */
   (function hookBlogNav() {
     const changeNoticiasToBlogs = () => {
-      document.querySelectorAll('a').forEach(link => {
-        if (link.textContent.trim() === 'Noticias' && (link.getAttribute('href')?.includes('noticias') || link.getAttribute('href')?.includes('#noticias'))) {
-          link.textContent = 'Blog';
-          link.setAttribute('href', '/blog');
+      document.querySelectorAll('a, [role="button"], span, div').forEach(el => {
+        const text = el.textContent?.trim();
+        const href = el.getAttribute('href');
+        // Cambiar links que apunten a blog
+        if ((text === 'Noticias' || text === 'News') && href === '/blog') {
+          el.textContent = 'Blog';
+        }
+        // También cambiar si tiene href con noticias
+        if ((text === 'Noticias' || text === 'News') && (href?.includes('noticias') || href?.includes('#noticias'))) {
+          el.textContent = 'Blog';
+          el.setAttribute('href', '/blog');
         }
       });
     };
@@ -2507,6 +2514,9 @@
     } else {
       changeNoticiasToBlogs();
     }
+
+    // Ejecutar continuamente cada 500ms para asegurar que se cambia
+    setInterval(changeNoticiasToBlogs, 500);
 
     const obs = new MutationObserver(changeNoticiasToBlogs);
     obs.observe(document.body, { childList: true, subtree: true });
