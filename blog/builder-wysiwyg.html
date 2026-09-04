@@ -261,6 +261,9 @@
       e.preventDefault();
       let text = e.clipboardData.getData('text/html') || e.clipboardData.getData('text/plain');
       text = sanitizeHtml(text);
+      // Remover atributos style que contengan color
+      text = text.replace(/style="[^"]*color[^"]*"/gi, '');
+      text = text.replace(/style='[^']*color[^']*'/gi, '');
       document.execCommand('insertHTML', false, text);
     }
 
