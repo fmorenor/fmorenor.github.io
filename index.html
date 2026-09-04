@@ -114,34 +114,22 @@
     </style>
     <style id="cd-step-fix"></style>
     <style>
-      /* Base styles para centrar y espaciar contenido */
-      * { box-sizing: border-box !important; }
-      html, body {
+      /* Force centered layout to match published version */
+      body, html {
+        width: 100vw !important;
         margin: 0 !important;
         padding: 0 !important;
-        font-family: 'DM Sans', system-ui, -apple-system, sans-serif !important;
-        background: #050816 !important;
-        color: #f8fafc !important;
-        width: 100% !important;
-      }
-      body {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
+        overflow-x: hidden !important;
       }
       #root {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
+        width: 100vw !important;
+        margin: 0 auto !important;
         padding: 0 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
       }
       #root > * {
         width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
       }
     </style>
   </head>
@@ -2165,6 +2153,40 @@
       hideFooter();
     }
     setTimeout(hideFooter, 100);
+  })();
+
+  /* Forzar layout centrado - última revisión necesaria */
+  (function forceCenterLayout() {
+    const center = () => {
+      const root = document.getElementById('root');
+      if (!root) return;
+
+      // Remove width constraints
+      root.style.removeProperty('width');
+      root.style.removeProperty('max-width');
+      root.style.width = '100%';
+      root.style.margin = '0 auto';
+      root.style.padding = '0';
+
+      // Get all elements and remove left-constraining classes
+      const allEls = root.querySelectorAll('*');
+      allEls.forEach(el => {
+        const classes = el.className || '';
+        // Remove Tailwind classes that constrain left
+        if (typeof el.className === 'string') {
+          el.className = classes.replace(/\bw-\d+\/\d+\b/g, 'w-full')
+            .replace(/\bl-\d+\b/g, '')
+            .replace(/\bmax-w-\d+\b/g, '');
+        }
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', center);
+    } else {
+      center();
+    }
+    [100, 300, 500, 1000, 2000].forEach(ms => setTimeout(center, ms));
   })();
   </script>
   <script src="shared.js"></script>
