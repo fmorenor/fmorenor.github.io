@@ -78,6 +78,9 @@
     .builder-preview-content strong { font-weight: 600; color: #fff; }
     .builder-preview-content a { color: #7dd3fc; text-decoration: none; border-bottom: 1px solid rgba(125,211,252,0.3); }
     .builder-preview-content a:hover { border-bottom-color: rgba(125,211,252,0.8); }
+    .builder-preview-content blockquote { border-left: 4px solid #7dd3fc; padding-left: 1rem; margin: 1.5rem 0; color: rgba(255,255,255,0.8); font-style: italic; }
+    .builder-preview-content pre { background: rgba(0,0,0,0.3); border: 1px solid rgba(125,211,252,0.2); border-radius: 6px; padding: 1rem; overflow-x: auto; margin: 1.5rem 0; }
+    .builder-preview-content code { font-family: 'Courier New', monospace; font-size: 0.9em; color: #7dd3fc; }
 
     .builder-video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.5rem 0; border-radius: 8px; }
     .builder-video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
@@ -172,6 +175,8 @@
           <button class="builder-block-btn" onclick="addBlock('h3')">+ H3</button>
           <button class="builder-block-btn" onclick="addBlock('p')">+ Párrafo</button>
           <button class="builder-block-btn" onclick="addBlock('ul')">+ Lista</button>
+          <button class="builder-block-btn" onclick="addBlock('blockquote')">+ Cita</button>
+          <button class="builder-block-btn" onclick="addBlock('code')">+ Código</button>
           <button class="builder-block-btn" onclick="addBlock('image')">+ Imagen</button>
           <button class="builder-block-btn" onclick="addBlock('video')">+ Video</button>
         </div>
@@ -498,12 +503,16 @@
 
     function renderBlocks() {
       blocksList.innerHTML = blocks.map((block, index) => {
-        const label = { h2: 'Título (H2)', h3: 'Subtítulo (H3)', p: 'Párrafo', ul: 'Lista', image: 'Imagen', video: 'Video' }[block.type];
+        const labels = {
+          h2: 'Título (H2)', h3: 'Subtítulo (H3)', p: 'Párrafo', ul: 'Lista',
+          blockquote: 'Cita', code: 'Código', image: 'Imagen', video: 'Video'
+        };
+        const label = labels[block.type];
         let placeholder = 'Escribe aquí...';
         if (block.type === 'image') placeholder = 'https://ejemplo.com/imagen.jpg';
         if (block.type === 'video') placeholder = 'https://youtube.com/watch?v=...';
 
-        const isTextBlock = ['h2', 'h3', 'p'].includes(block.type);
+        const isTextBlock = ['h2', 'h3', 'p', 'blockquote'].includes(block.type);
         const toolbarHtml = isTextBlock ? `
           <div class="builder-block-toolbar">
             <button type="button" class="builder-format-btn" title="Bold (Ctrl+B)" onclick="applyFormat(${block.id}, 'bold')"><strong>B</strong></button>
@@ -512,6 +521,15 @@
             <button type="button" class="builder-format-btn" title="Link" onclick="showLinkDialog(${block.id})">🔗</button>
           </div>
         ` : '';
+
+        const isCodeBlock = block.type === 'code';
+        const inputHtml = isCodeBlock
+          ? `<textarea class="builder-block-input" placeholder="${placeholder}" style="min-height: 100px; font-family: monospace; font-size: 0.8rem;"
+              onchange="updateBlockContent(${block.id}, this.value)"
+              oninput="updateBlockContent(${block.id}, this.value)">${block.content}</textarea>`
+          : `<input type="text" class="builder-block-input" placeholder="${placeholder}" value="${block.content}"
+              onchange="updateBlockContent(${block.id}, this.value)"
+              oninput="updateBlockContent(${block.id}, this.value)" />`;
 
         return `
           <div class="builder-block-item" draggable="true" data-block-id="${block.id}"
@@ -526,9 +544,7 @@
             </div>
             ${toolbarHtml}
             <div class="builder-block-content">
-              <input type="text" class="builder-block-input" placeholder="${placeholder}" value="${block.content}"
-                onchange="updateBlockContent(${block.id}, this.value)"
-                oninput="updateBlockContent(${block.id}, this.value)" />
+              ${inputHtml}
             </div>
           </div>
         `;
@@ -591,6 +607,10 @@
           html += '<h3>' + sanitizeHtml(block.content) + '</h3>';
         } else if (block.type === 'p') {
           html += '<p>' + sanitizeHtml(block.content) + '</p>';
+        } else if (block.type === 'blockquote') {
+          html += '<blockquote>' + sanitizeHtml(block.content) + '</blockquote>';
+        } else if (block.type === 'code') {
+          html += '<pre><code>' + escapeHtml(block.content) + '</code></pre>';
         } else if (block.type === 'ul') {
           const items = block.content.split('\n').filter(i => i.trim());
           if (items.length) {
@@ -725,6 +745,10 @@
           content += '<h3>' + sanitizeHtml(block.content) + '</h3>\n';
         } else if (block.type === 'p') {
           content += '<p>' + sanitizeHtml(block.content) + '</p>\n';
+        } else if (block.type === 'blockquote') {
+          content += '<blockquote>' + sanitizeHtml(block.content) + '</blockquote>\n';
+        } else if (block.type === 'code') {
+          content += '<pre><code>' + escapeHtml(block.content) + '</code></pre>\n';
         } else if (block.type === 'ul') {
           const items = block.content.split('\n').filter(i => i.trim());
           if (items.length) {
