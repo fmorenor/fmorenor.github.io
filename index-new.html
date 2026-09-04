@@ -2122,7 +2122,19 @@
     obs.observe(document.body, { childList: true, subtree: true });
   })();
 
-  /* Dropdowns en el nav del home (Impacto, Tecnología, Cultura) */
+  /* Ocultar el footer del bundle React para evitar duplicación con el de shared.js */
+  (function hideReactFooter() {
+    const hideFooter = () => {
+      const rootFooter = document.querySelector('#root footer');
+      if (rootFooter) rootFooter.style.display = 'none';
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', hideFooter);
+    } else {
+      hideFooter();
+    }
+    setTimeout(hideFooter, 100);
+  })();
   </script>
   <script src="shared.js"></script>
   </body>
