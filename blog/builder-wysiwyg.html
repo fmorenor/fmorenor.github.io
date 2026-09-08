@@ -796,9 +796,9 @@
 
     updatePreview();
 
-    // Inicializar Turnstile (captcha)
-    document.addEventListener('DOMContentLoaded', () => {
-      if (window.turnstile) {
+    // Inicializar Turnstile (captcha) - esperar a que esté cargado
+    function initTurnstile() {
+      if (window.turnstile && typeof window.turnstile.render === 'function') {
         window.turnstile.render('#turnstile', {
           sitekey: '0x4AAAAAAADnLSQ0j0rg8Ozb',
           theme: 'dark',
@@ -806,8 +806,16 @@
             currentTurnstileToken = token;
           }
         });
+      } else {
+        setTimeout(initTurnstile, 100);
       }
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTurnstile);
+    } else {
+      initTurnstile();
+    }
   </script>
 </body>
 </html>
