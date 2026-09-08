@@ -301,7 +301,6 @@
       const embedUrl = `https://www.youtube.com/embed/${videoId}`;
       const videoEmbed = `<div class="video-container"><iframe src="${embedUrl}" allowfullscreen></iframe></div>`;
       document.execCommand('insertHTML', false, videoEmbed);
-      urlInput.value = ''; // Limpiar el input
       editor.focus();
     }
 
