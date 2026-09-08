@@ -92,6 +92,10 @@
 <body>
   <div class="builder-header">
     <h1>📝 Artículo Builder WYSIWYG — CartoData Blog</h1>
+    <div style="margin-left: auto; display: flex; gap: 1rem; align-items: center;">
+      <span id="userDisplay" style="font-size: 0.85rem; color: rgba(255,255,255,0.6);"></span>
+      <button id="logoutBtn" style="padding: 0.4rem 1rem; background: rgba(244,63,94,0.2); border: 1px solid #f43f5e; color: #f43f5e; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Logout</button>
+    </div>
   </div>
 
   <div class="builder-container">
@@ -220,6 +224,27 @@
 
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script>
+    // Verificar sesión de login
+    const LOGGED_IN_KEY = 'cartoblog_logged_in';
+    const SESSION_EMAIL_KEY = 'cartoblog_session_email';
+    const SESSION_PASSWORD_KEY = 'cartoblog_session_password';
+
+    if (localStorage.getItem(LOGGED_IN_KEY) !== 'true') {
+      window.location.href = './builder-login.html';
+    }
+
+    const sessionEmail = localStorage.getItem(SESSION_EMAIL_KEY);
+    const sessionPassword = localStorage.getItem(SESSION_PASSWORD_KEY);
+
+    // Mostrar email en header y agregar logout
+    document.getElementById('userDisplay').textContent = `👤 ${sessionEmail}`;
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem(LOGGED_IN_KEY);
+      localStorage.removeItem(SESSION_EMAIL_KEY);
+      localStorage.removeItem(SESSION_PASSWORD_KEY);
+      window.location.href = './builder-login.html';
+    });
+
     const editor = document.getElementById('mainEditor');
     const preview = document.getElementById('preview');
     const form = document.getElementById('builderForm');
@@ -234,10 +259,13 @@
     const draftItemsEl = document.getElementById('draftItems');
 
     const DRAFT_KEY = 'cartoblog_wysiwyg_draft_v1';
-    const EMAIL_KEY = 'cartoblog_user_email';
     let autoSaveTimer = null;
     let currentTurnstileToken = null;
     let loadedDrafts = [];
+
+    // Auto-llenar email y password de la sesión
+    userEmailInput.value = sessionEmail;
+    passwordInput.value = sessionPassword;
 
     // Event listeners
     form.addEventListener('input', updatePreview);
@@ -251,13 +279,6 @@
     publishBtn.addEventListener('click', publishArticle);
     saveDraftBtn.addEventListener('click', saveDraftToCloud);
     loadDraftBtn.addEventListener('click', toggleDraftList);
-
-    // Cargar email guardado
-    const savedEmail = localStorage.getItem(EMAIL_KEY);
-    if (savedEmail) userEmailInput.value = savedEmail;
-    userEmailInput.addEventListener('change', () => {
-      localStorage.setItem(EMAIL_KEY, userEmailInput.value);
-    });
 
     // Atajos de teclado
     document.addEventListener('keydown', (e) => {

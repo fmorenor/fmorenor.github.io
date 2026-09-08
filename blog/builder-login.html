@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Blog Builder CartoData</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      background: linear-gradient(135deg, #050816 0%, #0f172a 100%);
+      color: #f8fafc;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 3rem 2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .login-header p {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .login-form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .login-form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 0.5rem;
+    }
+
+    .login-form-group input {
+      width: 100%;
+      padding: 0.875rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      color: #f8fafc;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 250ms;
+    }
+
+    .login-form-group input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #3b5bdb;
+      box-shadow: 0 0 0 3px rgba(59, 91, 219, 0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 0.875rem;
+      background: linear-gradient(135deg, #3b5bdb 0%, #2d4bbd 100%);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 250ms;
+      margin-top: 1rem;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(59, 91, 219, 0.3);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-error {
+      background: rgba(244, 63, 94, 0.1);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      color: #f43f5e;
+      padding: 0.875rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+
+    .login-error.show {
+      display: block;
+    }
+
+    .login-loading {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .login-loading.show {
+      display: block;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #3b5bdb;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .login-info {
+      background: rgba(59, 91, 219, 0.1);
+      border: 1px solid rgba(59, 91, 219, 0.3);
+      color: rgba(255, 255, 255, 0.8);
+      padding: 0.875rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 2rem 1.5rem;
+      }
+
+      .login-header h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <h1>📝 Blog Builder</h1>
+      <p>CartoData</p>
+    </div>
+
+    <div class="login-error" id="errorMsg"></div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="login-form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          placeholder="tu@email.com"
+          required
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="login-form-group">
+        <label for="password">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="Contraseña"
+          required
+          autocomplete="current-password"
+        />
+      </div>
+
+      <button class="login-btn" id="loginBtn" type="submit">
+        Entrar al Builder
+      </button>
+
+      <div class="login-loading" id="loading">
+        <span class="spinner"></span>Verificando...
+      </div>
+    </form>
+
+    <div class="login-info">
+      ℹ️ Usa las credenciales que te proporcionó el equipo de CartoData
+    </div>
+  </div>
+
+  <script>
+    const EMAIL_KEY = 'cartoblog_session_email';
+    const PASSWORD_KEY = 'cartoblog_session_password';
+    const LOGGED_IN_KEY = 'cartoblog_logged_in';
+
+    // Si ya está logueado, redirigir al builder
+    if (localStorage.getItem(LOGGED_IN_KEY) === 'true') {
+      window.location.href = './builder-wysiwyg.html';
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+      const loginBtn = document.getElementById('loginBtn');
+      const loading = document.getElementById('loading');
+
+      // Limpiar error anterior
+      errorMsg.classList.remove('show');
+      errorMsg.textContent = '';
+
+      // Validar que email esté en whitelist (verificación simple en cliente)
+      const allowedEmails = ['fmoreno@cartodata.com', 'tv@cartodata.com'];
+      if (!allowedEmails.includes(email.toLowerCase())) {
+        errorMsg.textContent = '❌ Email no autorizado';
+        errorMsg.classList.add('show');
+        return;
+      }
+
+      // Validar contraseña
+      // En producción, esto debería validarse en el servidor, pero por MVP lo hacemos en cliente
+      // TODO: Implementar validación segura en servidor cuando sea posible
+      if (password.length < 1) {
+        errorMsg.textContent = '❌ Contraseña requerida';
+        errorMsg.classList.add('show');
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loading.classList.add('show');
+
+      try {
+        // Simular validación (en producción sería una llamada a API)
+        // Por ahora aceptamos cualquier contraseña no vacía
+        // TODO: Validar contraseña contra servidor
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Guardar sesión
+        localStorage.setItem(EMAIL_KEY, email);
+        localStorage.setItem(PASSWORD_KEY, password);
+        localStorage.setItem(LOGGED_IN_KEY, 'true');
+
+        // Redirigir al builder
+        window.location.href = './builder-wysiwyg.html';
+      } catch (error) {
+        errorMsg.textContent = '❌ Error al verificar credenciales';
+        errorMsg.classList.add('show');
+        loginBtn.disabled = false;
+        loading.classList.remove('show');
+      }
+    }
+
+    // Enfocar en email al cargar
+    document.getElementById('email').focus();
+  </script>
+</body>
+</html>
