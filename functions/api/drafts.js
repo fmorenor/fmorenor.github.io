@@ -43,9 +43,22 @@ export async function onRequest({ request, env }) {
       return json({ error: "config_incompleta" }, 500);
     }
 
-    // Extraer email del usuario de la query o header
+    // Extraer email del usuario de query, header o body
     const url = new URL(request.url);
-    const userEmail = url.searchParams.get("email") || request.headers.get("x-user-email");
+    let userEmail = url.searchParams.get("email") || request.headers.get("x-user-email");
+    let body = null;
+
+    // Para POST/DELETE, leer el body (solo una vez)
+    if (request.method === "POST" || request.method === "DELETE") {
+      try {
+        body = await request.clone().json();
+        if (!userEmail && body.email) {
+          userEmail = body.email;
+        }
+      } catch (e) {
+        // Si no hay body JSON válido, ignorar
+      }
+    }
 
     if (!userEmail) {
       return json({ error: "email_requerido" }, 400);
