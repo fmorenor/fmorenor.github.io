@@ -1,5 +1,5 @@
 // Cloudflare Pages Function — publica artículos del blog automáticamente a GitHub
-// POST: valida contraseña, genera HTML, commitea a GitHub, actualiza index.html
+// POST: valida email, contraseña, genera HTML, commitea a GitHub, actualiza index.html
 //
 // Variables de entorno (Cloudflare Pages → Settings → Environment variables):
 //   GITHUB_TOKEN              (Personal Access Token, secret)
@@ -7,6 +7,7 @@
 //   GITHUB_USERNAME           (ej: fmorenor)
 //   GITHUB_REPO               (ej: cartodata-web)
 //   TURNSTILE_SECRET_KEY      (para verificar bot)
+//   ALLOWED_EMAILS            (emails autorizados, separados por comas)
 
 import { createCommit, getFileContent, insertArticleCard } from "../utils/github-api.js";
 
@@ -224,6 +225,12 @@ function json(obj, status = 200) {
   });
 }
 
+function isEmailAllowed(env, email) {
+  if (!env.ALLOWED_EMAILS) return true; // Sin restricción si no está configurado
+  const allowed = env.ALLOWED_EMAILS.split(',').map(e => e.trim().toLowerCase());
+  return allowed.includes(email.toLowerCase());
+}
+
 function getFilenameFromTitle(title) {
   return title
     .toLowerCase()
@@ -315,10 +322,19 @@ export async function onRequestPost({ request, env }) {
     }
 
     // Validar campos requeridos
-    const { title, category, date, description, imageUrl, content, password } = body;
+    const { title, category, date, description, imageUrl, content, password, email } = body;
+
+    if (!email) {
+      return json({ error: "email_requerido" }, 400);
+    }
 
     if (!title || !category || !date || !description || !content || !password) {
       return json({ error: "campos_requeridos" }, 400);
+    }
+
+    // Validar que el email esté autorizado
+    if (!isEmailAllowed(env, email)) {
+      return json({ error: "email_no_autorizado" }, 403);
     }
 
     // Verificar contraseña

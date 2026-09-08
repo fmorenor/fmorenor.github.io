@@ -727,6 +727,7 @@
             imageUrl,
             content,
             password,
+            email,
             turnstile_token: currentTurnstileToken
           })
         });
@@ -734,7 +735,9 @@
         const data = await response.json();
 
         if (!response.ok) {
-          if (data.error === 'contraseña_incorrecta') {
+          if (data.error === 'email_no_autorizado') {
+            throw new Error('Email no autorizado para publicar');
+          } else if (data.error === 'contraseña_incorrecta') {
             throw new Error('Contraseña incorrecta');
           } else if (data.error === 'demasiados_intentos') {
             throw new Error('Demasiados intentos. Intenta en 5 minutos');
