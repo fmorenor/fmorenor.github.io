@@ -4,3 +4,11 @@ type = "service"
 [[kv_namespaces]]
 binding = "GALLERY_KV"
 id = "gallery_kv_namespace"
+
+[[kv_namespaces]]
+binding = "DRAFTS_KV"
+id = "drafts_kv_namespace"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "rate_limit_namespace"
