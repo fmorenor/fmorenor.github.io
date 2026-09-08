@@ -281,8 +281,8 @@
 
       // Extraer video ID de diferentes formatos de URL
       const patterns = [
-        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
-        /^([a-zA-Z0-9_-]{11})$/ // ID directo
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([^&\n?#]+)/,
+        /^([a-zA-Z0-9_-]{6,11})$/ // ID directo (6-11 caracteres)
       ];
 
       for (let pattern of patterns) {
@@ -293,8 +293,8 @@
         }
       }
 
-      if (!videoId || videoId.length !== 11) {
-        alert('URL de YouTube inválida. Intenta con:\nhttps://www.youtube.com/watch?v=dQw4w9WgXcQ');
+      if (!videoId || videoId.length < 6) {
+        alert('URL de YouTube inválida. Intenta con:\nhttps://www.youtube.com/watch?v=dQw4w9WgXcQ\no\nhttps://youtube.com/shorts/RIghQSuaoBU');
         return;
       }
 
