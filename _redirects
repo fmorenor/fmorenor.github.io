@@ -1,39 +1,61 @@
 # Redirecciones 301 permanentes - URLs antiguas del sitio anterior
-# Cloudflare Pages lee este archivo automáticamente
+# Cloudflare Pages lee este archivo automáticamente.
+#
+# NOTA: Cloudflare sirve URLs "limpias" (sin .html) y redirige cualquier .html
+# a su versión sin extensión. Por eso los destinos aquí van SIN .html: así el
+# salto es directo (viejo → destino) en lugar de dar el rodeo viejo → .html →
+# 308 → limpia, que penaliza el SEO.
 
-# Redirecciones de rutas limpias
-/home                  /                   301
+# ── Rutas limpias / alias del home ──────────────────────────────────────
+/home                  /              301
+/nosotros              /              301
+/contacto              /              301
+/contact               /              301
+/impacto               /              301
 
-# Redirecciones a páginas equivalentes nuevas
-/cartografía           /cartografica.html  301
-/cartografia           /cartografica.html  301
-/cartoparque           /parques-urbanos.html 301
-/ecarto                /geosoftware.html   301
-/lidar                 /ciudades.html      301
-/vision_360            /ciudades.html      301
-/visor_nuevo_leon      /ciudades.html      301
-/tradicion             /historia.html      301
+# ── Páginas de servicio equivalentes ────────────────────────────────────
+/cartografía           /cartografica  301
+/cartografia           /cartografica  301
+/cartography           /cartografica  301
+/oblix                 /cartografica  301
+/ecarto                /geosoftware   301
+/au4                   /geosoftware   301
+/cartoparque           /parques-urbanos 301
+/lidar                 /ciudades      301
+/vision_360            /ciudades      301
+/visor_nuevo_leon      /ciudades      301
+/tradicion             /historia      301
 
-# Redirecciones a home (páginas que no tienen equivalente directo)
-/contacto              /                   301
-/nosotros              /                   301
-/en                    /                   301
-/perro                 /                   301
-/audio                 /                   301
+# ── Páginas legales (variantes viejas / en inglés) ──────────────────────
+/privacy               /privacidad    301
+/politicaprivacidad    /privacidad    301
+/terms                 /terminos      301
+/terms-of-use          /terminos      301
+/legal                 /terminos      301
 
-# Borradores y ramas de desarrollo (todos a home)
-/copia-de-oblix        /                   301
-/copia-de-lidar        /                   301
-/rebuild-home          /                   301
-/rebuilt-home          /                   301
+# ── Idioma / rutas sin equivalente ──────────────────────────────────────
+/en                    /              301
+/perro                 /              301
+/audio                 /              301
 
-# Redirecciones de artículos del blog sin /blog/ → versión correcta
-/que-cambia-cuando-un-municipio-puede-ver-cada-toma           /blog/que-cambia-cuando-un-municipio-puede-ver-cada-toma.html           301
-/que-cambia-cuando-un-municipio-puede-ver-cada-toma.html      /blog/que-cambia-cuando-un-municipio-puede-ver-cada-toma.html           301
-/por-que-hacer-dos-filas-para-resolver-un-solo-tram           /blog/por-que-hacer-dos-filas-para-resolver-un-solo-tram.html           301
-/por-que-hacer-dos-filas-para-resolver-un-solo-tram.html      /blog/por-que-hacer-dos-filas-para-resolver-un-solo-tram.html           301
-/por-que-se-disparo-21-la-recaudacion-predial-en-el           /blog/por-que-se-disparo-21-la-recaudacion-predial-en-el.html           301
-/por-que-se-disparo-21-la-recaudacion-predial-en-el.html      /blog/por-que-se-disparo-21-la-recaudacion-predial-en-el.html           301
+# ── Borradores y ramas de desarrollo (todos a home) ─────────────────────
+/copia-de-oblix        /              301
+/copia-de-lidar        /              301
+/rebuild-home          /              301
+/rebuilt-home          /              301
+
+# ── Artículos del blog: rutas sin /blog/ → post correcto (URL limpia) ────
+/que-cambia-cuando-un-municipio-puede-ver-cada-toma       /blog/que-cambia-cuando-un-municipio-puede-ver-cada-toma  301
+/por-que-hacer-dos-filas-para-resolver-un-solo-tram       /blog/por-que-hacer-dos-filas-para-resolver-un-solo-tram  301
+/por-que-se-disparo-21-la-recaudacion-predial-en-el       /blog/por-que-se-disparo-21-la-recaudacion-predial-en-el  301
+
+# ── Permalinks viejos de Wix (con fecha) → post nuevo equivalente ────────
+/2018/02/07/se-disparo-la-recaudacion-predial-en-guadalajara/                                       /blog/por-que-se-disparo-21-la-recaudacion-predial-en-el   301
+/2021/07/09/historias-de-cartomorfosis-e02t01-transformacion-digital-con-juan-carlos-gonzalez/      /blog/historias-de-cartomorfosis--e02t01-transformacion-   301
+/2021/08/06/historias-de-cartomorfosis-e03t01-guillermo-hernandez-tlajomulco/                       /blog/historias-de-cartomorfosis--e03t01--guillermo-hern   301
+/2021/08/06/historias-de-cartomorfosis-e04t01-sandra-tovar-tesorera-de-guadalajara/                 /blog/historias-de-cartomorfosis-e04t01--sandra-tovar-te   301
+/2021/08/06/historias-de-cartomorfosis-e05t01-rodolfo-gonzalez-director-de-catastro-estado-de-jalisco/  /blog/historias-de-cartomorfosis-e05t01--rodolfo-gonzale   301
+/2021/08/06/historias-de-cartomorfosis-e06t01-martin-guzman-pena-alcalde-de-talpa-de-allende/       /blog/historias-de-cartomorfosis-e06t01--martin-guzman-p   301
 
 # Wildcard para cualquier otra ruta no encontrada (opcional - mantén esto al final)
 # /*                   /404.html           200
