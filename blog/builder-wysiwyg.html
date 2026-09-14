@@ -839,5 +839,20 @@
       setTimeout(initTurnstile, 500);
     }
   </script>
+
+  <!-- Cargar Turnstile de forma sincrónica si aún no está cargado -->
+  <script>
+    if (!window.turnstile) {
+      var script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+      script.onload = () => {
+        console.log('Turnstile cargado exitosamente');
+        if (window.initTurnstile) {
+          window.initTurnstile();
+        }
+      };
+      document.head.appendChild(script);
+    }
+  </script>
 </body>
 </html>
