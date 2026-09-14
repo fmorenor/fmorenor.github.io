@@ -726,11 +726,11 @@
         return;
       }
 
-      // Obtener token de Turnstile
-      if (!currentTurnstileToken) {
-        alert('Verifica el captcha para publicar');
-        return;
-      }
+      // TODO: Validación de Turnstile deshabilitada por ahora
+      // if (!currentTurnstileToken) {
+      //   alert('Verifica el captcha para publicar');
+      //   return;
+      // }
 
       publishBtn.disabled = true;
       publishBtn.textContent = '🚀 Publicando...';
