@@ -187,6 +187,7 @@
           <label for="publishPassword">Contraseña para publicar</label>
           <input type="password" id="publishPassword" placeholder="Contraseña" />
         </div>
+        <div id="turnstile" style="margin-top: 1rem;"></div>
       </div>
 
       <!-- BOTONES DE ACCIÓN -->
@@ -258,6 +259,7 @@
 
     const DRAFT_KEY = 'cartoblog_wysiwyg_draft_v1';
     let autoSaveTimer = null;
+    let currentTurnstileToken = null;
     let loadedDrafts = [];
 
     // Auto-llenar email y password de la sesión
@@ -724,6 +726,12 @@
         return;
       }
 
+      // Obtener token de Turnstile
+      if (!currentTurnstileToken) {
+        alert('Verifica el captcha para publicar');
+        return;
+      }
+
       publishBtn.disabled = true;
       publishBtn.textContent = '🚀 Publicando...';
 
@@ -739,7 +747,8 @@
             imageUrl,
             content,
             password,
-            email
+            email,
+            turnstile_token: currentTurnstileToken
           })
         });
 
@@ -752,6 +761,8 @@
             throw new Error('Contraseña incorrecta');
           } else if (data.error === 'demasiados_intentos') {
             throw new Error('Demasiados intentos. Intenta en 5 minutos');
+          } else if (data.error === 'verificacion_fallida') {
+            throw new Error('Verifica el captcha e intenta de nuevo');
           }
           throw new Error(data.error || 'Error publicando');
         }
@@ -785,5 +796,63 @@
     updatePreview();
 
     // Inicializar Turnstile (captcha) - esperar a que esté cargado
+    function initTurnstile() {
+      const maxAttempts = 50;
+      let attempts = 0;
+
+      const tryRender = () => {
+        attempts++;
+        if (window.turnstile && typeof window.turnstile.render === 'function') {
+          try {
+            window.turnstile.render('#turnstile', {
+              sitekey: '0x4AAAAAAAD6sqdVk00kt3s8e',
+              theme: 'dark',
+              callback: (token) => {
+                currentTurnstileToken = token;
+              },
+              'error-callback': () => {
+                console.error('Turnstile error');
+              }
+            });
+            console.log('Turnstile renderizado correctamente');
+          } catch (e) {
+            console.error('Error al renderizar Turnstile:', e);
+            if (attempts < maxAttempts) {
+              setTimeout(tryRender, 200);
+            }
+          }
+        } else if (attempts < maxAttempts) {
+          setTimeout(tryRender, 200);
+        } else {
+          console.error('Turnstile no se cargó después de 10 segundos');
+        }
+      };
+
+      tryRender();
+    }
+
+    // Esperar a que el DOM esté listo
+    // Esperar a que Turnstile esté disponible globalmente
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => setTimeout(initTurnstile, 500));
+    } else {
+      setTimeout(initTurnstile, 500);
+    }
+  </script>
+
+  <!-- Cargar Turnstile de forma sincrónica si aún no está cargado -->
+  <script>
+    if (!window.turnstile) {
+      var script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+      script.onload = () => {
+        console.log('Turnstile cargado exitosamente');
+        if (window.initTurnstile) {
+          window.initTurnstile();
+        }
+      };
+      document.head.appendChild(script);
+    }
+  </script>
 </body>
 </html>
