@@ -17,7 +17,7 @@ export async function getMainBranchSHA(env) {
   const url = `${GITHUB_API_URL}/repos/${env.GITHUB_USERNAME}/${env.GITHUB_REPO}/branches/main`;
   const res = await fetch(url, {
     headers: {
-      Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+      Authorization: `token ${env.GITHUB_TOKEN}`,
       "X-GitHub-Api-Version": "2022-11-28",
     },
   });
@@ -35,7 +35,7 @@ export async function getFileContent(env, path) {
   const url = `${GITHUB_API_URL}/repos/${env.GITHUB_USERNAME}/${env.GITHUB_REPO}/contents/${path}`;
   const res = await fetch(url, {
     headers: {
-      Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+      Authorization: `token ${env.GITHUB_TOKEN}`,
       "X-GitHub-Api-Version": "2022-11-28",
     },
   });
@@ -73,7 +73,7 @@ export async function createCommit(env, files, message) {
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+        Authorization: `token ${env.GITHUB_TOKEN}`,
         "X-GitHub-Api-Version": "2022-11-28",
       },
       body: JSON.stringify({
@@ -95,7 +95,7 @@ export async function createCommit(env, files, message) {
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+        Authorization: `token ${env.GITHUB_TOKEN}`,
         "X-GitHub-Api-Version": "2022-11-28",
       },
       body: JSON.stringify({
@@ -122,7 +122,7 @@ export async function createCommit(env, files, message) {
     {
       method: "PATCH",
       headers: {
-        Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+        Authorization: `token ${env.GITHUB_TOKEN}`,
         "X-GitHub-Api-Version": "2022-11-28",
       },
       body: JSON.stringify({
