@@ -832,13 +832,12 @@
     }
 
     // Esperar a que el DOM esté listo
+    // Esperar a que Turnstile esté disponible globalmente
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => setTimeout(initTurnstile, 500));
     } else {
       setTimeout(initTurnstile, 500);
     }
   </script>
-
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </body>
 </html>
