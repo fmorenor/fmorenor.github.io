@@ -797,23 +797,45 @@
 
     // Inicializar Turnstile (captcha) - esperar a que esté cargado
     function initTurnstile() {
-      if (window.turnstile && typeof window.turnstile.render === 'function') {
-        window.turnstile.render('#turnstile', {
-          sitekey: '0x4AAAAAAAD6sqdVk00kt3s8e',
-          theme: 'dark',
-          callback: (token) => {
-            currentTurnstileToken = token;
+      const maxAttempts = 50;
+      let attempts = 0;
+
+      const tryRender = () => {
+        attempts++;
+        if (window.turnstile && typeof window.turnstile.render === 'function') {
+          try {
+            window.turnstile.render('#turnstile', {
+              sitekey: '0x4AAAAAAAD6sqdVk00kt3s8e',
+              theme: 'dark',
+              callback: (token) => {
+                currentTurnstileToken = token;
+              },
+              'error-callback': () => {
+                console.error('Turnstile error');
+              }
+            });
+            console.log('Turnstile renderizado correctamente');
+          } catch (e) {
+            console.error('Error al renderizar Turnstile:', e);
+            if (attempts < maxAttempts) {
+              setTimeout(tryRender, 200);
+            }
           }
-        });
-      } else {
-        setTimeout(initTurnstile, 100);
-      }
+        } else if (attempts < maxAttempts) {
+          setTimeout(tryRender, 200);
+        } else {
+          console.error('Turnstile no se cargó después de 10 segundos');
+        }
+      };
+
+      tryRender();
     }
 
+    // Esperar a que el DOM esté listo
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initTurnstile);
+      document.addEventListener('DOMContentLoaded', () => setTimeout(initTurnstile, 500));
     } else {
-      initTurnstile();
+      setTimeout(initTurnstile, 500);
     }
   </script>
 
