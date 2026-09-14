@@ -314,12 +314,12 @@ export async function onRequestPost({ request, env }) {
       return json({ error: "demasiados_intentos" }, 429);
     }
 
-    // Turnstile
+    // TODO: Validación de Turnstile deshabilitada por ahora
     const body = await request.json();
-    const verified = await verifyTurnstile(env, request, body.turnstile_token);
-    if (!verified) {
-      return json({ error: "verificacion_fallida" }, 403);
-    }
+    // const verified = await verifyTurnstile(env, request, body.turnstile_token);
+    // if (!verified) {
+    //   return json({ error: "verificacion_fallida" }, 403);
+    // }
 
     // Validar campos requeridos
     const { title, category, date, description, imageUrl, content, password, email } = body;
