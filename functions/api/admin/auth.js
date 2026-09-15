@@ -12,11 +12,11 @@ export function validateAdminAuth(request, env) {
 
   const token = authHeader.slice(7);
 
-  if (token !== env.PUBLISH_PASSWORD) {
+  if (token !== env.ADMIN_PASSWORD) {
     return { valid: false, error: 'Invalid token' };
   }
 
-  if (password !== env.PUBLISH_PASSWORD) {
+  if (password !== env.ADMIN_PASSWORD) {
     return { valid: false, error: 'Invalid password header' };
   }
 
