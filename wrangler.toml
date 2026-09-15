@@ -1,6 +1,12 @@
 name = "cartodata-web"
 type = "service"
 
+[[d1_databases]]
+binding = "DB"
+database_name = "cartodata"
+database_id = "d1-database-id"
+preview_database_id = "preview-d1-database-id"
+
 [[kv_namespaces]]
 binding = "GALLERY_KV"
 id = "gallery_kv_namespace"
