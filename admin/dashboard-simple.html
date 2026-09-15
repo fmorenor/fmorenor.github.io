@@ -620,9 +620,7 @@ async function loadPosts() {
   const token = getToken();
   const status = document.getElementById('statusFilter').value;
   const url = new URL(`${API_BASE}/posts`, window.location.origin);
-  if (status) {
-    url.searchParams.append('status', status);
-  }
+  url.searchParams.append('status', status);
   try {
     const res = await fetch(url.toString(), {
       headers: { 'Authorization': `Bearer ${token}`, 'X-Admin-Password': token }

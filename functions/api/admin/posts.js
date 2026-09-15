@@ -63,13 +63,16 @@ async function handleGET(request, env, postId) {
     let query = 'SELECT * FROM articles WHERE 1=1';
     const params = [];
 
-    // Si status está definido (no null) y no es empty string, filtrar por él
-    if (status !== null && status !== '') {
+    // Si status="" (Todos) → no filtrar
+    // Si status="draft" o "published" → filtrar
+    // Si status=null (no enviado) → por defecto "published"
+    if (status === '') {
+      // Mostrar todos, sin filtro de status
+    } else if (status && status !== '') {
       query += ' AND status = ?';
       params.push(status);
-    }
-    // Si status no está definido (null), por defecto mostrar solo publicados
-    if (status === null) {
+    } else {
+      // null o no enviado → por defecto publicados
       query += ' AND status = ?';
       params.push('published');
     }
