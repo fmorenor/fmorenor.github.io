@@ -44,7 +44,8 @@ export async function uploadImage(fileBuffer, filename, contentType, env) {
 
     // Guardar metadata en D1
     const imageId = `${timestamp}-${randomStr}`;
-    const publicUrl = `https://${env.R2_PUBLIC_DOMAIN}/blog/images/${r2Filename}`;
+    const domain = env.R2_PUBLIC_DOMAIN || 'pub-0b66dd4321604e288d1651690d880dc2.r2.dev';
+    const publicUrl = `https://${domain}/blog/images/${r2Filename}`;
 
     const { success } = await env.DB.prepare(`
       INSERT INTO images (filename, url, size, category)
