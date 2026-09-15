@@ -5,6 +5,9 @@
 - [x] Actualizado `wrangler.toml` con binding D1
 - [x] Creado archivo de migración SQL: `functions/migrations/001_create_schema.sql`
 - [x] Creado endpoint de inicialización: `functions/api/admin/init-db.js`
+- [x] Ejecutado `wrangler d1 create cartodata`
+- [x] Aplicado migración SQL (7 comandos ejecutados)
+- [x] Verificado tablas creadas: `articles`, `images`
 
 ## 📋 Pasos para completar Fase 1
 
@@ -106,5 +109,6 @@ Cuando completes estos pasos, estaremos listos para Fase 2:
 
 ---
 
-**Estado**: En Progreso ⏳
+**Estado**: ✅ Completado
 **Fecha**: 2026-09-15
+**Completado en**: 2026-09-15 (mismo día)
