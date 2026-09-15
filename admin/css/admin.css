@@ -27,11 +27,13 @@ body {
 }
 
 .screen {
-  display: none;
+  display: none !important;
+  visibility: hidden !important;
 }
 
 .screen.active {
-  display: block;
+  display: block !important;
+  visibility: visible !important;
 }
 
 /* Login Screen */
@@ -41,31 +43,53 @@ body {
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+}
+
+#loginScreen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
 }
 
 .login-container {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   padding: 20px;
+  position: relative;
+  z-index: 10;
 }
 
 .login-box {
   background: white;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  padding: 50px 40px;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
 }
 
 .login-box h1 {
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   color: var(--text-dark);
-  font-size: 28px;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 .login-box .subtitle {
   color: var(--text-light);
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   font-size: 14px;
+  font-weight: 500;
 }
 
 .form-group {
@@ -74,22 +98,28 @@ body {
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  font-size: 14px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 13px;
   color: var(--text-dark);
+  text-align: left;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
   font-family: inherit;
-  font-size: 14px;
-  transition: border-color 0.2s;
+  font-size: 15px;
+  transition: all 0.3s;
+  background: #fafafa;
+}
+
+.form-group input::placeholder {
+  color: #999;
 }
 
 .form-group input:focus,
@@ -97,13 +127,23 @@ body {
 .form-group textarea:focus {
   outline: none;
   border-color: var(--primary);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
 .error-message {
   color: var(--danger);
-  font-size: 14px;
+  font-size: 13px;
   margin-top: 15px;
   text-align: center;
+  padding: 12px;
+  background: rgba(255, 59, 48, 0.1);
+  border-radius: 6px;
+  display: none;
+}
+
+.error-message:not(:empty) {
+  display: block;
 }
 
 /* Buttons */
@@ -123,10 +163,20 @@ body {
 .btn-primary {
   background: var(--primary);
   color: white;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+  transition: all 0.3s;
 }
 
 .btn-primary:hover {
   background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
 }
 
 .btn-secondary {
