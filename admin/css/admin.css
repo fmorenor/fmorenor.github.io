@@ -27,13 +27,11 @@ body {
 }
 
 .screen {
-  display: none !important;
-  visibility: hidden !important;
+  display: none;
 }
 
 .screen.active {
-  display: block !important;
-  visibility: visible !important;
+  display: block;
 }
 
 /* Login Screen */

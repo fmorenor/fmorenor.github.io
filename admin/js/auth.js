@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Si ya está autenticado, mostrar dashboard
   if (authManager.isLoggedIn()) {
-    showDashboard();
+    setTimeout(() => showDashboard(), 100);
   }
 
   // Login form
@@ -77,15 +77,27 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showLoginScreen() {
-    loginScreen.classList.add('active');
-    dashboardScreen.classList.remove('active');
+    if (loginScreen) {
+      loginScreen.style.display = 'flex';
+      loginScreen.style.visibility = 'visible';
+    }
+    if (dashboardScreen) {
+      dashboardScreen.style.display = 'none';
+      dashboardScreen.style.visibility = 'hidden';
+    }
     if (passwordInput) passwordInput.value = '';
     if (loginError) loginError.textContent = '';
   }
 
   function showDashboard() {
-    loginScreen.classList.remove('active');
-    dashboardScreen.classList.add('active');
+    if (loginScreen) {
+      loginScreen.style.display = 'none';
+      loginScreen.style.visibility = 'hidden';
+    }
+    if (dashboardScreen) {
+      dashboardScreen.style.display = 'flex';
+      dashboardScreen.style.visibility = 'visible';
+    }
 
     // Recargar datos del dashboard
     if (window.postsManager) {
