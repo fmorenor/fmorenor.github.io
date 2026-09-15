@@ -256,7 +256,14 @@
     <!-- Posts -->
     <div id="postsTab" class="tab active">
       <h2>Artículos</h2>
-      <button class="btn-new" id="newPostBtn">+ Nuevo Artículo</button>
+      <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center;">
+        <button class="btn-new" id="newPostBtn">+ Nuevo Artículo</button>
+        <select id="statusFilter" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer; font-size: 14px;">
+          <option value="published">Publicado</option>
+          <option value="draft">Draft</option>
+          <option value="">Todos</option>
+        </select>
+      </div>
       <div id="postsList" class="loader">Cargando...</div>
     </div>
 
@@ -611,8 +618,13 @@ document.querySelectorAll('.nav-link').forEach(link => {
 // API calls
 async function loadPosts() {
   const token = getToken();
+  const status = document.getElementById('statusFilter').value;
+  const url = new URL(`${API_BASE}/posts`, window.location.origin);
+  if (status) {
+    url.searchParams.append('status', status);
+  }
   try {
-    const res = await fetch(`${API_BASE}/posts`, {
+    const res = await fetch(url.toString(), {
       headers: { 'Authorization': `Bearer ${token}`, 'X-Admin-Password': token }
     });
     const data = await res.json();
@@ -687,6 +699,7 @@ async function loadImages() {
 if (isLoggedIn()) {
   showDashboard();
   loadPosts();
+  document.getElementById('statusFilter').addEventListener('change', loadPosts);
 } else {
   showLogin();
 }
