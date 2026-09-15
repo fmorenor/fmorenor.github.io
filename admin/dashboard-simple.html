@@ -93,10 +93,23 @@ const API_BASE = '/api/admin';
 const PASSWORD_KEY = 'adminToken';
 
 // Simple auth
-function login(password) {
-  localStorage.setItem(PASSWORD_KEY, password);
-  showDashboard();
-  loadPosts();
+async function login(password) {
+  try {
+    const res = await fetch(`${API_BASE}/posts`, {
+      headers: { 'Authorization': `Bearer ${password}`, 'X-Admin-Password': password }
+    });
+
+    if (!res.ok) {
+      document.getElementById('loginError').textContent = 'Contraseña incorrecta';
+      return;
+    }
+
+    localStorage.setItem(PASSWORD_KEY, password);
+    showDashboard();
+    loadPosts();
+  } catch (e) {
+    document.getElementById('loginError').textContent = 'Error: ' + e.message;
+  }
 }
 
 function logout() {
@@ -127,6 +140,7 @@ function showDashboard() {
 document.getElementById('loginForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const password = document.getElementById('password').value;
+  document.getElementById('loginError').textContent = '';
   login(password);
 });
 
