@@ -4,8 +4,8 @@ type = "service"
 [[d1_databases]]
 binding = "DB"
 database_name = "cartodata"
-database_id = "d1-database-id"
-preview_database_id = "preview-d1-database-id"
+database_id = "54116fca-9c2e-4afc-b816-ec842b951633"
+preview_database_id = "PLACEHOLDER_PREVIEW_ID"
 
 [[kv_namespaces]]
 binding = "GALLERY_KV"
