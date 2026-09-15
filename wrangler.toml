@@ -1,6 +1,10 @@
 name = "cartodata-web"
 type = "service"
 
+[vars]
+R2_PUBLIC_DOMAIN = "pub-0b66dd4321604e288d1651690d880dc2.r2.dev"
+ADMIN_PASSWORD = "admin123"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "cartodata"
