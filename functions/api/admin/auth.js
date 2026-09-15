@@ -3,8 +3,22 @@
  */
 
 export function validateAdminAuth(request, env) {
-  // TODO: Implementar validación de contraseña con variables de entorno
-  // Por ahora, permitimos sin contraseña para testing
+  const password = request.headers.get('X-Admin-Password');
+  const adminPassword = env.ADMIN_PASSWORD;
+
+  if (!adminPassword) {
+    console.error('ADMIN_PASSWORD no configurado en wrangler.toml');
+    return { valid: false, error: 'Server not configured' };
+  }
+
+  if (!password) {
+    return { valid: false, error: 'No password provided' };
+  }
+
+  if (password !== adminPassword) {
+    return { valid: false, error: 'Invalid password' };
+  }
+
   return { valid: true };
 }
 
