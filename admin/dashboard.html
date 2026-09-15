@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CartoData - Admin Dashboard</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="screen active">
+    <div class="login-container">
+      <div class="login-box">
+        <h1>CartoData Admin</h1>
+        <p class="subtitle">Acceso restringido</p>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Acceder</button>
+        </form>
+
+        <div id="loginError" class="error-message"></div>
+      </div>
+    </div>
+  </body>
+
+  <!-- Dashboard Screen -->
+  <div id="dashboardScreen" class="screen">
+    <header class="admin-header">
+      <div class="header-content">
+        <h1>CartoData Admin</h1>
+        <div class="header-actions">
+          <span id="userInfo" class="user-info">Autenticado</span>
+          <button id="logoutBtn" class="btn btn-secondary">Salir</button>
+        </div>
+      </div>
+    </header>
+
+    <nav class="admin-nav">
+      <ul>
+        <li><a href="#" data-tab="posts" class="nav-link active">📝 Artículos</a></li>
+        <li><a href="#" data-tab="images" class="nav-link">🖼️ Galería</a></li>
+      </ul>
+    </nav>
+
+    <main class="admin-main">
+      <!-- Posts Tab -->
+      <section id="postsTab" class="tab-content active">
+        <div class="tab-header">
+          <h2>Artículos del Blog</h2>
+          <button id="newPostBtn" class="btn btn-primary">+ Nuevo Artículo</button>
+        </div>
+
+        <div class="filters">
+          <select id="statusFilter" class="filter-select">
+            <option value="">Todos</option>
+            <option value="draft">Borradores</option>
+            <option value="published">Publicados</option>
+          </select>
+          <select id="categoryFilter" class="filter-select">
+            <option value="">Todas las categorías</option>
+            <option value="gobierno">Gobierno</option>
+            <option value="ciudades">Ciudades</option>
+            <option value="infraestructura">Infraestructura</option>
+            <option value="podcast">Podcast</option>
+            <option value="actualidad">Actualidad</option>
+          </select>
+        </div>
+
+        <div id="postsContainer" class="posts-container loading">
+          <p>Cargando artículos...</p>
+        </div>
+      </section>
+
+      <!-- Images Tab -->
+      <section id="imagesTab" class="tab-content">
+        <div class="tab-header">
+          <h2>Galería de Imágenes</h2>
+        </div>
+
+        <div class="image-upload-zone" id="imageUploadZone">
+          <div class="upload-icon">📤</div>
+          <h3>Arrastra imágenes aquí</h3>
+          <p>o <a href="#" id="browseFilesLink">selecciona archivos</a></p>
+          <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+        </div>
+
+        <div class="image-filter">
+          <select id="imageCategoryFilter" class="filter-select">
+            <option value="">Todas las categorías</option>
+            <option value="header">Header</option>
+            <option value="content">Contenido</option>
+            <option value="gallery">Galería</option>
+          </select>
+        </div>
+
+        <div id="imagesContainer" class="images-container loading">
+          <p>Cargando imágenes...</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Post Editor Modal -->
+  <div id="postEditorModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="editorTitle">Nuevo Artículo</h2>
+        <button class="modal-close" id="closeEditorBtn">&times;</button>
+      </div>
+
+      <form id="postForm" class="post-form">
+        <div class="form-row">
+          <div class="form-group full">
+            <label for="postTitle">Título *</label>
+            <input type="text" id="postTitle" name="title" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="postSlug">Slug *</label>
+            <input type="text" id="postSlug" name="slug" required>
+          </div>
+          <div class="form-group">
+            <label for="postCategory">Categoría *</label>
+            <select id="postCategory" name="category" required>
+              <option value="">Selecciona...</option>
+              <option value="gobierno">Gobierno</option>
+              <option value="ciudades">Ciudades</option>
+              <option value="infraestructura">Infraestructura</option>
+              <option value="podcast">Podcast</option>
+              <option value="actualidad">Actualidad</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full">
+            <label for="postExcerpt">Descripción corta</label>
+            <textarea id="postExcerpt" name="excerpt" rows="2" placeholder="Resumen del artículo"></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full">
+            <label for="postContent">Contenido *</label>
+            <textarea id="postContent" name="content" rows="10" required placeholder="Contenido del artículo (HTML permitido)"></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="postImageUrl">URL de imagen destacada</label>
+            <input type="url" id="postImageUrl" name="image_url" placeholder="https://...">
+          </div>
+          <div class="form-group">
+            <label for="postAuthor">Autor</label>
+            <input type="text" id="postAuthor" name="author" value="CartoData">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="postStatus">Estado *</label>
+            <select id="postStatus" name="status" required>
+              <option value="draft">Borrador</option>
+              <option value="published">Publicado</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="cancelPostBtn" class="btn btn-secondary">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar Artículo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="spinner"></div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/posts-manager.js"></script>
+  <script src="js/images-manager.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
