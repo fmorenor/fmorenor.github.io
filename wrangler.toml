@@ -6,6 +6,7 @@ binding = "DB"
 database_name = "cartodata"
 database_id = "54116fca-9c2e-4afc-b816-ec842b951633"
 preview_database_id = "PLACEHOLDER_PREVIEW_ID"
+migrations_dir = "functions/migrations"
 
 [[r2_buckets]]
 binding = "IMAGES"
