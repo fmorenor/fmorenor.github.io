@@ -7,6 +7,7 @@
  */
 
 import { validateAdminAuth, createAuthError } from './auth.js';
+import { compileArticle, validateArticle } from '../../utils/article-compiler.js';
 
 export async function onRequest({ request, env, params }) {
   // Validar autenticación
