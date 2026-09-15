@@ -4,7 +4,7 @@ type = "service"
 [[d1_databases]]
 binding = "DB"
 database_name = "cartodata"
-database_id = "54116fca-9c2e-4afc-b816-ec842b951633"
+database_id = "73f58bbd-1673-4016-bcd9-47f8a89a6a15"
 preview_database_id = "PLACEHOLDER_PREVIEW_ID"
 migrations_dir = "functions/migrations"
 
