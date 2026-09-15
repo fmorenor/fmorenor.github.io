@@ -157,21 +157,25 @@ async function handlePUT(request, env, postId) {
     }
 
     // Preparar campos para actualizar
+    const newStatus = status !== undefined ? status : article.status;
+    let published_at = article.published_at;
+
+    // Si cambia a publicado, agregar fecha
+    if (newStatus === 'published' && article.status !== 'published') {
+      published_at = new Date().toISOString();
+    }
+
     const updates = {
       title: title !== undefined ? title : article.title,
       content: content !== undefined ? content : article.content,
       category: category !== undefined ? category : article.category,
-      excerpt: excerpt !== undefined ? excerpt : article.excerpt,
-      image_url: image_url !== undefined ? image_url : article.image_url,
-      author: author !== undefined ? author : article.author,
-      status: status !== undefined ? status : article.status,
+      excerpt: excerpt !== undefined ? excerpt : (article.excerpt || ''),
+      image_url: image_url !== undefined ? image_url : (article.image_url || ''),
+      author: author !== undefined ? author : (article.author || 'CartoData'),
+      status: newStatus,
+      published_at: published_at,
       updated_at: new Date().toISOString(),
     };
-
-    // Si cambia a publicado, agregar fecha
-    if (status === 'published' && article.status !== 'published') {
-      updates.published_at = new Date().toISOString();
-    }
 
     const { success } = await env.DB.prepare(`
       UPDATE articles SET
