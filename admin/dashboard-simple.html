@@ -209,7 +209,9 @@
     .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; }
     .form-group { margin-bottom: 20px; }
     .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
-    .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: inherit; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: inherit; }
+    .form-group select { cursor: pointer; background: white; }
+    .form-group select:focus { outline: none; border-color: #0066cc; }
     .form-group textarea { resize: vertical; min-height: 100px; }
     #editor { border: 1px solid #e0e0e0; border-radius: 8px; min-height: 300px; background: white; }
     .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
@@ -290,7 +292,26 @@
 
     <div class="form-group">
       <label>Categoría</label>
-      <input type="text" id="postCategory" placeholder="general">
+      <select id="postCategory">
+        <option value="">Selecciona una categoría</option>
+        <option value="Ciudades">Ciudades</option>
+        <option value="Minería">Minería</option>
+        <option value="Gobierno">Gobierno</option>
+        <option value="Infraestructura">Infraestructura</option>
+        <option value="Construcción">Construcción</option>
+        <option value="Lidar">Lidar</option>
+        <option value="Visión 360">Visión 360</option>
+        <option value="eCarto">eCarto</option>
+        <option value="Podcast">Podcast</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Estado</label>
+      <select id="postStatus">
+        <option value="draft">Draft</option>
+        <option value="published">Publicado</option>
+      </select>
     </div>
 
     <div class="form-group">
@@ -428,6 +449,7 @@ window.editPost = (id, title, slug, category, status, imageUrl) => {
   document.getElementById('postTitle').value = title;
   document.getElementById('postSlug').value = slug;
   document.getElementById('postCategory').value = category;
+  document.getElementById('postStatus').value = status;
   document.getElementById('postImage').value = imageUrl;
 
   // Obtener contenido del artículo
@@ -513,7 +535,8 @@ document.getElementById('newPostBtn').addEventListener('click', () => {
   currentEditingPostId = null;
   document.getElementById('postTitle').value = '';
   document.getElementById('postSlug').value = '';
-  document.getElementById('postCategory').value = 'general';
+  document.getElementById('postCategory').value = '';
+  document.getElementById('postStatus').value = 'draft';
   document.getElementById('postImage').value = '';
   document.getElementById('editor').innerHTML = '';
   document.getElementById('savePostBtn').textContent = 'Guardar Artículo';
@@ -533,11 +556,12 @@ document.getElementById('savePostBtn').addEventListener('click', async () => {
   const title = document.getElementById('postTitle').value;
   const slug = document.getElementById('postSlug').value || title.toLowerCase().replace(/\s+/g, '-');
   const category = document.getElementById('postCategory').value;
+  const status = document.getElementById('postStatus').value;
   const imageUrl = document.getElementById('postImage').value;
   const content = document.getElementById('editor').innerHTML;
 
-  if (!title || !content) {
-    alert('Título y contenido son requeridos');
+  if (!title || !content || !category) {
+    alert('Título, categoría y contenido son requeridos');
     return;
   }
 
@@ -554,7 +578,7 @@ document.getElementById('savePostBtn').addEventListener('click', async () => {
         'X-Admin-Password': token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ slug, title, content, category, image_url: imageUrl, status: 'published' })
+      body: JSON.stringify({ slug, title, content, category, image_url: imageUrl, status })
     });
 
     if (res.ok) {
