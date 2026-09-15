@@ -146,6 +146,38 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
 
 document.getElementById('logoutBtn').addEventListener('click', logout);
 
+// New Post
+document.getElementById('newPostBtn').addEventListener('click', async () => {
+  const title = prompt('Título del artículo:');
+  if (!title) return;
+
+  const slug = title.toLowerCase().replace(/\s+/g, '-');
+  const content = prompt('Contenido (HTML):') || '<p>Contenido aquí</p>';
+  const category = prompt('Categoría:') || 'general';
+
+  const token = getToken();
+  try {
+    const res = await fetch(`${API_BASE}/posts`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'X-Admin-Password': token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ slug, title, content, category, status: 'published' })
+    });
+
+    if (res.ok) {
+      alert('Artículo creado');
+      loadPosts();
+    } else {
+      alert('Error: ' + (await res.text()));
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+});
+
 // Tabs
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', (e) => {
