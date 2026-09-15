@@ -55,7 +55,7 @@ async function handleGET(request, env, postId) {
 
     // Listar todos los artículos
     const url = new URL(request.url);
-    const status = url.searchParams.get('status') || 'published';
+    const status = url.searchParams.get('status');
     const category = url.searchParams.get('category');
     const limit = parseInt(url.searchParams.get('limit') || '50');
     const offset = parseInt(url.searchParams.get('offset') || '0');
@@ -63,9 +63,15 @@ async function handleGET(request, env, postId) {
     let query = 'SELECT * FROM articles WHERE 1=1';
     const params = [];
 
-    if (status) {
+    // Si status está definido (no null) y no es empty string, filtrar por él
+    if (status !== null && status !== '') {
       query += ' AND status = ?';
       params.push(status);
+    }
+    // Si status no está definido (null), por defecto mostrar solo publicados
+    if (status === null) {
+      query += ' AND status = ?';
+      params.push('published');
     }
 
     if (category) {

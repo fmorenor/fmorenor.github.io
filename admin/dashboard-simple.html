@@ -256,13 +256,13 @@
     <!-- Posts -->
     <div id="postsTab" class="tab active">
       <h2>Artículos</h2>
-      <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center;">
-        <button class="btn-new" id="newPostBtn">+ Nuevo Artículo</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <select id="statusFilter" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer; font-size: 14px;">
           <option value="published">Publicado</option>
           <option value="draft">Draft</option>
           <option value="">Todos</option>
         </select>
+        <button class="btn-new" id="newPostBtn">+ Nuevo Artículo</button>
       </div>
       <div id="postsList" class="loader">Cargando...</div>
     </div>
