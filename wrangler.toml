@@ -7,6 +7,11 @@ database_name = "cartodata"
 database_id = "54116fca-9c2e-4afc-b816-ec842b951633"
 preview_database_id = "PLACEHOLDER_PREVIEW_ID"
 
+[[r2_buckets]]
+binding = "IMAGES"
+bucket_name = "cartodata-images"
+preview_bucket_name = "cartodata-images-preview"
+
 [[kv_namespaces]]
 binding = "GALLERY_KV"
 id = "gallery_kv_namespace"

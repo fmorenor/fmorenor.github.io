@@ -1,11 +1,12 @@
 /**
  * CRUD endpoint para imágenes del blog
  * GET /api/admin/images - listar imágenes
- * POST /api/admin/images - subir imagen
+ * POST /api/admin/images - subir imagen a R2
  * DELETE /api/admin/images/:id - eliminar imagen
  */
 
 import { validateAdminAuth, createAuthError } from './auth.js';
+import { uploadImage, validateImage } from '../../utils/r2-storage.js';
 
 export async function onRequest({ request, env, params }) {
   // Validar autenticación
@@ -72,29 +73,44 @@ async function handlePOST(request, env) {
       );
     }
 
-    // Generar nombre de archivo único
-    const timestamp = Date.now();
-    const filename = `${timestamp}-${file.name}`;
+    // Leer archivo como Buffer
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
-    // Aquí normalmente subirías a R2, pero por ahora guardamos metadata en D1
-    // TODO: Implementar subida a R2
-    const url = `/images/${filename}`;
-
-    const { success } = await env.DB.prepare(`
-      INSERT INTO images (filename, url, size, category)
-      VALUES (?, ?, ?, ?)
-    `).bind(filename, url, file.size, category).run();
-
-    if (!success) {
-      throw new Error('Failed to insert image metadata');
+    // Validar imagen
+    const validation = validateImage(buffer);
+    if (!validation.valid) {
+      return new Response(
+        JSON.stringify({ error: validation.error || 'Invalid image' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
     }
 
-    // Obtener la imagen insertada
+    // Subir a R2
+    const uploadResult = await uploadImage(
+      buffer,
+      file.name,
+      validation.type,
+      env
+    );
+
+    if (!uploadResult.success) {
+      return new Response(
+        JSON.stringify({ error: uploadResult.error }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Obtener imagen de D1
     const image = await env.DB.prepare('SELECT * FROM images WHERE filename = ?')
-      .bind(filename)
+      .bind(file.name)
       .first();
 
-    return new Response(JSON.stringify({ image, success: true }), {
+    return new Response(JSON.stringify({
+      image,
+      success: true,
+      url: uploadResult.url
+    }), {
       status: 201,
       headers: { 'Content-Type': 'application/json' },
     });
