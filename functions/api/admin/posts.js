@@ -177,16 +177,26 @@ async function handlePUT(request, env, postId) {
       updated_at: new Date().toISOString(),
     };
 
+    // Asegurar que cada valor es válido (no undefined)
+    const bindParams = [
+      String(updates.title ?? ''),
+      String(updates.content ?? ''),
+      String(updates.category ?? ''),
+      String(updates.excerpt ?? ''),
+      String(updates.image_url ?? ''),
+      String(updates.author ?? ''),
+      String(updates.status ?? ''),
+      updates.published_at ? String(updates.published_at) : null,
+      String(updates.updated_at ?? ''),
+      String(postId ?? '')
+    ];
+
     const { success } = await env.DB.prepare(`
       UPDATE articles SET
         title = ?, content = ?, category = ?, excerpt = ?,
         image_url = ?, author = ?, status = ?, published_at = ?, updated_at = ?
       WHERE id = ?
-    `).bind(
-      updates.title, updates.content, updates.category, updates.excerpt,
-      updates.image_url, updates.author, updates.status, updates.published_at, updates.updated_at,
-      postId
-    ).run();
+    `).bind(...bindParams).run();
 
     if (!success) {
       throw new Error('Failed to update article');
