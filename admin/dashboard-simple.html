@@ -51,12 +51,39 @@
       overflow: hidden;
       background: white;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
     }
     .gallery-item:hover {
       transform: scale(1.05);
       box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .gallery-item-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 0 6px 0 4px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .gallery-item:hover .gallery-item-actions {
+      opacity: 1;
+    }
+    .gallery-item-btn {
+      background: none;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      color: white;
+      padding: 2px 4px;
+      transition: transform 0.2s;
+    }
+    .gallery-item-btn:hover {
+      transform: scale(1.2);
     }
     .gallery-item img {
       width: 100%;
@@ -437,6 +464,50 @@ window.deletePost = (id, title) => {
   .catch(e => alert('Error: ' + e.message));
 };
 
+// Función para editar nombre de imagen
+window.editImageName = (id, filename) => {
+  const newName = prompt('Nuevo nombre para la imagen:', filename);
+  if (!newName || newName === filename) {
+    return;
+  }
+
+  const token = getToken();
+  fetch(`${API_BASE}/images/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'X-Admin-Password': token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ filename: newName })
+  })
+  .then(r => r.json())
+  .then(data => {
+    alert('Imagen renombrada exitosamente');
+    loadImages();
+  })
+  .catch(e => alert('Error: ' + e.message));
+};
+
+// Función para borrar imagen
+window.deleteImage = (id, filename) => {
+  if (!confirm(`¿Estás seguro de que quieres borrar "${filename}"?`)) {
+    return;
+  }
+
+  const token = getToken();
+  fetch(`${API_BASE}/images/${id}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}`, 'X-Admin-Password': token }
+  })
+  .then(r => r.json())
+  .then(data => {
+    alert('Imagen borrada exitosamente');
+    loadImages();
+  })
+  .catch(e => alert('Error: ' + e.message));
+};
+
 // Modal handlers
 document.getElementById('newPostBtn').addEventListener('click', () => {
   currentEditingPostId = null;
@@ -572,7 +643,11 @@ async function loadImages() {
     const html = '<div class="gallery">' +
       data.images.map(img => `
         <div class="gallery-item" title="${img.filename}">
-          <img src="${img.url}" alt="${img.filename}" loading="lazy" style="width: 100%; height: 150px; object-fit: cover;">
+          <img src="${img.url}" alt="${img.filename}" loading="lazy" style="width: 100%; height: 120px; object-fit: cover;">
+          <div class="gallery-item-actions">
+            <button class="gallery-item-btn" onclick="editImageName('${img.id}', '${img.filename.replace(/'/g, "\\'")}')" title="Renombrar">✏️</button>
+            <button class="gallery-item-btn" onclick="deleteImage('${img.id}', '${img.filename.replace(/'/g, "\\'")}')" title="Borrar">🗑️</button>
+          </div>
           <p style="padding: 8px; font-size: 12px; background: #f5f5f5; margin: 0; word-break: break-word;">${img.filename.substring(0, 30)}${img.filename.length > 30 ? '...' : ''}</p>
         </div>
       `).join('') +
