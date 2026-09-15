@@ -73,9 +73,9 @@ async function handlePOST(request, env) {
       );
     }
 
-    // Leer archivo como Buffer
+    // Leer archivo como Uint8Array
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const buffer = new Uint8Array(arrayBuffer);
 
     // Validar imagen
     const validation = validateImage(buffer);
