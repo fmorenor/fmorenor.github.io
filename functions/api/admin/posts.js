@@ -156,9 +156,9 @@ async function handlePUT(request, env, postId) {
       return new Response(JSON.stringify({ error: 'Article not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
     }
 
-    // Preparar campos para actualizar
-    const newStatus = status !== undefined ? status : article.status;
-    let published_at = article.published_at;
+    // Preparar campos para actualizar - asegurar que nunca hay undefined
+    const newStatus = status || article.status || 'draft';
+    let published_at = article.published_at || null;
 
     // Si cambia a publicado, agregar fecha
     if (newStatus === 'published' && article.status !== 'published') {
@@ -166,12 +166,12 @@ async function handlePUT(request, env, postId) {
     }
 
     const updates = {
-      title: title !== undefined ? title : article.title,
-      content: content !== undefined ? content : article.content,
-      category: category !== undefined ? category : article.category,
+      title: title || article.title || 'Sin título',
+      content: content || article.content || '',
+      category: category || article.category || 'general',
       excerpt: excerpt !== undefined ? excerpt : (article.excerpt || ''),
       image_url: image_url !== undefined ? image_url : (article.image_url || ''),
-      author: author !== undefined ? author : (article.author || 'CartoData'),
+      author: author || article.author || 'CartoData',
       status: newStatus,
       published_at: published_at,
       updated_at: new Date().toISOString(),
