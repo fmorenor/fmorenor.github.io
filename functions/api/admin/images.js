@@ -64,7 +64,7 @@ async function handlePOST(request, env) {
   try {
     const formData = await request.formData();
     const file = formData.get('file');
-    const category = formData.get('category') || null;
+    const category = formData.get('category') || 'blog';
 
     if (!file) {
       return new Response(
@@ -73,50 +73,45 @@ async function handlePOST(request, env) {
       );
     }
 
-    // Leer archivo como Uint8Array
+    // Leer archivo
     const arrayBuffer = await file.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
 
-    // Validar imagen
-    const validation = validateImage(buffer);
-    if (!validation.valid) {
-      return new Response(
-        JSON.stringify({ error: validation.error || 'Invalid image' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
+    // Subir a R2 directamente (sin validación complicada)
+    const timestamp = Date.now();
+    const randomStr = Math.random().toString(36).substring(7);
+    const ext = file.name.split('.').pop();
+    const r2Filename = `${timestamp}-${randomStr}.${ext}`;
+    const r2Path = `blog/images/${r2Filename}`;
+
+    await env.IMAGES.put(r2Path, buffer, {
+      httpMetadata: { contentType: file.type }
+    });
+
+    // Guardar en D1
+    const domain = env.R2_PUBLIC_DOMAIN || 'pub-0b66dd4321604e288d1651690d880dc2.r2.dev';
+    const publicUrl = `https://${domain}/blog/images/${r2Filename}`;
+
+    const result = await env.DB.prepare(`
+      INSERT INTO images (filename, url, size, category)
+      VALUES (?, ?, ?, ?)
+    `).bind(file.name, publicUrl, buffer.length, category).run();
+
+    if (!result.success) {
+      throw new Error('Failed to save image metadata');
     }
-
-    // Subir a R2
-    const uploadResult = await uploadImage(
-      buffer,
-      file.name,
-      validation.type,
-      env
-    );
-
-    if (!uploadResult.success) {
-      return new Response(
-        JSON.stringify({ error: uploadResult.error }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Obtener imagen de D1
-    const image = await env.DB.prepare('SELECT * FROM images WHERE filename = ?')
-      .bind(file.name)
-      .first();
 
     return new Response(JSON.stringify({
-      image,
       success: true,
-      url: uploadResult.url
+      url: publicUrl,
+      filename: r2Filename
     }), {
       status: 201,
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('POST images error:', error);
-    return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ error: error.message || 'Upload failed' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 }
 
