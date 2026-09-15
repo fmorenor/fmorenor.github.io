@@ -156,47 +156,30 @@ async function handlePUT(request, env, postId) {
       return new Response(JSON.stringify({ error: 'Article not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
     }
 
-    // Preparar campos para actualizar - asegurar que nunca hay undefined
+    // Preparar valores por defecto si no vienen en el request
+    const newTitle = title || article.title || '';
+    const newContent = content || article.content || '';
+    const newCategory = category || article.category || '';
+    const newExcerpt = excerpt ?? article.excerpt ?? '';
+    const newImageUrl = image_url ?? article.image_url ?? '';
+    const newAuthor = author || article.author || '';
     const newStatus = status || article.status || 'draft';
-    let published_at = article.published_at || null;
+    const newUpdatedAt = new Date().toISOString();
 
-    // Si cambia a publicado, agregar fecha
+    let newPublishedAt = article.published_at;
     if (newStatus === 'published' && article.status !== 'published') {
-      published_at = new Date().toISOString();
+      newPublishedAt = new Date().toISOString();
     }
 
-    const updates = {
-      title: title || article.title || 'Sin título',
-      content: content || article.content || '',
-      category: category || article.category || 'general',
-      excerpt: excerpt !== undefined ? excerpt : (article.excerpt || ''),
-      image_url: image_url !== undefined ? image_url : (article.image_url || ''),
-      author: author || article.author || 'CartoData',
-      status: newStatus,
-      published_at: published_at,
-      updated_at: new Date().toISOString(),
-    };
-
-    // Asegurar que cada valor es válido (no undefined)
-    const bindParams = [
-      String(updates.title ?? ''),
-      String(updates.content ?? ''),
-      String(updates.category ?? ''),
-      String(updates.excerpt ?? ''),
-      String(updates.image_url ?? ''),
-      String(updates.author ?? ''),
-      String(updates.status ?? ''),
-      updates.published_at ? String(updates.published_at) : null,
-      String(updates.updated_at ?? ''),
-      String(postId ?? '')
-    ];
+    console.log('UPDATE params:', { newTitle, newContent, newCategory, newExcerpt, newImageUrl, newAuthor, newStatus, newPublishedAt, newUpdatedAt, postId });
 
     const { success } = await env.DB.prepare(`
-      UPDATE articles SET
-        title = ?, content = ?, category = ?, excerpt = ?,
-        image_url = ?, author = ?, status = ?, published_at = ?, updated_at = ?
+      UPDATE articles
+      SET title = ?, content = ?, category = ?, excerpt = ?, image_url = ?, author = ?, status = ?, published_at = ?, updated_at = ?
       WHERE id = ?
-    `).bind(...bindParams).run();
+    `).bind(
+      newTitle, newContent, newCategory, newExcerpt, newImageUrl, newAuthor, newStatus, newPublishedAt, newUpdatedAt, postId
+    ).run();
 
     if (!success) {
       throw new Error('Failed to update article');
