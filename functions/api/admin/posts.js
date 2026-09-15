@@ -37,6 +37,22 @@ export async function onRequest({ request, env, params }) {
 
 async function handleGET(request, env, postId) {
   try {
+    // Si se solicita un artículo específico
+    if (postId && postId !== 'posts') {
+      const article = await env.DB.prepare('SELECT * FROM articles WHERE id = ?')
+        .bind(postId)
+        .first();
+
+      if (!article) {
+        return new Response(JSON.stringify({ error: 'Article not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      return new Response(JSON.stringify({ article }), {
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Listar todos los artículos
     const url = new URL(request.url);
     const status = url.searchParams.get('status') || 'published';
     const category = url.searchParams.get('category');
