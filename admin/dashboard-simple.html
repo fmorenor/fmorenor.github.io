@@ -39,6 +39,10 @@
     .btn-new { padding: 10px 16px; background: #0066cc; color: white; border: none; border-radius: 6px; cursor: pointer; margin-bottom: 20px; }
 
     .loader { text-align: center; color: #666; padding: 40px; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+    .gallery-item { border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; }
+    .gallery-item img { width: 100%; height: 150px; object-fit: cover; }
+    .gallery-item p { padding: 10px; font-size: 12px; background: #f5f5f5; }
   </style>
 </head>
 <body>
@@ -216,12 +220,24 @@ async function loadImages() {
       headers: { 'Authorization': `Bearer ${token}`, 'X-Admin-Password': token }
     });
     const data = await res.json();
-    const html = data.images?.length
-      ? `<p>${data.images.length} imágenes</p>`
-      : '<div class="empty-state">No hay imágenes</div>';
+
+    if (!data.images || data.images.length === 0) {
+      document.getElementById('imagesList').innerHTML = '<div class="empty-state">No hay imágenes</div>';
+      return;
+    }
+
+    const html = '<div class="gallery">' +
+      data.images.map(img => `
+        <div class="gallery-item">
+          <img src="${img.url}" alt="${img.filename}" loading="lazy">
+          <p>${img.filename}</p>
+        </div>
+      `).join('') +
+      '</div>';
     document.getElementById('imagesList').innerHTML = html;
   } catch (e) {
-    document.getElementById('imagesList').innerHTML = '<div class="error">Error cargando</div>';
+    console.error('Error cargando imágenes:', e);
+    document.getElementById('imagesList').innerHTML = '<div class="error">Error cargando imágenes</div>';
   }
 }
 
