@@ -481,8 +481,8 @@ window.previewPost = async (id) => {
       return;
     }
 
-    const previewUrl = `data:text/html;charset=utf-8,${encodeURIComponent(`
-<!DOCTYPE html>
+    const preview = window.open('', '_blank');
+    const html = `<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -493,15 +493,12 @@ window.previewPost = async (id) => {
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
     body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.6; }
     img { display: block; max-width: 100%; }
-
-    .blog-hero { position: relative; width: 100%; min-height: 50vh; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 3rem; }
-    .blog-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .blog-hero { position: relative; width: 100%; min-height: 50vh; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 3rem; background-size: cover; background-position: center; }
     .blog-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,8,22,0) 0%, rgba(5,8,22,0.95) 100%); }
     .blog-hero-content { position: relative; z-index: 2; max-width: 860px; padding: 0 2rem; width: 100%; }
     .blog-category { display: inline-block; padding: 0.4rem 1rem; background: rgba(59, 91, 219, 0.2); border-radius: 999px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; margin-bottom: 1rem; color: #7dd3fc; }
     .blog-title { font-size: 2.5rem; font-weight: 700; line-height: 1.1; margin: 1rem 0; }
     .blog-meta { font-size: 0.9rem; color: rgba(255,255,255,0.6); margin-top: 1.5rem; }
-
     .blog-content { max-width: 860px; margin: 4rem auto; padding: 0 2rem; }
     .blog-content p { margin-bottom: 1.5rem; line-height: 1.8; }
     .blog-content h2 { font-size: 1.8rem; margin: 2rem 0 1rem; }
@@ -511,36 +508,27 @@ window.previewPost = async (id) => {
     .blog-content img { max-width: 100%; margin: 2rem 0; border-radius: 8px; }
     .blog-content a { color: #7dd3fc; text-decoration: none; }
     .blog-content a:hover { text-decoration: underline; }
-
     footer { text-align: center; padding: 3rem 2rem; color: rgba(255,255,255,0.5); font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.1); }
   </style>
 </head>
 <body>
-  <article class="blog-hero" ${article.image_url ? `style="background: url('${article.image_url}') center/cover;"` : ''}>
-    ${article.image_url ? `<img src="${article.image_url}" alt="${article.title}" class="blog-hero-bg">` : ''}
+  <article class="blog-hero" style="${article.image_url ? `background-image: url('${article.image_url}');` : ''}">
     <div class="blog-hero-overlay"></div>
     <div class="blog-hero-content">
       <div class="blog-category">${article.category}</div>
       <h1 class="blog-title">${article.title}</h1>
-      <div class="blog-meta">
-        📅 ${new Date(article.published_at || article.created_at).toLocaleDateString('es-ES')}
-      </div>
+      <div class="blog-meta">📅 ${new Date(article.published_at || article.created_at).toLocaleDateString('es-ES')}</div>
     </div>
   </article>
-
-  <div class="blog-content">
-    ${article.content}
-  </div>
-
+  <div class="blog-content">${article.content}</div>
   <footer>
     <p>Artículo publicado en CartoData • ${new Date(article.published_at || article.created_at).toLocaleDateString('es-ES')}</p>
     <p style="margin-top: 1rem; font-size: 0.8rem;">Estado: ${article.status}</p>
   </footer>
 </body>
-</html>
-    `)}`;
-
-    window.open(previewUrl, '_blank');
+</html>`;
+    preview.document.write(html);
+    preview.document.close();
   } catch (e) {
     console.error('Error en preview:', e);
     alert('Error abriendo vista previa');
