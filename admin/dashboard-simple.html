@@ -518,10 +518,12 @@ window.previewPost = async (id) => {
 <body>
   <article class="blog-hero" style="${article.image_url ? `background-image: url('${article.image_url}');` : ''}">
     <div class="blog-hero-overlay"></div>
+    <div style="position: absolute; top: 40px; left: 40px; z-index: 3; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7);">
+      <div style="margin-bottom: 8px;">${article.category.toUpperCase()}</div>
+      <div>${new Date(article.published_at || article.created_at).toLocaleDateString('es-ES').toUpperCase()}</div>
+    </div>
     <div class="blog-hero-content">
-      <div class="blog-category">${article.category}</div>
       <h1 class="blog-title">${article.title}</h1>
-      <div class="blog-meta">📅 ${new Date(article.published_at || article.created_at).toLocaleDateString('es-ES')}</div>
     </div>
   </article>
   <div class="blog-content">${article.content}</div>
