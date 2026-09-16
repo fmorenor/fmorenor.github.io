@@ -327,8 +327,45 @@
 
     <div class="form-group">
       <label>Contenido</label>
-      <div id="editor" contenteditable="true" style="border: 1px solid #e0e0e0; border-radius: 8px; min-height: 300px; padding: 12px; background: white;"></div>
+      <div style="border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; background: white;">
+        <div style="background: #f5f5f5; padding: 8px; border-bottom: 1px solid #e0e0e0; display: flex; gap: 4px; flex-wrap: wrap;">
+          <button type="button" class="editor-btn" onclick="execFormat('bold')" title="Negrita (Ctrl+B)"><strong>B</strong></button>
+          <button type="button" class="editor-btn" onclick="execFormat('italic')" title="Itálica (Ctrl+I)"><em>I</em></button>
+          <button type="button" class="editor-btn" onclick="execFormat('underline')" title="Subrayado (Ctrl+U)"><u>U</u></button>
+          <div style="width: 1px; background: #ddd; margin: 0 4px;"></div>
+          <button type="button" class="editor-btn" onclick="execFormat('formatBlock', '<h2>')" title="Encabezado 2">H2</button>
+          <button type="button" class="editor-btn" onclick="execFormat('formatBlock', '<h3>')" title="Encabezado 3">H3</button>
+          <button type="button" class="editor-btn" onclick="execFormat('insertUnorderedList')" title="Lista">• Lista</button>
+          <div style="width: 1px; background: #ddd; margin: 0 4px;"></div>
+          <button type="button" class="editor-btn" onclick="insertLink()" title="Insertar enlace">🔗 Enlace</button>
+          <button type="button" class="editor-btn" onclick="insertImage()" title="Insertar imagen">🖼️ Imagen</button>
+          <div style="width: 1px; background: #ddd; margin: 0 4px;"></div>
+          <button type="button" class="editor-btn" onclick="execFormat('removeFormat')" title="Limpiar formato">✖️ Limpiar</button>
+        </div>
+        <div id="editor" contenteditable="true" style="min-height: 300px; padding: 12px; background: white; outline: none;"></div>
+      </div>
     </div>
+
+    <style>
+      .editor-btn {
+        background: white;
+        border: 1px solid #ddd;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .editor-btn:hover {
+        background: #f0f0f0;
+        border-color: #0066cc;
+        color: #0066cc;
+      }
+      .editor-btn:active {
+        background: #e8f0ff;
+      }
+    </style>
 
     <div class="form-group">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -790,6 +827,28 @@ async function loadImages() {
     console.error('Error cargando imágenes:', e);
     document.getElementById('imagesList').innerHTML = '<div class="error">Error cargando imágenes</div>';
   }
+}
+
+// Editor functions
+function execFormat(cmd, val = null) {
+  document.execCommand(cmd, false, val);
+  document.getElementById('editor').focus();
+}
+
+function insertLink() {
+  const url = prompt('Ingresa la URL:');
+  if (url) {
+    document.execCommand('createLink', false, url);
+  }
+  document.getElementById('editor').focus();
+}
+
+function insertImage() {
+  const url = prompt('Ingresa la URL de la imagen:');
+  if (url) {
+    document.execCommand('insertImage', false, url);
+  }
+  document.getElementById('editor').focus();
 }
 
 // Gallery Picker
