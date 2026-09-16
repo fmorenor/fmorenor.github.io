@@ -499,15 +499,19 @@ window.previewPost = async (id) => {
     .blog-category { display: inline-block; padding: 0.4rem 1rem; background: rgba(59, 91, 219, 0.2); border-radius: 999px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; margin-bottom: 1rem; color: #7dd3fc; }
     .blog-title { font-size: 2.5rem; font-weight: 700; line-height: 1.1; margin: 1rem 0; color: #ffffff; }
     .blog-meta { font-size: 0.9rem; color: #cccccc; margin-top: 1.5rem; }
-    .blog-content { max-width: 860px; margin: 4rem auto; padding: 0 2rem; color: #f0f0f0; }
-    .blog-content p { margin-bottom: 1.5rem; line-height: 1.8; }
-    .blog-content h2 { font-size: 1.8rem; margin: 2rem 0 1rem; color: #ffffff; }
-    .blog-content h3 { font-size: 1.3rem; margin: 1.5rem 0 0.75rem; color: #ffffff; }
-    .blog-content ul, .blog-content ol { margin-left: 2rem; margin-bottom: 1.5rem; }
-    .blog-content li { margin-bottom: 0.5rem; }
+    .blog-content { max-width: 860px; margin: 4rem auto; padding: 0 2rem; color: #f0f0f0 !important; }
+    .blog-content * { color: #f0f0f0 !important; }
+    .blog-content p { margin-bottom: 1.5rem; line-height: 1.8; color: #f0f0f0 !important; }
+    .blog-content h2 { font-size: 1.8rem; margin: 2rem 0 1rem; color: #ffffff !important; }
+    .blog-content h3 { font-size: 1.3rem; margin: 1.5rem 0 0.75rem; color: #ffffff !important; }
+    .blog-content h4, .blog-content h5, .blog-content h6 { color: #ffffff !important; }
+    .blog-content ul, .blog-content ol { margin-left: 2rem; margin-bottom: 1.5rem; color: #f0f0f0 !important; }
+    .blog-content li { margin-bottom: 0.5rem; color: #f0f0f0 !important; }
     .blog-content img { max-width: 100%; margin: 2rem 0; border-radius: 8px; }
-    .blog-content a { color: #7dd3fc; text-decoration: none; }
+    .blog-content a { color: #7dd3fc !important; text-decoration: none; }
     .blog-content a:hover { text-decoration: underline; }
+    .blog-content strong, .blog-content b { color: #ffffff !important; }
+    .blog-content em, .blog-content i { color: #f0f0f0 !important; }
     footer { text-align: center; padding: 3rem 2rem; color: #999999; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.1); }
   </style>
 </head>
