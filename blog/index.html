@@ -20,7 +20,15 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; }
+    body {
+      background: #050816;
+      color: #f8fafc;
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+    html.light body {
+      background: #f8fafc;
+      color: #0f172a;
+    }
     img { display: block; max-width: 100%; }
 
     /* ── HERO DEL BLOG ── */
@@ -88,6 +96,17 @@
       color: rgba(255, 255, 255, 0.7);
     }
 
+    /* Tema claro: hero */
+    html.light .blog-index-eyebrow {
+      color: rgba(15, 23, 42, 0.5);
+    }
+    html.light .blog-index-h1 {
+      color: #0f172a;
+    }
+    html.light .blog-index-subtitle {
+      color: rgba(15, 23, 42, 0.6);
+    }
+
     /* ── CONTENEDOR PRINCIPAL ── */
     .blog-index-container {
       max-width: 1400px;
@@ -132,6 +151,21 @@
       color: #fff;
     }
 
+    /* Tema claro: filtros */
+    html.light .blog-filters {
+      border-bottom-color: rgba(0, 0, 0, 0.1);
+    }
+    html.light .blog-filter-btn {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.12);
+      color: rgba(15, 23, 42, 0.6);
+    }
+    html.light .blog-filter-btn:hover {
+      background: rgba(0, 0, 0, 0.08);
+      border-color: rgba(0, 0, 0, 0.2);
+      color: #0f172a;
+    }
+
     /* ── GRID DE ARTÍCULOS ── */
     .blog-articles-grid {
       display: grid;
@@ -156,6 +190,32 @@
       background: rgba(255, 255, 255, 0.06);
       border-color: rgba(255, 255, 255, 0.15);
       transform: translateY(-6px);
+    }
+
+    /* Tema claro: tarjetas de artículos */
+    html.light .blog-article-card {
+      background: rgba(0, 0, 0, 0.02);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+    html.light .blog-article-card:hover {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+    html.light .blog-article-image {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    html.light .blog-article-category {
+      background: rgba(59, 91, 219, 0.1);
+      color: #2563eb;
+    }
+    html.light .blog-article-date {
+      color: rgba(15, 23, 42, 0.5);
+    }
+    html.light .blog-article-title {
+      color: #0f172a;
+    }
+    html.light .blog-article-excerpt {
+      color: rgba(15, 23, 42, 0.6);
     }
 
     .blog-article-image {
@@ -237,6 +297,11 @@
 
     .blog-empty p {
       font-size: 1.1rem;
+    }
+
+    /* Tema claro: estado vacío */
+    html.light .blog-empty {
+      color: rgba(15, 23, 42, 0.5);
     }
 
     /* ── RESPONSIVE ── */
