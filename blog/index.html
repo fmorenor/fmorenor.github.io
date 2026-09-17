@@ -18,18 +18,8 @@
   <script src="../shared.js" defer></script>
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-    body {
-      background: #050816;
-      color: #f8fafc;
-      font-family: 'DM Sans', system-ui, sans-serif;
-    }
-    html.light body {
-      background: #f8fafc;
-      color: #0f172a;
-    }
-    img { display: block; max-width: 100%; }
+    /* site.css (inyectado desde shared.js) maneja body, html, img y responde al tema */
+    /* Solo especificamos estilos específicos del blog aquí */
 
     /* ── HERO DEL BLOG ── */
     .blog-index-hero {
@@ -76,6 +66,9 @@
       color: rgba(255, 255, 255, 0.5);
       margin-bottom: 1rem;
     }
+    html.light .blog-index-eyebrow {
+      color: rgba(15, 23, 42, 0.5);
+    }
 
     .blog-index-h1 {
       font-size: clamp(2.5rem, 6vw, 4rem);
@@ -83,6 +76,9 @@
       line-height: 1.2;
       color: #fff;
       margin-bottom: 1rem;
+    }
+    html.light .blog-index-h1 {
+      color: #0f172a;
     }
 
     .blog-index-h1 strong {
@@ -94,14 +90,6 @@
       font-weight: 300;
       line-height: 1.6;
       color: rgba(255, 255, 255, 0.7);
-    }
-
-    /* Tema claro: hero */
-    html.light .blog-index-eyebrow {
-      color: rgba(15, 23, 42, 0.5);
-    }
-    html.light .blog-index-h1 {
-      color: #0f172a;
     }
     html.light .blog-index-subtitle {
       color: rgba(15, 23, 42, 0.6);
