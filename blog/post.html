@@ -38,14 +38,18 @@
           document.title = `${article.title} · Blog — CartoData`;
           document.querySelector('meta[name="description"]').setAttribute('content', article.excerpt || article.title);
 
+          const heroStyle = article.image_url
+            ? `background-image: url('${article.image_url}'); background-size: cover; background-position: center;`
+            : `background: linear-gradient(135deg, #1a3a52 0%, #0f2a3d 100%);`;
+
           const html = `
-            <section class="blog-hero" style="background-image: url('${article.image_url || ''}');">
-              <img src="${article.image_url || ''}" alt="${article.title}" class="blog-hero-bg" />
+            <section class="blog-hero" style="${heroStyle}">
+              ${article.image_url ? `<img src="${article.image_url}" alt="${article.title}" class="blog-hero-bg" />` : ''}
               <div class="blog-hero-overlay"></div>
               <div class="blog-hero-content">
                 <div class="blog-eyebrow">
                   <span class="blog-category">${article.category}</span>
-                  ${dateFormatted}
+                  <div style="margin-top: 8px;">${dateFormatted}</div>
                 </div>
                 <h1 class="blog-h1">${article.title}</h1>
               </div>
