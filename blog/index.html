@@ -290,7 +290,13 @@
       <button class="blog-filter-btn" data-filter="podcast" data-en="Podcast">Podcast</button>
     </div>
 
-    <!-- GRID DE ARTÍCULOS -->
+    <!-- GRID DE ARTÍCULOS NUEVOS (DINÁMICOS) -->
+    <div id="newPostsSection" style="display: none; margin-bottom: 4rem;">
+      <h2 style="font-size: 1.5rem; margin-bottom: 2rem; color: #fff;">📝 Últimos Artículos</h2>
+      <div class="blog-articles-grid" id="newPostsGrid"></div>
+    </div>
+
+    <!-- GRID DE ARTÍCULOS EXISTENTES -->
     <div class="blog-articles-grid">
 
       <!-- ARTÍCULO: AHUALULCO REPORTES -->
@@ -429,8 +435,52 @@
     </div>
   </div>
 
-  <!-- SCRIPT PARA FILTROS -->
+  <!-- SCRIPT PARA CARGAR POSTS DINÁMICOS Y FILTROS -->
   <script>
+    // Cargar posts dinámicos de D1
+    async function loadDynamicPosts() {
+      try {
+        const res = await fetch('/api/public/posts?limit=3');
+        if (!res.ok) throw new Error('Error cargando posts');
+
+        const data = await res.json();
+        if (!data.articles || data.articles.length === 0) return;
+
+        const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        const grid = document.getElementById('newPostsGrid');
+
+        data.articles.forEach(article => {
+          const date = new Date(article.published_at || article.created_at);
+          const dateFormatted = `${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
+          const categoryLower = article.category.toLowerCase().replace(/ /g, '');
+
+          const card = document.createElement('a');
+          card.href = `/blog/post?id=${article.id}`;
+          card.className = 'blog-article-card';
+          card.setAttribute('data-category', categoryLower);
+          card.innerHTML = `
+            <img src="${article.image_url || 'https://via.placeholder.com/350x220?text=Sin+imagen'}" alt="${article.title}" class="blog-article-image" />
+            <div class="blog-article-content">
+              <span class="blog-article-category">${article.category}</span>
+              <div class="blog-article-date">${dateFormatted}</div>
+              <h3 class="blog-article-title">${article.title}</h3>
+              <p class="blog-article-excerpt">${(article.content ? article.content.replace(/<[^>]*>/g, '') : 'Sin contenido').substring(0, 150)}...</p>
+              <span class="blog-article-link">LEER MÁS</span>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+
+        document.getElementById('newPostsSection').style.display = 'block';
+      } catch (error) {
+        console.error('Error cargando posts dinámicos:', error);
+      }
+    }
+
+    // Cargar posts al abrir la página
+    loadDynamicPosts();
+
+    // Filtros
     document.querySelectorAll('.blog-filter-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         const filter = this.dataset.filter;
@@ -439,7 +489,7 @@
         document.querySelectorAll('.blog-filter-btn').forEach(b => b.classList.remove('active'));
         this.classList.add('active');
 
-        // Filtrar artículos
+        // Filtrar todos los artículos (dinámicos y estáticos)
         document.querySelectorAll('.blog-article-card').forEach(card => {
           const category = card.dataset.category;
           if (filter === 'all' || category === filter) {
