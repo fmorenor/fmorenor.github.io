@@ -17,8 +17,13 @@
         return;
       }
 
-      fetch(`/api/admin/posts/${postId}`)
-        .then(res => res.json())
+      fetch(`/api/public/posts/${postId}`)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Post no encontrado o no publicado');
+          }
+          return res.json();
+        })
         .then(data => {
           if (!data.article) {
             document.getElementById('postContainer').innerHTML = '<div style="padding: 60px 20px; text-align: center; color: #666;"><p>Post no encontrado</p></div>';
