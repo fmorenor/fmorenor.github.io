@@ -137,7 +137,7 @@
   if (!document.querySelector('link[href*="site.css"]')) {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = './site.css';
+    link.href = '/site.css';
     document.head.prepend(link);
   }
 
