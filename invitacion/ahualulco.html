@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invitación — Podcast CartoData: Ahualulco la modernidad municipal</title>
+  <meta name="description" content="Estimado José Bladimir Arreola Álvarez. CartoData te invita a una conversación sobre Ahualulco de Mercado, su territorio y su futuro. 25 de septiembre de 2026." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Invitación CartoData: Ahualulco la modernidad municipal" />
+  <meta property="og:description" content="Una conversación sobre territorio, información y transformación municipal." />
+  <meta property="og:image" content="https://www.cartodata.com/images/og-invitacion-ahualulco.jpg" />
+  <meta property="og:locale" content="es_MX" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      background: #050816;
+      color: #f8fafc;
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Reducir movimiento si se prefiere */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(59, 91, 219, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Mapa cartográfico de fondo */
+    .map-background {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.25;
+    }
+
+    .map-lines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(0deg, rgba(59, 91, 219, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 91, 219, 0.1) 1px, transparent 1px);
+      background-size: 80px 80px;
+      opacity: 0.3;
+    }
+
+    /* Contenedor principal con animación de entrada */
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 900px;
+      animation: slideUp 1s ease-out 0.3s both;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Logo/marca de CartoData */
+    .brand-mark {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 1.5rem;
+      animation: fadeIn 1s ease-out 0.6s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Saludo personalizado */
+    .saludo {
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
+      font-weight: 300;
+      line-height: 1.4;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 0.5rem;
+      animation: fadeIn 1s ease-out 0.8s both;
+    }
+
+    .saludo strong {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* Título principal */
+    .hero-h1 {
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      font-weight: 200;
+      line-height: 1.25;
+      color: #fff;
+      margin: 1.5rem 0 2rem;
+      animation: fadeIn 1s ease-out 1s both;
+    }
+
+    .hero-h1 em {
+      font-style: normal;
+      font-weight: 600;
+      color: #3b5bdb;
+    }
+
+    /* Subtítulo/descripción */
+    .hero-sub {
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.72);
+      max-width: 700px;
+      margin: 0 auto 3rem;
+      animation: fadeIn 1s ease-out 1.2s both;
+    }
+
+    /* Detalles del evento en tarjeta cartográfica */
+    .event-card {
+      background: rgba(59, 91, 219, 0.1);
+      border: 1px solid rgba(59, 91, 219, 0.3);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 600px;
+      margin: 2rem auto;
+      backdrop-filter: blur(10px);
+      animation: fadeIn 1s ease-out 1.4s both;
+    }
+
+    .event-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .event-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .event-item {
+      text-align: left;
+    }
+
+    .event-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 0.5rem;
+    }
+
+    .event-value {
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .event-address {
+      grid-column: 1 / -1;
+      border-top: 1px solid rgba(59, 91, 219, 0.3);
+      padding-top: 1.5rem;
+    }
+
+    .event-address .event-label {
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+
+    .event-address .event-value {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .coordinates {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(59, 91, 219, 0.3);
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-family: 'Monaco', 'Courier New', monospace;
+    }
+
+    /* Contador regresivo */
+    .countdown {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .countdown-item {
+      background: rgba(59, 91, 219, 0.15);
+      border: 1px solid rgba(59, 91, 219, 0.3);
+      border-radius: 8px;
+      padding: 1rem;
+      min-width: 80px;
+      text-align: center;
+      animation: fadeIn 1s ease-out 1.6s both;
+    }
+
+    .countdown-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #3b5bdb;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .countdown-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Botones de acción */
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 3rem 0 2rem;
+      animation: fadeIn 1s ease-out 1.8s both;
+    }
+
+    @media (min-width: 640px) {
+      .action-buttons {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.2rem;
+      }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem 1.8rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 250ms ease;
+      font-family: inherit;
+      letter-spacing: 0.01em;
+      min-height: 52px;
+    }
+
+    .btn-primary {
+      background: #3b5bdb;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #2d4bbd;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(59, 91, 219, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .btn-sm {
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9rem;
+      min-height: 44px;
+      flex: 1;
+    }
+
+    @media (min-width: 640px) {
+      .btn-sm {
+        flex: 0 1 auto;
+      }
+    }
+
+    /* Ícono en botones */
+    .btn-icon {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Footer con nota */
+    .footer-note {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(59, 91, 219, 0.2);
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+      line-height: 1.6;
+      animation: fadeIn 1s ease-out 2s both;
+    }
+
+    .footer-note a {
+      color: #3b5bdb;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(59, 91, 219, 0.5);
+      transition: color 200ms;
+    }
+
+    .footer-note a:hover {
+      color: #fff;
+    }
+
+    /* Pulso visual (animación de punto de ubicación) */
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .countdown-item {
+        animation: fadeIn 1s ease-out 1.6s both, pulse 2s ease-in-out 2.5s infinite;
+      }
+    }
+
+    /* Estado de la invitación */
+    .status-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: rgba(76, 175, 80, 0.2);
+      border: 1px solid rgba(76, 175, 80, 0.5);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #4caf50;
+      margin-bottom: 1rem;
+      animation: fadeIn 1s ease-out 0.5s both;
+    }
+
+    /* Responsive ajustes */
+    @media (max-width: 768px) {
+      .hero {
+        min-height: auto;
+        padding: 2rem 1.5rem;
+      }
+
+      .event-card {
+        padding: 1.5rem;
+      }
+
+      .btn-sm {
+        padding: 0.85rem 1.5rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="map-background">
+      <div class="map-lines"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="status-badge">Invitación confirmada</div>
+
+      <div class="brand-mark">CartoData</div>
+
+      <div class="saludo">
+        Estimado <strong>José Bladimir Arreola Álvarez</strong>
+      </div>
+
+      <h1 class="hero-h1">
+        El territorio también tiene <em>historias que contar</em>
+      </h1>
+
+      <p class="hero-sub">
+        CartoData tiene el gusto de invitarle a una conversación con el Presidente Municipal de Ahualulco de Mercado. Una charla sobre el municipio, su territorio, sus retos y la manera en que la información puede ayudarnos a comprenderlo y transformarlo.
+      </p>
+
+      <div class="event-card">
+        <div class="event-grid">
+          <div class="event-item">
+            <div class="event-label">Fecha</div>
+            <div class="event-value">Viernes 25 de septiembre de 2026</div>
+          </div>
+          <div class="event-item">
+            <div class="event-label">Hora</div>
+            <div class="event-value">10:00 a. m.</div>
+          </div>
+          <div class="event-item">
+            <div class="event-label">Duración</div>
+            <div class="event-value">60 minutos</div>
+          </div>
+          <div class="event-item">
+            <div class="event-label">Zona horaria</div>
+            <div class="event-value">America/Mexico_City</div>
+          </div>
+          <div class="event-address">
+            <div class="event-label">Lugar</div>
+            <div class="event-value">
+              Estudio CartoData<br>
+              Circunvalación Ote. 689<br>
+              Ciudad Granja<br>
+              Zapopan, Jalisco, México · C.P. 45010
+            </div>
+          </div>
+        </div>
+        <div class="coordinates">
+          📍 LAT 20.6723 · LON -103.4524
+        </div>
+      </div>
+
+      <div class="countdown" id="countdown"></div>
+
+      <div class="action-buttons">
+        <a href="#" id="googleCalendarBtn" class="btn btn-primary btn-sm">
+          <span class="btn-icon">📅</span>
+          Google Calendar
+        </a>
+        <a href="#" id="icsBtn" class="btn btn-primary btn-sm" download="Invitacion-CartoData-Podcast.ics">
+          <span class="btn-icon">📱</span>
+          Apple/Outlook
+        </a>
+        <a href="#" id="mapsBtn" class="btn btn-secondary btn-sm" target="_blank" rel="noopener">
+          <span class="btn-icon">📍</span>
+          Ver ubicación
+        </a>
+        <a href="#" id="whatsappBtn" class="btn btn-secondary btn-sm" target="_blank" rel="noopener">
+          <span class="btn-icon">💬</span>
+          Confirmar asistencia
+        </a>
+      </div>
+
+      <div class="footer-note">
+        <p>
+          🎙️ Tema del episodio: <strong>"Ahualulco la modernidad municipal"</strong>
+        </p>
+        <p style="margin-top: 0.75rem;">
+          Si tienes preguntas sobre la grabación, <a href="tel:+5212125551234">contáctanos por WhatsApp</a>. Esperamos tu participación.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Configuración del evento ──
+    const eventConfig = {
+      title: 'Podcast CartoData: Ahualulco la modernidad municipal',
+      description: 'Una conversación con José Bladimir Arreola Álvarez, Presidente Municipal de Ahualulco de Mercado. Hablaremos sobre el municipio, su territorio, sus retos y cómo la información puede ayudarnos a comprenderlo y transformarlo.',
+      location: 'Estudio CartoData, Circunvalación Ote. 689, Ciudad Granja, Zapopan, Jalisco, México · C.P. 45010',
+      startDate: new Date('2026-09-25T10:00:00'),
+      endDate: new Date('2026-09-25T11:00:00'),
+      timezone: 'America/Mexico_City',
+      coordinates: { lat: 20.6723, lon: -103.4524 }
+    };
+
+    // Ajustar a zona horaria de México
+    const tzOffset = -5 * 60 * 60 * 1000; // CDT (UTC-5)
+    eventConfig.startDate = new Date(eventConfig.startDate.getTime() + tzOffset);
+    eventConfig.endDate = new Date(eventConfig.endDate.getTime() + tzOffset);
+
+    // ── Google Calendar Link ──
+    function generateGoogleCalendarLink() {
+      const start = eventConfig.startDate.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+      const end = eventConfig.endDate.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+
+      const params = new URLSearchParams({
+        action: 'TEMPLATE',
+        text: eventConfig.title,
+        dates: `${start}/${end}`,
+        details: eventConfig.description,
+        location: eventConfig.location,
+        ctz: eventConfig.timezone
+      });
+
+      return `https://calendar.google.com/calendar/render?${params.toString()}`;
+    }
+
+    // ── iCalendar (.ics) ──
+    function generateICS() {
+      const startStr = formatICSDate(eventConfig.startDate);
+      const endStr = formatICSDate(eventConfig.endDate);
+
+      const ics = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//CartoData//Podcast Invitation//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Podcast CartoData
+X-WR-TIMEZONE:America/Mexico_City
+BEGIN:VEVENT
+UID:cartodata-podcast-ahualulco-2026-09-25@cartodata.com
+DTSTAMP:${formatICSDate(new Date())}
+DTSTART:${startStr}
+DTEND:${endStr}
+TZID:America/Mexico_City
+SUMMARY:${eventConfig.title}
+DESCRIPTION:${eventConfig.description.replace(/\n/g, '\\n')}
+LOCATION:${eventConfig.location}
+GEO:${eventConfig.coordinates.lat};${eventConfig.coordinates.lon}
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+END:VCALENDAR`;
+
+      return ics;
+    }
+
+    function formatICSDate(date) {
+      const year = date.getUTCFullYear();
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(date.getUTCDate()).padStart(2, '0');
+      const hours = String(date.getUTCHours()).padStart(2, '0');
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+
+      return `${year}${month}${day}T${hours}${minutes}${seconds}Z`;
+    }
+
+    // ── Google Maps Link ──
+    function generateMapsLink() {
+      const params = new URLSearchParams({
+        q: eventConfig.location,
+        zoom: 16
+      });
+      return `https://www.google.com/maps/search/?${params.toString()}`;
+    }
+
+    // ── WhatsApp Link ──
+    function generateWhatsAppLink(phoneNumber) {
+      const message = encodeURIComponent(
+        '¡Hola! Confirmo mi asistencia a la grabación del podcast de CartoData del viernes 25 de septiembre a las 10:00 a. m. Tema: "Ahualulco la modernidad municipal".'
+      );
+      return `https://wa.me/${phoneNumber}?text=${message}`;
+    }
+
+    // ── Countdown ──
+    function initCountdown() {
+      const countdownEl = document.getElementById('countdown');
+
+      function updateCountdown() {
+        const now = new Date();
+        const target = new Date('2026-09-25T10:00:00');
+        const diff = target - now;
+
+        if (diff <= 0) {
+          countdownEl.innerHTML = '<div style="text-align: center; color: #4caf50; font-weight: 600;">¡El evento es hoy!</div>';
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+        countdownEl.innerHTML = `
+          <div class="countdown-item">
+            <div class="countdown-value">${days}</div>
+            <div class="countdown-label">Días</div>
+          </div>
+          <div class="countdown-item">
+            <div class="countdown-value">${hours}</div>
+            <div class="countdown-label">Horas</div>
+          </div>
+          <div class="countdown-item">
+            <div class="countdown-value">${minutes}</div>
+            <div class="countdown-label">Minutos</div>
+          </div>
+        `;
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 60000); // Actualizar cada minuto
+    }
+
+    // ── Setup de botones ──
+    document.addEventListener('DOMContentLoaded', () => {
+      // Google Calendar
+      const googleCalendarBtn = document.getElementById('googleCalendarBtn');
+      if (googleCalendarBtn) {
+        googleCalendarBtn.href = generateGoogleCalendarLink();
+        googleCalendarBtn.target = '_blank';
+        googleCalendarBtn.rel = 'noopener';
+      }
+
+      // ICS Download
+      const icsBtn = document.getElementById('icsBtn');
+      if (icsBtn) {
+        const icsContent = generateICS();
+        const blob = new Blob([icsContent], { type: 'text/calendar' });
+        const url = URL.createObjectURL(blob);
+        icsBtn.href = url;
+      }
+
+      // Google Maps
+      const mapsBtn = document.getElementById('mapsBtn');
+      if (mapsBtn) {
+        mapsBtn.href = generateMapsLink();
+      }
+
+      // WhatsApp
+      const whatsappBtn = document.getElementById('whatsappBtn');
+      if (whatsappBtn) {
+        // ⚠️ REEMPLAZAR EL NÚMERO DE TELÉFONO
+        const phoneNumber = '5212125551234'; // TODO: Reemplazar con número real
+        whatsappBtn.href = generateWhatsAppLink(phoneNumber);
+      }
+
+      // Iniciar countdown
+      initCountdown();
+    });
+  </script>
+</body>
+</html>
