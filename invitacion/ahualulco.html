@@ -45,7 +45,7 @@
       inset: 0;
       background: radial-gradient(circle at 50% 0%, rgba(59, 91, 219, 0.15) 0%, transparent 70%);
       pointer-events: none;
-      z-index: 1;
+      z-index: 2;
     }
 
     /* Mapa cartográfico de fondo */
@@ -53,23 +53,35 @@
       position: absolute;
       inset: 0;
       z-index: 0;
-      opacity: 0.25;
+      background-size: cover;
+      background-position: center;
+      background-image: url('https://tile.openstreetmap.org/10/521/357.png');
+      opacity: 0.35;
+      filter: saturate(0.6) brightness(0.6) contrast(1.2);
+    }
+
+    .map-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(5,8,22,0.85) 0%, rgba(5,8,22,0.6) 100%);
+      z-index: 1;
     }
 
     .map-lines {
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(0deg, rgba(59, 91, 219, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(59, 91, 219, 0.1) 1px, transparent 1px);
+        linear-gradient(0deg, rgba(59, 91, 219, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 91, 219, 0.08) 1px, transparent 1px);
       background-size: 80px 80px;
       opacity: 0.3;
+      z-index: 1;
     }
 
     /* Contenedor principal con animación de entrada */
     .hero-content {
       position: relative;
-      z-index: 2;
+      z-index: 3;
       text-align: center;
       max-width: 900px;
       animation: slideUp 1s ease-out 0.3s both;
@@ -86,21 +98,17 @@
       }
     }
 
-    /* Logo/marca de CartoData */
-    .brand-mark {
+    /* Logo de CartoData */
+    .cartodata-logo {
       display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.5);
-      margin-bottom: 1.5rem;
-      animation: fadeIn 1s ease-out 0.6s both;
+      margin-bottom: 2rem;
+      animation: fadeIn 1s ease-out 0.3s both;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .cartodata-logo img {
+      height: 45px;
+      width: auto;
+      opacity: 0.95;
     }
 
     /* Saludo personalizado */
@@ -402,19 +410,25 @@
         padding: 0.85rem 1.5rem;
         font-size: 0.9rem;
       }
+
+      .cartodata-logo img {
+        height: 40px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="hero">
-    <div class="map-background">
-      <div class="map-lines"></div>
-    </div>
+    <div class="map-background"></div>
+    <div class="map-overlay"></div>
+    <div class="map-lines"></div>
 
     <div class="hero-content">
-      <div class="status-badge">Invitación confirmada</div>
+      <div class="cartodata-logo">
+        <img src="../images/logo-white-h.png" alt="CartoData" />
+      </div>
 
-      <div class="brand-mark">CartoData</div>
+      <div class="status-badge">Invitación confirmada</div>
 
       <div class="saludo">
         Estimado <strong>José Bladimir Arreola Álvarez</strong>
