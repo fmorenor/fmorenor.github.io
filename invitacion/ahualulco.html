@@ -359,6 +359,44 @@
       color: #fff;
     }
 
+    /* Redes sociales */
+    .social-links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(59, 91, 219, 0.2);
+      animation: fadeIn 1s ease-out 2.2s both;
+    }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(59, 91, 219, 0.15);
+      color: #3b5bdb;
+      text-decoration: none;
+      transition: all 250ms ease;
+      border: 1px solid rgba(59, 91, 219, 0.3);
+    }
+
+    .social-link:hover {
+      background: #3b5bdb;
+      color: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(59, 91, 219, 0.3);
+    }
+
+    .social-link svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
     /* Pulso visual (animación de punto de ubicación) */
     @keyframes pulse {
       0% {
@@ -504,6 +542,21 @@
         <p style="margin-top: 0.75rem;">
           Si tienes preguntas sobre la grabación, <a href="tel:+5212125551234">contáctanos por WhatsApp</a>. Esperamos tu participación.
         </p>
+
+        <div class="social-links">
+          <a href="https://www.linkedin.com/company/cartodata" class="social-link" title="LinkedIn" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+          <a href="https://twitter.com/cartodata_mx" class="social-link" title="Twitter/X" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 002.856-3.515 10 10 0 01-2.836.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/cartodata.mx" class="social-link" title="Instagram" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0m0 22.25C6.063 22.25 1.75 17.937 1.75 12S6.063 1.75 12 1.75 22.25 6.063 22.25 12 17.937 22.25 12 22.25m5.5-15c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5.672-1.5 1.5-1.5 1.5.672 1.5 1.5m-10.5 1.75c1.933 0 3.5-1.567 3.5-3.5S9.933 2.5 8 2.5 4.5 4.067 4.5 6s1.567 3.5 3.5 3.5m0-5.75c1.379 0 2.5 1.121 2.5 2.5S9.379 8.5 8 8.5 5.5 7.379 5.5 6s1.121-2.5 2.5-2.5m7 14.75c-4.962 0-9-4.038-9-9s4.038-9 9-9 9 4.038 9 9-4.038 9-9 9m0-16.5c-4.136 0-7.5 3.364-7.5 7.5s3.364 7.5 7.5 7.5 7.5-3.364 7.5-7.5-3.364-7.5-7.5-7.5z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/cartodata" class="social-link" title="Facebook" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
       </div>
     </div>
   </div>
