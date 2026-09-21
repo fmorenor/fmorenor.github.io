@@ -57,7 +57,7 @@
       background-position: center;
       background-repeat: no-repeat;
       background-image: url('../images/ahualulco-topografia.jpg');
-      opacity: 0.3;
+      opacity: 0.45;
       filter: grayscale(0.7) brightness(0.8) contrast(1.1);
     }
 
@@ -75,7 +75,7 @@
         linear-gradient(0deg, rgba(59, 91, 219, 0.08) 1px, transparent 1px),
         linear-gradient(90deg, rgba(59, 91, 219, 0.08) 1px, transparent 1px);
       background-size: 80px 80px;
-      opacity: 0.3;
+      opacity: 0.45;
       z-index: 1;
     }
 
@@ -480,7 +480,7 @@
       <p class="hero-sub">
         Nos da mucho gusto recordar la invitación al Presidente Municipal de Ahualulco de Mercado, <strong>José Bladimir Arreola Álvarez</strong>, para participar en una nueva edición de <strong>Historias de Cartomorfosis</strong>, el podcast de CartoData.<br><br>
         En esta ocasión, <strong>Félix Audirac</strong> conversará con el Presidente Municipal sobre Ahualulco de Mercado, su territorio, sus retos y la manera en que la información, los mapas y la tecnología pueden contribuir a comprenderlo y transformarlo.<br><br>
-        Los esperamos este <strong>25 de septiembre a las 10:00 a. m.</strong><br><br>
+        Los esperamos este <strong>25 de septiembre a las 10:30 a. m.</strong><br><br>
         Será un gusto recibirlos y compartir esta conversación.
       </p>
 
@@ -492,7 +492,7 @@
           </div>
           <div class="event-item">
             <div class="event-label">Hora</div>
-            <div class="event-value">10:00 a. m.</div>
+            <div class="event-value">10:30 a. m.</div>
           </div>
           <div class="event-item">
             <div class="event-label">Duración</div>
@@ -570,7 +570,7 @@
       title: 'Podcast CartoData: Ahualulco la modernidad municipal',
       description: 'Una conversación con José Bladimir Arreola Álvarez, Presidente Municipal de Ahualulco de Mercado. Hablaremos sobre el municipio, su territorio, sus retos y cómo la información puede ayudarnos a comprenderlo y transformarlo.',
       location: 'Estudio CartoData, Circunvalación Ote. 689, Ciudad Granja, Zapopan, Jalisco, México · C.P. 45010',
-      startDate: new Date('2026-09-25T10:00:00'),
+      startDate: new Date('2026-09-25T10:30:00'),
       endDate: new Date('2026-09-25T11:00:00'),
       timezone: 'America/Mexico_City',
       coordinates: { lat: 20.6723, lon: -103.4524 }
@@ -651,7 +651,7 @@ END:VCALENDAR`;
     // ── WhatsApp Link ──
     function generateWhatsAppLink(phoneNumber) {
       const message = encodeURIComponent(
-        '¡Hola! Confirmo mi asistencia a la grabación del podcast de CartoData del viernes 25 de septiembre a las 10:00 a. m. Tema: "Ahualulco la modernidad municipal".'
+        '¡Hola! Confirmo mi asistencia a la grabación del podcast de CartoData del viernes 25 de septiembre a las 10:30 a. m. Tema: "Ahualulco la modernidad municipal".'
       );
       return `https://wa.me/${phoneNumber}?text=${message}`;
     }
@@ -662,7 +662,7 @@ END:VCALENDAR`;
 
       function updateCountdown() {
         const now = new Date();
-        const target = new Date('2026-09-25T10:00:00');
+        const target = new Date('2026-09-25T10:30:00');
         const diff = target - now;
 
         if (diff <= 0) {
