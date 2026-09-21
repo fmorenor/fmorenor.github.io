@@ -867,11 +867,11 @@ function insertYouTube() {
 
   if (url.includes('youtu.be/')) {
     videoId = url.split('youtu.be/')[1].split('?')[0].split('&')[0];
-  } else if (url.includes('youtube.com/shorts/')) {
-    videoId = url.split('youtube.com/shorts/')[1].split('?')[0].split('&')[0];
-  } else if (url.includes('youtube.com/watch?v=')) {
+  } else if (url.includes('/shorts/')) {
+    videoId = url.split('/shorts/')[1].split('?')[0].split('&')[0];
+  } else if (url.includes('watch?v=')) {
     videoId = url.split('v=')[1].split('&')[0];
-  } else if (url.includes('youtube.com/embed/')) {
+  } else if (url.includes('/embed/')) {
     videoId = url.split('/embed/')[1].split('?')[0];
   } else if (url.match(/^[a-zA-Z0-9_-]{11}$/)) {
     videoId = url;
