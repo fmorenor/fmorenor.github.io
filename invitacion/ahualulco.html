@@ -48,16 +48,17 @@
       z-index: 2;
     }
 
-    /* Mapa cartográfico de fondo */
+    /* Mapa cartográfico de fondo — Imagen topográfica de Ahualulco */
     .map-background {
       position: absolute;
       inset: 0;
       z-index: 0;
       background-size: cover;
       background-position: center;
-      background-image: url('https://tile.openstreetmap.org/10/521/357.png');
-      opacity: 0.35;
-      filter: saturate(0.6) brightness(0.6) contrast(1.2);
+      background-repeat: no-repeat;
+      background-image: url('../images/ahualulco-topografia.jpg');
+      opacity: 0.3;
+      filter: grayscale(0.7) brightness(0.8) contrast(1.1);
     }
 
     .map-overlay {
@@ -665,8 +666,7 @@ END:VCALENDAR`;
       // WhatsApp
       const whatsappBtn = document.getElementById('whatsappBtn');
       if (whatsappBtn) {
-        // ⚠️ REEMPLAZAR EL NÚMERO DE TELÉFONO
-        const phoneNumber = '5212125551234'; // TODO: Reemplazar con número real
+        const phoneNumber = '523318468370'; // Número de confirmación
         whatsappBtn.href = generateWhatsAppLink(phoneNumber);
       }
 
