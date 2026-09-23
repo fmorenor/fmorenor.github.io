@@ -331,7 +331,7 @@
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ messages: history, turnstile_token: tsToken })
+          body: JSON.stringify({ messages: history, turnstile_token: tsToken, lead_uuid: leadUuid })
         });
         const data = await res.json().catch(() => ({}));
         hideTyping();
