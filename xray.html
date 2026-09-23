@@ -65,11 +65,55 @@
     .chat-topbar-info h3 { font-size: 0.92rem; font-weight: 700; color: #fff; }
     .chat-topbar-info p { font-size: 0.72rem; color: rgba(255,255,255,0.45); display: flex; align-items: center; gap: 0.35rem; }
     .chat-topbar-info p .dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
-    .chat-demo-pill {
-      margin-left: auto; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: #fcd34d; background: rgba(252,211,77,0.12);
-      border: 1px solid rgba(252,211,77,0.3); border-radius: 999px; padding: 0.25rem 0.65rem;
+    .chat-topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 0.55rem; }
+    .chat-version-pill {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(165,180,252,0.9); background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.28); border-radius: 999px; padding: 0.25rem 0.65rem;
+      white-space: nowrap;
     }
+
+    /* ── TOOLS (menú discreto en la barra del chat) ── */
+    .chat-tools { position: relative; }
+    .chat-tools > summary {
+      list-style: none; cursor: pointer; user-select: none;
+      display: flex; align-items: center; gap: 0.3rem;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em;
+      color: rgba(255,255,255,0.5); padding: 0.3rem 0.55rem; border-radius: 8px;
+      transition: color .2s, background .2s;
+    }
+    .chat-tools > summary::-webkit-details-marker { display: none; }
+    .chat-tools > summary:hover, .chat-tools[open] > summary { color: #fff; background: rgba(255,255,255,0.06); }
+    .chat-tools > summary:focus-visible { outline: 2px solid rgba(99,102,241,0.6); outline-offset: 2px; }
+    .chat-tools-caret { font-size: 0.55rem; opacity: 0.7; transition: transform .2s; }
+    .chat-tools[open] .chat-tools-caret { transform: rotate(180deg); }
+    .chat-tools-menu {
+      position: absolute; right: 0; top: calc(100% + 0.45rem); z-index: 20;
+      min-width: 230px; padding: 0.4rem;
+      background: #141a2e; border: 1px solid rgba(255,255,255,0.09); border-radius: 12px;
+      box-shadow: 0 14px 34px rgba(0,0,0,0.45);
+      animation: toolsIn .16s ease-out;
+    }
+    @keyframes toolsIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+    .chat-tools-label {
+      font-size: 0.58rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3); padding: 0.35rem 0.6rem 0.3rem;
+    }
+    .chat-tools-item {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      padding: 0.55rem 0.6rem; border-radius: 8px; text-decoration: none;
+      transition: background .15s;
+    }
+    .chat-tools-item:hover, .chat-tools-item:focus-visible { background: rgba(99,102,241,0.12); outline: none; }
+    .chat-tools-icon {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(99,102,241,0.15); color: #a5b4fc;
+    }
+    .chat-tools-text { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+    .chat-tools-title { font-size: 0.8rem; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 0.3rem; }
+    .chat-tools-title .ext { font-size: 0.7rem; color: rgba(255,255,255,0.35); }
+    .chat-tools-desc { font-size: 0.68rem; line-height: 1.35; color: rgba(255,255,255,0.45); }
 
     /* ── MENSAJES ── */
     .chat-messages {
@@ -209,7 +253,24 @@
           <h3 data-en="CartoData Assistant">Asistente CartoData</h3>
           <p><span class="dot"></span> <span data-en="Online">En línea</span></p>
         </div>
-        <span class="chat-demo-pill">Demo</span>
+        <div class="chat-topbar-actions">
+          <details class="chat-tools" id="chatTools">
+            <summary aria-label="Herramientas" data-en-aria="Tools">Tools <span class="chat-tools-caret" aria-hidden="true">▾</span></summary>
+            <div class="chat-tools-menu" role="menu">
+              <div class="chat-tools-label" data-en="Tools">Herramientas</div>
+              <a class="chat-tools-item" role="menuitem" href="https://apps.cartodata.com/plus/toKML/index.html" target="_blank" rel="noopener">
+                <span class="chat-tools-icon" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+                </span>
+                <span class="chat-tools-text">
+                  <span class="chat-tools-title"><span data-en="Create KML">Generar KML</span> <span class="ext" aria-hidden="true">↗</span></span>
+                  <span class="chat-tools-desc" data-en="Draw your area of interest, download it and attach it here.">Dibuja tu área de interés, descárgala y adjúntala aquí.</span>
+                </span>
+              </a>
+            </div>
+          </details>
+          <span class="chat-version-pill" data-en="Version 1">Versión 1</span>
+        </div>
       </div>
 
       <div class="chat-messages" id="messages"></div>
@@ -493,6 +554,17 @@
       const blob = new File([lines.join('\n\n')], 'conversacion-xray-' + stamp + '.md', { type: 'text/markdown' });
       try { await postUpload(blob, blob.name); } catch (e) { /* no bloquea el cierre */ }
     }
+
+    // Menú Tools: se cierra al hacer clic fuera, con Escape o al elegir una herramienta.
+    const toolsEl = document.getElementById('chatTools');
+    document.addEventListener('click', e => { if (toolsEl.open && !toolsEl.contains(e.target)) toolsEl.open = false; });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && toolsEl.open) { toolsEl.open = false; toolsEl.querySelector('summary').focus(); } });
+    toolsEl.querySelectorAll('.chat-tools-item').forEach(a => a.addEventListener('click', () => {
+      toolsEl.open = false;
+      /* GA4 */
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'xray_tool_click', tool: 'generar_kml' });
+    }));
 
     attachBtn.addEventListener('click', () => { if (!attachBtn.disabled) fileInput.click(); });
     fileInput.addEventListener('change', () => {
