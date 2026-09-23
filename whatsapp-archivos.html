@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <!-- Página privada: se llega solo con el enlace que manda el flujo de WhatsApp
+       (Twilio Studio → POST /api/wa/link). No está en el menú ni en el sitemap. -->
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="theme-color" content="#050816" />
+  <title>Envía tu archivo — CartoData</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050816;
+      --card: #0d1226;
+      --line: rgba(255,255,255,0.08);
+      --text: #f8fafc;
+      --muted: rgba(255,255,255,0.55);
+      --faint: rgba(255,255,255,0.35);
+      --accent: #6366f1;
+      --accent-soft: rgba(99,102,241,0.14);
+      --ok: #22c55e;
+      --ok-soft: rgba(34,197,94,0.12);
+      --err: #f87171;
+      --err-soft: rgba(248,113,113,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg); }
+    body {
+      color: var(--text); font-family: 'DM Sans', system-ui, sans-serif;
+      min-height: 100vh; min-height: 100dvh;
+      padding: max(20px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom));
+      display: flex; justify-content: center;
+    }
+    .wrap { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 18px; }
+
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-mark {
+      width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+      background: linear-gradient(135deg, #3b5bdb, #6366f1);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.8rem; letter-spacing: 0.02em;
+    }
+    .brand-name { font-weight: 600; font-size: 0.95rem; }
+    .brand-sub { font-size: 0.72rem; color: var(--faint); }
+
+    h1 { font-size: 1.55rem; font-weight: 300; line-height: 1.2; }
+    h1 strong { font-weight: 700; }
+    .lead { font-size: 0.92rem; line-height: 1.5; color: var(--muted); }
+
+    .card {
+      background: linear-gradient(180deg, #0d1226 0%, #0a0f20 100%);
+      border: 1px solid var(--line); border-radius: 18px; padding: 16px;
+    }
+
+    .contact { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .contact-label { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+    .contact-phone { font-size: 1rem; font-weight: 600; margin-top: 3px; letter-spacing: 0.02em; }
+    .contact-wa {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 600;
+      color: #86efac; background: var(--ok-soft); border-radius: 999px; padding: 5px 10px; white-space: nowrap;
+    }
+
+    .drop {
+      display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px;
+      padding: 26px 16px; border: 1.5px dashed rgba(99,102,241,0.45); border-radius: 16px;
+      background: var(--accent-soft); cursor: pointer; transition: border-color .2s, background .2s;
+    }
+    .drop:hover, .drop.over { border-color: #a5b4fc; background: rgba(99,102,241,0.2); }
+    .drop-icon {
+      width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+      background: rgba(99,102,241,0.22); color: #c7d2fe;
+    }
+    .btn {
+      appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 600; font-size: 0.95rem;
+      color: #fff; background: var(--accent); border-radius: 12px; padding: 13px 22px; width: 100%;
+      transition: filter .2s;
+    }
+    .btn:hover { filter: brightness(1.1); }
+    .btn:focus-visible { outline: 2px solid #a5b4fc; outline-offset: 3px; }
+    .btn[disabled] { opacity: 0.5; cursor: default; }
+    .formats { font-size: 0.76rem; color: var(--muted); }
+    .hint { font-size: 0.76rem; line-height: 1.45; color: var(--faint); margin-top: 12px; }
+    .hint b { color: var(--muted); font-weight: 600; }
+
+    .files { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .file {
+      display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start;
+      padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,0.02);
+    }
+    .file-icon {
+      width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.04em; background: rgba(255,255,255,0.06); color: var(--muted);
+    }
+    .file-name { font-size: 0.86rem; font-weight: 600; overflow-wrap: anywhere; }
+    .file-meta { font-size: 0.74rem; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+    .bar { height: 4px; border-radius: 4px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 8px; }
+    .bar > span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+    .file.ok .file-icon { background: var(--ok-soft); color: #86efac; }
+    .file.ok .file-meta { color: #86efac; }
+    .file.err .file-icon { background: var(--err-soft); color: var(--err); }
+    .file.err .file-meta { color: var(--err); }
+    .retry { background: none; border: 0; color: #a5b4fc; font: inherit; font-weight: 600; text-decoration: underline; cursor: pointer; padding: 0; margin-left: 4px; }
+
+    .state { text-align: center; padding: 30px 18px; }
+    .state h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+    .state p { font-size: 0.88rem; line-height: 1.5; color: var(--muted); }
+    .spinner {
+      width: 26px; height: 26px; margin: 0 auto 14px; border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.12); border-top-color: #a5b4fc; animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .foot { font-size: 0.72rem; color: var(--faint); text-align: center; line-height: 1.5; }
+    .foot a { color: var(--muted); }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">CD</div>
+      <div>
+        <div class="brand-name">CartoData</div>
+        <div class="brand-sub">Archivos de tu proyecto</div>
+      </div>
+    </div>
+
+    <!-- Cargando -->
+    <section class="card state" id="stLoading">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Verificando tu enlace…</p>
+    </section>
+
+    <!-- Enlace inválido o caducado -->
+    <section class="card state" id="stInvalid" hidden>
+      <h2>Este enlace ya no es válido</h2>
+      <p>Los enlaces para enviar archivos caducan por seguridad. Vuelve a la conversación de WhatsApp con CartoData y pide uno nuevo.</p>
+    </section>
+
+    <!-- Listo para subir -->
+    <section id="stReady" hidden style="display:flex;flex-direction:column;gap:18px;">
+      <div>
+        <h1 id="hello">Envía tu <strong>área de interés</strong></h1>
+        <p class="lead" style="margin-top:8px;">Con tu área delimitada podemos prepararte una propuesta mucho más exacta.</p>
+      </div>
+
+      <div class="card contact">
+        <div>
+          <div class="contact-label">Número vinculado</div>
+          <div class="contact-phone" id="phone">—</div>
+        </div>
+        <span class="contact-wa">● WhatsApp</span>
+      </div>
+
+      <div class="card">
+        <label class="drop" id="drop" for="fileInput">
+          <span class="drop-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+          </span>
+          <span class="formats">KML · KMZ · SHP · ZIP — hasta 20 MB por archivo</span>
+          <span class="btn" role="button" id="pickBtn">Elegir archivos</span>
+        </label>
+        <input type="file" id="fileInput" multiple hidden accept=".kml,.kmz,.shp,.zip" />
+        <p class="hint">¿Tu área es un <b>Shapefile</b>? Comprime juntos el .shp, .shx, .dbf y .prj en un <b>.zip</b> y súbelo.<br>¿No tienes el archivo? <a href="https://apps.cartodata.com/plus/toKML/index.html" target="_blank" rel="noopener" style="color:#a5b4fc;">Créalo aquí</a>, descárgalo y vuelve a esta página.</p>
+      </div>
+
+      <ul class="files" id="files" aria-live="polite"></ul>
+
+      <p class="foot" id="expires"></p>
+    </section>
+
+    <p class="foot">Tus archivos se guardan de forma privada en la ficha de tu proyecto con CartoData.<br><a href="/privacidad">Aviso de privacidad</a></p>
+  </main>
+
+  <script>
+  (function () {
+    const ALLOWED = ['kml', 'kmz', 'shp', 'zip'];
+    const MAX_BYTES = 20 * 1024 * 1024;
+    const ERRORS = {
+      tipo_no_permitido: 'Formato no permitido. Usa KML, KMZ, SHP o ZIP.',
+      archivo_muy_grande: 'Supera el límite de 20 MB.',
+      archivo_vacio: 'El archivo está vacío.',
+      contenido_no_valido: 'El contenido no corresponde a un archivo KML, KMZ, SHP o ZIP válido.',
+      enlace_invalido: 'Tu enlace caducó. Pide uno nuevo por WhatsApp.',
+      limite_de_archivos: 'Llegaste al máximo de archivos para este enlace.',
+      demasiadas_subidas: 'Demasiadas subidas seguidas. Espera un minuto e inténtalo de nuevo.',
+      lead_no_disponible: 'No pudimos preparar tu ficha. Inténtalo de nuevo en un momento.',
+      cartoflow_rechazo: 'No se pudo guardar en tu ficha. Inténtalo de nuevo.'
+    };
+
+    // El token va tras "#": el navegador no lo manda al servidor ni en Referer.
+    const token = new URLSearchParams(location.hash.slice(1)).get('t') || '';
+    const $ = id => document.getElementById(id);
+    const show = id => ['stLoading', 'stInvalid', 'stReady'].forEach(s => $(s).hidden = s !== id);
+
+    let leadId = null;
+    const queue = [];
+    let busy = false;
+
+    function fmtSize(b) { return b < 1024 * 1024 ? Math.max(1, Math.round(b / 1024)) + ' KB' : (b / 1024 / 1024).toFixed(1) + ' MB'; }
+    function extOf(n) { return (String(n).split('.').pop() || '').toLowerCase(); }
+    function okText() { return '✓ Asociado a tu proyecto' + (leadId ? ' · folio ' + leadId : ''); }
+
+    function addRow(name, meta, cls) {
+      const li = document.createElement('li');
+      li.className = 'file' + (cls ? ' ' + cls : '');
+      li.innerHTML = '<div class="file-icon"></div><div><div class="file-name"></div><div class="file-meta"></div></div>';
+      li.querySelector('.file-icon').textContent = extOf(name).toUpperCase().slice(0, 4) || '—';
+      li.querySelector('.file-name').textContent = name;
+      li.querySelector('.file-meta').textContent = meta;
+      $('files').prepend(li);
+      return li;
+    }
+
+    async function init() {
+      if (!token) return show('stInvalid');
+      try {
+        const r = await fetch('/api/wa/session', { headers: { 'x-wa-token': token }, cache: 'no-store' });
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok || !d.ok) return show('stInvalid');
+        leadId = d.lead_id || null;
+        $('phone').textContent = d.phone_masked;
+        if (d.first_name) $('hello').innerHTML = 'Hola ' + escapeHtml(d.first_name) + ', envía tu <strong>área de interés</strong>';
+        const exp = new Date(d.expires_at);
+        $('expires').textContent = 'Este enlace es personal y vence el ' +
+          exp.toLocaleString('es-MX', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }).replace(/\.$/, '') + '.';
+        (d.files || []).slice().reverse().forEach(f => addRow(f.name, okText(), 'ok'));
+        show('stReady');
+      } catch (e) {
+        show('stInvalid');
+      }
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function enqueue(files) {
+      for (const f of files) {
+        const ext = extOf(f.name);
+        if (!ALLOWED.includes(ext)) { addRow(f.name, ERRORS.tipo_no_permitido, 'err'); continue; }
+        if (f.size > MAX_BYTES) { addRow(f.name, ERRORS.archivo_muy_grande, 'err'); continue; }
+        const row = addRow(f.name, 'En espera · ' + fmtSize(f.size));
+        if (ext === 'shp') row.querySelector('.file-meta').textContent += ' · Recuerda enviar también .shx y .dbf (mejor en un ZIP)';
+        queue.push({ file: f, row });
+      }
+      next();
+    }
+
+    // Una subida a la vez: así el lead nunca se crea dos veces en paralelo.
+    function next() {
+      if (busy || !queue.length) return;
+      busy = true;
+      const job = queue.shift();
+      upload(job).finally(() => { busy = false; next(); });
+    }
+
+    function upload(job) {
+      const { file, row } = job;
+      row.className = 'file';
+      const meta = row.querySelector('.file-meta');
+      meta.textContent = 'Subiendo… 0%';
+      let bar = row.querySelector('.bar');
+      if (!bar) { bar = document.createElement('div'); bar.className = 'bar'; bar.innerHTML = '<span></span>'; meta.after(bar); }
+      const fill = bar.firstChild;
+      fill.style.width = '0%';
+
+      return new Promise(resolve => {
+        const fd = new FormData();
+        fd.append('file', file, file.name);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/wa/upload');
+        xhr.setRequestHeader('x-wa-token', token);
+        xhr.upload.onprogress = e => {
+          if (!e.lengthComputable) return;
+          const p = Math.round(e.loaded / e.total * 100);
+          fill.style.width = p + '%';
+          meta.textContent = p < 100 ? 'Subiendo… ' + p + '%' : 'Guardando en tu proyecto…';
+        };
+        xhr.onload = () => {
+          let d = {};
+          try { d = JSON.parse(xhr.responseText); } catch (_) {}
+          bar.remove();
+          if (xhr.status === 200 && d.success) {
+            if (d.lead_id) leadId = d.lead_id;
+            row.className = 'file ok';
+            meta.textContent = okText();
+          } else {
+            fail(job, ERRORS[d.error] || 'No se pudo subir. Inténtalo de nuevo.', d.error !== 'enlace_invalido' && d.error !== 'limite_de_archivos');
+          }
+          resolve();
+        };
+        xhr.onerror = () => { bar.remove(); fail(job, 'Se perdió la conexión.', true); resolve(); };
+        xhr.send(fd);
+      });
+    }
+
+    function fail(job, msg, canRetry) {
+      job.row.className = 'file err';
+      const meta = job.row.querySelector('.file-meta');
+      meta.textContent = msg;
+      if (canRetry) {
+        const b = document.createElement('button');
+        b.className = 'retry'; b.type = 'button'; b.textContent = 'Reintentar';
+        b.onclick = () => { queue.push(job); next(); };
+        meta.appendChild(b);
+      }
+    }
+
+    const input = $('fileInput');
+    input.addEventListener('change', () => { const f = [...input.files]; input.value = ''; if (f.length) enqueue(f); });
+    const drop = $('drop');
+    ['dragenter', 'dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+    ['dragleave', 'drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+    drop.addEventListener('drop', e => { if (e.dataTransfer && e.dataTransfer.files.length) enqueue([...e.dataTransfer.files]); });
+
+    init();
+  })();
+  </script>
+</body>
+</html>

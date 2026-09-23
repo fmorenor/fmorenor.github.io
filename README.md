@@ -40,7 +40,8 @@ CartoData/
 ├── functions/            # Cloudflare Pages Functions (backend de X-Ray)
 │   └── api/
 │       ├── chat.js       # Proxy seguro a la API de Claude + tools (lead / cierre)
-│       └── upload.js     # Subida de archivos del lead a CartoFlow
+│       ├── upload.js     # Subida de archivos del lead a CartoFlow
+│       └── wa/           # Carga de archivos desde WhatsApp (link/session/upload)
 │
 ├── assets/
 │   ├── index-*.js        # Bundle React compilado (NO editar)
@@ -124,6 +125,19 @@ Tokens principales (dark = default; `.light` en `<html>` conmuta a claro):
 
 - Crear lead (público): `POST …/functions/v1/submit-landing-lead` (`project_id`, `name`, `institution`).
 - Subir archivo (requiere `x-webhook-secret`): `POST …/functions/v1/upload-lead-file`.
+
+### Archivos desde WhatsApp (Twilio Studio) — `/whatsapp-archivos`
+
+Página móvil **privada** (no está en el menú ni en el sitemap; `noindex`) para que quien llega por el flujo de WhatsApp suba su KML/KMZ/SHP/ZIP (máx. 20 MB c/u). Independiente de X-Ray.
+
+1. Studio llama `POST /api/wa/link` (secreto `WA_LINK_SECRET`) con `phone`, `name`, `company`, `email`, `project`.
+   El servidor busca el lead del número (KV `wa:lead:<tel>`) o lo crea **una vez** en CartoFlow, y devuelve un enlace único `…/whatsapp-archivos#t=<token>` (caduca en `WA_LINK_TTL_HOURS`, 24 h por defecto).
+2. La página lee el enlace con `GET /api/wa/session` (muestra el número enmascarado; no es editable).
+3. Cada archivo va a `POST /api/wa/upload` → `upload-lead-file` con el `lead_id` **del registro del servidor**, nunca del navegador.
+
+- Código: `functions/api/wa/{link,session,upload}.js` + `functions/utils/whatsapp-links.js`.
+- Sin copia en R2: el archivo va directo a CartoFlow.
+- Requiere: KV binding **`WA_LINKS`** y variable secreta **`WA_LINK_SECRET`** (más `CARTOFLOW_PROJECT_ID` y `SOCIAL_WEBHOOK_SECRET`, ya existentes). Opcionales: `WA_LINK_TTL_HOURS`, `WA_LEAD_SOURCE` (por defecto `WhatsApp`; si CartoFlow lo rechaza se reintenta con `Web`), `WA_PUBLIC_BASE_URL`.
 
 ### Variables de entorno (Cloudflare Pages, ya configuradas)
 
