@@ -455,7 +455,7 @@
           const categoryLower = article.category.toLowerCase().replace(/ /g, '');
 
           const card = document.createElement('a');
-          card.href = `/blog/post?id=${article.id}`;
+          card.href = `/blog/${encodeURIComponent(article.slug)}`;
           card.className = 'blog-article-card';
           card.setAttribute('data-category', categoryLower);
           card.innerHTML = `

@@ -14,10 +14,7 @@
       const params = new URLSearchParams(window.location.search);
       const postId = params.get('id');
 
-      if (!postId) {
-        document.getElementById('postContainer').innerHTML = '<div style="padding: 60px 20px; text-align: center; color: #666;"><p>Post no encontrado</p></div>';
-        return;
-      }
+      if (!postId) return;
 
       fetch(`/api/public/posts/${postId}`)
         .then(res => {
