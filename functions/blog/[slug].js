@@ -23,6 +23,9 @@ export async function onRequest({ request, env, params }) {
     .first();
 
   if (!article) {
+    const legacy = await env.ASSETS.fetch(new URL(`/blog/${slug}.html`, request.url));
+    if (legacy.ok) return legacy;
+
     const notFound = await env.ASSETS.fetch(new URL('/404.html', request.url));
     return new Response(notFound.body, { status: 404, headers: notFound.headers });
   }
