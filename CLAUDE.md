@@ -45,6 +45,11 @@ Sitio de CartoData: **frontend estático** (bundle React en `index.html` + pági
 - Tools del modelo: `enviar_lead_cartoflow`, `finalizar_conversacion`. Lead → CartoFlow/Supabase.
 - 🔒 **Nunca** poner `ANTHROPIC_API_KEY` ni secretos en el repo (sitio público). Ya están como env vars en Cloudflare Pages: `ANTHROPIC_API_KEY`, `CARTOFLOW_PROJECT_ID`, `SOCIAL_WEBHOOK_SECRET`.
 
+## Archivos por WhatsApp (Twilio Studio)
+
+- `whatsapp-archivos.html` + `functions/api/wa/*` + `functions/utils/whatsapp-links.js`. Página privada (noindex, fuera del menú/sitemap). **No** reutiliza ni cambia `upload.js`/`chat.js` de X-Ray.
+- Requiere KV binding `WA_LINKS` y secreto `WA_LINK_SECRET` en Cloudflare Pages. Detalle en `README.md`.
+
 ## Notas de git
 
 - Remoto: `github.com/fmorenor/cartodata-web` (el push muestra un aviso de "repository moved" a `fmorenor.github.io` — es inofensivo, el push llega bien y Cloudflare despliega).

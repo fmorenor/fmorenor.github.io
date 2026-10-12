@@ -20,6 +20,9 @@ const MAX_CHARS_TOTAL = 20000;
 const CARTOFLOW_URL =
   "https://nxzoiesnejqaofgwxlde.supabase.co/functions/v1/submit-landing-lead";
 
+// Herramienta pública de CartoData para dibujar el área de interés y descargarla como KML.
+const KML_TOOL_URL = "https://apps.cartodata.com/plus/toKML/index.html";
+
 // Enlaces que ofrece el asistente cuando la persona no tiene archivo/especificaciones.
 // Deja "" en los que aún no tengas; solo se ofrecen las opciones con enlace configurado.
 const LINKS = {
@@ -62,8 +65,12 @@ Flujo de la conversación (síguelo con naturalidad, sin que suene a checklist):
 1) El saludo inicial ya dio la bienvenida y pidió los datos de contacto (nombre, correo o teléfono, y empresa). Cuando la persona los comparta, agradécele con calidez usando su nombre.
 2) Pregúntale por su proyecto: si tiene una necesidad específica o si prefiere que le compartas ejemplos de las soluciones que ofrecemos.
 3) Cuando describa lo que necesita, reacciona con entusiasmo y confírmale que sí podemos apoyarlo.
-4) Pregúntale si tiene definida su área de interés en algún archivo (SHP, KMZ o KML) y si cuenta con especificaciones técnicas, o si prefiere que las desarrollemos en conjunto.
-5) Si NO tiene el archivo ni las especificaciones, tranquilízalo ("no te preocupes, sé que puede sonar complicado, pero no lo es; con gusto te acompañamos") y ofrécele estas opciones (compártelas con sus enlaces tal cual, sin modificarlos):
+4) Pregúntale si ya cuenta con un archivo KML (o KMZ/SHP) con su área de interés. Explícale que es MUY importante, porque con su área delimitada podemos prepararle una propuesta mucho más exacta.
+   - Si SÍ lo tiene: invítalo a subirlo en este mismo chat con el botón del clip 📎.
+   - Si NO lo tiene: dile que es muy sencillo crearlo y compártele esta herramienta gratuita de CartoData (el enlace tal cual, sin modificarlo): ${KML_TOOL_URL}
+     Explícale los pasos: 1) abre la herramienta y dibuja tu área de interés, 2) descarga el archivo KML, 3) súbelo aquí en el chat con el botón del clip 📎.
+   - Después pregúntale si cuenta con especificaciones técnicas o si prefiere que las desarrollemos en conjunto.
+5) Si no logra generar el archivo o NO tiene especificaciones, tranquilízalo ("no te preocupes, sé que puede sonar complicado, pero no lo es; con gusto te acompañamos") y ofrécele estas opciones (compártelas con sus enlaces tal cual, sin modificarlos):
 ${buildOptions()}
 
 Archivos adjuntos (importante, léelo bien):
@@ -86,7 +93,7 @@ Nunca cierres la conversación de forma abrupta:
 const LEAD_TOOL = {
   name: "enviar_lead_cartoflow",
   description:
-    "Registra el lead en el CRM de CartoData (CartoFlow). Llama a esta herramienta ÚNICAMENTE cuando ya tienes, como mínimo: el nombre del contacto, la institución/empresa, y un medio de contacto (email O teléfono), y el usuario ha confirmado explícitamente que quiere que el equipo lo contacte. No la llames antes de confirmar. No inventes datos que el usuario no haya proporcionado.",
+    "Registra el lead en el CRM de CartoData (CartoFlow). Llámala UNA sola vez, en cuanto tengas como mínimo: el nombre del contacto, la institución/empresa y un medio de contacto (email O teléfono). No hace falta pedir permiso formal: la persona compartió sus datos para recibir su cotización. No inventes datos que el usuario no haya proporcionado.",
   input_schema: {
     type: "object",
     properties: {
@@ -182,6 +189,13 @@ export async function onRequestPost({ request, env }) {
     while (messages.length && messages[0].role !== "user") messages.shift();
     if (messages.length === 0) return json({ reply: "No recibí ningún mensaje." }, 400);
 
+    // El servidor no guarda estado entre peticiones y el historial que reenvía
+    // el navegador solo trae texto (sin los tool_use). Sin esta señal el modelo
+    // no "recuerda" que ya registró el lead y puede volver a llamar a la
+    // herramienta, creando un lead duplicado en CartoFlow.
+    const leadAlreadyRegistered =
+      typeof body.lead_uuid === "string" && body.lead_uuid.trim() !== "";
+
     let leadSubmitted = false;
     let leadId = null;
     let leadUuid = null;
@@ -190,7 +204,7 @@ export async function onRequestPost({ request, env }) {
     const replyParts = [];
 
     for (let i = 0; i < 5; i++) {
-      const resp = await callClaude(env, messages);
+      const resp = await callClaude(env, messages, leadAlreadyRegistered || leadSubmitted);
       const turnText = (resp.content || [])
         .filter((b) => b.type === "text")
         .map((b) => b.text)
@@ -204,6 +218,10 @@ export async function onRequestPost({ request, env }) {
         for (const block of resp.content) {
           if (block.type !== "tool_use") continue;
           if (block.name === "enviar_lead_cartoflow") {
+            if (leadAlreadyRegistered || leadSubmitted) {
+              results.push({ type: "tool_result", tool_use_id: block.id, content: "El lead ya estaba registrado; no se volvió a enviar." });
+              continue;
+            }
             const r = await submitLead(env, block.input || {});
             if (r.ok) {
               leadSubmitted = true;
@@ -305,7 +323,11 @@ async function verifyTurnstile(env, request, token) {
   }
 }
 
-async function callClaude(env, messages) {
+const LEAD_REGISTERED_NOTE = `
+
+Estado actual: el lead de esta persona YA ESTÁ REGISTRADO en CartoFlow. No intentes registrarlo de nuevo; continúa la conversación con normalidad.`;
+
+async function callClaude(env, messages, leadRegistered) {
   const r = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -316,8 +338,8 @@ async function callClaude(env, messages) {
     body: JSON.stringify({
       model: MODEL,
       max_tokens: 1024,
-      system: SYSTEM_PROMPT,
-      tools: [LEAD_TOOL, FINALIZE_TOOL],
+      system: leadRegistered ? SYSTEM_PROMPT + LEAD_REGISTERED_NOTE : SYSTEM_PROMPT,
+      tools: leadRegistered ? [FINALIZE_TOOL] : [LEAD_TOOL, FINALIZE_TOOL],
       messages,
     }),
   });

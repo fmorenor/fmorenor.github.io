@@ -71,3 +71,11 @@
 /favicon.ico
   Cache-Control: public, max-age=604800
   Content-Type: image/x-icon
+
+# ── Carga de archivos desde WhatsApp (Twilio Studio) ─────────────────────
+# Página privada: se abre solo con el enlace temporal que genera
+# /api/wa/link. Ni indexar ni cachear (el estado depende del token).
+/whatsapp-archivos
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+  Referrer-Policy: no-referrer

@@ -15,13 +15,11 @@
   <meta property="og:site_name" content="CartoData" />
   <meta property="og:image" content="https://www.cartodata.com/images/og-blog.jpg" />
 
-  <script src="../shared.js" defer></script>
+  <script src="../shared.js?v=2" defer></script>
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-    body { background: #050816; color: #f8fafc; font-family: 'DM Sans', system-ui, sans-serif; }
-    img { display: block; max-width: 100%; }
+    /* site.css (inyectado desde shared.js) maneja body, html, img y responde al tema */
+    /* Solo especificamos estilos específicos del blog aquí */
 
     /* ── HERO DEL BLOG ── */
     .blog-index-hero {
@@ -68,6 +66,9 @@
       color: rgba(255, 255, 255, 0.5);
       margin-bottom: 1rem;
     }
+    html.light .blog-index-eyebrow {
+      color: rgba(15, 23, 42, 0.5);
+    }
 
     .blog-index-h1 {
       font-size: clamp(2.5rem, 6vw, 4rem);
@@ -75,6 +76,9 @@
       line-height: 1.2;
       color: #fff;
       margin-bottom: 1rem;
+    }
+    html.light .blog-index-h1 {
+      color: #0f172a;
     }
 
     .blog-index-h1 strong {
@@ -86,6 +90,9 @@
       font-weight: 300;
       line-height: 1.6;
       color: rgba(255, 255, 255, 0.7);
+    }
+    html.light .blog-index-subtitle {
+      color: rgba(15, 23, 42, 0.6);
     }
 
     /* ── CONTENEDOR PRINCIPAL ── */
@@ -132,6 +139,21 @@
       color: #fff;
     }
 
+    /* Tema claro: filtros */
+    html.light .blog-filters {
+      border-bottom-color: rgba(0, 0, 0, 0.1);
+    }
+    html.light .blog-filter-btn {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.12);
+      color: rgba(15, 23, 42, 0.6);
+    }
+    html.light .blog-filter-btn:hover {
+      background: rgba(0, 0, 0, 0.08);
+      border-color: rgba(0, 0, 0, 0.2);
+      color: #0f172a;
+    }
+
     /* ── GRID DE ARTÍCULOS ── */
     .blog-articles-grid {
       display: grid;
@@ -156,6 +178,32 @@
       background: rgba(255, 255, 255, 0.06);
       border-color: rgba(255, 255, 255, 0.15);
       transform: translateY(-6px);
+    }
+
+    /* Tema claro: tarjetas de artículos */
+    html.light .blog-article-card {
+      background: rgba(0, 0, 0, 0.02);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+    html.light .blog-article-card:hover {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+    html.light .blog-article-image {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    html.light .blog-article-category {
+      background: rgba(59, 91, 219, 0.1);
+      color: #2563eb;
+    }
+    html.light .blog-article-date {
+      color: rgba(15, 23, 42, 0.5);
+    }
+    html.light .blog-article-title {
+      color: #0f172a;
+    }
+    html.light .blog-article-excerpt {
+      color: rgba(15, 23, 42, 0.6);
     }
 
     .blog-article-image {
@@ -237,6 +285,11 @@
 
     .blog-empty p {
       font-size: 1.1rem;
+    }
+
+    /* Tema claro: estado vacío */
+    html.light .blog-empty {
+      color: rgba(15, 23, 42, 0.5);
     }
 
     /* ── RESPONSIVE ── */
