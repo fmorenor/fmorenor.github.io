@@ -67,7 +67,7 @@ async function handlePUT(request, env, postId) {
     }
 
     const body = await request.json();
-    const { title, content, category, excerpt, image_url, author, status } = body;
+    const { slug, title, content, category, excerpt, image_url, author, status } = body;
 
     const article = await env.DB.prepare('SELECT * FROM articles WHERE id = ?')
       .bind(postId)
@@ -78,6 +78,19 @@ async function handlePUT(request, env, postId) {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
       });
+    }
+
+    const newSlug = slug || article.slug;
+    if (newSlug !== article.slug) {
+      const clash = await env.DB.prepare('SELECT id FROM articles WHERE slug = ? AND id != ?')
+        .bind(newSlug, postId)
+        .first();
+      if (clash) {
+        return new Response(JSON.stringify({ error: 'Slug already exists' }), {
+          status: 409,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
     }
 
     const newTitle = title || article.title || '';
@@ -96,10 +109,10 @@ async function handlePUT(request, env, postId) {
 
     const { success } = await env.DB.prepare(`
       UPDATE articles
-      SET title = ?, content = ?, category = ?, excerpt = ?, image_url = ?, author = ?, status = ?, published_at = ?, updated_at = ?
+      SET slug = ?, title = ?, content = ?, category = ?, excerpt = ?, image_url = ?, author = ?, status = ?, published_at = ?, updated_at = ?
       WHERE id = ?
     `).bind(
-      newTitle, newContent, newCategory, newExcerpt, newImageUrl, newAuthor, newStatus, newPublishedAt, newUpdatedAt, postId
+      newSlug, newTitle, newContent, newCategory, newExcerpt, newImageUrl, newAuthor, newStatus, newPublishedAt, newUpdatedAt, postId
     ).run();
 
     if (!success) {
