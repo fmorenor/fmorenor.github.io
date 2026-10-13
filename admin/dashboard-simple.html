@@ -393,7 +393,7 @@
           <label>Color</label>
           <div style="display: flex; gap: 10px;">
             <button type="button" class="cta-swatch" data-color="#3b5bdb" style="flex: 1; padding: 10px; border-radius: 6px; border: 3px solid #3b5bdb; background: #3b5bdb; color: #fff; font-weight: 600; cursor: pointer;">Azul</button>
-            <button type="button" class="cta-swatch" data-color="#1e40af" style="flex: 1; padding: 10px; border-radius: 6px; border: 3px solid transparent; background: #1e40af; color: #fff; font-weight: 600; cursor: pointer;">Azul oscuro</button>
+            <button type="button" class="cta-swatch" data-color="#a16207" style="flex: 1; padding: 10px; border-radius: 6px; border: 3px solid transparent; background: #a16207; color: #fff; font-weight: 600; cursor: pointer;">Dorado</button>
           </div>
         </div>
         <div class="modal-footer">
@@ -1004,7 +1004,7 @@ function insertCta() {
   }
 
   const editor = document.getElementById('editor');
-  const html = `<a href="${escapeHtml(url)}" class="cta-button" style="display: inline-block; padding: 12px 24px; background: ${ctaColor}; color: #ffffff; border-radius: 6px; font-weight: 600; text-decoration: none;">${escapeHtml(text)}</a>&nbsp;`;
+  const html = `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="cta-button" style="display: inline-block; padding: 12px 24px; background: ${ctaColor}; color: #ffffff; border-radius: 6px; font-weight: 600; text-decoration: none;">${escapeHtml(text)}</a>&nbsp;`;
 
   editor.focus();
   if (ctaSavedRange) {
