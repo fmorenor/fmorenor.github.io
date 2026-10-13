@@ -13,7 +13,7 @@ export async function onRequest({ request, env, params }) {
     return new Response('Method not allowed', { status: 405 });
   }
 
-  const slug = params.slug;
+  const slug = decodeURIComponent(params.slug);
   if (slug.includes('.')) {
     return env.ASSETS.fetch(request);
   }
