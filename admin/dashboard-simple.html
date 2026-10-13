@@ -774,9 +774,22 @@ document.getElementById('cancelBtn').addEventListener('click', () => {
   document.getElementById('editorModal').classList.remove('active');
 });
 
+function slugify(text) {
+  return text
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 document.getElementById('savePostBtn').addEventListener('click', async () => {
   const title = document.getElementById('postTitle').value;
-  const slug = document.getElementById('postSlug').value || title.toLowerCase().replace(/\s+/g, '-');
+  const slug = slugify(document.getElementById('postSlug').value || title);
+  if (!slug) {
+    alert('No se pudo generar un slug válido. Escribe uno en el campo Slug.');
+    return;
+  }
   const category = document.getElementById('postCategory').value;
   const status = document.getElementById('postStatus').value;
   const imageUrl = document.getElementById('postImage').value;
