@@ -367,6 +367,22 @@
       .editor-btn:active {
         background: #e8f0ff;
       }
+      #editor img { max-width: 100%; height: auto; }
+      #editor img.img-left { float: left; margin: 0.5rem 1.5rem 1rem 0; }
+      #editor img.img-right { float: right; margin: 0.5rem 0 1rem 1.5rem; }
+      #editor img.img-center { display: block; margin: 1rem auto; }
+      .img-tools-btn {
+        background: transparent;
+        border: none;
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .img-tools-btn:hover { background: rgba(255,255,255,0.15); }
+      .img-tools-sep { width: 1px; background: rgba(255,255,255,0.25); margin: 4px 2px; }
     </style>
 
     <div class="form-group">
@@ -375,6 +391,18 @@
         <button type="button" id="galleryPickerBtn" style="background: none; border: none; color: #0066cc; cursor: pointer; padding: 4px 8px; font-size: 12px; text-decoration: underline;">📷 Galería</button>
       </div>
       <input type="text" id="postImage" placeholder="https://...">
+    </div>
+
+    <!-- Image tools (aparece al seleccionar una imagen en el editor) -->
+    <div id="imgTools" style="display: none; position: fixed; z-index: 1200; background: #1f2937; border-radius: 6px; padding: 4px; gap: 2px; align-items: center; box-shadow: 0 6px 18px rgba(0,0,0,0.3);">
+      <button type="button" class="img-tools-btn" data-align="left" title="Alinear a la izquierda">⬅ Izq</button>
+      <button type="button" class="img-tools-btn" data-align="center" title="Centrar">▣ Centro</button>
+      <button type="button" class="img-tools-btn" data-align="right" title="Alinear a la derecha">Der ➡</button>
+      <div class="img-tools-sep"></div>
+      <button type="button" class="img-tools-btn" data-size="25" title="25% del ancho">25%</button>
+      <button type="button" class="img-tools-btn" data-size="50" title="50% del ancho">50%</button>
+      <button type="button" class="img-tools-btn" data-size="75" title="75% del ancho">75%</button>
+      <button type="button" class="img-tools-btn" data-size="100" title="Ancho completo">100%</button>
     </div>
 
     <!-- CTA Modal -->
@@ -1085,6 +1113,61 @@ document.getElementById('galleryPickerModal').addEventListener('click', (e) => {
     document.getElementById('galleryPickerModal').style.display = 'none';
   }
 });
+
+// Image tools
+let selectedImg = null;
+const imgTools = document.getElementById('imgTools');
+
+function hideImageTools() {
+  imgTools.style.display = 'none';
+  selectedImg = null;
+}
+
+function showImageTools(img) {
+  selectedImg = img;
+  imgTools.style.display = 'flex';
+  const r = img.getBoundingClientRect();
+  const top = r.top - imgTools.offsetHeight - 8;
+  imgTools.style.top = (top > 8 ? top : r.bottom + 8) + 'px';
+  imgTools.style.left = Math.max(8, r.left) + 'px';
+}
+
+function setImageAlign(align) {
+  if (!selectedImg) return;
+  selectedImg.classList.remove('img-left', 'img-center', 'img-right');
+  selectedImg.classList.add(`img-${align}`);
+}
+
+function setImageSize(percent) {
+  if (!selectedImg) return;
+  selectedImg.style.width = percent + '%';
+}
+
+document.getElementById('editor').addEventListener('click', (e) => {
+  if (e.target.tagName === 'IMG') {
+    showImageTools(e.target);
+  } else {
+    hideImageTools();
+  }
+});
+
+document.addEventListener('mousedown', (e) => {
+  if (!e.target.closest('#imgTools') && e.target.tagName !== 'IMG') {
+    hideImageTools();
+  }
+});
+
+imgTools.addEventListener('mousedown', (e) => e.preventDefault());
+imgTools.addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  if (btn.dataset.align) setImageAlign(btn.dataset.align);
+  if (btn.dataset.size) setImageSize(btn.dataset.size);
+});
+
+window.addEventListener('scroll', hideImageTools, true);
+window.addEventListener('resize', hideImageTools);
+document.execCommand('enableObjectResizing', false, 'false');
 
 // CTA button
 let ctaSavedRange = null;
