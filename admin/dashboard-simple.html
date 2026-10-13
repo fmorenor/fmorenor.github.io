@@ -338,7 +338,7 @@
           <button type="button" class="editor-btn" onclick="execFormat('insertUnorderedList')" title="Lista">• Lista</button>
           <div style="width: 1px; background: #ddd; margin: 0 4px;"></div>
           <button type="button" class="editor-btn" onclick="insertLink()" title="Insertar enlace">🔗 Enlace</button>
-          <button type="button" class="editor-btn" onclick="insertImage()" title="Insertar imagen">🖼️ Imagen</button>
+          <button type="button" class="editor-btn" onclick="openImageModal()" title="Insertar imagen">🖼️ Imagen</button>
           <button type="button" class="editor-btn" onclick="insertYouTube()" title="Insertar video YouTube">▶️ YouTube</button>
           <button type="button" class="editor-btn" onclick="openCtaModal()" title="Insertar botón (CTA)">🔘 Botón</button>
           <div style="width: 1px; background: #ddd; margin: 0 4px;"></div>
@@ -399,6 +399,34 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" id="ctaCancel">Cancelar</button>
           <button type="button" class="btn btn-primary" id="ctaInsert">Insertar botón</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editor Image Modal -->
+    <div id="imgModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1100; align-items: center; justify-content: center;">
+      <div style="background: white; border-radius: 8px; padding: 24px; width: 90%; max-width: 720px; max-height: 85vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="margin: 0;">Insertar imagen</h3>
+          <button type="button" id="imgClose" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+        </div>
+        <div class="form-group" style="margin-top: 16px;">
+          <label>Desde una URL</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="imgUrl" placeholder="https://...">
+            <button type="button" class="btn btn-primary" id="imgUrlInsert" style="width: auto; white-space: nowrap;">Insertar</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subir a la galería</label>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="file" id="imgFile" accept="image/*">
+            <button type="button" class="btn btn-primary" id="imgUpload" style="width: auto; white-space: nowrap;">Subir e insertar</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Elegir de la galería</label>
+          <div id="imgGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; max-height: 300px; overflow-y: auto;"></div>
         </div>
       </div>
     </div>
@@ -875,13 +903,109 @@ function insertLink() {
   document.getElementById('editor').focus();
 }
 
-function insertImage() {
-  const url = prompt('Ingresa la URL de la imagen:');
-  if (url) {
-    document.execCommand('insertImage', false, url);
-  }
+function saveEditorSelection() {
+  const editor = document.getElementById('editor');
+  const sel = window.getSelection();
+  return sel && sel.rangeCount && editor.contains(sel.getRangeAt(0).commonAncestorContainer)
+    ? sel.getRangeAt(0).cloneRange()
+    : null;
+}
+
+function restoreEditorSelection(range) {
+  document.getElementById('editor').focus();
+  if (!range) return;
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+let imgSavedRange = null;
+
+function openImageModal() {
+  imgSavedRange = saveEditorSelection();
+  document.getElementById('imgUrl').value = '';
+  document.getElementById('imgFile').value = '';
+  document.getElementById('imgModal').style.display = 'flex';
+  loadEditorImageGrid();
+}
+
+function closeImageModal() {
+  document.getElementById('imgModal').style.display = 'none';
+}
+
+function insertImageAtCursor(url) {
+  restoreEditorSelection(imgSavedRange);
+  document.execCommand('insertImage', false, url);
+  closeImageModal();
   document.getElementById('editor').focus();
 }
+
+async function loadEditorImageGrid() {
+  const grid = document.getElementById('imgGrid');
+  const token = getToken();
+  grid.innerHTML = '<p>Cargando...</p>';
+  try {
+    const res = await fetch(`${API_BASE}/images`, {
+      headers: { 'Authorization': `Bearer ${token}`, 'X-Admin-Password': token }
+    });
+    const data = await res.json();
+    const images = data.images || [];
+    grid.innerHTML = images.length ? '' : '<p>No hay imágenes en la galería</p>';
+    images.forEach(img => {
+      const thumb = document.createElement('img');
+      thumb.src = img.url;
+      thumb.alt = img.filename;
+      thumb.title = img.filename;
+      thumb.style.cssText = 'width: 100%; height: 100px; object-fit: cover; border-radius: 6px; cursor: pointer; border: 2px solid transparent;';
+      thumb.addEventListener('click', () => insertImageAtCursor(img.url));
+      grid.appendChild(thumb);
+    });
+  } catch (e) {
+    grid.innerHTML = '<p>Error cargando imágenes</p>';
+  }
+}
+
+async function uploadEditorImage() {
+  const file = document.getElementById('imgFile').files[0];
+  if (!file) {
+    alert('Selecciona una imagen');
+    return;
+  }
+  const token = getToken();
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('category', 'blog');
+
+  const btn = document.getElementById('imgUpload');
+  btn.disabled = true;
+  btn.textContent = 'Subiendo...';
+  try {
+    const res = await fetch(`${API_BASE}/images`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'X-Admin-Password': token },
+      body: formData
+    });
+    const data = await res.json();
+    if (!res.ok || !data.url) throw new Error(data.error || 'No se pudo subir la imagen');
+    insertImageAtCursor(data.url);
+  } catch (e) {
+    alert('Error: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Subir e insertar';
+  }
+}
+
+document.getElementById('imgClose').addEventListener('click', closeImageModal);
+document.getElementById('imgUrlInsert').addEventListener('click', () => {
+  const url = document.getElementById('imgUrl').value.trim();
+  if (!url) {
+    alert('Escribe la URL de la imagen');
+    return;
+  }
+  insertImageAtCursor(url);
+});
+document.getElementById('imgUpload').addEventListener('click', uploadEditorImage);
 
 function insertYouTube() {
   const url = prompt('Ingresa la URL del video de YouTube:\n(ej: https://www.youtube.com/watch?v=dQw4w9WgXcQ o https://www.youtube.com/shorts/VIDEO_ID)');
@@ -976,11 +1100,7 @@ function setCtaColor(color) {
 }
 
 function openCtaModal() {
-  const editor = document.getElementById('editor');
-  const sel = window.getSelection();
-  ctaSavedRange = sel && sel.rangeCount && editor.contains(sel.getRangeAt(0).commonAncestorContainer)
-    ? sel.getRangeAt(0).cloneRange()
-    : null;
+  ctaSavedRange = saveEditorSelection();
   document.getElementById('ctaText').value = '';
   document.getElementById('ctaUrl').value = '';
   setCtaColor('#3b5bdb');
@@ -1003,18 +1123,12 @@ function insertCta() {
     url = 'https://' + url;
   }
 
-  const editor = document.getElementById('editor');
   const html = `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="cta-button" style="display: inline-block; padding: 12px 24px; background: ${ctaColor}; color: #ffffff; border-radius: 6px; font-weight: 600; text-decoration: none;">${escapeHtml(text)}</a>&nbsp;`;
 
-  editor.focus();
-  if (ctaSavedRange) {
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(ctaSavedRange);
-  }
+  restoreEditorSelection(ctaSavedRange);
   document.execCommand('insertHTML', false, html);
   closeCtaModal();
-  editor.focus();
+  document.getElementById('editor').focus();
 }
 
 document.querySelectorAll('.cta-swatch').forEach(btn => {
