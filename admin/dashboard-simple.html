@@ -340,6 +340,7 @@
           <button type="button" class="editor-btn" onclick="insertLink()" title="Insertar enlace">🔗 Enlace</button>
           <button type="button" class="editor-btn" onclick="insertImage()" title="Insertar imagen">🖼️ Imagen</button>
           <button type="button" class="editor-btn" onclick="insertYouTube()" title="Insertar video YouTube">▶️ YouTube</button>
+          <button type="button" class="editor-btn" onclick="openCtaModal()" title="Insertar botón (CTA)">🔘 Botón</button>
           <div style="width: 1px; background: #ddd; margin: 0 4px;"></div>
           <button type="button" class="editor-btn" onclick="execFormat('removeFormat')" title="Limpiar formato">✖️ Limpiar</button>
         </div>
@@ -374,6 +375,32 @@
         <button type="button" id="galleryPickerBtn" style="background: none; border: none; color: #0066cc; cursor: pointer; padding: 4px 8px; font-size: 12px; text-decoration: underline;">📷 Galería</button>
       </div>
       <input type="text" id="postImage" placeholder="https://...">
+    </div>
+
+    <!-- CTA Modal -->
+    <div id="ctaModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1100; align-items: center; justify-content: center;">
+      <div style="background: white; border-radius: 8px; padding: 24px; width: 90%; max-width: 420px;">
+        <h3 style="margin-top: 0;">Insertar botón</h3>
+        <div class="form-group">
+          <label>Texto del botón</label>
+          <input type="text" id="ctaText" placeholder="Ver reporte">
+        </div>
+        <div class="form-group">
+          <label>URL destino</label>
+          <input type="text" id="ctaUrl" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>Color</label>
+          <div style="display: flex; gap: 10px;">
+            <button type="button" class="cta-swatch" data-color="#3b5bdb" style="flex: 1; padding: 10px; border-radius: 6px; border: 3px solid #3b5bdb; background: #3b5bdb; color: #fff; font-weight: 600; cursor: pointer;">Azul</button>
+            <button type="button" class="cta-swatch" data-color="#1e40af" style="flex: 1; padding: 10px; border-radius: 6px; border: 3px solid transparent; background: #1e40af; color: #fff; font-weight: 600; cursor: pointer;">Azul oscuro</button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="ctaCancel">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="ctaInsert">Insertar botón</button>
+        </div>
+      </div>
     </div>
 
     <!-- Gallery Picker Modal -->
@@ -934,6 +961,67 @@ document.getElementById('galleryPickerModal').addEventListener('click', (e) => {
     document.getElementById('galleryPickerModal').style.display = 'none';
   }
 });
+
+// CTA button
+let ctaSavedRange = null;
+let ctaColor = '#3b5bdb';
+
+const escapeHtml = (value) => value.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+function setCtaColor(color) {
+  ctaColor = color;
+  document.querySelectorAll('.cta-swatch').forEach(btn => {
+    btn.style.borderColor = btn.dataset.color === color ? '#0f172a' : 'transparent';
+  });
+}
+
+function openCtaModal() {
+  const editor = document.getElementById('editor');
+  const sel = window.getSelection();
+  ctaSavedRange = sel && sel.rangeCount && editor.contains(sel.getRangeAt(0).commonAncestorContainer)
+    ? sel.getRangeAt(0).cloneRange()
+    : null;
+  document.getElementById('ctaText').value = '';
+  document.getElementById('ctaUrl').value = '';
+  setCtaColor('#3b5bdb');
+  document.getElementById('ctaModal').style.display = 'flex';
+  setTimeout(() => document.getElementById('ctaText').focus(), 50);
+}
+
+function closeCtaModal() {
+  document.getElementById('ctaModal').style.display = 'none';
+}
+
+function insertCta() {
+  const text = document.getElementById('ctaText').value.trim();
+  let url = document.getElementById('ctaUrl').value.trim();
+  if (!text || !url) {
+    alert('Escribe el texto y la URL del botón');
+    return;
+  }
+  if (!/^(https?:\/\/|\/|mailto:)/.test(url)) {
+    url = 'https://' + url;
+  }
+
+  const editor = document.getElementById('editor');
+  const html = `<a href="${escapeHtml(url)}" class="cta-button" style="display: inline-block; padding: 12px 24px; background: ${ctaColor}; color: #ffffff; border-radius: 6px; font-weight: 600; text-decoration: none;">${escapeHtml(text)}</a>&nbsp;`;
+
+  editor.focus();
+  if (ctaSavedRange) {
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(ctaSavedRange);
+  }
+  document.execCommand('insertHTML', false, html);
+  closeCtaModal();
+  editor.focus();
+}
+
+document.querySelectorAll('.cta-swatch').forEach(btn => {
+  btn.addEventListener('click', () => setCtaColor(btn.dataset.color));
+});
+document.getElementById('ctaCancel').addEventListener('click', closeCtaModal);
+document.getElementById('ctaInsert').addEventListener('click', insertCta);
 
 // Init
 if (isLoggedIn()) {
