@@ -793,7 +793,8 @@ document.getElementById('savePostBtn').addEventListener('click', async () => {
   const category = document.getElementById('postCategory').value;
   const status = document.getElementById('postStatus').value;
   const imageUrl = document.getElementById('postImage').value;
-  const content = document.getElementById('editor').innerHTML;
+  openLinksInNewTab();
+  const content = document.getElementById("editor").innerHTML;
 
   if (!title || !content || !category) {
     alert('Título, categoría y contenido son requeridos');
@@ -936,12 +937,20 @@ function execFormat(cmd, val = null) {
   document.getElementById('editor').focus();
 }
 
+function openLinksInNewTab() {
+  document.querySelectorAll("#editor a").forEach(a => {
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+  });
+}
+
 function insertLink() {
-  const url = prompt('Ingresa la URL:');
+  const url = prompt("Ingresa la URL:");
   if (url) {
-    document.execCommand('createLink', false, url);
+    document.execCommand("createLink", false, url);
+    openLinksInNewTab();
   }
-  document.getElementById('editor').focus();
+  document.getElementById("editor").focus();
 }
 
 function saveEditorSelection() {
