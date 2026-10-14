@@ -8,6 +8,20 @@ const formatDate = (value) => {
   return `${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()}`;
 };
 
+const navCard = (post, label, direction) => {
+  if (!post) return '<span></span>';
+  const bg = post.image_url
+    ? `background-image: url('${escapeHtml(post.image_url)}');`
+    : 'background: linear-gradient(135deg, #1a3a52 0%, #0f2a3d 100%);';
+  return `<a class="post-nav-card post-nav-${direction}" href="/blog/${encodeURIComponent(post.slug)}">
+        <div class="post-nav-img" style="${bg}"></div>
+        <div class="post-nav-body">
+          <span class="post-nav-label">${label}</span>
+          <span class="post-nav-title">${escapeHtml(post.title)}</span>
+        </div>
+      </a>`;
+};
+
 export async function onRequest({ request, env, params }) {
   if (request.method !== 'GET') {
     return new Response('Method not allowed', { status: 405 });
@@ -29,6 +43,19 @@ export async function onRequest({ request, env, params }) {
     const notFound = await env.ASSETS.fetch(new URL('/404.html', request.url));
     return new Response(notFound.body, { status: 404, headers: notFound.headers });
   }
+
+  const pubDate = article.published_at || article.created_at;
+  const [prev, next] = await Promise.all([
+    env.DB.prepare("SELECT slug, title, image_url FROM articles WHERE status = 'published' AND COALESCE(published_at, created_at) < ? ORDER BY COALESCE(published_at, created_at) DESC LIMIT 1")
+      .bind(pubDate)
+      .first(),
+    env.DB.prepare("SELECT slug, title, image_url FROM articles WHERE status = 'published' AND COALESCE(published_at, created_at) > ? ORDER BY COALESCE(published_at, created_at) ASC LIMIT 1")
+      .bind(pubDate)
+      .first(),
+  ]);
+  const postNav = prev || next
+    ? `<nav class="post-nav">${navCard(prev, '← Anterior', 'prev')}${navCard(next, 'Siguiente →', 'next')}</nav>`
+    : '';
 
   const page = await env.ASSETS.fetch(new URL('/blog/post.html', request.url));
   const title = `${article.title} · Blog — CartoData`;
@@ -55,7 +82,8 @@ export async function onRequest({ request, env, params }) {
     <article class="blog-container">
       <h1 class="blog-h1">${escapeHtml(article.title)}</h1>
       <div class="blog-content">${contentHtml}</div>
-    </article>`;
+    </article>
+    ${postNav}`;
 
   const head = `
     <link rel="canonical" href="${escapeHtml(canonical)}" />

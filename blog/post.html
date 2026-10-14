@@ -181,6 +181,59 @@
       border-radius: 8px !important;
     }
 
+    /* ── NAVEGACIÓN ENTRE POSTS ── */
+    .post-nav {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 6vw, 4rem) clamp(3rem, 8vw, 5rem);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .post-nav-card {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.03);
+      transition: transform 300ms, border-color 300ms;
+    }
+    .post-nav-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(125, 211, 252, 0.4);
+    }
+    .post-nav-img {
+      height: 110px;
+      background-size: cover;
+      background-position: center;
+      background-color: #0f2a3d;
+    }
+    .post-nav-body {
+      padding: 1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .post-nav-next .post-nav-body { align-items: flex-end; text-align: right; }
+    .post-nav-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #7dd3fc;
+    }
+    .post-nav-title {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.35;
+      color: #fff;
+    }
+    @media (max-width: 640px) {
+      .post-nav { grid-template-columns: 1fr; }
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       .blog-hero { min-height: 50vh !important; }
