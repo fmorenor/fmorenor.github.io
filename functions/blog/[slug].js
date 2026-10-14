@@ -42,20 +42,19 @@ export async function onRequest({ request, env, params }) {
     ? `<img src="${escapeHtml(article.image_url)}" alt="${escapeHtml(article.title)}" class="blog-hero-bg" />`
     : '';
 
+  const contentHtml = article.content.replace(/<h1(\s[^>]*)?>/gi, '<h2$1>').replace(/<\/h1>/gi, '</h2>');
+
   const body = `
     <section class="blog-hero" style="${heroStyle}">
       ${heroImage}
-      <div class="blog-hero-overlay"></div>
-      <div class="blog-hero-content">
-        <div class="blog-eyebrow">
-          <span class="blog-category">${escapeHtml(article.category)}</span>
-          <div style="margin-top: 8px;">${date}</div>
-        </div>
-        <h1 class="blog-h1">${escapeHtml(article.title)}</h1>
+      <div class="blog-hero-meta">
+        <span class="blog-category">${escapeHtml(article.category)}</span>
+        <span class="blog-hero-date">${date}</span>
       </div>
     </section>
     <article class="blog-container">
-      <div class="blog-content">${article.content}</div>
+      <h1 class="blog-h1">${escapeHtml(article.title)}</h1>
+      <div class="blog-content">${contentHtml}</div>
     </article>`;
 
   const head = `

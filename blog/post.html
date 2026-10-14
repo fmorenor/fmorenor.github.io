@@ -77,11 +77,11 @@
     .blog-hero {
       position: relative !important;
       width: 100% !important;
-      min-height: 60vh !important;
-      display: flex !important;
-      align-items: flex-end !important;
+      height: 60vh !important;
+      min-height: 320px !important;
       overflow: hidden !important;
-      padding-bottom: 3rem !important;
+      background-size: cover !important;
+      background-position: center !important;
     }
     .blog-hero-bg {
       position: absolute !important;
@@ -91,44 +91,43 @@
       object-fit: cover !important;
       object-position: center !important;
     }
-    .blog-hero-overlay {
+    .blog-hero-meta {
       position: absolute !important;
-      inset: 0 !important;
-      background: linear-gradient(180deg, rgba(5,8,22,0) 0%, rgba(5,8,22,0.95) 100%) !important;
-    }
-    .blog-hero-content {
-      position: relative !important;
+      top: clamp(1rem, 3vw, 2rem) !important;
+      right: clamp(1rem, 3vw, 2rem) !important;
       z-index: 2 !important;
-      max-width: 860px !important;
-      padding: 0 clamp(1.5rem, 6vw, 4rem) !important;
-      width: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-end !important;
+      gap: 0.5rem !important;
     }
-    .blog-eyebrow {
+    .blog-hero-date {
       font-size: 0.75rem !important;
       font-weight: 600 !important;
-      letter-spacing: 0.12em !important;
+      letter-spacing: 0.1em !important;
       text-transform: uppercase !important;
-      color: rgba(255, 255, 255, 0.5) !important;
-      margin-bottom: 1rem !important;
+      color: #fff !important;
+      background: rgba(5, 8, 22, 0.6) !important;
+      padding: 0.35rem 0.8rem !important;
+      border-radius: 999px !important;
     }
     .blog-category {
       display: inline-block !important;
       padding: 0.4rem 1rem !important;
-      background: rgba(59, 91, 219, 0.2) !important;
+      background: rgba(59, 91, 219, 0.85) !important;
       border-radius: 999px !important;
       font-size: 0.7rem !important;
       font-weight: 600 !important;
       letter-spacing: 0.1em !important;
       text-transform: uppercase !important;
-      color: #7dd3fc !important;
-      margin-right: 0.8rem !important;
+      color: #fff !important;
     }
     .blog-h1 {
-      font-size: clamp(2rem, 5vw, 3.5rem) !important;
-      font-weight: 300 !important;
+      font-size: clamp(2rem, 4.5vw, 3rem) !important;
+      font-weight: 600 !important;
       line-height: 1.2 !important;
       color: #fff !important;
-      margin-bottom: 1rem !important;
+      margin-bottom: 2rem !important;
     }
 
     /* ── CONTENEDOR ── */
