@@ -493,7 +493,7 @@
     // Cargar posts dinámicos de D1
     async function loadDynamicPosts() {
       try {
-        const res = await fetch('/api/public/posts?limit=3');
+        const res = await fetch('/api/public/posts?limit=50');
         if (!res.ok) throw new Error('Error cargando posts');
 
         const data = await res.json();
