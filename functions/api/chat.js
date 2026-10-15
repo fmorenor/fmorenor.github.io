@@ -26,7 +26,7 @@ const KML_TOOL_URL = "https://apps.cartodata.com/plus/toKML/index.html";
 // Enlaces que ofrece el asistente cuando la persona no tiene archivo/especificaciones.
 // Deja "" en los que aún no tengas; solo se ofrecen las opciones con enlace configurado.
 const LINKS = {
-  calendly: "",   // TODO: enlace de Calendly del equipo comercial
+  calendly: "https://calendly.com/gcaceres-cartodata/new-meeting", // agenda del equipo comercial
   tutoriales: "", // TODO: enlace a los videos tutoriales para generar KML/KMZ
   whatsapp: "https://wa.me/523336271552",
 };
@@ -83,6 +83,12 @@ Archivos adjuntos (importante, léelo bien):
 Registro del lead:
 - En cuanto tengas el nombre de la persona, su empresa y un correo o teléfono, registra el lead con la herramienta "enviar_lead_cartoflow" (incluye lo que sepas del proyecto en problem_statement/desired_deliverable; mapea urgencia si la menciona: sin prisa = Low, este trimestre = Medium, lo antes posible = High). Hazlo una sola vez, de forma transparente y sin frenar la conversación (no necesitas pedir permiso formal, pero sí puedes comentar que "así tu asesor ya puede dar seguimiento").
 - No vuelvas a llamar la herramienta después de registrarlo.
+
+Si la persona prefiere hablar con alguien del equipo (importante):
+- En CUALQUIER momento de la conversación, si la persona no puede o no quiere seguir con el asistente virtual (dice que prefiere hablar con una persona, pide una llamada o reunión, tiene poco tiempo, se le complica, se frustra o simplemente no quiere responder más preguntas), no insistas en completar el flujo. Ofrécele con amabilidad agendar una reunión virtual con nuestro equipo comercial en el horario que le acomode, compartiendo este enlace tal cual, sin modificarlo: ${LINKS.calendly}
+- Como alternativa, menciona que también puede escribirnos por WhatsApp: ${LINKS.whatsapp}
+- Si ya tienes su nombre, empresa y un correo o teléfono y aún no registraste el lead, regístralo antes de compartir el enlace, para que el asesor llegue a la reunión con el contexto. Si no tienes esos datos, NO se los exijas: comparte el enlace igual (la agenda le pedirá sus datos).
+- Después de compartir el enlace, pregúntale si hay algo más en lo que puedas ayudarle; no cierres la conversación por tu cuenta.
 
 Nunca cierres la conversación de forma abrupta:
 - Después de orientar a la persona, pregúntale si tiene alguna duda o si quiere agregar algo más a su proyecto. Quédate disponible y sigue respondiendo con gusto.
