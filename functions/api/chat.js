@@ -26,15 +26,16 @@ const KML_TOOL_URL = "https://apps.cartodata.com/plus/toKML/index.html";
 // Enlaces que ofrece el asistente cuando la persona no tiene archivo/especificaciones.
 // Deja "" en los que aún no tengas; solo se ofrecen las opciones con enlace configurado.
 const LINKS = {
-  calendly: "",   // TODO: enlace de Calendly del equipo comercial
+  calendly: "https://calendly.com/gcaceres-cartodata/new-meeting", // agenda del equipo comercial
   tutoriales: "", // TODO: enlace a los videos tutoriales para generar KML/KMZ
   whatsapp: "https://wa.me/523336271552",
 };
 
 function buildOptions() {
   const opts = [];
-  if (LINKS.calendly)
-    opts.push(`Agendar una reunión virtual con nuestro equipo comercial en el horario que te acomode: ${LINKS.calendly}`);
+  // La agenda (LINKS.calendly) NO va aquí a propósito: es un último recurso y
+  // tiene sus propias reglas en el SYSTEM_PROMPT, para no llenar la agenda
+  // del equipo con reuniones sin un proyecto detrás.
   if (LINKS.tutoriales)
     opts.push(`Ver nuestros videos tutoriales para generar tu archivo KML/KMZ; ahí también explicamos especificaciones que otros clientes han pedido y que se convirtieron en casos de éxito: ${LINKS.tutoriales}`);
   opts.push(`Que nuestro equipo te contacte por WhatsApp para acompañarte de forma más personalizada: ${LINKS.whatsapp}`);
@@ -83,6 +84,16 @@ Archivos adjuntos (importante, léelo bien):
 Registro del lead:
 - En cuanto tengas el nombre de la persona, su empresa y un correo o teléfono, registra el lead con la herramienta "enviar_lead_cartoflow" (incluye lo que sepas del proyecto en problem_statement/desired_deliverable; mapea urgencia si la menciona: sin prisa = Low, este trimestre = Medium, lo antes posible = High). Hazlo una sola vez, de forma transparente y sin frenar la conversación (no necesitas pedir permiso formal, pero sí puedes comentar que "así tu asesor ya puede dar seguimiento").
 - No vuelvas a llamar la herramienta después de registrarlo.
+
+Reunión con el equipo (último recurso, NO una opción más):
+- La agenda del equipo comercial es valiosa: no la ofrezcas por iniciativa propia, ni en el saludo, ni como alternativa de rutina, ni al despedirte. Tu trabajo es resolver aquí todo lo que se pueda.
+- Comparte el enlace de la agenda SOLO en uno de estos dos casos:
+  a) La persona pide explícitamente hablar con alguien del equipo, una llamada o una reunión.
+  b) Ya intentaste ayudarla (aclarar, simplificar, ofrecer la herramienta para generar su KML) y de verdad no puede avanzar con el asistente.
+- Aun en esos casos, la reunión debe tener un proyecto detrás. Si todavía no sabes qué necesita, pregúntale en una frase breve qué le gustaría resolver en la reunión. Si no describe ninguna necesidad concreta (solo curiosidad, una duda general o no quiere decir), NO compartas la agenda: ofrécele WhatsApp (${LINKS.whatsapp}) para resolver su duda.
+- Cuando sí corresponda, compártelo tal cual, sin modificarlo: ${LINKS.calendly}
+- Si ya tienes su nombre, empresa y un correo o teléfono y aún no registraste el lead, regístralo antes de compartir el enlace (incluye en problem_statement lo que quiere tratar en la reunión), para que el asesor llegue con contexto.
+- Después de compartir el enlace, pregúntale si hay algo más en lo que puedas ayudarle; no cierres la conversación por tu cuenta.
 
 Nunca cierres la conversación de forma abrupta:
 - Después de orientar a la persona, pregúntale si tiene alguna duda o si quiere agregar algo más a su proyecto. Quédate disponible y sigue respondiendo con gusto.

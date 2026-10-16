@@ -131,6 +131,8 @@
       background: rgba(255,255,255,0.06); color: #eef2ff;
       border: 1px solid rgba(255,255,255,0.05); border-bottom-left-radius: 5px;
     }
+    .msg-bubble .msg-link { color: #a5b4fc; text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
+    .msg.user .msg-bubble .msg-link { color: #fff; }
     .msg.user { align-self: flex-end; }
     .msg.user .msg-bubble {
       background: #3b5bdb; color: #fff; border-bottom-right-radius: 5px;
@@ -338,12 +340,22 @@
       return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
     }
 
+    // Convierte en enlaces clicables las URLs del texto YA escapado (así no se
+    // puede inyectar HTML). Deja fuera la puntuación final ("…aquí: url.").
+    function linkify(html) {
+      return html.replace(/https?:\/\/[^\s<]+/g, m => {
+        const trail = (m.match(/[.,;:!?)\]]+$/) || [''])[0];
+        const url = trail ? m.slice(0, -trail.length) : m;
+        return '<a class="msg-link" href="' + url + '" target="_blank" rel="noopener">' + url + '</a>' + trail;
+      });
+    }
+
     function addMessage(text, who) {
       const wrap = document.createElement('div');
       wrap.className = 'msg ' + who;
       const bubble = document.createElement('div');
       bubble.className = 'msg-bubble';
-      bubble.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+      bubble.innerHTML = linkify(escapeHtml(text)).replace(/\n/g, '<br>');
       wrap.appendChild(bubble);
       messagesEl.appendChild(wrap);
       scrollDown();
@@ -565,6 +577,18 @@
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: 'xray_tool_click', tool: 'generar_kml' });
     }));
+
+    /* GA4: clics en enlaces que comparte el asistente (agenda, WhatsApp, KML) */
+    messagesEl.addEventListener('click', e => {
+      const a = e.target.closest && e.target.closest('a.msg-link');
+      if (!a) return;
+      const h = a.hostname;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'xray_link_click',
+        link_type: h.includes('calendly') ? 'agenda' : h.includes('wa.me') ? 'whatsapp' : h.includes('cartodata') ? 'kml' : 'otro'
+      });
+    });
 
     attachBtn.addEventListener('click', () => { if (!attachBtn.disabled) fileInput.click(); });
     fileInput.addEventListener('change', () => {
