@@ -2465,6 +2465,39 @@
     return originalSetAttributeNS.call(this, ns, name, value);
   };
 
+  /* ── Footer del home bilingüe ──
+     El footer del bundle trae estos textos fijos en español. Se traducen según
+     localStorage 'cartodata-lang' (la misma clave que usa el bundle). ── */
+  (function hookFooterLang() {
+    const PAIRS = [
+      ['© 2026 CartoData - Dando contexto geográfico a tu decisión', '© 2026 CartoData - Giving geographic context to your decisions'],
+      ['Contacto', 'Contact'],
+      ['Ubicaciones', 'Locations'],
+      ['Kit de prensa', 'Press kit'],
+      ['Aviso de privacidad', 'Privacy notice'],
+      ['Términos y condiciones', 'Terms and conditions']
+    ];
+    const lang = () => { try { return localStorage.getItem('cartodata-lang') === 'en' ? 'en' : 'es'; } catch (e) { return 'es'; } };
+    function apply() {
+      const footer = document.querySelector('footer');
+      if (!footer) return;
+      const l = lang();
+      footer.querySelectorAll('p, h4, a').forEach(el => {
+        if (el.children.length) return;
+        const t = el.textContent.trim();
+        const pair = PAIRS.find(p => p[0] === t || p[1] === t);
+        if (!pair) return;
+        const want = l === 'en' ? pair[1] : pair[0];
+        if (t !== want) el.textContent = want;
+      });
+    }
+    const obs = new MutationObserver(apply);
+    const start = () => { apply(); obs.observe(document.body, { childList: true, subtree: true, characterData: true }); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+    document.addEventListener('click', () => setTimeout(apply, 50), true);
+    [500, 2000, 4000].forEach(ms => setTimeout(apply, ms));
+  })();
+
   /* Cambiar "Noticias" por "Blog" en el nav y footer del home (React bundle) */
   (function hookBlogNav() {
     const changeNoticiasToBlogs = () => {
