@@ -1430,32 +1430,6 @@
     [500, 2000, 4000].forEach(ms => setTimeout(hook, ms));
   })();
 
-  /* ── Ocultar temporalmente "Instituciones" SOLO de los menús del home ──
-     La página de Instituciones se rehará. Oculta únicamente los ítems de menú
-     (fuera de <main>: nav/header y menú móvil); NO toca las secciones de
-     contenido dentro de <main> (p. ej. la tarjeta con video del hero). ── */
-  (function hookInstitucionesNav() {
-    const NAMES = ['Instituciones', 'Institutions'];
-    function hook() {
-      document.querySelectorAll('a, button').forEach(el => {
-        if (el.dataset.cdInstHidden) return;
-        const h3 = el.querySelector('h3');
-        const match = h3 && NAMES.includes(h3.textContent.trim());
-        const directMatch = NAMES.includes(el.textContent.trim());
-        // Solo ocultar ítems de menú (fuera de <main>); preservar el contenido de la página.
-        if ((match || directMatch) && !el.closest('main')) {
-          el.dataset.cdInstHidden = '1';
-          el.style.display = 'none';
-        }
-      });
-    }
-    const obs = new MutationObserver(hook);
-    obs.observe(document.body, { childList: true, subtree: true });
-    setTimeout(hook, 500);
-    setTimeout(hook, 2000);
-    setTimeout(hook, 4000);
-  })();
-
   /* ── [Historia movida a historia.html] ── */
   (function injectHistoria() { return; // desactivado
     function inject() {
@@ -2634,50 +2608,6 @@
     };
 
     const processNavItems = () => {
-      // Estrategia 1: Agregar botones faltantes (Construction, Urban Parks) al menú de Impact
-      const addMissingImpactItems = () => {
-        const grids = document.querySelectorAll('[class*="grid"]');
-        grids.forEach(grid => {
-          if (grid.textContent.includes('Cities') && grid.textContent.includes('Infrastructure')) {
-            const buttons = grid.querySelectorAll('button');
-            // Si solo tiene 4 botones, agregar los faltantes
-            if (buttons.length === 4 && !grid.textContent.includes('Urban Parks')) {
-              const firstBtn = buttons[0];
-              if (firstBtn) {
-                const btnClass = firstBtn.className;
-                const btnHTML = firstBtn.innerHTML;
-
-                // Crear botón de Construction
-                const constructionBtn = document.createElement('button');
-                constructionBtn.className = btnClass;
-                constructionBtn.innerHTML = btnHTML;
-                const constructionH3 = constructionBtn.querySelector('h3');
-                if (constructionH3) {
-                  constructionH3.textContent = 'Construction';
-                  constructionH3.setAttribute('data-en', 'Construction');
-                }
-                const constructionLink = constructionBtn.querySelector('a');
-                if (constructionLink) constructionLink.href = '/construccion.html';
-                grid.appendChild(constructionBtn);
-
-                // Crear botón de Urban Parks
-                const urbanParksBtn = document.createElement('button');
-                urbanParksBtn.className = btnClass;
-                urbanParksBtn.innerHTML = btnHTML;
-                const urbanParksH3 = urbanParksBtn.querySelector('h3');
-                if (urbanParksH3) {
-                  urbanParksH3.textContent = 'Urban Parks';
-                  urbanParksH3.setAttribute('data-en', 'Urban Parks');
-                }
-                const urbanParksLink = urbanParksBtn.querySelector('a');
-                if (urbanParksLink) urbanParksLink.href = '/parques-urbanos.html';
-                grid.appendChild(urbanParksBtn);
-              }
-            }
-          }
-        });
-      };
-      addMissingImpactItems();
 
       // Estrategia 2: Crear dropdowns si no existen (fallback)
       const allLinks = document.querySelectorAll('a');
