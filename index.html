@@ -2498,6 +2498,54 @@
     [500, 2000, 4000].forEach(ms => setTimeout(apply, ms));
   })();
 
+  /* ── Equipo y noticias del home bilingües ──
+     Textos inyectados por JS (carrusel de equipo, tarjetas de noticias) que están
+     fijos en español. Se traducen según localStorage 'cartodata-lang'. ── */
+  (function hookHomeExtrasLang() {
+    const PAIRS = [
+      ['Nuestro equipo', 'Our team'],
+      ['Nuestro Equipo', 'Our Team'],
+      ['Cultura · CartoData', 'Culture · CartoData'],
+      ['Conoce al equipo →', 'Meet the team →'],
+      ['Equipo Guadalajara', 'Guadalajara Team'],
+      ['Equipo Nuevo León', 'Nuevo León Team'],
+      ['Equipo El Salvador', 'El Salvador Team'],
+      ['Noticias destacadas de municipios que han implementado la Cartomorfosis', 'Featured news from municipalities that have implemented Cartomorfosis'],
+      ['Tlajomulco · Noticia oficial', 'Tlajomulco · Official news'],
+      ['Tlajo logra incremento histórico en recaudación', 'Tlajo achieves historic increase in tax revenue'],
+      ['Nix El Salvador', 'Nix El Salvador'],
+      ['UNESCO destacó plataforma NIX como referente de la IA para el liderazgo regional del país', 'UNESCO highlighted the NIX platform as a benchmark for AI in the country\'s regional leadership'],
+      ['Mundial de futbol 2026', '2026 World Cup'],
+      ['Desarrollamos una guía práctica con toda la información geoespacial para moverte mejor en los días de partido en Guadalajara.', 'We developed a practical guide with all the geospatial information you need to get around better on match days in Guadalajara.'],
+      ['Leer noticia →', 'Read the story →'],
+      ['Ver guía →', 'View guide →']
+    ];
+    const lang = () => { try { return localStorage.getItem('cartodata-lang') === 'en' ? 'en' : 'es'; } catch (e) { return 'es'; } };
+    function apply() {
+      const l = lang();
+      document.querySelectorAll('p, h2, span, a').forEach(el => {
+        if (el.children.length) return;
+        const t = el.textContent.trim();
+        const pair = PAIRS.find(p => p[0] === t || p[1] === t);
+        if (!pair) return;
+        const want = l === 'en' ? pair[1] : pair[0];
+        if (t !== want) el.textContent = want;
+      });
+      /* Subtítulo de Noticias: el bundle lo vuelve a pintar ("Próximamente…") al cambiar de idioma */
+      const sec = document.getElementById('noticias');
+      const sub = sec && sec.querySelector('.cd-news-grid') && sec.querySelector('p');
+      if (sub && !sub.closest('.cd-news-grid')) {
+        const want = l === 'en' ? PAIRS[7][1] : PAIRS[7][0];
+        if (sub.textContent.trim() !== want) sub.textContent = want;
+      }
+    }
+    const obs = new MutationObserver(apply);
+    const start = () => { apply(); obs.observe(document.body, { childList: true, subtree: true, characterData: true }); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+    document.addEventListener('click', () => setTimeout(apply, 50), true);
+    [500, 2000, 4000].forEach(ms => setTimeout(apply, ms));
+  })();
+
   /* Cambiar "Noticias" por "Blog" en el nav y footer del home (React bundle) */
   (function hookBlogNav() {
     const changeNoticiasToBlogs = () => {
