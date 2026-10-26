@@ -1430,32 +1430,6 @@
     [500, 2000, 4000].forEach(ms => setTimeout(hook, ms));
   })();
 
-  /* ── Ocultar temporalmente "Instituciones" SOLO de los menús del home ──
-     La página de Instituciones se rehará. Oculta únicamente los ítems de menú
-     (fuera de <main>: nav/header y menú móvil); NO toca las secciones de
-     contenido dentro de <main> (p. ej. la tarjeta con video del hero). ── */
-  (function hookInstitucionesNav() {
-    const NAMES = ['Instituciones', 'Institutions'];
-    function hook() {
-      document.querySelectorAll('a, button').forEach(el => {
-        if (el.dataset.cdInstHidden) return;
-        const h3 = el.querySelector('h3');
-        const match = h3 && NAMES.includes(h3.textContent.trim());
-        const directMatch = NAMES.includes(el.textContent.trim());
-        // Solo ocultar ítems de menú (fuera de <main>); preservar el contenido de la página.
-        if ((match || directMatch) && !el.closest('main')) {
-          el.dataset.cdInstHidden = '1';
-          el.style.display = 'none';
-        }
-      });
-    }
-    const obs = new MutationObserver(hook);
-    obs.observe(document.body, { childList: true, subtree: true });
-    setTimeout(hook, 500);
-    setTimeout(hook, 2000);
-    setTimeout(hook, 4000);
-  })();
-
   /* ── [Historia movida a historia.html] ── */
   (function injectHistoria() { return; // desactivado
     function inject() {
@@ -2491,6 +2465,87 @@
     return originalSetAttributeNS.call(this, ns, name, value);
   };
 
+  /* ── Footer del home bilingüe ──
+     El footer del bundle trae estos textos fijos en español. Se traducen según
+     localStorage 'cartodata-lang' (la misma clave que usa el bundle). ── */
+  (function hookFooterLang() {
+    const PAIRS = [
+      ['© 2026 CartoData - Dando contexto geográfico a tu decisión', '© 2026 CartoData - Giving geographic context to your decisions'],
+      ['Contacto', 'Contact'],
+      ['Ubicaciones', 'Locations'],
+      ['Kit de prensa', 'Press kit'],
+      ['Aviso de privacidad', 'Privacy notice'],
+      ['Términos y condiciones', 'Terms and conditions']
+    ];
+    const lang = () => { try { return localStorage.getItem('cartodata-lang') === 'en' ? 'en' : 'es'; } catch (e) { return 'es'; } };
+    function apply() {
+      const footer = document.querySelector('footer');
+      if (!footer) return;
+      const l = lang();
+      footer.querySelectorAll('p, h4, a').forEach(el => {
+        if (el.children.length) return;
+        const t = el.textContent.trim();
+        const pair = PAIRS.find(p => p[0] === t || p[1] === t);
+        if (!pair) return;
+        const want = l === 'en' ? pair[1] : pair[0];
+        if (t !== want) el.textContent = want;
+      });
+    }
+    const obs = new MutationObserver(apply);
+    const start = () => { apply(); obs.observe(document.body, { childList: true, subtree: true, characterData: true }); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+    document.addEventListener('click', () => setTimeout(apply, 50), true);
+    [500, 2000, 4000].forEach(ms => setTimeout(apply, ms));
+  })();
+
+  /* ── Equipo y noticias del home bilingües ──
+     Textos inyectados por JS (carrusel de equipo, tarjetas de noticias) que están
+     fijos en español. Se traducen según localStorage 'cartodata-lang'. ── */
+  (function hookHomeExtrasLang() {
+    const PAIRS = [
+      ['Nuestro equipo', 'Our team'],
+      ['Nuestro Equipo', 'Our Team'],
+      ['Cultura · CartoData', 'Culture · CartoData'],
+      ['Conoce al equipo →', 'Meet the team →'],
+      ['Equipo Guadalajara', 'Guadalajara Team'],
+      ['Equipo Nuevo León', 'Nuevo León Team'],
+      ['Equipo El Salvador', 'El Salvador Team'],
+      ['Noticias destacadas de municipios que han implementado la Cartomorfosis', 'Featured news from municipalities that have implemented Cartomorfosis'],
+      ['Tlajomulco · Noticia oficial', 'Tlajomulco · Official news'],
+      ['Tlajo logra incremento histórico en recaudación', 'Tlajo achieves historic increase in tax revenue'],
+      ['Nix El Salvador', 'Nix El Salvador'],
+      ['UNESCO destacó plataforma NIX como referente de la IA para el liderazgo regional del país', 'UNESCO highlighted the NIX platform as a benchmark for AI in the country\'s regional leadership'],
+      ['Mundial de futbol 2026', '2026 World Cup'],
+      ['Desarrollamos una guía práctica con toda la información geoespacial para moverte mejor en los días de partido en Guadalajara.', 'We developed a practical guide with all the geospatial information you need to get around better on match days in Guadalajara.'],
+      ['Leer noticia →', 'Read the story →'],
+      ['Ver guía →', 'View guide →']
+    ];
+    const lang = () => { try { return localStorage.getItem('cartodata-lang') === 'en' ? 'en' : 'es'; } catch (e) { return 'es'; } };
+    function apply() {
+      const l = lang();
+      document.querySelectorAll('p, h2, span, a').forEach(el => {
+        if (el.children.length) return;
+        const t = el.textContent.trim();
+        const pair = PAIRS.find(p => p[0] === t || p[1] === t);
+        if (!pair) return;
+        const want = l === 'en' ? pair[1] : pair[0];
+        if (t !== want) el.textContent = want;
+      });
+      /* Subtítulo de Noticias: el bundle lo vuelve a pintar ("Próximamente…") al cambiar de idioma */
+      const sec = document.getElementById('noticias');
+      const sub = sec && sec.querySelector('.cd-news-grid') && sec.querySelector('p');
+      if (sub && !sub.closest('.cd-news-grid')) {
+        const want = l === 'en' ? PAIRS[7][1] : PAIRS[7][0];
+        if (sub.textContent.trim() !== want) sub.textContent = want;
+      }
+    }
+    const obs = new MutationObserver(apply);
+    const start = () => { apply(); obs.observe(document.body, { childList: true, subtree: true, characterData: true }); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+    document.addEventListener('click', () => setTimeout(apply, 50), true);
+    [500, 2000, 4000].forEach(ms => setTimeout(apply, ms));
+  })();
+
   /* Cambiar "Noticias" por "Blog" en el nav y footer del home (React bundle) */
   (function hookBlogNav() {
     const changeNoticiasToBlogs = () => {
@@ -2634,50 +2689,6 @@
     };
 
     const processNavItems = () => {
-      // Estrategia 1: Agregar botones faltantes (Construction, Urban Parks) al menú de Impact
-      const addMissingImpactItems = () => {
-        const grids = document.querySelectorAll('[class*="grid"]');
-        grids.forEach(grid => {
-          if (grid.textContent.includes('Cities') && grid.textContent.includes('Infrastructure')) {
-            const buttons = grid.querySelectorAll('button');
-            // Si solo tiene 4 botones, agregar los faltantes
-            if (buttons.length === 4 && !grid.textContent.includes('Urban Parks')) {
-              const firstBtn = buttons[0];
-              if (firstBtn) {
-                const btnClass = firstBtn.className;
-                const btnHTML = firstBtn.innerHTML;
-
-                // Crear botón de Construction
-                const constructionBtn = document.createElement('button');
-                constructionBtn.className = btnClass;
-                constructionBtn.innerHTML = btnHTML;
-                const constructionH3 = constructionBtn.querySelector('h3');
-                if (constructionH3) {
-                  constructionH3.textContent = 'Construction';
-                  constructionH3.setAttribute('data-en', 'Construction');
-                }
-                const constructionLink = constructionBtn.querySelector('a');
-                if (constructionLink) constructionLink.href = '/construccion.html';
-                grid.appendChild(constructionBtn);
-
-                // Crear botón de Urban Parks
-                const urbanParksBtn = document.createElement('button');
-                urbanParksBtn.className = btnClass;
-                urbanParksBtn.innerHTML = btnHTML;
-                const urbanParksH3 = urbanParksBtn.querySelector('h3');
-                if (urbanParksH3) {
-                  urbanParksH3.textContent = 'Urban Parks';
-                  urbanParksH3.setAttribute('data-en', 'Urban Parks');
-                }
-                const urbanParksLink = urbanParksBtn.querySelector('a');
-                if (urbanParksLink) urbanParksLink.href = '/parques-urbanos.html';
-                grid.appendChild(urbanParksBtn);
-              }
-            }
-          }
-        });
-      };
-      addMissingImpactItems();
 
       // Estrategia 2: Crear dropdowns si no existen (fallback)
       const allLinks = document.querySelectorAll('a');
