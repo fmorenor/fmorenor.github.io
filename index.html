@@ -2473,7 +2473,7 @@
       ['© 2026 CartoData - Dando contexto geográfico a tu decisión', '© 2026 CartoData - Giving geographic context to your decisions'],
       ['Contacto', 'Contact'],
       ['Ubicaciones', 'Locations'],
-      ['Kit de prensa', 'Press kit'],
+      ['Agendar una demo', 'Book a demo'],
       ['Aviso de privacidad', 'Privacy notice'],
       ['Términos y condiciones', 'Terms and conditions']
     ];
@@ -2496,6 +2496,54 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
     document.addEventListener('click', () => setTimeout(apply, 50), true);
     [500, 2000, 4000].forEach(ms => setTimeout(apply, ms));
+  })();
+
+  /* ── "Agendar demo": reemplaza al enlace "Kit de prensa" del footer y añade el
+     botón sólido del menú superior (y el del menú móvil). El bundle no se edita:
+     se inyecta aquí. Textos ES/EN según localStorage 'cartodata-lang'. ── */
+  (function hookBookDemo() {
+    const URL_DEMO = '/agendar-demo';
+    const lang = () => { try { return localStorage.getItem('cartodata-lang') === 'en' ? 'en' : 'es'; } catch (e) { return 'es'; } };
+    const st = document.createElement('style');
+    st.textContent = `
+      .cd-demo-cta { display:inline-flex; align-items:center; justify-content:center; white-space:nowrap;
+        padding:.42rem 1.1rem; border-radius:999px; background:#2563eb; color:#fff !important;
+        font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; text-decoration:none;
+        transition:background 150ms; }
+      .cd-demo-cta:hover { background:#1d4ed8; }
+      .cd-demo-cta:focus-visible { outline:2px solid #fff; outline-offset:2px; box-shadow:0 0 0 4px #1d4ed8; }
+      @media (max-width:479px) { header .cd-demo-cta--header { display:none; } }
+      .cd-demo-cta--mobile { display:flex; margin-top:.5rem; padding:.8rem 1rem; font-size:12px; }`;
+    document.head.appendChild(st);
+    const label = () => lang() === 'en' ? 'Book a demo' : 'Agendar demo';
+    function hook() {
+      /* Footer: el bundle trae <a href="#kit-prensa"> */
+      document.querySelectorAll('footer a[href="#kit-prensa"]').forEach(a => {
+        a.setAttribute('href', URL_DEMO);
+        a.textContent = lang() === 'en' ? 'Book a demo' : 'Agendar una demo';
+      });
+      /* Header: antes del botón de idioma */
+      const header = document.querySelector('header');
+      if (!header) return;
+      const right = header.querySelector('button[aria-label="Toggle theme"]')?.parentElement;
+      if (right && !right.querySelector('.cd-demo-cta--header')) {
+        const a = document.createElement('a');
+        a.href = URL_DEMO; a.className = 'cd-demo-cta cd-demo-cta--header'; a.textContent = label();
+        right.insertBefore(a, right.firstChild);
+      }
+      /* Menú móvil desplegable (<nav class="container py-6 space-y-4">) */
+      const mnav = header.querySelector('div.lg\\:hidden nav');
+      if (mnav && !mnav.querySelector('.cd-demo-cta--mobile')) {
+        const a = document.createElement('a');
+        a.href = URL_DEMO; a.className = 'cd-demo-cta cd-demo-cta--mobile'; a.textContent = label();
+        mnav.appendChild(a);
+      }
+      header.querySelectorAll('.cd-demo-cta').forEach(a => { if (a.textContent !== label()) a.textContent = label(); });
+    }
+    hook();
+    new MutationObserver(hook).observe(document.body, { childList: true, subtree: true });
+    document.addEventListener('click', () => setTimeout(hook, 50), true);
+    [500, 2000, 4000].forEach(ms => setTimeout(hook, ms));
   })();
 
   /* ── Equipo y noticias del home bilingües ──

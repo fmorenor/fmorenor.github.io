@@ -289,6 +289,11 @@
       transition: background 150ms; margin-left: 0.25rem;
     }
     .cd-nav-cta:hover { background: #1d4ed8; }
+    .cd-nav-cta:focus-visible { outline: 2px solid #fff; outline-offset: 2px; box-shadow: 0 0 0 4px #1d4ed8; }
+    .cd-nav-cta { white-space: nowrap; margin-right: 0.35rem; }
+    /* En pantallas muy angostas el CTA vive solo en el menú móvil (no se corta el nav) */
+    @media (max-width: 479px) { .cd-nav-cta-desktop { display: none; } }
+    .cd-mobile-cta { justify-content: center; margin: 1.25rem 0 0; padding: 0.8rem 1.1rem; font-size: 0.8rem; }
     @media (min-width: 1024px) {
       .cd-nav { height: 80px; }
       .cd-nav-brand img { height: 40px; }
@@ -669,6 +674,7 @@
       `).join('')}
     </ul>
     <div class="cd-nav-right">
+      <a href="/agendar-demo" class="cd-nav-cta cd-nav-cta-desktop" data-en="Book a demo">Agendar demo</a>
       <button id="cd-lang-btn" class="cd-nav-lang" aria-label="Cambiar idioma">
         ${lang === 'es' ? 'EN' : 'ES'}
       </button>
@@ -696,7 +702,7 @@
       </div>`;
     }
     return `<div class="cd-mobile-item"><a href="${l.href}" class="cd-mobile-link">${l.label}</a></div>`;
-  }).join('');
+  }).join('') + `<a href="/agendar-demo" class="cd-nav-cta cd-mobile-cta" data-en="Book a demo">Agendar demo</a>`;
   document.body.insertBefore(mobileMenu, nav.nextSibling);
 
   /* Aplicar tema inicial */
@@ -844,7 +850,7 @@
         <h4 class="cd-footer-col-title">Info</h4>
         <div class="cd-footer-col-links">
           <a href="#ubicaciones" data-en="Locations">Ubicaciones</a>
-          <a href="#" data-en="Press kit">Kit de prensa</a>
+          <a href="/agendar-demo" data-en="Book a demo">Agendar una demo</a>
           <a href="./#aviso-privacidad" data-en="Privacy notice">Aviso de privacidad</a>
           <a href="./#terminos" data-en="Terms and conditions">Términos y condiciones</a>
         </div>
