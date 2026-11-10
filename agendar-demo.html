@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agendar una demo — CartoData</title>
+  <meta name="description" content="Elige un horario para hablar de tus necesidades de mapeo y recibir una demo personalizada de CartoData." />
+  <link rel="canonical" href="https://www.cartodata.com/agendar-demo" />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.cartodata.com/agendar-demo" />
+  <meta property="og:title" content="Agendar una demo — CartoData" />
+  <meta property="og:description" content="Habla con un experto para empezar: elige un horario y recibe una demo personalizada." />
+  <meta property="og:locale" content="es_MX" />
+  <meta property="og:site_name" content="CartoData" />
+  <style>
+    /* ── Página "Agendar una demo" ──
+       Usa los tokens de site.css (--bg, --text, --border, --blue, DM Sans).
+       Los colores de texto secundario se refuerzan localmente para cumplir AA. */
+    :root {
+      --demo-muted: rgba(248,250,252,0.74);   /* ≈ 8:1 sobre #0d0d0d */
+      --demo-card-shadow: 0 1px 2px rgba(0,0,0,0.25), 0 12px 40px rgba(0,0,0,0.35);
+    }
+    html.light {
+      --demo-muted: rgba(15,23,42,0.78);      /* ≈ 7:1 sobre #f8fafc */
+      --demo-card-shadow: 0 1px 2px rgba(15,23,42,0.06), 0 12px 40px rgba(15,23,42,0.10);
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-sans); }
+
+    .demo-main {
+      max-width: 1180px; margin: 0 auto;
+      padding: calc(64px + clamp(2rem, 6vw, 4.5rem)) clamp(1rem, 4vw, 2rem) clamp(3rem, 8vw, 6rem);
+    }
+    .demo-grid {
+      display: grid; gap: clamp(1.75rem, 4vw, 3rem) clamp(2rem, 5vw, 4.5rem);
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "intro" "card" "proof";
+    }
+    .demo-intro { grid-area: intro; }
+    .demo-card  { grid-area: card; min-width: 0; }
+    .demo-proof { grid-area: proof; }
+
+    .demo-eyebrow {
+      display: inline-block; margin-bottom: 1rem;
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--demo-muted);
+    }
+    .demo-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1.08; letter-spacing: -0.02em; font-weight: 600;
+      margin-bottom: 1.25rem; overflow-wrap: break-word;
+    }
+    .demo-lead { font-size: clamp(1rem, 2.4vw, 1.125rem); line-height: 1.6; color: var(--demo-muted); max-width: 34rem; }
+
+    /* Testimonios / logos: separados por líneas finas */
+    .demo-proof-item { padding: 1.5rem 0; border-top: 1px solid var(--border); }
+    .demo-proof-item:last-child { border-bottom: 1px solid var(--border); }
+    .demo-quote { font-size: 1rem; line-height: 1.6; margin-bottom: 0.75rem; }
+    .demo-author { font-size: 0.875rem; color: var(--demo-muted); }
+
+    /* Tarjeta blanca con el widget (blanca en ambos temas: Calendly renderiza sobre blanco) */
+    .demo-card {
+      background: #fff; border-radius: 16px; overflow: hidden;
+      box-shadow: var(--demo-card-shadow);
+      border: 1px solid var(--border);
+    }
+    .calendly-inline-widget { min-width: 0; width: 100%; height: 700px; }
+    .demo-fallback {
+      margin: 0; padding: 0.9rem 1.25rem; text-align: center;
+      font-size: 0.875rem; color: #334155; background: #f8fafc; border-top: 1px solid #e2e8f0;
+    }
+    .demo-fallback a { color: #1e40af; font-weight: 600; text-underline-offset: 3px; }
+    .demo-fallback a:hover { color: #1e3a8a; }
+    .demo-fallback a:focus-visible { outline: 2px solid #1e40af; outline-offset: 2px; border-radius: 2px; }
+    .demo-noscript { padding: 1.5rem; color: #0f172a; font-size: 0.95rem; line-height: 1.6; }
+    .demo-noscript a { color: #1e40af; font-weight: 600; }
+
+    @media (min-width: 900px) {
+      .demo-grid {
+        grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+        grid-template-areas: "intro card" "proof card";
+        grid-template-rows: auto 1fr; align-items: start;
+      }
+    }
+    @media (max-width: 899px) {
+      .calendly-inline-widget { height: 980px; } /* el calendario + formulario es más alto en una columna */
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-main">
+    <div class="demo-grid">
+
+      <header class="demo-intro">
+        <span class="demo-eyebrow" data-en="Book a demo">Agendar una demo</span>
+        <h1 class="demo-title" data-en="Talk to an expert to get started">Habla con un experto para empezar</h1>
+        <p class="demo-lead" data-en="Pick a time to talk about your mapping needs and get a personalized demo.">Elige un horario para hablar de tus necesidades de mapeo y recibir una demo personalizada.</p>
+      </header>
+
+      <section class="demo-card" aria-label="Calendario para agendar una demo" data-en-aria="Calendar to book a demo">
+        <div id="calendly-embed" class="calendly-inline-widget"
+             data-url="https://calendly.com/gcaceres-cartodata/new-meeting?hide_gdpr_banner=1&amp;locale=es&amp;primary_color=3b5bdb"></div>
+        <noscript>
+          <p class="demo-noscript">Activa JavaScript para ver el calendario, o <a href="https://calendly.com/gcaceres-cartodata/new-meeting" target="_blank" rel="noopener noreferrer">agenda directamente en Calendly</a>.</p>
+        </noscript>
+        <p class="demo-fallback">
+          <span data-en="Calendar not loading?">¿No ves el calendario?</span>
+          <a id="calendly-fallback" href="https://calendly.com/gcaceres-cartodata/new-meeting?hide_gdpr_banner=1&amp;locale=es" target="_blank" rel="noopener noreferrer" data-en="Open in Calendly">Abrir en Calendly</a>
+        </p>
+      </section>
+
+      <!--
+        TESTIMONIOS / LOGOS DE CLIENTES (hasta 3) — PENDIENTE de textos reales.
+        No se inventan citas ni clientes. Para activarlo: descomenta el bloque,
+        reemplaza cada texto por contenido autorizado por el cliente y borra los
+        elementos que no uses. Para un logo en lugar de cita, usa
+        <img src="/images/<logo>.png" alt="<Cliente>" height="32"> dentro de .demo-proof-item.
+        Los textos con data-en son opcionales (traducción al inglés).
+
+      <aside class="demo-proof" aria-label="Clientes">
+        <figure class="demo-proof-item">
+          <blockquote class="demo-quote" data-en="[ENGLISH QUOTE]">“[CITA REAL 1]”</blockquote>
+          <figcaption class="demo-author">[Nombre], [Cargo] — [Organización]</figcaption>
+        </figure>
+        <figure class="demo-proof-item">
+          <blockquote class="demo-quote" data-en="[ENGLISH QUOTE]">“[CITA REAL 2]”</blockquote>
+          <figcaption class="demo-author">[Nombre], [Cargo] — [Organización]</figcaption>
+        </figure>
+        <figure class="demo-proof-item">
+          <blockquote class="demo-quote" data-en="[ENGLISH QUOTE]">“[CITA REAL 3]”</blockquote>
+          <figcaption class="demo-author">[Nombre], [Cargo] — [Organización]</figcaption>
+        </figure>
+      </aside>
+      -->
+
+    </div>
+  </main>
+
+  <script>
+    /* El idioma se decide ANTES de que widget.js lea data-url (locale=es|en). */
+    (function () {
+      var BASE = 'https://calendly.com/gcaceres-cartodata/new-meeting?hide_gdpr_banner=1&primary_color=3b5bdb';
+      function lang() { try { return localStorage.getItem('cartodata-lang') === 'en' ? 'en' : 'es'; } catch (e) { return 'es'; } }
+      window.cdDemoUrl = function () { return BASE + '&locale=' + lang(); };
+      var el = document.getElementById('calendly-embed');
+      el.setAttribute('data-url', window.cdDemoUrl());
+      document.getElementById('calendly-fallback').href = 'https://calendly.com/gcaceres-cartodata/new-meeting?hide_gdpr_banner=1&locale=' + lang();
+    })();
+  </script>
+  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+  <script src="./shared.js"></script>
+  <script>
+    /* Al cambiar ES⇄EN se vuelve a montar el widget con el locale correspondiente. */
+    (function () {
+      var btn = document.getElementById('cd-lang-btn');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        setTimeout(function () {
+          var el = document.getElementById('calendly-embed');
+          var url = window.cdDemoUrl();
+          document.getElementById('calendly-fallback').href = url.replace(/&primary_color=[^&]*/, '');
+          if (window.Calendly && el) {
+            el.innerHTML = '';
+            window.Calendly.initInlineWidget({ url: url, parentElement: el });
+          }
+        }, 0);
+      });
+    })();
+  </script>
+</body>
+</html>

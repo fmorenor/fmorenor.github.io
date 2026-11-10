@@ -10,6 +10,7 @@ const STATIC_PAGES = [
   { path: '/cartografica.html', changefreq: 'monthly', priority: '0.9', lastmod: '2026-07-21' },
   { path: '/geosoftware.html', changefreq: 'monthly', priority: '0.9', lastmod: '2026-07-21' },
   { path: '/procesos.html', changefreq: 'monthly', priority: '0.8', lastmod: '2026-07-21' },
+  { path: '/agendar-demo', changefreq: 'yearly', priority: '0.6', lastmod: '2026-11-10' },
   { path: '/xray.html', changefreq: 'monthly', priority: '0.7', lastmod: '2026-07-21' },
   { path: '/historia.html', changefreq: 'yearly', priority: '0.6', lastmod: '2026-07-21' },
   { path: '/equipo.html', changefreq: 'yearly', priority: '0.6', lastmod: '2026-07-21' },
